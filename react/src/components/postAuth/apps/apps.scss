@@ -1,0 +1,36 @@
+.active-nav-tab-container {
+  color: rgb(255,255,255);
+
+  &:hover {
+    color: rgb(78,115,223);
+  }
+}
+
+.nav-tab-container {
+  color: rgb(55, 67, 77);
+}
+
+.active-nav-tab {
+  background-color: rgb(78,115,223);
+}
+
+.border-on-hover {
+  transition: border-color 0.3s ease-in-out, border-width 0.3s ease-in-out, padding 0.3s ease-in-out;
+
+  border-width: 1px;
+  padding: 2px;
+  
+  &:hover {
+    border-color: rgb(78,115,223);
+    border-width: 3px;
+    padding: 0px;
+  }
+}
+
+.active-card {
+  border-color: rgb(78,115,223);
+  border-width: 3px;
+  padding: 0px;
+}
+
+

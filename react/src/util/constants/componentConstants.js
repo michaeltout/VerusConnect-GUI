@@ -1,0 +1,276 @@
+
+// Coin modes and states
+export const NATIVE = 'native'
+export const LITE = 'lite'
+export const ETH = 'eth'
+export const ELECTRUM = 'electrum'
+export const PRE_DATA = 'pre_data' // Before any API calls yield useful information (initialization)
+export const SYNCING = 'syncing' // Before blockchain is fully synced, while API does give useful info
+export const POST_SYNC = 'post_sync' // After data is accesable and blockchain is fully synced
+export const IS_ZCASH = 'is_zcash'
+export const IS_PBAAS = 'is_pbaas'
+export const IS_PBAAS_ROOT = 'is_pbaas_root'
+export const IS_SAPLING = 'is_sapling'
+export const Z_ONLY = 'z_only'
+export const IS_VERUS = 'is_verus'
+
+// Recurring API Call names
+export const API_GET_BALANCES = 'get_balances'
+export const API_GET_TRANSACTIONS = 'get_transactions'
+export const API_GET_INFO = 'get_info'
+export const API_GET_DEFINEDCHAINS = 'get_definedchains'
+export const API_GET_ZOPERATIONSTATUSES = 'get_zoperations'
+export const API_GET_MININGINFO = 'get_mininginfo'
+export const API_GET_ADDRESSES = 'get_addresses'
+export const API_GET_FIATPRICE = 'get_fiatprice'
+
+// Singleton API call names
+export const API_GET_PRIVKEY = 'get_privkey'
+export const API_GET_PUBKEY = 'get_pubkey'
+export const API_STOP = 'stop'
+
+// Write API call names
+export const API_CREATE_ADDRESS = 'get_newaddress'
+export const API_TX_PREFLIGHT = 'tx_preflight'
+export const API_SENDTX = 'sendtx'
+
+// Non-blockchain API call paths
+export const LOAD_USERS = 'users/load'
+export const SAVE_USERS = 'users/save'
+export const RESET_USERS = 'users/reset'
+export const LOAD_CONFIG = 'config/load'
+export const SAVE_CONFIG = 'config/save'
+export const RESET_CONFIG = 'config/reset'
+export const GET_SCHEMA = 'config/schema'
+export const ENCRYPT_KEY = 'encryptkey'
+export const DECRYPT_KEY = 'decryptkey'
+export const GET_PIN_LIST = 'getpinlist'
+export const MODIFY_PIN = 'modifypin'
+export const API_ACTIVATE_COIN = 'coins/activate'
+export const API_REMOVE_COIN = 'remove_coin'
+export const CHECK_ZCASH_PARAMS = 'zcashparamsexist'
+export const DL_ZCASH_PARAMS = 'zcparamsdl'
+export const AUTHENTICATE = 'auth'
+export const LOG_OUT = 'logout' 
+
+// API call request types
+export const POST = 'post'
+export const GET = 'get'
+
+// Conditional update responses
+export const API_ABORTED = 'aborted'
+export const API_SUCCESS = 'success'
+export const API_ERROR = 'error'
+export const API_FAILED = 'failed'
+
+// API Fetch update intervals
+export const ALWAYS_ACTIVATED = 0
+export const NEVER_ACTIVATED = -1
+
+// PBaaS Convert
+export const QUICK_CONVERT = 'quick_convert'
+export const CONTROL_CENTER = 'control_center'
+export const QUICK_CONVERT_FORM_TITLES = ['FILL_CONVERT_FORM', 'CONFIRMING_CONVERSION', 'PROCESSING_CONVERSION']
+export const BUY = 'buy'
+export const SELL = 'sell'
+
+// PBaaS Main Screen
+export const CONNECT = 'connect'
+export const CREATE = 'create'
+export const DISCOVER = 'discover'
+export const HELP = 'help'
+export const CONVERT = 'convert'
+
+// PBaaS Create Screen
+export const EXPONENTIAL = 'exponential'
+export const LINEAR = 'linear'
+export const END = 'END'
+export const FREQUENCY = 'FREQUENCY'
+export const MAGNITUDE = 'MAGNITUDE'
+export const LINEAR_DECAY = 100000000
+export const MIN_BILLING_PERIOD = 480
+export const FORM_TITLES = ['NAME', 'LAUNCH_OPTIONS', 'REWARD_STRUCTURE', 'BILLING', 'NODES', 'CONFIRM']
+
+// Add coin and login modal and screen
+export const SEED_TRIM_TIMEOUT = 5000
+export const DEFAULT_CHAIN = "defaultChain.png"
+export const VERUS_DAEMON = 'verusd'
+export const TEST_CHAINS = ['BEER', 'PIZZA', 'VOTE2018']
+
+// Main Wallet
+export const MAX_COINNAME_DISPLAY_LENGTH = 10
+export const COINS_TO_SKIP = ['KMD', 'JUMBLR', 'MESH', 'MVP']
+export const BOTTOM_BAR_DISPLAY_THRESHOLD = 15
+
+// Main Navigation
+export const PRE_AUTH = 'pre_auth'
+export const POST_AUTH = 'post_auth'
+export const UX_SELECTOR = 'ux_selector'
+export const MINING = 'mining'
+export const WALLET = 'wallet'
+export const PBAAS = 'pbaas'
+export const VERUSID = 'verus_id'
+export const SETTINGS = 'settings'
+export const IDENTITIES = 'identities'
+export const CREATE_PROFILE = 'create_profile'
+export const SELECT_PROFILE = 'select_profile'
+export const UNLOCK_PROFILE = 'unlock_profile'
+export const APPS = 'apps'
+export const DASHBOARD = 'dashboard'
+export const CHAIN_POSTFIX = 'chain'
+export const LOGIN = 'login'
+export const SETUP = 'setup'
+export const SIGN_UP = 'sign_up'
+
+// Modal navigation
+export const ADD_COIN = 'add_coin'
+export const CHAIN_INFO = 'chain_info'
+export const PBAAS_CHAIN_INFO = 'pbaas_chain_info'
+export const RECEIVE_COIN = 'receive_coin'
+export const SEND_COIN = 'send_coin'
+export const TX_INFO = 'tx_info'
+export const OPERATION_INFO = 'operation_info'
+export const ID_INFO = 'id_info'
+export const SELECT_COIN = 'select_coin'
+export const CONFIGURE_LITE = 'configure_lite'
+export const CONFIGURE_NATIVE = 'configure_native'
+export const CONFIGURE = 'configure'
+export const IMMATURE_DETAILS = 'immature_details'
+
+// Coin object data
+export const DEFAULT_DUST_THRESHOLD = 0.00001
+export const DEFAULT_DAEMON = 'verusd'
+export const KOMODO_DAEMON = 'komodod'
+
+// Coin wallet screen
+export const NATIVE_BALANCE = 'native'
+export const RESERVE_BALANCE = 'reserve'
+export const PRIVATE_BALANCE = 'private'
+export const PUBLIC_BALANCE = 'public'
+export const CONFIRMED_BALANCE = 'confirmed'
+export const TRANSPARENT_BALANCE = 'transparent'
+export const IMMATURE_BALANCE = 'immature'
+export const INTEREST_BALANCE = 'interest'
+export const UNCONFIRMED_BALANCE = 'unconfirmed'
+export const NO_BALANCE = 'None'
+export const UNKNOWN_BALANCE = '?'
+export const FUND = 'fund'
+export const SEND = 'send'
+export const DARK_CARD = 'dark'
+export const LIGHT_CARD = 'light'
+export const SYNCING_CHAIN = 'Syncing native chain...'
+export const WALLET_CONNECTED = 'Wallet connected.'
+export const FINDING_LONGEST_CHAIN = 'Finding longest chain, possibly forked...'
+export const CONNECTING_TO_PEERS = 'Connecting to peers...'
+
+// Transaction information
+export const MINED_TX = 'generate'
+export const MINTED_TX = 'mint'
+export const IN_TX = 'receive'
+export const IN_TX_ELECTRUM = 'received'
+export const OUT_TX = 'send'
+export const OUT_TX_ELECTRUM = 'sent'
+export const SELF_TX = 'self'
+export const STAKE_TX = 'stake'
+export const IMMATURE_TX = 'immature'
+export const UNKNOWN_TX = 'unknown'
+
+// Fallback image 
+export const CHAIN_FALLBACK_IMAGE = 'assets/images/cryptologo/defaultChain.png'
+
+// Addcoin native options
+export const NATIVE_RESCAN = '-rescan'
+export const NATIVE_STAKE = '-mint'
+export const NATIVE_MINE = '-gen'
+export const NATIVE_MINE_THREADS = '-genproclimit='
+
+// ZCash params 
+export const ZCPARAMS_VERUS = 'veruscoin.io'
+export const ZCPARAMS_KOMODO = 'agama.komodoplatform.com'
+export const ZCPARAMS_ZCASH = 'z.cash'
+export const ZCPARAMS_SOCKET = 'zcparams'
+export const ADDCOIN_DELAY = 500
+
+// Password and seed entering
+export const PWD_STRENGTH_THRESHOLD = 29
+
+// Receive coin screen
+export const PRIVATE_ADDRS = 'private'
+export const PUBLIC_ADDRS = 'public'
+export const COPY_PUBKEY = 'Copy public key'
+export const COPY_PRIVKEY = 'Copy private key'
+export const GENERATE_QR = 'Generate QR-Code'
+export const SAPLING_ADDR = 'sapling'
+export const SPROUT_ADDR = 'sprout'
+
+// Tx Info Modal
+export const GENERAL_INFO = 'General Info'
+export const RAW_TX = 'Raw Transaction'
+export const TX_MESSAGE = 'Message'
+export const TX_HEX = 'Hex'
+
+// Snackbar types
+export const ERROR_SNACK = 'error'
+export const INFO_SNACK = 'info'
+export const SUCCESS_SNACK = 'success'
+export const WARNING_SNACK = 'warning'
+export const MID_LENGTH_ALERT = 6000
+
+// Settings screen
+export const PROFILE_SETTINGS = 'profile_settings'
+export const GENERAL_SETTINGS = 'general_settings'
+export const COIN_SETTINGS = 'coin_settings'
+
+// Profile Settings
+export const START_AT_LAST_LOCATION = 'start_at_last_location'
+export const CUSTOM_START_LOCATION = 'custom_start_location'
+export const PLACEHOLDER = 'placeholder'
+
+// General Settings 
+export const MAIN_SETTINGS = 'main'
+export const HOST = 'host'
+export const APP_PORT = 'agamaPort'
+export const SPV_USE_PROXY = 'proxy'
+export const SPV_SOCKET_TIMEOUT = 'spv.socketTimeout'
+export const SPV_MAX_TX_LENGTH = 'spv.listtransactionsMaxLength'
+export const NATIVE_CLI_STOP_TIMEOUT = 'native.cliStopTimeout'
+export const NATIVE_MAX_TX_LENGTH = 'native.listtransactionsMaxLength'
+export const NATIVE_ZCASH_PARAMS_SRC = 'native.zcashParamsSrc'
+export const DROPDOWN = 'dropdown'
+export const TEXT_INPUT = 'text_input'
+export const NUMBER_INPUT = 'number_input'
+export const CHECKBOX = 'checkbox'
+export const STAKE_GUARD = 'stakeGuard'
+
+// Send coin form 
+export const TRANSPARENT_FUNDS = 'Transparent Funds'
+
+// Send coin
+export const ENTER_DATA = 0
+export const CONFIRM_DATA = 1
+export const SEND_RESULT = 2
+
+// Send coin form errors
+export const ERROR_INVALID_ADDR = 'Invalid to address'
+export const ERROR_INVALID_AMOUNT = 'Invalid send amount'
+export const ERROR_INVALID_FROM = 'Invalid from address'
+export const ERROR_AMOUNT_MORE_THAN_BALANCE = 'Amount is more than available balance.'
+export const ERROR_Z_AND_NO_FROM = 'Sending a Z transaction requires a from address.'
+
+// Send coin preflight obj keys
+export const TXDATA_TO = 'to'
+export const TXDATA_FROM = 'from'
+export const TXDATA_VALUE = 'value'
+export const TXDATA_FEE = 'fee'
+export const TXDATA_TOTAL_AMOUNT = 'total'
+export const TXDATA_BALANCE = 'balance'
+export const TXDATA_REMAINING_BALANCE = 'remainingBalance'
+export const TXDATA_LAST_PRICE = 'lastPrice'
+export const TXDATA_STATUS = 'status'
+export const TXDATA_ERROR = 'error'
+export const TXDATA_TXID = 'txid'
+
+// Send command types
+export const Z_SEND = 'z_sendmany'
+
+

@@ -1,0 +1,145 @@
+import React from 'react';
+import FundForm from "./fundForm/fundForm";
+import MessageSendForm from "./messageSendForm/messageSendForm";
+import ReserveSendForm from "./reserveSendForm/reserveSendForm";
+import TraditionalSendForm from "./traditionalSendForm/traditionalSendForm";
+import { TRANSPARENT_BALANCE, PRIVATE_BALANCE, RESERVE_BALANCE, CONFIRM_DATA, API_SUCCESS, SEND_RESULT } from '../../../util/constants/componentConstants';
+import Button from '@material-ui/core/Button';
+import PieChart from 'react-minimal-pie-chart';
+
+export const SendCoinRender = function() {
+  const { advanceFormStep, state, back, props } = this
+  const { loading, continueDisabled, formStep, txData } = state
+  const { closeModal } = props
+
+  return (
+    <div style={{ width: "100%", paddingLeft: 35, paddingRight: 35 }}>
+      {loading
+        ? SendCoinRenderLoading.call(this)
+        : SendCoinFormRender.call(this)}
+      {!loading && (
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            justifyContent: "space-between"
+          }}
+        >
+          <Button
+            variant="contained"
+            onClick={back}
+            size="large"
+            color="default"
+            style={{
+              visibility:
+                formStep === CONFIRM_DATA ||
+                (formStep === SEND_RESULT && txData.status !== API_SUCCESS)
+                  ? "unset"
+                  : "hidden"
+            }}
+          >
+            {"Back"}
+          </Button>
+          <Button
+            variant="contained"
+            onClick={ formStep === SEND_RESULT ? closeModal : advanceFormStep }
+            disabled={continueDisabled}
+            size="large"
+            color="primary"
+          >
+            {formStep === SEND_RESULT ? "Done" : "Continue"}
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export const SendCoinFormRender = function() {
+  const { state, props, getFormData, getContinueDisabled } = this
+  const { modalProps } = props
+
+  if (modalProps.fund)
+    return (
+      <FundForm
+        {...modalProps}
+        {...state}
+        setFormData={getFormData}
+        setContinueDisabled={getContinueDisabled}
+      />
+    );
+  else {
+    switch (modalProps.balanceTag) {
+      case TRANSPARENT_BALANCE:
+        return (
+          <TraditionalSendForm
+            {...modalProps}
+            {...state}
+            setFormData={getFormData}
+            setContinueDisabled={getContinueDisabled}
+          />
+        );
+      case PRIVATE_BALANCE:
+        if (modalProps.isMessage)
+          return (
+            <MessageSendForm
+              {...modalProps}
+              {...state}
+              setFormData={getFormData}
+              setContinueDisabled={getContinueDisabled}
+            />
+          );
+        else
+          return (
+            <TraditionalSendForm
+              {...modalProps}
+              {...state}
+              setFormData={getFormData}
+              setContinueDisabled={getContinueDisabled}
+            />
+          );
+      case RESERVE_BALANCE:
+        return (
+          <ReserveSendForm
+            {...modalProps}
+            {...state}
+            setFormData={getFormData}
+            setContinueDisabled={getContinueDisabled}
+          />
+        );
+    }
+
+    return null;
+  }
+}
+
+export const SendCoinRenderLoading = function() {
+  return (
+    <div 
+      className="d-sm-flex flex-column justify-content-sm-center"
+      style={{ paddingBottom: 40, height: "100%" }}>
+      <div
+        className="d-flex d-sm-flex justify-content-center justify-content-sm-center"
+        style={{ paddingBottom: 40 }}
+      >
+        <PieChart
+          data={[{ value: 1, key: 1, color: "rgb(78,115,223)" }]}
+          reveal={ this.state.loadingProgress }
+          lineWidth={20}
+          animate
+          labelPosition={0}
+          label={() => Math.round(this.state.loadingProgress) + "%"}
+          labelStyle={{
+            fontSize: "25px"
+          }}
+          style={{
+            maxHeight: "60px",
+            maxWidth: "60px"
+          }}
+        />
+      </div>
+    </div>
+  )
+}
+
+
