@@ -20,7 +20,11 @@ import {
   SET_COIN_ZOPERATIONS,
   SET_COIN_FIATPRICE,
   ERROR_ACTIVATE_COIN,
-  ACTIVATE_COIN
+  ACTIVATE_COIN,
+  SET_COIN_IDENTITIES,
+  SET_COIN_NAME_COMMITMENTS,
+  ERROR_COIN_IDENTITIES,
+  ERROR_COIN_NAME_COMMITMENTS
 } from '../util/constants/storeType'
 import {
   API_GET_ZOPERATIONSTATUSES,
@@ -31,10 +35,13 @@ import {
   API_GET_MININGINFO,
   API_GET_ADDRESSES,
   API_GET_FIATPRICE,
-  API_ACTIVATE_COIN
+  API_ACTIVATE_COIN,
+  API_GET_IDENTITIES,
+  API_GET_NAME_COMMITMENTS
 } from '../util/constants/componentConstants'
 
 export const errors = (state = {
+  [API_ACTIVATE_COIN]: {},
   [API_GET_BALANCES]: {},
   [API_GET_TRANSACTIONS]: {},
   [API_GET_INFO]: {},
@@ -43,9 +50,15 @@ export const errors = (state = {
   [API_GET_ZOPERATIONSTATUSES]: {},
   [API_GET_DEFINEDCHAINS]: {},
   [API_GET_FIATPRICE]: {},
-  [API_ACTIVATE_COIN]: {}
+  [API_GET_IDENTITIES]: {},
+  [API_GET_NAME_COMMITMENTS]: {}
 }, action) => {
   switch (action.type) {
+    case ERROR_ACTIVATE_COIN:
+      return {
+        ...state,
+        [API_ACTIVATE_COIN]: {...state[API_ACTIVATE_COIN], [action.chainTicker]: {error: true, result: action.result}}
+      };
     case ERROR_COIN_ADDRESSES:
       return {
         ...state,
@@ -86,10 +99,20 @@ export const errors = (state = {
         ...state,
         [API_GET_FIATPRICE]: {...state[API_GET_FIATPRICE], [action.chainTicker]: {error: true, result: action.result}}
       };
-    case ERROR_ACTIVATE_COIN:
+    case ERROR_COIN_IDENTITIES:
       return {
         ...state,
-        [API_ACTIVATE_COIN]: {...state[API_ACTIVATE_COIN], [action.chainTicker]: {error: true, result: action.result}}
+        [API_GET_IDENTITIES]: {...state[API_GET_IDENTITIES], [action.chainTicker]: {error: true, result: action.result}}
+      };
+    case ERROR_COIN_NAME_COMMITMENTS:
+      return {
+        ...state,
+        [API_GET_NAME_COMMITMENTS]: {...state[API_GET_NAME_COMMITMENTS], [action.chainTicker]: {error: true, result: action.result}}
+      };
+    case ACTIVATE_COIN:
+      return {
+        ...state,
+        [API_ACTIVATE_COIN]: {...state[API_ACTIVATE_COIN], [action.chainTicker]: {error: false, result: null}}
       };
     case SET_COIN_ADDRESSES:
       return {
@@ -131,10 +154,15 @@ export const errors = (state = {
         ...state,
         [API_GET_FIATPRICE]: {...state[API_GET_FIATPRICE], [action.chainTicker]: {error: false, result: null}}
       };
-    case ACTIVATE_COIN:
+    case SET_COIN_IDENTITIES:
       return {
         ...state,
-        [API_ACTIVATE_COIN]: {...state[API_ACTIVATE_COIN], [action.chainTicker]: {error: false, result: null}}
+        [API_GET_IDENTITIES]: {...state[API_GET_IDENTITIES], [action.chainTicker]: {error: false, result: null}}
+      };
+    case SET_COIN_NAME_COMMITMENTS:
+      return {
+        ...state,
+        [API_GET_NAME_COMMITMENTS]: {...state[API_GET_NAME_COMMITMENTS], [action.chainTicker]: {error: false, result: null}}
       };
     default:
       return state;

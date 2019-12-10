@@ -265,7 +265,7 @@ class CoinWallet extends React.Component {
                   ? CONNECTING_TO_PEERS
                   : longestchain < blocks
                   ? FINDING_LONGEST_CHAIN
-                  : WALLET_CONNECTED,
+                  : `${WALLET_CONNECTED} (${blocks} blocks)`,
               percentage: connections === 0 ? 0 : percentage
             };
           }

@@ -6,6 +6,8 @@ import { updateMiningInfo } from './updateMiningInfo'
 import { updateTransactions } from './updateTransactions'
 import { updateZOperations } from './updateZOperationStatuses'
 import { updateFiatPrice } from './updateFiatPrice'
+import { updateIdentities } from './updateIdentities'
+import { updateNameCommitments } from './updateNameCommitments'
 import { readNavigationUrl } from '../../../../util/navigationUtils'
 import {
   API_GET_ADDRESSES,
@@ -20,7 +22,9 @@ import {
   API_ERROR,
   API_SUCCESS,
   WARNING_SNACK,
-  MID_LENGTH_ALERT
+  MID_LENGTH_ALERT,
+  API_GET_IDENTITIES,
+  API_GET_NAME_COMMITMENTS
 } from '../../../../util/constants/componentConstants'
 import {
   renewData,
@@ -42,7 +46,9 @@ export const walletUpdates = {
   [API_GET_MININGINFO]: updateMiningInfo,
   [API_GET_TRANSACTIONS]: updateTransactions,
   [API_GET_ZOPERATIONSTATUSES]: updateZOperations,
-  [API_GET_FIATPRICE]: updateFiatPrice
+  [API_GET_FIATPRICE]: updateFiatPrice,
+  [API_GET_IDENTITIES]: updateIdentities,
+  [API_GET_NAME_COMMITMENTS]: updateNameCommitments
 }
 
 /**

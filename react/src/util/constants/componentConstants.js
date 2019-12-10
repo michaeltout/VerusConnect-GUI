@@ -23,16 +23,21 @@ export const API_GET_ZOPERATIONSTATUSES = 'get_zoperations'
 export const API_GET_MININGINFO = 'get_mininginfo'
 export const API_GET_ADDRESSES = 'get_addresses'
 export const API_GET_FIATPRICE = 'get_fiatprice'
+export const API_GET_IDENTITIES = 'get_identities'
+export const API_GET_NAME_COMMITMENTS = 'get_name_commitments'
 
 // Singleton API call names
 export const API_GET_PRIVKEY = 'get_privkey'
 export const API_GET_PUBKEY = 'get_pubkey'
+export const API_GET_IDENTITY = 'get_identity'
 export const API_STOP = 'stop'
 
 // Write API call names
 export const API_CREATE_ADDRESS = 'get_newaddress'
 export const API_TX_PREFLIGHT = 'tx_preflight'
 export const API_SENDTX = 'sendtx'
+export const API_REGISTER_ID_NAME = 'register_id_name'
+export const API_REGISTER_ID = 'register_id'
 
 // Non-blockchain API call paths
 export const LOAD_USERS = 'users/load'
