@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { 
   TraditionalSendFormRender
-} from './TraditionalSendForm.render';
+} from './traditionalSendForm.render';
 import { checkAddrValidity } from '../../../../util/addrUtils';
 import {
   PRIVATE_BALANCE,
