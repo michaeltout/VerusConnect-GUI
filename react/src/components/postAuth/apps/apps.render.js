@@ -145,7 +145,7 @@ export const AppsRender = function() {
           <div
             className="col d-flex flex-column justify-content-between"
             style={AppsStyles.sideBarInnerContainer}>
-            <div style={AppsStyles.sideBarContainerScroller}>
+            <div style={AppsStyles.sideBarContainerScroller} className="hide-scrollbar">
               {this.state.cards}
             </div>
             <footer />

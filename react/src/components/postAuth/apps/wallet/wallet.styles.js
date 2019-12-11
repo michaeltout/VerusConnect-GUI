@@ -1,6 +1,7 @@
 export default {
   cardClickableContainer: {
-    width: "100%"
+    width: "100%",
+    overflow: "hidden"
   },
   secondaryTabBarLink: {
     color: "rgb(255,255,255)" 

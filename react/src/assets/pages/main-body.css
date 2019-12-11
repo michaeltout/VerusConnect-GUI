@@ -4,4 +4,13 @@
   background-image: url("../images/Verus-Desktop-BG.png");
   background-position: center;
   background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+.index-body::-webkit-scrollbar {
+  display: none
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none
 }
