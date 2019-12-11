@@ -24,7 +24,8 @@ import {
   WARNING_SNACK,
   MID_LENGTH_ALERT,
   API_GET_IDENTITIES,
-  API_GET_NAME_COMMITMENTS
+  API_GET_NAME_COMMITMENTS,
+  ALWAYS_ACTIVATED
 } from '../../../../util/constants/componentConstants'
 import {
   renewData,
@@ -67,7 +68,10 @@ export const udpateWalletData = async (state, dispatch, mode, chainTicker, updat
 
   try {
     if(await walletUpdates[updateId](state, dispatch, mode, chainTicker)) {
-      dispatch(renewData(chainTicker, updateId))
+      if (state.updates.updateIntervals[chainTicker][updateId].expire_timeout !== ALWAYS_ACTIVATED) {
+        dispatch(renewData(chainTicker, updateId))
+      }
+
       if (state.updates.updateIntervals[chainTicker][updateId].expire_id) {
         console.log(`Going to clear expire timeout for ${updateId}: ${state.updates.updateIntervals[chainTicker][updateId].expire_id}`)
         clearTimeout(state.updates.updateIntervals[chainTicker][updateId].expire_id)
