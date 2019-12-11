@@ -23,6 +23,7 @@ import {
   OPERATION_INFO,
   TX_INFO,
   FINDING_LONGEST_CHAIN,
+  UNCONFIRMED_BALANCE,
 } from '../../../../../util/constants/componentConstants'
 import { renderAffectedBalance } from '../../../../../util/txUtils/txRenderUtils'
 import { setModalNavigationPath, setModalParams } from '../../../../../actions/actionCreators'
@@ -192,7 +193,7 @@ class CoinWallet extends React.Component {
               spendableBalance.crypto += balance
             }
 
-            if (balance != 0 || balanceType === CONFIRMED_BALANCE) {
+            if ((balance != 0 || balanceType === CONFIRMED_BALANCE) && balanceType != UNCONFIRMED_BALANCE) {
               walletDisplayBalances.push({
                 balanceAddrType,
                 balanceType,

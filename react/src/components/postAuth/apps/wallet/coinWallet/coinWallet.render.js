@@ -561,7 +561,7 @@ export const WalletRenderTransactions = function() {
           {
             width: 125,
             cellDataGetter: ({ rowData }) => {
-              const time = timeConverter(rowData.time)
+              const time = timeConverter(rowData.time == null ? rowData.timestamp : rowData.time)
               return time ? time : '-'
             },
             flexGrow: 1,
