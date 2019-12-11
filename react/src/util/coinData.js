@@ -12,7 +12,8 @@ import {
   DEFAULT_DUST_THRESHOLD,
   DEFAULT_DAEMON,
   KOMODO_DAEMON,
-  Z_ONLY
+  Z_ONLY,
+  IS_VERUS
 } from './constants/componentConstants'
 import erc20ContractId from 'agama-wallet-lib/src/eth-erc20-contract-id'
 import electrumServers from 'agama-wallet-lib/src/electrum-servers'
@@ -89,6 +90,10 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
       coinObj.options.daemon = DEFAULT_DAEMON
   
       if (chainTickerUc === 'VRSCTEST') tags[IS_PBAAS_ROOT] = true
+    }
+
+    if (chainTickerUc === 'VRSCTEST' || chainTickerUc === 'VRSC') {
+      tags[IS_VERUS] = true
     }
   }
 

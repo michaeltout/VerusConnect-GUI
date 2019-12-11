@@ -25,7 +25,7 @@ import { getApiData } from '../../util/api/callCreator'
 import { checkZcashParamsFormatted, downloadZcashParams } from '../../util/api/setup/zcashParams'
 
 //DELET
-import { getPrivkey, getPubkey, createAddress } from '../../util/api/wallet/walletCalls'
+import { getPrivkey, getPubkey, createAddress, getIdentities, getNameCommitments, registerIdName } from '../../util/api/wallet/walletCalls'
 
 //DELET
 import { activateChainLifecycle, clearAllCoinIntervals, addCoin, logoutActiveUser } from '../../actions/actionDispatchers'
@@ -57,7 +57,7 @@ class Main extends React.Component {
       const { defaultUserId } = config
 
       // Setup initial navigation state
-      if (defaultUserId.length > 0 && loadedUsers[defaultUserId]) {
+      if (defaultUserId && defaultUserId.length > 0 && loadedUsers[defaultUserId]) {
         if (Object.values(loadedUsers[defaultUserId].startCoins).every((coinObj) => {
           return coinObj.mode === NATIVE
         }) || loadedUsers[defaultUserId].pinFile == null) {
@@ -67,10 +67,7 @@ class Main extends React.Component {
         } else {
           dispatch(setMainNavigationPath(`${PRE_AUTH}/${UNLOCK_PROFILE}`))
         }
-      } else if (defaultUserId.length > 0) {
-        //DELET
-        console.log("RESETTING DEFAULT USER")
-
+      } else if (defaultUserId && defaultUserId.length > 0) {
         try {
           dispatch(await setConfigParams(config, { defaultUserId: '' }))
         } catch (e) {
@@ -244,6 +241,28 @@ class Main extends React.Component {
     //DELET
     window.downloadZcashParams = async (dloption) => {
       console.log(await downloadZcashParams(dloption))
+    }
+
+    //DELET
+    window.getIdentities = async (chainTicker) => {
+      try {
+        console.log(await getIdentities(NATIVE, chainTicker))
+      } catch (e) {
+        console.error(e)
+      }
+    }
+
+    window.registerName = async (chainTicker, name, address, refferral) => {
+      try {
+        console.log(await registerIdName(chainTicker, name, address, refferral))
+      } catch (e) {
+        console.error(e)
+      }
+    }
+
+    //DELET
+    window.getNames = async (chainTicker) => {
+      console.log(await getNameCommitments(NATIVE, chainTicker))
     }
 
     window.newAlert = (message, type, autoCloseMs) => {

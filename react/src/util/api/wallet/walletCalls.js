@@ -13,3 +13,4 @@ export * from './readCalls/getPubkey'
 
 export * from './writeCalls/createAddress'
 export * from './writeCalls/sendCoin'
+export * from './writeCalls/identity'

@@ -14,7 +14,8 @@ import {
   API_GET_FIATPRICE,
   CHAIN_POSTFIX,
   API_GET_IDENTITIES,
-  IS_VERUS
+  IS_VERUS,
+  API_GET_NAME_COMMITMENTS
 } from './componentConstants'
 
 /**
@@ -62,7 +63,7 @@ export const DEFAULT_UPDATE_PARAMS = (ticker) => ({
           expire_oncomplete: null,
           update_expired_oncomplete: null,
           expire_timeout: ALWAYS_ACTIVATED,
-          update_expired_interval: 20000
+          update_expired_interval: 10000
         }
       },
       post_sync: {
@@ -106,7 +107,7 @@ export const DEFAULT_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`],
-          location_and_type_restrictions: [['@post_auth/apps/mining/dashboard', IS_PBAAS]]
+          location_and_type_restrictions: [['@post_auth/apps/mining/dashboard', IS_PBAAS], ['@post_auth/apps/verus_id', IS_VERUS]]
         },
         interval_info: {
           expire_id: null,
@@ -122,7 +123,7 @@ export const DEFAULT_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`],
-          location_and_type_restrictions: [['@post_auth/apps/mining/dashboard', IS_PBAAS]]
+          location_and_type_restrictions: [['@post_auth/apps/mining/dashboard', IS_PBAAS], ['@post_auth/apps/verus_id', IS_VERUS]]
         },
         interval_info: {
           expire_id: null,
@@ -158,7 +159,7 @@ export const DEFAULT_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [],
-          location_and_type_restrictions: [['@post_auth/apps/verus_id', IS_VERUS]]
+          location_and_type_restrictions: [['@post_auth', IS_VERUS]]
         },
         interval_info: {
           expire_id: null,
@@ -174,7 +175,60 @@ export const DEFAULT_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [],
-          location_and_type_restrictions: [['@post_auth/apps/verus_id', IS_VERUS]]
+          location_and_type_restrictions: [['@post_auth', IS_VERUS]]
+        },
+        interval_info: {
+          expire_id: null,
+          update_expired_id: null,
+          expire_oncomplete: null,
+          update_expired_oncomplete: null,
+          expire_timeout: 60000,
+          update_expired_interval: 10000,
+        }
+      }
+    },
+
+    //TODO: Make less frequent, it is only fetched from a file after all
+    [API_GET_NAME_COMMITMENTS]: {
+      restrictions: [], 
+      pre_data: {
+        tracking_info: {
+          needs_update: false,
+          busy: false,
+          location_restrictions: [],
+          location_and_type_restrictions: []
+        },
+        interval_info: {
+          expire_id: null,
+          update_expired_id: null,
+          expire_oncomplete: null,
+          update_expired_oncomplete: null,
+          expire_timeout: NEVER_ACTIVATED,
+          update_expired_interval: NEVER_ACTIVATED
+        }
+      },
+      syncing: {
+        tracking_info: {
+          needs_update: true,
+          busy: false,
+          location_restrictions: [],
+          location_and_type_restrictions: [['@post_auth', IS_VERUS]]
+        },
+        interval_info: {
+          expire_id: null,
+          update_expired_id: null,
+          expire_oncomplete: null,
+          update_expired_oncomplete: null,
+          expire_timeout: 60000,
+          update_expired_interval: 10000,
+        }
+      },
+      post_sync: {
+        tracking_info: {
+          needs_update: true,
+          busy: false,
+          location_restrictions: [],
+          location_and_type_restrictions: [['@post_auth', IS_VERUS]]
         },
         interval_info: {
           expire_id: null,

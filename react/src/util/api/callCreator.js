@@ -16,10 +16,6 @@ import { NATIVE, ETH, ELECTRUM, POST, GET } from '../constants/componentConstant
 export const getApiData = (mode, call, params, reqType) => {
   const requestFunc = reqType ? modeNameMap[reqType] : modeDefaultCallMap[mode]
 
-  //DELET
-  console.log("SENDING REQ")
-  console.log(`${mode}/${call}`)
-
   return new Promise((resolve, reject) => {
     requestFunc(`${mode}/${call}`, params)
     .catch((error) => {
