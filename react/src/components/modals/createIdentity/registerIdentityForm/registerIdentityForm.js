@@ -13,7 +13,8 @@ import {
   CREATE_IDENTITY,
   ERROR_NAME_REQUIRED,
   ERROR_INVALID_Z_ADDR,
-  ENTER_DATA
+  ENTER_DATA,
+  ERROR_INVALID_ID
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar } from '../../../../actions/actionCreators';
 
@@ -158,6 +159,14 @@ class RegisterIdentityForm extends React.Component {
 
     if (privateAddr.length > 0 && !(privateAddr[0] === 'z' && (privateAddr.length === 95 || privateAddr.length === 78))) {
       formErrors.privateAddr.push(ERROR_INVALID_Z_ADDR)
+    }
+
+    if (revocationId != null && revocationId.length > 0 && revocationId[revocationId.length - 1] !== '@' && revocationId[0] !== 'i') {
+      formErrors.revocationId.push(ERROR_INVALID_ID)
+    }
+
+    if (recoveryId != null && recoveryId.length > 0 && recoveryId[recoveryId.length - 1] !== '@' && recoveryId[0] !== 'i') {
+      formErrors.recoveryId.push(ERROR_INVALID_ID)
     }
 
     //TODO: ID validation

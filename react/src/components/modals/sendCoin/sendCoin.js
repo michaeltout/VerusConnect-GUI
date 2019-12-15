@@ -49,7 +49,7 @@ class SendCoin extends React.Component {
     let _txData
 
     this.props.setModalLock(true)
-    this.setState({loading: true, loadingProgress: 75}, async () => {      
+    this.setState({loading: true, loadingProgress: 99}, async () => {      
       // Fake loading
       const loadingTickInterval = setInterval(() => {
         this.setState({ loadingProgress: loadingProgress + ((99 - loadingProgress) / (Math.random() * (9 - 8) + 9)) })

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { 
   ProfileSettingsRender,
 } from './profileSettings.render';
-import { UX_SELECTOR, WALLET, PBAAS, MINING, PLACEHOLDER, POST_AUTH, APPS, ETH, NATIVE, ELECTRUM } from '../../../../../util/constants/componentConstants';
+import { UX_SELECTOR, WALLET, PBAAS, MINING, PLACEHOLDER, POST_AUTH, APPS, ETH, NATIVE, ELECTRUM, IDENTITIES } from '../../../../../util/constants/componentConstants';
 import { getSimpleCoinArray, getCoinObj, getCoinColor } from "../../../../../util/coinData";
 
 class ProfileSettings extends React.Component {
@@ -23,7 +23,7 @@ class ProfileSettings extends React.Component {
       }
     }
 
-    this.locationPresets = [UX_SELECTOR, WALLET, PBAAS, MINING]
+    this.locationPresets = [UX_SELECTOR, WALLET, IDENTITIES, MINING]
     this.startCoinOptions = getSimpleCoinArray()
     this.setStartScreen = this.setStartScreen.bind(this)
     this.setStartCoins = this.setStartCoins.bind(this)

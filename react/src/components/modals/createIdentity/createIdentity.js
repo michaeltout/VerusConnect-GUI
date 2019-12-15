@@ -84,7 +84,7 @@ class CreateIdentity extends React.Component {
     let _txData
 
     setModalLock(true)
-    this.setState({loading: true, loadingProgress: 75}, async () => {      
+    this.setState({loading: true, loadingProgress: 99}, async () => {      
       try {
         const { 
           chainTicker,

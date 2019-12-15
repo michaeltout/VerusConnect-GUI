@@ -1,5 +1,5 @@
 import React from 'react';
-import { IS_VERUS } from '../../../../../util/constants/componentConstants';
+import { IS_VERUS, NATIVE } from '../../../../../util/constants/componentConstants';
 import Tooltip from '@material-ui/core/Tooltip';
 import Block from '@material-ui/icons/Block';
 import Button from '@material-ui/core/Button';
@@ -13,7 +13,7 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 export const DashboardRender = function() {
   //TODO: Move to parent component so this isnt re-calculated at render
   const verusProtocolCoins = Object.values(this.props.activatedCoins).filter((coinObj) => {
-    return coinObj.tags.includes(IS_VERUS)
+    return coinObj.tags.includes(IS_VERUS) && coinObj.mode === NATIVE
   })
 
   return (
@@ -84,7 +84,8 @@ export const DashboardRender = function() {
                         {"Select chain:"}
                       </h6>
                       {verusProtocolCoins.map((coinObj, index) => {
-                        return (
+                        if (this.props.identities[coinObj.id] == null) return null
+                        else return (
                           <a
                             className="dropdown-item"
                             key={index}
@@ -138,7 +139,8 @@ export const DashboardRender = function() {
                         {"Select chain:"}
                       </h6>
                       {verusProtocolCoins.map((coinObj, index) => {
-                        return (
+                        if (this.props.identities[coinObj.id] == null) return null
+                        else return (
                           <a
                             className="dropdown-item"
                             key={index}
@@ -156,10 +158,25 @@ export const DashboardRender = function() {
                 <div
                   className="col d-lg-flex align-items-lg-start"
                   style={{
-                    paddingTop: 9
+                    paddingTop: 9,
+                    justifyContent: "center",
+                    color: "rgb(0,0,0)"
                   }}
                 >
-                  {DashboardRenderTable.call(this)}
+                  {verusProtocolCoins.length == 0 ? (
+                    <a
+                      className="nav-link"
+                      href="#"
+                      style={{color: "rgb(78,115,223)"}}
+                      onClick={this.openAddCoinModal}
+                    >
+                      {"Add a Verus protocol coin (VRSC or VRSCTEST) to start making IDs!"}
+                    </a>
+                  ) : this.state.displayNameCommitments.length > 0 ? (
+                    DashboardRenderTable.call(this)
+                  ) : (
+                    "No name commitments. Commit a name to create an ID!"
+                  )}
                 </div>
               </div>
             </div>

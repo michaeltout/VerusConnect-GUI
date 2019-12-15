@@ -11,7 +11,8 @@ import {
   TXDATA_TXID,
   CONFIRM_DATA,
   CREATE_IDENTITY,
-  ERROR_NAME_REQUIRED
+  ERROR_NAME_REQUIRED,
+  ERROR_INVALID_ID
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar } from '../../../../actions/actionCreators';
 
@@ -110,6 +111,10 @@ class CommitNameForm extends React.Component {
     if (name == null || name.length == 0) {
       formErrors.name.push(ERROR_NAME_REQUIRED)
     }  
+
+    if (referralId != null && referralId.length > 0 && referralId[referralId.length - 1] !== '@' && referralId[0] !== 'i') {
+      formErrors.referralId.push(ERROR_INVALID_ID)
+    }
 
     this.setState({ formErrors }, () => {
       setContinueDisabled(!Object.keys(this.state.formErrors).every((formInput) => {

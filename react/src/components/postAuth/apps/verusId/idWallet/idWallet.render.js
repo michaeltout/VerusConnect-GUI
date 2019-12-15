@@ -9,7 +9,8 @@ import {
   IMMATURE_BALANCE,
   PRIVATE_ADDRS,
   API_SUCCESS,
-  API_FAILED
+  API_FAILED,
+  ID_INFO
 } from "../../../../../util/constants/componentConstants";
 import { VirtualizedTable } from '../../../../../containers/VirtualizedTable/VirtualizedTable'
 import { TX_TYPES } from '../../../../../util/txUtils/txRenderUtils'
@@ -82,11 +83,11 @@ export const IdWalletRender = function() {
                 <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
                   {"ID Information"}
                 </h6>
-                {/*<button
+                <button
                   className="btn btn-primary border rounded"
                   type="button"
-                  name={CHAIN_INFO}
-                  onClick={e => this.openModal(e, null)}
+                  name={ID_INFO}
+                  onClick={e => this.openModal(e, { activeIdentity })}
                   style={{
                     fontSize: 14,
                     backgroundColor: "rgba(0,178,26,0)",
@@ -97,7 +98,7 @@ export const IdWalletRender = function() {
                   }}
                 >
                   {"ID Info"}
-                </button>*/}
+                </button>
               </div>
               <div
                 className="d-lg-flex"
@@ -107,17 +108,15 @@ export const IdWalletRender = function() {
                   alignItems: "center"
                 }}
               >
-                {/*{WalletRenderPie.call(this)}
                 <h1
                   style={{
                     margin: 0,
                     fontSize: 16,
                     color: "rgb(0,0,0)",
-                    paddingLeft: 23,
                     overflow: "-webkit-paged-x"
                   }}
                 >
-                  {this.state.walletLoadState.error && (
+                  {activeIdentity.status !== 'active' && (
                     <i
                       className="fas fa-exclamation-triangle"
                       style={{
@@ -127,8 +126,8 @@ export const IdWalletRender = function() {
                       }}
                     />
                   )}
-                  {this.state.walletLoadState.message}
-                    </h1>*/}
+                  {`Status: ${activeIdentity.status} as of block ${activeIdentity.blockheight}.`}
+                </h1>
               </div>
             </div>
           </div>

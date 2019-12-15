@@ -11,7 +11,8 @@ import {
   CREATE_IDENTITY,
   ERROR_INVALID_Z_ADDR,
   NATIVE,
-  ERROR_INVALID_ADDR
+  ERROR_INVALID_ADDR,
+  ERROR_INVALID_ID
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar } from '../../../../actions/actionCreators';
 import { checkAddrValidity } from '../../../../util/addrUtils';
@@ -119,6 +120,18 @@ class RecoverIdentityForm extends React.Component {
     if (primaryAddress.length !== 0 && !checkAddrValidity(primaryAddress, NATIVE, activeCoin.id)) {
       formErrors.primaryAddress.push(ERROR_INVALID_ADDR)
     }  
+
+    if (revocationId != null && revocationId.length > 0 && revocationId[revocationId.length - 1] !== '@' && revocationId[0] !== 'i') {
+      formErrors.revocationId.push(ERROR_INVALID_ID)
+    }
+
+    if (recoveryId != null && recoveryId.length > 0 && recoveryId[recoveryId.length - 1] !== '@' && recoveryId[0] !== 'i') {
+      formErrors.recoveryId.push(ERROR_INVALID_ID)
+    }
+
+    if (name != null && name.length > 0 && name[name.length - 1] !== '@' && name[0] !== 'i') {
+      formErrors.name.push(ERROR_INVALID_ID)
+    }
 
     //TODO: ID & name validation
 

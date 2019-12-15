@@ -4,7 +4,7 @@ import {
   DashboardRender,
 } from './dashboard.render';
 import { setModalParams, setModalNavigationPath, expireData, newSnackbar, setMainNavigationPath } from '../../../../../actions/actionCreators';
-import { CREATE_IDENTITY, NATIVE, API_GET_NAME_COMMITMENTS, ERROR_SNACK, MID_LENGTH_ALERT, SUCCESS_SNACK, ID_POSTFIX, API_REGISTER_ID, API_REGISTER_ID_NAME, API_RECOVER_ID, API_SUCCESS, INFO_SNACK } from '../../../../../util/constants/componentConstants';
+import { CREATE_IDENTITY, NATIVE, API_GET_NAME_COMMITMENTS, ERROR_SNACK, MID_LENGTH_ALERT, SUCCESS_SNACK, ID_POSTFIX, API_REGISTER_ID, API_REGISTER_ID_NAME, API_RECOVER_ID, API_SUCCESS, INFO_SNACK, ADD_COIN, SELECT_COIN } from '../../../../../util/constants/componentConstants';
 import { deleteIdName, revokeIdentity } from '../../../../../util/api/wallet/walletCalls';
 import Store from '../../../../../store'
 import { conditionallyUpdateWallet } from '../../../../../actions/actionDispatchers';
@@ -37,6 +37,7 @@ class Dashboard extends React.Component {
     this.openRevokeDialogue = this.openRevokeDialogue.bind(this)
     this.closeRevokeDialogue = this.closeRevokeDialogue.bind(this)
     this.revokeId = this.revokeId.bind(this)
+    this.openAddCoinModal = this.openAddCoinModal.bind(this)
   }
 
   componentWillMount() {
@@ -45,6 +46,10 @@ class Dashboard extends React.Component {
 
   openId(chainTicker, idIndex) {
     this.props.dispatch(setMainNavigationPath(`${getPathParent(this.props.mainPathArray)}/${idIndex}_${chainTicker}_${ID_POSTFIX}`))
+  }
+
+  openAddCoinModal() {
+    this.props.dispatch(setModalNavigationPath(`${ADD_COIN}/${SELECT_COIN}`))
   }
 
   componentWillUnmount() {

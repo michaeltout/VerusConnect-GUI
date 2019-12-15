@@ -93,7 +93,7 @@ export const WalletTabsRender = function() {
         style={WalletStyles.secondaryTabBarLink}
         onClick={this.openAddCoinModal}>
         <i className="fas fa-plus" style={WalletStyles.navigationTabIcon} />
-        Add Coin
+        {"Add Coin"}
       </a>
     </li>
   ]
