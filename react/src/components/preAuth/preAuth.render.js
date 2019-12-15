@@ -20,8 +20,9 @@ export const PreAuthRender = function() {
   return (
     <div className="d-flex d-sm-flex d-md-flex align-items-center align-items-sm-center align-items-md-center contact-clean pre-auth-container">
       <div className="pre-auth-inner-container">
-        <div className="col-lg-4 col-xl-6 offset-lg-4 offset-xl-3 text-center pre-auth-header-container"><img src="assets/images/Verus-Logo.png" width="100px" height="100px"/>
-          <h1 className="pre-auth-logo-header">Verus Connect</h1>
+        <div className="col-lg-4 col-xl-6 offset-lg-4 offset-xl-3 text-center pre-auth-header-container">
+          <img src="assets/images/Verus-Logo.png" width="367px" height="103px"/>
+          {/*<h1 className="pre-auth-logo-header">Verus Connect</h1>*/}
         </div>
         {this.props.mainPathArray[1] ? COMPONENT_MAP[this.props.mainPathArray[1]] : null}
       </div>

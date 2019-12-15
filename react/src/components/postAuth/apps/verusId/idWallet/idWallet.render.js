@@ -1,19 +1,15 @@
 import React from "react";
-import PieChart from "react-minimal-pie-chart";
 import {
   CONFIRMED_BALANCE,
   PRIVATE_BALANCE,
-  DARK_CARD,
-  RESERVE_BALANCE,
   RECEIVE_COIN,
   CHAIN_INFO,
-  SEND,
   TRANSPARENT_BALANCE,
-  IMMATURE_DETAILS,
   SEND_COIN,
+  IMMATURE_BALANCE,
+  PRIVATE_ADDRS,
   API_SUCCESS,
-  API_FAILED,
-  IMMATURE_BALANCE
+  API_FAILED
 } from "../../../../../util/constants/componentConstants";
 import { VirtualizedTable } from '../../../../../containers/VirtualizedTable/VirtualizedTable'
 import { TX_TYPES } from '../../../../../util/txUtils/txRenderUtils'
@@ -23,7 +19,11 @@ import SearchBar from '../../../../../containers/SearchBar/SearchBar'
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import ArrowDownward from '@material-ui/icons/ArrowDownward'
 
-export const CoinWalletRender = function() {
+//TODO: Combine this with HOCs from coinWallet.js
+
+export const IdWalletRender = function() {
+  const { coin, activeIdentity, fiatCurrency } = this.props
+  const { identityTransactions, spendableBalance, txSearchTerm } = this.state
   return (
     <div
       className="col-md-8 col-lg-9"
@@ -35,23 +35,8 @@ export const CoinWalletRender = function() {
             <div className="card-body">
               <div className="d-flex flex-row justify-content-between">
                 <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
-                  {`Current ${this.props.coin} Balance`}
+                  {`${activeIdentity.identity.name}@ ${coin} Balance`}
                 </h6>
-                {/*<button
-                  className="btn btn-primary"
-                  type="button"
-                  name={RECEIVE_COIN}
-                  onClick={e => this.openModal(e, null)}
-                  style={{
-                    fontSize: 14,
-                    backgroundColor: "rgb(0,178,26)",
-                    borderWidth: 1,
-                    borderColor: "rgb(0,178,26)",
-                    fontWeight: "bold"
-                  }}
-                >
-                  {"Receive"}
-                </button>*/}
               </div>
               <div style={{ paddingTop: 5 }}>
                 <div className="d-lg-flex justify-content-lg-start">
@@ -62,7 +47,7 @@ export const CoinWalletRender = function() {
                       fontWeight: "bold"
                     }}
                   >
-                    {Number(this.state.spendableBalance.crypto.toFixed(8))}
+                    {Number(spendableBalance.crypto.toFixed(8))}
                   </h5>
                   <h5
                     className="d-lg-flex align-items-lg-end"
@@ -74,80 +59,30 @@ export const CoinWalletRender = function() {
                       fontWeight: "bold"
                     }}
                   >
-                    {this.props.coin}
+                    {coin}
                   </h5>
                 </div>
                 <div className="d-lg-flex justify-content-lg-start">
                   <h1 style={{ margin: 0, fontSize: 16, color: "rgb(0,0,0)" }}>
                     {`${
-                      this.state.spendableBalance.fiat == null
+                      spendableBalance.fiat == null
                         ? "-"
-                        : this.state.spendableBalance.fiat
-                    } ${this.props.fiatCurrency}`}
+                        : spendableBalance.fiat
+                    } ${fiatCurrency}`}
                   </h1>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        {this.state.spendableBalance.crypto !=
-          this.state.pendingBalance.crypto && (
-          <div style={{ padding: 0, flex: 1 }}>
-            <div className="card border rounded-0" style={{ height: "100%" }}>
-              <div className="card-body">
-                <div className="d-flex flex-row justify-content-between">
-                  <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
-                    {`Pending ${this.props.coin} Balance`}
-                  </h6>
-                </div>
-                <div style={{ paddingTop: 5 }}>
-                  <div className="d-lg-flex justify-content-lg-start">
-                    <h5
-                      style={{
-                        color: "rgb(0,0,0)",
-                        fontSize: 36,
-                        fontWeight: "bold"
-                      }}
-                    >
-                      {Number(this.state.pendingBalance.crypto.toFixed(8))}
-                    </h5>
-                    <h5
-                      className="d-lg-flex align-items-lg-end"
-                      style={{
-                        color: "rgb(0,0,0)",
-                        fontSize: 16,
-                        paddingBottom: 5,
-                        paddingLeft: 8,
-                        fontWeight: "bold"
-                      }}
-                    >
-                      {this.props.coin}
-                    </h5>
-                  </div>
-                  <div className="d-lg-flex justify-content-lg-start">
-                    <h1
-                      style={{ margin: 0, fontSize: 16, color: "rgb(0,0,0)" }}
-                    >
-                      {`${
-                        this.state.pendingBalance.fiat == null
-                          ? "-"
-                          : this.state.pendingBalance.fiat
-                      } ${this.props.fiatCurrency}`}
-                    </h1>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
         <div style={{ padding: 0, flex: 1 }}>
           <div className="card border rounded-0" style={{ height: "100%" }}>
             <div className="card-body">
               <div className="d-flex flex-row justify-content-between">
                 <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
-                  Blockchain Status
+                  {"ID Information"}
                 </h6>
-                <button
+                {/*<button
                   className="btn btn-primary border rounded"
                   type="button"
                   name={CHAIN_INFO}
@@ -161,8 +96,8 @@ export const CoinWalletRender = function() {
                     fontWeight: "bold"
                   }}
                 >
-                  {"Chain Info"}
-                </button>
+                  {"ID Info"}
+                </button>*/}
               </div>
               <div
                 className="d-lg-flex"
@@ -172,7 +107,7 @@ export const CoinWalletRender = function() {
                   alignItems: "center"
                 }}
               >
-                {WalletRenderPie.call(this)}
+                {/*{WalletRenderPie.call(this)}
                 <h1
                   style={{
                     margin: 0,
@@ -193,51 +128,11 @@ export const CoinWalletRender = function() {
                     />
                   )}
                   {this.state.walletLoadState.message}
-                </h1>
+                    </h1>*/}
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div style={{ position: "relative" }}>
-        {this.state.chevronVisible && (
-          <div
-            className="d-flex"
-            style={{
-              zIndex: 1,
-              position: "absolute",
-              height: "100%",
-              width: "10%",
-              right: 0,
-              marginRight: "-2px"
-            }}
-          >
-            <div
-              style={{
-                height: "100%",
-                width: "35%",
-                right: 0,
-                backgroundImage:
-                  "linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1))"
-              }}
-            />
-            <div
-              className="d-flex d-sm-flex d-lg-flex justify-content-center align-items-center justify-content-sm-center align-items-sm-center justify-content-lg-center align-items-lg-center"
-              style={{
-                height: "100%",
-                width: "65%",
-                right: 0,
-                backgroundColor: "#ffffff",
-                opacity: 1
-              }}
-            >
-              <i
-                className="fas fa-chevron-right"
-                style={{ fontSize: 34, paddingRight: 6 }}
-              />
-            </div>
-          </div>
-        )}
       </div>
       {WalletRenderBalances.call(this)}
       <div className="d-flex flex-fill flex-wrap" style={{ marginBottom: 16 }}>
@@ -251,8 +146,8 @@ export const CoinWalletRender = function() {
                 >
                   {"Transactions"}
                 </h6>
-                {this.props.transactions[this.props.coin] &&
-                  this.props.transactions[this.props.coin].length > 0 && (
+                {identityTransactions &&
+                  identityTransactions.length > 0 && (
                     <div
                       style={{
                         display: "flex",
@@ -273,16 +168,16 @@ export const CoinWalletRender = function() {
                         onSubmit={() =>
                           this.filterTransactions(
                             this.getDisplayTransactions(
-                              this.props.transactions[this.props.coin]
+                              identityTransactions
                             )
                           )
                         }
-                        value={this.state.txSearchTerm}
+                        value={txSearchTerm}
                       />
                     </div>
                   )}
-                {this.props.transactions[this.props.coin] &&
-                this.props.transactions[this.props.coin].length > 0 ? (
+                {identityTransactions &&
+                identityTransactions.length > 0 ? (
                   WalletRenderTransactions.call(this)
                 ) : (
                   <div style={{ marginTop: 20 }}>
@@ -294,8 +189,8 @@ export const CoinWalletRender = function() {
           </div>
         </div>
       </div>
-      {this.props.zOperations[this.props.coin] &&
-        this.props.zOperations[this.props.coin].length > 0 && (
+      {this.props.zOperations &&
+        this.props.zOperations.length > 0 && (
           <div
             className="d-flex flex-fill flex-wrap"
             style={{ marginBottom: 16 }}
@@ -321,28 +216,6 @@ export const CoinWalletRender = function() {
   );
 };
 
-export const WalletRenderPie = function() {
-  return (
-    <PieChart
-      data={[{ value: 1, key: 1, color: "rgb(78,115,223)" }]}
-      reveal={this.state.walletLoadState.percentage}
-      lineWidth={20}
-      animate
-      labelPosition={0}
-      label={() => Math.round(this.state.walletLoadState.percentage) + "%"}
-      labelStyle={{
-        fontSize: "25px"
-      }}
-      style={{
-        maxHeight: 60,
-        maxWidth: 60,
-        minWidth: 60,
-        maxWidth: 60
-      }}
-    />
-  );
-};
-
 export const WalletRenderBalances = function() {
   return (
     <div
@@ -360,17 +233,9 @@ export const WalletRenderBalances = function() {
           balanceAddrType,
           balance,
           balanceFiat,
-          fundable,
           unusable
         } = balanceObj;
-
-        /*const balanceTag = balanceChain === RESERVE_BALANCE
-        ? RESERVE_BALANCE
-        : balanceAddrType === PRIVATE_BALANCE
-        ? PRIVATE_BALANCE
-        : balanceType === CONFIRMED_BALANCE
-        ? TRANSPARENT_BALANCE
-        : balanceType*/
+        const { activeIdentity } = this.props
 
         const balanceTag =
           balanceAddrType === PRIVATE_BALANCE
@@ -380,7 +245,6 @@ export const WalletRenderBalances = function() {
             : balanceType === IMMATURE_BALANCE
             ? IMMATURE_BALANCE
             : null;
-
 
         return balanceTag == null ? null : (
           <div
@@ -394,59 +258,87 @@ export const WalletRenderBalances = function() {
               maxWidth: "100%",
               minWidth: 216,
               flex: 1
-            }}>
+            }}
+          >
             <div className="col-lg-12" style={{ padding: 0 }}>
-              <div
-                className="card border rounded-0">
+              <div className="card border rounded-0">
                 <div className="card-body">
                   <div
                     className="d-flex flex-row justify-content-between"
-                    style={{ paddingBottom: 3 }}>
+                    style={{ paddingBottom: 3 }}
+                  >
                     <h6
                       className="text-capitalize"
                       style={{
                         fontSize: 14,
-                        margin: 0,
-                      }}>
+                        margin: 0
+                      }}
+                    >
                       <i
-                        className={`far ${balanceTag === PRIVATE_BALANCE ? 'fa-eye-slash' : 'fa-eye'}`}
+                        className={`far ${
+                          balanceTag === PRIVATE_BALANCE
+                            ? "fa-eye-slash"
+                            : "fa-eye"
+                        }`}
                         style={{ paddingRight: 6, color: "rgb(133, 135, 150)" }}
                       />
-                      { balanceTag + " Balance" }
+                      {balanceTag + " Balance"}
                     </h6>
                   </div>
                   <div>
                     <div
                       className="d-lg-flex justify-content-lg-start"
-                      style={{ paddingBottom: 3, paddingTop: 3 }}>
+                      style={{ paddingBottom: 3, paddingTop: 3 }}
+                    >
                       <h1
                         style={{
                           margin: 0,
                           fontSize: 16,
                           color: "rgb(0, 0, 0)",
                           fontWeight: "bold"
-                        }}>
+                        }}
+                      >
                         {`${balance} ${this.props.coin}`}
                       </h1>
                     </div>
                     <div
                       className="d-lg-flex justify-content-lg-start"
-                      style={{ paddingBottom: 3, paddingTop: 3 }}>
+                      style={{ paddingBottom: 3, paddingTop: 3 }}
+                    >
                       <h1
                         style={{
                           margin: 0,
                           fontSize: 14
-                        }}>
+                        }}
+                      >
                         {`${balanceFiat} ${this.props.fiatCurrency}`}
                       </h1>
                     </div>
                     <div
-                      style={{ paddingTop: 6, display: "flex", justifyContent: "space-between", maxWidth: 150 }}>
+                      style={{
+                        paddingTop: 6,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        maxWidth: 150
+                      }}
+                    >
                       <button
                         className="btn btn-primary"
                         type="button"
-                        onClick={ (e) => this.openModal(null, {balanceTag, fund: false, balance, isMessage: false}, SEND_COIN) }
-                        disabled={ balance === 0 || balance === '-' || !this.props.addresses[this.props.coin] }
+                        onClick={e =>
+                          this.openModal(
+                            null,
+                            {
+                              identity: activeIdentity,
+                              balanceTag,
+                              fund: false,
+                              balance,
+                              isMessage: false
+                            },
+                            SEND_COIN
+                          )
+                        }
+                        disabled={balance === 0 || balance === "-"}
                         style={{
                           fontSize: 10,
                           backgroundColor: "rgb(236,43,43)",
@@ -454,14 +346,21 @@ export const WalletRenderBalances = function() {
                           borderColor: "rgb(236,43,43)",
                           fontWeight: "bold",
                           visibility: unusable ? "hidden" : "unset"
-                        }}>
-                        <ArrowUpward name={ SEND_COIN }/>
+                        }}
+                      >
+                        <ArrowUpward name={SEND_COIN} />
                       </button>
                       <button
                         className="btn btn-primary"
                         type="button"
-                        name={ RECEIVE_COIN }
-                        onClick={e => this.openModal(null, {balanceTag}, RECEIVE_COIN)}
+                        name={RECEIVE_COIN}
+                        onClick={e =>
+                          this.openModal(
+                            null,
+                            { identity: activeIdentity, balanceTag },
+                            RECEIVE_COIN
+                          )
+                        }
                         style={{
                           fontSize: 10,
                           backgroundColor: "rgb(0,178,26)",
@@ -473,42 +372,6 @@ export const WalletRenderBalances = function() {
                       >
                         <ArrowDownward />
                       </button>
-                      {/*unusable && (
-                        <button
-                          className="btn btn-primary"
-                          type="button"
-                          name={ IMMATURE_DETAILS }
-                          onClick={ (e) => this.openModal(e, null) }
-                          style={{
-                            fontSize: 14,
-                            backgroundColor: "rgb(98,98,98)",
-                            borderWidth: 1,
-                            borderColor: "rgb(98,98,98)",
-                            paddingRight: 20,
-                            paddingLeft: 20,
-                            fontWeight: "bold"
-                          }}>
-                          {"Details"}
-                        </button>
-                      )*/}
-                      {/*fundable && (
-                        <button
-                          className="btn btn-primary"
-                          type="button"
-                          name={ SEND_COIN }
-                          onClick={ (e) => this.openModal(e, {balanceTag, fund: true, isMessage: false, balance}) }
-                          style={{
-                            fontSize: 14,
-                            backgroundColor: "rgb(78,115,223)",
-                            borderWidth: 1,
-                            borderColor: "rgb(78,115,223)",
-                            paddingRight: 20,
-                            paddingLeft: 20,
-                            fontWeight: "bold"
-                          }}>
-                          {"Fund"}
-                        </button>
-                        )*/}
                     </div>
                   </div>
                 </div>
@@ -522,14 +385,16 @@ export const WalletRenderBalances = function() {
 };
 
 export const WalletRenderTransactions = function() {  
+  const { displayTransactions } = this.state
+
   return (
-    <div style={{ height: ((50 * this.state.displayTransactions.length) + 50), maxHeight: 500, width: '100%' }}>
+    <div style={{ height: ((50 * displayTransactions.length) + 50), maxHeight: 500, width: '100%' }}>
       <VirtualizedTable
-        rowCount={this.state.displayTransactions.length}
+        rowCount={displayTransactions.length}
         sortBy="confirmations"
         sortDirection={ SortDirection.ASC }
         onRowClick={ ({rowData}) => this.openTxInfo(rowData) }
-        rowGetter={({ index }) => this.state.displayTransactions[index]}
+        rowGetter={({ index }) => displayTransactions[index]}
         columns={[
           {
             width: 150,
@@ -590,7 +455,7 @@ export const WalletRenderTransactions = function() {
 }
 
 export const WalletRenderOperations = function() {
-  const zOperations = this.props.zOperations[this.props.coin]
+  const zOperations = this.props.zOperations
   const zOperationComps = zOperations.map((operation, index) => {
     return {
       status: operation.status,

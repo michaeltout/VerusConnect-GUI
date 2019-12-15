@@ -50,14 +50,7 @@ export const initUsers = async () => {
  * @param {String} password The password to encrypt the seed
  * @param {String} seed The litemode seed for the user
  */
-export const setUserAuth = async (loadedUsers, userId, password, seed) => {
-  //DELET
-  console.log("SETTINGS USER AUTH")
-  console.log(loadedUsers)
-  console.log(userId)
-  console.log(password)
-  console.log(seed)
-  
+export const setUserAuth = async (loadedUsers, userId, password, seed) => {  
   const updates = { pinFile: await encryptKey(password, seed) }
 
   if (!loadedUsers[userId]) throw new Error(`User with ID ${userId} not found!`)

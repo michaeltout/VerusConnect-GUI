@@ -6,7 +6,7 @@
 import { 
   SET_MODAL_PARAMS
 } from '../util/constants/storeType'
-import { SEND_COIN, RECEIVE_COIN } from '../util/constants/componentConstants'
+import { SEND_COIN, RECEIVE_COIN, CREATE_IDENTITY } from '../util/constants/componentConstants'
 
 export const modal = (state = {
   [SEND_COIN]: {
@@ -17,6 +17,11 @@ export const modal = (state = {
   },
   [RECEIVE_COIN]: {
     chainTicker: null,
+  },
+  [CREATE_IDENTITY]: {
+    chainTicker: null,
+    nameReservation: null,
+    modalType: null
   }
 }, action) => {
   switch (action.type) {

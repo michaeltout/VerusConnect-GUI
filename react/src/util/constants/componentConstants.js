@@ -38,6 +38,12 @@ export const API_TX_PREFLIGHT = 'tx_preflight'
 export const API_SENDTX = 'sendtx'
 export const API_REGISTER_ID_NAME = 'register_id_name'
 export const API_REGISTER_ID = 'register_id'
+export const API_RECOVER_ID = 'recover_id'
+export const API_REVOKE_ID = 'revoke_id'
+export const API_RECOVER_ID_PREFLIGHT = 'recover_id_preflight'
+export const API_REGISTER_ID_NAME_PREFLIGHT = 'register_id_name_preflight'
+export const API_REGISTER_ID_PREFLIGHT = 'register_id_preflight'
+export const API_DELETE_NAME_COMMITMENT = 'delete_name_commitment'
 
 // Non-blockchain API call paths
 export const LOAD_USERS = 'users/load'
@@ -134,6 +140,7 @@ export const CHAIN_INFO = 'chain_info'
 export const PBAAS_CHAIN_INFO = 'pbaas_chain_info'
 export const RECEIVE_COIN = 'receive_coin'
 export const SEND_COIN = 'send_coin'
+export const CREATE_IDENTITY = 'create_identity'
 export const TX_INFO = 'tx_info'
 export const OPERATION_INFO = 'operation_info'
 export const ID_INFO = 'id_info'
@@ -262,6 +269,7 @@ export const ERROR_INVALID_AMOUNT = 'Invalid send amount'
 export const ERROR_INVALID_FROM = 'Invalid from address'
 export const ERROR_AMOUNT_MORE_THAN_BALANCE = 'Amount is more than available balance.'
 export const ERROR_Z_AND_NO_FROM = 'Sending a Z transaction requires a from address.'
+export const ERROR_Z_NOT_SUPPORTED = 'Private transactions are not supported in this mode.'
 
 // Send coin preflight obj keys
 export const TXDATA_TO = 'to'
@@ -278,5 +286,9 @@ export const TXDATA_TXID = 'txid'
 
 // Send command types
 export const Z_SEND = 'z_sendmany'
+
+// Create Identity form errors
+export const ERROR_NAME_REQUIRED = 'A name is required'
+export const ERROR_INVALID_Z_ADDR = 'Invalid private address'
 
 

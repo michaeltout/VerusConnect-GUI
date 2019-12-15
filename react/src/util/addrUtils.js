@@ -13,7 +13,7 @@ const networks = require('agama-wallet-lib/src/bitcoinjs-networks');
  */
 export const checkAddrValidity = (address, mode, chainTicker) => {
   //Validate IDs
-  if ((chainTicker === 'VRSC' || chainTicker === 'VRSCTEST') && address[address.length - 1] === '@') {
+  if ((chainTicker === 'VRSC' || chainTicker === 'VRSCTEST') && (address[address.length - 1] === '@' || address[0] === 'i')) {
     return true
   } else if (mode === ELECTRUM || mode === NATIVE) {
     let addrCheck = addressVersionCheck(networks[chainTicker.toLowerCase()] || networks.kmd, address)

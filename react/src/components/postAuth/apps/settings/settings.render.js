@@ -41,9 +41,9 @@ export const SettingsRender = function() {
           disabled = { !loading && displayConfig == config && displayUser == activeUser }
           style={{
             fontSize: 14,
-            backgroundColor: "rgb(78,115,223)",
+            backgroundColor: "rgb(0,178,26)",
             borderWidth: 1,
-            borderColor: "rgb(78,115,223)",
+            borderColor: "rgb(0,178,26)",
             paddingRight: 20,
             paddingLeft: 20,
             marginBottom: 16

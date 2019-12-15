@@ -31,24 +31,45 @@ import Store from '../../../store'
 class ReceiveCoin extends React.Component {
   constructor(props) {
     super(props);
+    this.isIdentity = props.modalProps.identity != null
+
+    if (this.isIdentity) {
+      this.idZAddrs = props.modalProps.identity.addresses[PRIVATE_ADDRS]
+      this.idIAddrs = props.modalProps.identity.addresses[PUBLIC_ADDRS]
+      this.idAddrs = {
+        [PUBLIC_ADDRS]: this.idIAddrs,
+        [PRIVATE_ADDRS]: this.idZAddrs
+      }
+    }
 
     props.setModalHeader("Receive Coin")
     this.supportedTypes = {
-      [PUBLIC_ADDRS]: !this.props.activeCoin.tags.includes(Z_ONLY),
-      [PRIVATE_ADDRS]: this.props.activeCoin.mode === NATIVE && this.props.activeCoin.tags.includes(IS_ZCASH)
-    }
+      [PUBLIC_ADDRS]:
+        this.isIdentity || !props.activeCoin.tags.includes(Z_ONLY),
+      [PRIVATE_ADDRS]:
+        (this.isIdentity && this.idZAddrs.length > 0) ||
+        (!this.isIdentity && props.activeCoin.mode === NATIVE &&
+          props.activeCoin.tags.includes(IS_ZCASH))
+    };
 
     this.state = {
-      selectedMode: props.modalProps.balanceTag === PRIVATE_BALANCE ? PRIVATE_ADDRS : PUBLIC_ADDRS,
-      addresses: this.props.addresses ? this.props.addresses : {
-        [PUBLIC_ADDRS]: [],
-        [PRIVATE_ADDRS]: []
-      },
-      addressSearchTerm: '',
+      selectedMode:
+        props.modalProps.balanceTag === PRIVATE_BALANCE
+          ? PRIVATE_ADDRS
+          : PUBLIC_ADDRS,
+      addresses: this.isIdentity
+        ? this.idAddrs
+        : props.addresses
+        ? props.addresses
+        : {
+            [PUBLIC_ADDRS]: [],
+            [PRIVATE_ADDRS]: []
+          },
+      addressSearchTerm: "",
       balanceCurr: props.activeCoin.id,
       currencyArr: [props.activeCoin.id],
       qrAddress: null
-    }
+    };
 
     this.setAddrMode = this.setAddrMode.bind(this)
     this.filterAddresses = this.filterAddresses.bind(this)
@@ -65,30 +86,35 @@ class ReceiveCoin extends React.Component {
   }
 
   async componentDidMount() {
-    const stateSnapshot = Store.getState()
-    const { supportedTypes, props, state } = this
-    const { dispatch, activeCoin, config } = props
-    const { addresses } = state
-    const { mode, id } = activeCoin
-
-    const updateResult = await conditionallyUpdateWallet(stateSnapshot, dispatch, mode, id, API_GET_ADDRESSES)
-
-    if ((updateResult === API_SUCCESS || updateResult === API_ABORTED) &&
-      supportedTypes[PRIVATE_ADDRS] && 
-      config.coin.native.includePrivateAddrs[id] && 
-      addresses[PUBLIC_ADDRS].length > 0 &&
-      addresses[PRIVATE_ADDRS].length === 0) {
-      this.getNewAddress(PRIVATE_ADDRS, true)
+    if (!this.isIdentity) {
+      const stateSnapshot = Store.getState()
+      const { supportedTypes, props, state } = this
+      const { dispatch, activeCoin, config } = props
+      const { addresses } = state
+      const { mode, id } = activeCoin
+  
+      const updateResult = await conditionallyUpdateWallet(stateSnapshot, dispatch, mode, id, API_GET_ADDRESSES)
+  
+      if ((updateResult === API_SUCCESS || updateResult === API_ABORTED) &&
+        supportedTypes[PRIVATE_ADDRS] && 
+        config.coin.native.includePrivateAddrs[id] && 
+        addresses[PUBLIC_ADDRS].length > 0 &&
+        addresses[PRIVATE_ADDRS].length === 0) {
+        this.getNewAddress(PRIVATE_ADDRS, true)
+      }
     }
   }
 
   componentWillReceiveProps(nextProps) {
     this.getAddrCurrencies()
-    if (nextProps.addresses != this.props.addresses) {
-      if (this.state.addressSearchTerm.length > 0) {
-        this.filterAddresses(nextProps.addresses)
-      } else {
-        this.setState({ addresses: nextProps.addresses })
+
+    if (!this.isIdentity) {
+      if (nextProps.addresses != this.props.addresses) {
+        if (this.state.addressSearchTerm.length > 0) {
+          this.filterAddresses(nextProps.addresses)
+        } else {
+          this.setState({ addresses: nextProps.addresses })
+        }
       }
     }
   }
@@ -155,7 +181,7 @@ class ReceiveCoin extends React.Component {
     if (keyType === COPY_PRIVKEY) {
       getPrivkey(mode, id, address)
       .then((res) => {
-        if (res.msg === 'error') throw new Error(res.msg)
+        if (res.msg === 'error') throw new Error(res.result)
         else {
           this.props.dispatch(newSnackbar(SUCCESS_SNACK, "Private key copied, keep it safe.", MID_LENGTH_ALERT))
           navigator.clipboard.writeText(res.result)
@@ -168,7 +194,7 @@ class ReceiveCoin extends React.Component {
     } else if (keyType === COPY_PUBKEY) {
       getPubkey(mode, id, address)
       .then((res) => {
-        if (res.msg === 'error') throw new Error(res.msg)
+        if (res.msg === 'error') throw new Error(res.result)
         else {
           this.props.dispatch(newSnackbar(SUCCESS_SNACK, "Public key copied!", MID_LENGTH_ALERT))
           navigator.clipboard.writeText(res.result)
@@ -185,7 +211,7 @@ class ReceiveCoin extends React.Component {
     let addressOptions = [GENERATE_QR]
 
     if (this.props.activeCoin.mode === NATIVE) {
-      addressOptions.push(COPY_PRIVKEY)
+      if (!this.isIdentity) addressOptions.push(COPY_PRIVKEY)
 
       if (address[0] !== 'z') addressOptions.push(COPY_PUBKEY)
     } 

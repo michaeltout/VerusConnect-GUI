@@ -23,10 +23,10 @@ export const createExpireTimeout = (timeout, chainTicker, updateId, onComplete) 
   if (timeout !== ALWAYS_ACTIVATED && timeout !== NEVER_ACTIVATED) {
     const timeoutId = setTimeout(() => {
       Store.dispatch(expireData(chainTicker, updateId))
-      console.log(`${updateId} expired for ${chainTicker}`)
+      //console.log(`${updateId} expired for ${chainTicker}`)
       if (onComplete != null) onComplete(Store.getState(), Store.dispatch, chainTicker) 
     }, timeout);
-    console.log(`${updateId} expire timeout set to ${timeout} with id ${timeoutId}`)
+    //console.log(`${updateId} expire timeout set to ${timeout} with id ${timeoutId}`)
     
     Store.dispatch(setExpireTimeoutId(chainTicker, updateId, timeoutId))
   } else {
@@ -44,12 +44,12 @@ export const createExpireTimeout = (timeout, chainTicker, updateId, onComplete) 
  */
 export const createUpdateExpiredInterval = (interval, mode, chainTicker, updateId, onComplete) => {
   if (interval !== ALWAYS_ACTIVATED && interval !== NEVER_ACTIVATED) {
-    console.log(`${updateId} update expired interval set to ${interval}`)
+    //console.log(`${updateId} update expired interval set to ${interval}`)
     const intervalAction = async () => {
       const state = Store.getState()
     
       const updateStatus = await conditionallyUpdateWallet(state, Store.dispatch, mode, chainTicker, updateId)
-      console.log(`Call to ${updateId} for ${chainTicker} in ${mode} mode completed with status: ${updateStatus}`)
+      //console.log(`Call to ${updateId} for ${chainTicker} in ${mode} mode completed with status: ${updateStatus}`)
 
       if (onComplete != null) onComplete(state, Store.dispatch, chainTicker) 
     }

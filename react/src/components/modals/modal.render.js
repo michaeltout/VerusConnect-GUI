@@ -12,7 +12,8 @@ import {
   SEND_COIN,
   TX_INFO,
   OPERATION_INFO,
-  IMMATURE_DETAILS
+  IMMATURE_DETAILS,
+  CREATE_IDENTITY
 } from '../../util/constants/componentConstants';
 import AddCoin from './addCoin/addCoin'
 import ChainInfo from './chainInfo/chainInfo'
@@ -20,6 +21,7 @@ import IdInfo from './idInfo/idInfo'
 import PbaasChainInfo from './pbaasChainInfo/pbaasChainInfo'
 import ReceiveCoin from './receiveCoin/receiveCoin'
 import SendCoin from './sendCoin/sendCoin'
+import CreateIdentity from './createIdentity/createIdentity'
 import TxInfo from './txInfo/txInfo'
 import OperationInfo from './operationInfo/operationInfo'
 import ImmatureDetails from './immatureDetails/immatureDetails';
@@ -59,6 +61,11 @@ export const ModalRender = function() {
     ),
     [SEND_COIN]: (
       <SendCoin
+        {...COMPONENT_PROPS}
+      />
+    ),
+    [CREATE_IDENTITY]: (
+      <CreateIdentity
         {...COMPONENT_PROPS}
       />
     ),

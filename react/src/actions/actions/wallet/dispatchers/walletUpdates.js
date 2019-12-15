@@ -73,7 +73,7 @@ export const udpateWalletData = async (state, dispatch, mode, chainTicker, updat
       }
 
       if (state.updates.updateIntervals[chainTicker][updateId].expire_id) {
-        console.log(`Going to clear expire timeout for ${updateId}: ${state.updates.updateIntervals[chainTicker][updateId].expire_id}`)
+        //console.log(`Going to clear expire timeout for ${updateId}: ${state.updates.updateIntervals[chainTicker][updateId].expire_id}`)
         clearTimeout(state.updates.updateIntervals[chainTicker][updateId].expire_id)
       }
       createExpireTimeout(state.updates.updateIntervals[chainTicker][updateId].expire_timeout, chainTicker, updateId, onExpire)
@@ -109,6 +109,8 @@ export const conditionallyUpdateWallet = async (state, dispatch, mode, chainTick
   if (updateInfo && updateInfo.needs_update && !updateInfo.busy) {
     // -1 denotes a failed restriction test, 0 denotes empty, and 1 denotes a pass
     let restrictionResults = []
+    
+    //TODO: Fix testspass to be an OR rather than and AND
     
     if (updateInfo.location_restrictions && updateInfo.location_restrictions.length > 0) {
       let testPassed = updateInfo.location_restrictions.every((locationRestriction) => {

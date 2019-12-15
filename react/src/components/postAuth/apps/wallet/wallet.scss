@@ -5,6 +5,13 @@
     border: solid;
     border-color: rgb(78,115,223);
   }
+
+  &.green {
+    background-color: rgb(0,178,26);
+    color: rgb(255,255,255);
+    border: solid;
+    border-color: rgb(0,178,26);
+  }
   
   &.native {
     background-color: rgb(255,255,255);

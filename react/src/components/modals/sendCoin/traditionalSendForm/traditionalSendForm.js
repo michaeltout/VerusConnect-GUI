@@ -28,15 +28,18 @@ import {
   TXDATA_TXID,
   CONFIRM_DATA,
   Z_SEND,
-  API_SUCCESS
+  API_SUCCESS,
+  ERROR_Z_NOT_SUPPORTED
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar } from '../../../../actions/actionCreators';
 
 class TraditionalSendForm extends React.Component {
   constructor(props) {
     super(props);
-
-    const { addresses, balanceTag, chainTicker, balance, activeCoin } = props
+    this.isIdentity = props.identity != null
+    
+    const { balanceTag, chainTicker, balance, activeCoin } = props
+    const addresses = this.isIdentity ? props.identity.addresses : props.addresses[chainTicker]
     const { mode } = activeCoin
     const transparentFundsObj = {
       label: `${TRANSPARENT_FUNDS} (${balance} ${chainTicker})`,
@@ -45,7 +48,7 @@ class TraditionalSendForm extends React.Component {
     }
 
     const initAddresslist = () => {
-      let addressList = addresses[chainTicker][balanceTag === PRIVATE_BALANCE ? PRIVATE_ADDRS : PUBLIC_ADDRS].map(addressObj => {
+      let addressList = addresses[balanceTag === PRIVATE_BALANCE ? PRIVATE_ADDRS : PUBLIC_ADDRS].map(addressObj => {
         return {
           label: `${addressObj.address} (${addressObj.balances.native} ${chainTicker})`,
           address: addressObj.address,
@@ -53,7 +56,7 @@ class TraditionalSendForm extends React.Component {
         }
       })
 
-      if (mode === NATIVE && balanceTag !== PRIVATE_BALANCE) {
+      if (mode === NATIVE && !this.isIdentity && balanceTag !== PRIVATE_BALANCE) {
         addressList.unshift(transparentFundsObj)
       }
 
@@ -63,10 +66,13 @@ class TraditionalSendForm extends React.Component {
     const addressListFormatted = initAddresslist()
     
     this.state = {
-      sendFrom: mode === NATIVE && balanceTag !== PRIVATE_BALANCE ? transparentFundsObj : addressListFormatted[0],
-      sendTo: '',
-      amount: '',
-      memo: '',
+      sendFrom:
+        mode === NATIVE && !this.isIdentity && balanceTag !== PRIVATE_BALANCE
+          ? transparentFundsObj
+          : addressListFormatted[0],
+      sendTo: "",
+      amount: "",
+      memo: "",
       addressList: addressListFormatted,
       formErrors: {
         amount: [],
@@ -74,7 +80,7 @@ class TraditionalSendForm extends React.Component {
         sendTo: []
       },
       txDataDisplay: {}
-    }
+    };
 
     this.updateFormData = this.updateFormData.bind(this)
     this.updateSendFrom = this.updateSendFrom.bind(this)
@@ -106,10 +112,6 @@ class TraditionalSendForm extends React.Component {
   generateTxDataDisplay() {
     const { txData, formData, formStep } = this.props
 
-    //DELET
-    console.log("TX DATA")
-    console.log(txData)
-
     let txDataSchema = {
       ["Status:"]:
         formStep === CONFIRM_DATA
@@ -139,9 +141,6 @@ class TraditionalSendForm extends React.Component {
       this.generateWarningSnack(txData.warnings)
     }
 
-    //DELET
-    console.log(txDataSchema)
-
     //TODO: TEST ETH AND NATIVE
 
     this.setState({ txDataDisplay: txDataSchema })
@@ -167,8 +166,10 @@ class TraditionalSendForm extends React.Component {
       formErrors.sendTo.push(ERROR_INVALID_ADDR)
     }  
     
-    if ((sendTo[0] === 'z' && (sendTo.length === 95 || sendTo.length === 78)) && !sendFrom.address) {
-      formErrors.sendFrom.push(ERROR_Z_AND_NO_FROM)
+    if (sendTo[0] === 'z' && (sendTo.length === 95 || sendTo.length === 78)) {
+      if (!sendFrom.address) formErrors.sendFrom.push(ERROR_Z_AND_NO_FROM)
+
+      if (mode !== NATIVE) formErrors.sendFrom.push(ERROR_Z_NOT_SUPPORTED)
     }
 
     this.setState({ formErrors }, () => {

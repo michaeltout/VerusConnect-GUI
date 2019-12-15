@@ -1,5 +1,4 @@
 import React from 'react';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { PUBLIC_ADDRS, PRIVATE_ADDRS, NATIVE, PRIVATE_BALANCE } from '../../../util/constants/componentConstants'
 import SearchBar from '../../../containers/SearchBar/SearchBar'
 import TextField from "@material-ui/core/TextField";
@@ -78,7 +77,7 @@ export const ReceiveCoinMainRender = function() {
           </button>
         )}
       </div>
-      {activeCoin.mode === NATIVE && (
+      {activeCoin.mode === NATIVE && !this.isIdentity && (
         <div
           className="d-flex justify-content-between"
           style={{ paddingTop: 49 }}
@@ -102,7 +101,7 @@ export const ReceiveCoinMainRender = function() {
       <div style={{ paddingTop: 10 }}>
         {ReceiveAddressTableRender.call(this)}
       </div>
-      {activeCoin.mode === NATIVE && (
+      {activeCoin.mode === NATIVE && !this.isIdentity && (
         <div style={{ paddingTop: 50 }}>
           <div style={{ width: "max-content" }}>
             <button

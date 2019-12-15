@@ -89,7 +89,7 @@ class CoinWallet extends React.Component {
         amount: Number(tx.amount),
         address: tx.address,
         confirmations: Number(tx.confirmations),
-        time: Number(tx.blocktime),
+        time: Number(tx.blocktime != null ? tx.blocktime : tx.timestamp),
         affectedBalance: renderAffectedBalance(tx),
         txIndex: index
       };
@@ -102,12 +102,18 @@ class CoinWallet extends React.Component {
 
   filterTransactions(transactions) {
     const { txSearchTerm } = this.state
+    const { coin } = this.props
+    const txList = this.props.transactions[coin] || []
     const term = txSearchTerm.toLowerCase()
     
     // TODO: Make this work for balance types and normal transaction types as they are displayed as well
     const newTransactions = transactions.filter((tx) => {
+      const fullTx = txList[tx.txIndex]
+
       if (tx.type != null && tx.type.includes(term) || term.includes(tx.type)) return true
       if (tx.amount != null && tx.amount.toString().includes(term)) return true
+      if (fullTx.txid != null && fullTx.txid.includes(term)) return true
+      if (fullTx.blockhash != null && fullTx.blockhash.includes(term)) return true
       if (tx.confirmations != null && tx.confirmations.toString().includes(term)) return true
       if (tx.address != null && tx.address.toLowerCase().includes(term)) return true
     })
@@ -138,7 +144,7 @@ class CoinWallet extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.transactions[nextProps.coin] != this.props.transactions[this.props.coin]) {
-      if (this.state.txSearchTerm.length > 0) {
+      if (this.state.txSearchTerm.length === 0) {
         this.setState({ displayTransactions: this.getDisplayTransactions(nextProps.transactions[nextProps.coin] || []) })
       } else {
         this.filterTransactions(this.getDisplayTransactions(nextProps.transactions[nextProps.coin] || []))

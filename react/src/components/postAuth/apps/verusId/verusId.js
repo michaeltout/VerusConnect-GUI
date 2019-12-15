@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { DASHBOARD, CHAIN_POSTFIX, ADD_COIN, SELECT_COIN, IS_VERUS } from '../../../../util/constants/componentConstants'
+import { DASHBOARD, CHAIN_POSTFIX, ADD_COIN, SELECT_COIN, IS_VERUS, ID_POSTFIX } from '../../../../util/constants/componentConstants'
 import Dashboard from './dashboard/dashboard'
-//import CoinWallet from './coinWallet/coinWallet'
+import IdWallet from './idWallet/idWallet'
 import {
   IdCardRender,
   IdTabsRender
@@ -17,10 +17,17 @@ const COMPONENT_MAP = {
 class VerusId extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      activeId: {
+        chainTicker: null,
+        idIndex: null
+      }
+    }
     
     this.setCards = this.setCards.bind(this)
     this.setTabs = this.setTabs.bind(this)
-    this.openCoin = this.openCoin.bind(this)
+    this.openId = this.openId.bind(this)
     this.openDashboard = this.openDashboard.bind(this)
     this.setTabs()
   }
@@ -31,8 +38,12 @@ class VerusId extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (Object.keys(nextProps.activatedCoins).length < Object.keys(this.props.activatedCoins).length) {
-      this.setCards(nextProps.activatedCoins)
+    if (
+      Object.keys(nextProps.activatedCoins).length <
+        Object.keys(this.props.activatedCoins).length ||
+      nextProps.mainPathArray != this.props.mainPathArray
+    ) {
+      this.setCards(nextProps.activatedCoins);
     }
   }
   
@@ -47,25 +58,45 @@ class VerusId extends React.Component {
    * @param {Object} activatedCoins 
    */
   setCards(activatedCoins) {
-    const verusProtocolCoins = Object.values(activatedCoins).filter((coinObj) => {
-      return coinObj.tags.includes(IS_VERUS)
-    })
+    const walletApp = this.props.mainPathArray[3] ? this.props.mainPathArray[3] : null
+    
+    const updateCards = () => {
+      const verusProtocolCoins = Object.values(activatedCoins).filter((coinObj) => {
+        return coinObj.tags.includes(IS_VERUS)
+      })
+  
+      this.props.setCards(verusProtocolCoins.map((coinObj) => {
+        return IdCardRender.call(this, coinObj)
+      }))
+    }
 
-    this.props.setCards(verusProtocolCoins.map((coinObj) => {
-      return IdCardRender.call(this, coinObj)
-    }))
+    if (walletApp) {
+      const pathDestination = walletApp.split('_')
+      if (pathDestination.length > 2 && pathDestination[2] === ID_POSTFIX) {
+        this.setState({ activeId: {chainTicker: pathDestination[1], idIndex: pathDestination[0]}}, updateCards)
+      } else {
+        this.setState({ activeId: {chainTicker: null, idIndex: null}}, updateCards)
+      }  
+    } else updateCards()
   }
 
   openAddCoinModal() {
     this.props.dispatch(setModalNavigationPath(`${ADD_COIN}/${SELECT_COIN}`))
   }
 
-  openCoin(wallet) {
-    this.props.dispatch(setMainNavigationPath(`${getPathParent(this.props.mainPathArray)}/${wallet}_${CHAIN_POSTFIX}`))
+  openId(chainTicker, idIndex) {
+    this.props.dispatch(setMainNavigationPath(`${getPathParent(this.props.mainPathArray)}/${idIndex}_${chainTicker}_${ID_POSTFIX}`))
   }
 
   openDashboard() {
-    this.props.dispatch(setMainNavigationPath(`${getPathParent(this.props.mainPathArray)}/${DASHBOARD}`))
+    this.setState({
+      activeId: {
+        chainTicker: null,
+        idIndex: null
+      }
+    }, () => {
+      this.props.dispatch(setMainNavigationPath(`${getPathParent(this.props.mainPathArray)}/${DASHBOARD}`))
+    })
   }
 
   setTabs() {
@@ -73,15 +104,17 @@ class VerusId extends React.Component {
   }
 
   render() {
+    const { activeId } = this.state
     const walletApp = this.props.mainPathArray[3] ? this.props.mainPathArray[3] : null
 
     if (walletApp) {
       if (COMPONENT_MAP[walletApp]) return COMPONENT_MAP[walletApp]
       else {
-        const pathDestination = walletApp.split('_')
-
-        //if (pathDestination.length > 1 && pathDestination[1] === CHAIN_POSTFIX) return <CoinWallet coin={pathDestination[0]}/>
-        return <div />
+        if (activeId.idIndex != null && activeId.chainTicker != null) {
+          return (
+            <IdWallet idIndex={activeId.idIndex} coin={activeId.chainTicker} />
+          );
+        }
       }
     }
 

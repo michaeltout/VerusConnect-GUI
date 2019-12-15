@@ -31,7 +31,7 @@ export const AppsRender = function() {
               <li className={`nav-item ${currentApp === WALLET ? 'active-nav-tab-container' : 'nav-tab-container'}`}>
                 <a
                   className={`nav-link text-center ${currentApp === WALLET ? 'active-nav-tab' : ''}`}
-                  onClick={() => this.selectApp(WALLET)}
+                  onClick={currentApp === WALLET ? () => { return 0 } : () => this.selectApp(WALLET)}
                   style={AppsStyles.mainNavigationTab}>
                   <i className="fas fa-wallet" style={AppsStyles.navigationTabIcon} />
                   {"Wallet"}
@@ -40,7 +40,7 @@ export const AppsRender = function() {
               <li className={`nav-item ${currentApp === VERUSID ? 'active-nav-tab-container' : 'nav-tab-container'}`}>
                 <a
                   className={`nav-link text-center ${currentApp === VERUSID ? 'active-nav-tab' : ''}`}
-                  onClick={() => this.selectApp(VERUSID)}
+                  onClick={currentApp === VERUSID ? () => { return 0 } : () => this.selectApp(VERUSID)}
                   style={AppsStyles.mainNavigationTab}>
                   <i className="fas fa-fingerprint" style={AppsStyles.navigationTabIcon} />
                   {"Verus Identities"}
@@ -49,7 +49,7 @@ export const AppsRender = function() {
               <li className={`nav-item ${currentApp === MINING ? 'active-nav-tab-container' : 'nav-tab-container'}`}>
                 <a
                   className={`nav-link text-center ${currentApp === MINING ? 'active-nav-tab' : ''}`}
-                  onClick={() => this.selectApp(MINING)}
+                  onClick={currentApp === MINING ? () => { return 0 } : () => this.selectApp(MINING)}
                   style={AppsStyles.mainNavigationTab}>
                   <i
                     className="fas fa-tachometer-alt"
