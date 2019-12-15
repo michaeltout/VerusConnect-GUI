@@ -6,7 +6,7 @@
 # sudo apt-get install imagemagick
 
 # absolute path to image folder
-# e.g. /home/user/Agama/gui/EasyDEX-GUI/react/src/assets/images/cryptologo/
+# e.g. /home/user/Agama/gui/VerusConnect-GUI/react/src/assets/images/cryptologo/
 FOLDER=""
 
 # max height
