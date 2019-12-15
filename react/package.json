@@ -19,7 +19,7 @@
     "update-agamalib": "rm -rf node_modules/agama-wallet-lib/ && yarn install",
     "update-spvcoins": "rm -rf node_modules/coins/ && yarn install"
   },
-  "repository": "https://github.com/VerusCoin/EasyDEX-GUI",
+  "repository": "https://github.com/VerusCoin/VerusConnect-GUI",
   "homepage": "https://veruscoin.io",
   "keywords": [
     "agama",
