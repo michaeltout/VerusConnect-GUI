@@ -19,7 +19,7 @@ export const getCoinTitle = (coin) => {
       titleBG = true;
       transparentBG = true;
       coinlogo = 'WLC21';
-      coinname = 'WirelessCoin 21';
+      coinname = 'WirelessCoin';
       break;
     case 'WLC':
       titleBG = true;
