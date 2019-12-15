@@ -34,7 +34,7 @@ const coins = {
     //SHARK: 'SHARK',
     MESH: 'SpaceMesh',
     SUPERNET: 'SUPERNET',
-    WLC: 'WIRELESS',
+    //WLC: 'WIRELESS',
     WLC21: 'WirelessCoin',
     AXO: 'AXO',
     ETOMIC: 'ETOMIC',
