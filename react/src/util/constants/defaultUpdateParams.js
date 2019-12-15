@@ -107,7 +107,7 @@ export const DEFAULT_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`],
-          location_and_type_restrictions: [['@post_auth/apps/mining/dashboard', IS_PBAAS], ['@post_auth/apps/verus_id', IS_VERUS]]
+          location_and_type_restrictions: [/*['@post_auth/apps/mining/dashboard', IS_PBAAS], */['@post_auth/apps/', IS_VERUS]]
         },
         interval_info: {
           expire_id: null,
@@ -123,7 +123,7 @@ export const DEFAULT_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`],
-          location_and_type_restrictions: [['@post_auth/apps/mining/dashboard', IS_PBAAS], ['@post_auth/apps/verus_id', IS_VERUS]]
+          location_and_type_restrictions: [/*['@post_auth/apps/mining/dashboard', IS_PBAAS], */['@post_auth/apps/', IS_VERUS]]
         },
         interval_info: {
           expire_id: null,
@@ -472,7 +472,7 @@ export const DEFAULT_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`],
-          location_and_type_restrictions: []
+          location_and_type_restrictions: [['@post_auth/apps/verus_id', IS_VERUS]]
         },
         interval_info: {
           expire_id: null,
@@ -488,7 +488,7 @@ export const DEFAULT_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`],
-          location_and_type_restrictions: []
+          location_and_type_restrictions: [['@post_auth/apps/verus_id', IS_VERUS]]
         },
         interval_info: {
           expire_id: null,
