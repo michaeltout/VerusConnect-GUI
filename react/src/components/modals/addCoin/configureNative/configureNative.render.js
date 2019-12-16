@@ -4,7 +4,7 @@ import PieChart from 'react-minimal-pie-chart';
 export const ConfigureNativeRender = function() {
   const { error, done, passThrough } = this.state
   return (
-    <div 
+    <div
       className="d-sm-flex flex-column justify-content-sm-center"
       style={{ paddingBottom: 40 }}>
       <div
@@ -12,22 +12,22 @@ export const ConfigureNativeRender = function() {
         style={{ paddingBottom: 40, textAlign: "center", paddingRight: 50, paddingLeft: 50 }}
       >
         <h1 style={{ fontSize: 16 }}>
-          { error && 
+          { error &&
             <i
               className="fas fa-exclamation-triangle"
               style={{ paddingRight: 6, color: "rgb(236,124,43)" }}
             />
           }
-          {error ? 
-            error 
-            : 
-            (done ? 
-              "Done. Great!" 
-              : 
-              (passThrough ? 
-                "Loading coin data..." 
-                : 
-                "Preparing full blockchain download, please do not close Verus Connect. This should only happen once, but it may take a while."))}
+          {error ?
+            error
+            :
+            (done ?
+              "Done. Great!"
+              :
+              (passThrough ?
+                "Loading coin data..."
+                :
+                "Preparing full blockchain download, please do not close Verus. This should only happen once, but it may take a while."))}
         </h1>
       </div>
       <div

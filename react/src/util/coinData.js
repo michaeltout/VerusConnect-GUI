@@ -1,14 +1,14 @@
 import explorerList from 'agama-wallet-lib/src/coin-helpers';
 import { staticVar } from './mainWindow';
 import coins from '../translate/coins'
-import { 
-  NATIVE, 
-  ETH, 
-  ELECTRUM, 
-  IS_PBAAS, 
-  IS_ZCASH, 
-  IS_PBAAS_ROOT, 
-  IS_SAPLING, 
+import {
+  NATIVE,
+  ETH,
+  ELECTRUM,
+  IS_PBAAS,
+  IS_ZCASH,
+  IS_PBAAS_ROOT,
+  IS_SAPLING,
   DEFAULT_DUST_THRESHOLD,
   DEFAULT_DAEMON,
   KOMODO_DAEMON,
@@ -24,7 +24,7 @@ import * as Vibrant from 'node-vibrant'
 import * as randomColor from 'randomcolor'
 
 /**
- * Aggregates all relevant coin data needed in order to add 
+ * Aggregates all relevant coin data needed in order to add
  * a coin to the wallet based on its chain ticker
  * @param {String} chainTicker Coin to add's chain ticker
  * @param {Boolean} isPbaas Whether or not the coin to add is a pbaas chain, will override unsupported coin check
@@ -48,11 +48,11 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
   }
 
   //If trying to add an unsupported chain, create a coin obj instead, dont use this function
-  if (!isPbaas && !allCoinNames[chainTickerUc]) throw new Error(`${chainTicker} not found in Verus Connect coin list.`)
+  if (!isPbaas && !allCoinNames[chainTickerUc]) throw new Error(`${chainTicker} not found in Verus coin list.`)
   else coinObj.name = allCoinNames[chainTickerUc]
 
   if (explorerList.explorerList[chainTickerUc]) coinObj.options.explorer = explorerList.explorerList[chainTickerUc]
-  
+
   // Determine available modes based on available coin data and libraries
   if (erc20ContractId[chainTickerUc] || chainTickerUc === 'ETH') {
     available_modes[ETH] = true
@@ -81,14 +81,14 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
         coinObj.options.saplingHeight = networks[chainTickerLc].saplingActivationHeight
       }
       if (networks[chainTickerLc].dustThreshold) coinObj.options.dustThreshold = fromSats(networks[chainTickerLc].dustThreshold)
-    } 
+    }
 
     // Determine if chain is pbaas compatible, and if it is a pbaas root chain
     if (isPbaas || chainTickerUc === 'VRSCTEST') {
       tags = {...tags, [IS_ZCASH]: true, [IS_PBAAS]: true, [IS_SAPLING]: true}
       available_modes[NATIVE] = true
       coinObj.options.daemon = DEFAULT_DAEMON
-  
+
       if (chainTickerUc === 'VRSCTEST') tags[IS_PBAAS_ROOT] = true
     }
 
@@ -102,9 +102,9 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
       id: 'VRSC',                                // Coin's chain ticker
       name: Verus,                               // Coin name
       tags: [                                    // Tags for coin to identify properties
-        'is_sapling', 
-        'is_zcash', 
-        'is_pbaas', 
+        'is_sapling',
+        'is_zcash',
+        'is_pbaas',
         'is_pbaas_root'],
       available_modes: {                         // Modes in which this coin can be activated
         'native': true,
@@ -115,14 +115,14 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
         explorer: https://explorer.veruscoin.io, // (Optional) Explorer URL.
         saplingHeight: 10000,                    // (Optional) height at which sapling will be activated for the chain
         dustThreshold: 0.00001,                  // (Optional) Network threshold for dust values
-        daemon: 'verusd',                        // (Optional) Specify a custom daemon for native mode 
+        daemon: 'verusd',                        // (Optional) Specify a custom daemon for native mode
         startupOptions: ['-mint']                // (Optional) Added in a later step, native options for daemon start
       },
       isPbaasChain: false,                       // Boolean to decide whether or not to skip coin compatability check
       themeColor: hexCode                        // Theme color for coin to add, added to coin object in addCoin asynchronously
     }
   */
-  
+
   return {
     ...coinObj,
     tags: Object.keys(tags),
