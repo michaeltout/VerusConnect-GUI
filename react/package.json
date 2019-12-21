@@ -1,7 +1,7 @@
 {
   "name": "AgamaGUI",
   "version": "0.6.0",
-  "description": "Verus Wallet GUI",
+  "description": "Verus Desktop GUI Wallet",
   "main": "src/index.js",
   "scripts": {
     "start": "./node_modules/webpack-dashboard/bin/webpack-dashboard.js -t 'AgamaGUI' -- ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --colors --no-info --mode development",
@@ -19,7 +19,7 @@
     "update-agamalib": "rm -rf node_modules/agama-wallet-lib/ && yarn install",
     "update-spvcoins": "rm -rf node_modules/coins/ && yarn install"
   },
-  "repository": "https://github.com/VerusCoin/Verus-GUI",
+  "repository": "https://github.com/VerusCoin/Verus-Desktop-GUI",
   "homepage": "https://veruscoin.io",
   "keywords": [
     "agama",
