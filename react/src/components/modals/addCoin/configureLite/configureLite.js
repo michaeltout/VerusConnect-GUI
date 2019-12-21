@@ -4,7 +4,7 @@ import {
   ConfigureLiteRender
 } from './configureLite.render';
 import { setModalNavigationPath } from '../../../../actions/actionCreators'
-import { SETUP, LOGIN, SUCCESS_SNACK, MID_LENGTH_ALERT } from '../../../../util/constants/componentConstants'
+import { SETUP, LOGIN, SUCCESS_SNACK, MID_LENGTH_ALERT, ERROR_SNACK, ADD_COIN, SELECT_COIN } from '../../../../util/constants/componentConstants'
 import { addCoin } from '../../../../actions/actionDispatchers'
 import { authenticateActiveUser, newSnackbar } from '../../../../actions/actionCreators'
 
@@ -15,12 +15,15 @@ class ConfigureLite extends React.Component {
       seed: null,
       password: null,
       loading: false,
-      error: false
+      
+      //DEPRECATED, TODO: DELETE
+      error: false,
     }
 
     this.getSeed = this.getSeed.bind(this)
     this.getPassword = this.getPassword.bind(this)
     this.activateCoin = this.activateCoin.bind(this)
+    this._handleError = this._handleError.bind(this)
   }
 
   componentDidMount() {
@@ -46,9 +49,14 @@ class ConfigureLite extends React.Component {
     this.setState({password}, () => { if (callback) callback()})
   }
 
+  _handleError(message) {
+    this.props.dispatch(newSnackbar(ERROR_SNACK, message))
+    this.props.dispatch(setModalNavigationPath(`${ADD_COIN}/${SELECT_COIN}`))
+  }
+
   activateCoin() {
     this.setState({ loading: true }, async () => {
-      const { addCoinParams } = this.props
+      const { addCoinParams, activatedCoins } = this.props
       const { seed } = this.state
 
       try {
@@ -57,17 +65,18 @@ class ConfigureLite extends React.Component {
         const result = await addCoin(
           addCoinParams.coinObj,
           addCoinParams.mode,
-          this.props.dispatch
+          this.props.dispatch,
+          Object.keys(activatedCoins)
         );
   
         if (result.msg === 'error') {
-          this.setState({error: result.result, loading: false})
+          this._handleError(result.result)
         } else {
-          this.props.dispatch(newSnackbar(SUCCESS_SNACK, `${addCoinParams.coinObj.id} activated in lite mode!`), MID_LENGTH_ALERT)
+          this.props.dispatch(newSnackbar(SUCCESS_SNACK, `${addCoinParams.coinObj.id} activated in lite mode!`, MID_LENGTH_ALERT))
           this.props.closeModal()
         }
       } catch (e) {
-        this.setState({error: e.message, loading: false})
+        this._handleError(e.message)
       }
     })
   }
@@ -80,7 +89,8 @@ class ConfigureLite extends React.Component {
 const mapStateToProps = (state) => {
   return {
     activeUser: state.users.activeUser,
-    authenticated: state.users.authenticated
+    authenticated: state.users.authenticated,
+    activatedCoins: state.coins.activatedCoins
   };
 };
 

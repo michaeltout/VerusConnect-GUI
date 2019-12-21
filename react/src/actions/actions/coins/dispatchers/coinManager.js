@@ -49,13 +49,15 @@ export const activateCoin = async (coinObj, mode, dispatch) => {
  * @param {Object} coinObj Coin obj either created or fetched from getCoinObj
  * @param {String} mode native || electrum || eth,
  * @param {Function} dispatch Function to dispatch activated coin to store
+ * @param {String[]} activatedTickers The list of currently activated chain tickers
  * @param {String[]} startupOptions (Optional) startup options for native, e.g. -mint for auto staking
  */
-export const addCoin = async (coinObj, mode, dispatch, startupOptions) => {
+export const addCoin = async (coinObj, mode, dispatch, activatedTickers, startupOptions) => {
   try {
     coinObj.options.startupOptions = startupOptions
 
     if (!coinObj.available_modes[mode]) throw new Error(`${mode} is not supported for ${coinObj.id}.`)
+    if (activatedTickers.includes(coinObj.id)) throw new Error(`Error, ${coinObj.id} is already active!`)
 
     return await activateCoin({...coinObj, themeColor: await getCoinColor(coinObj.id, coinObj.available_modes)}, mode, dispatch)
   } catch (e) {
