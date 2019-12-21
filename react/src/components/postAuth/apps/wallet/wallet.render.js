@@ -3,7 +3,7 @@ import WalletStyles from './wallet.styles'
 import { NATIVE, DASHBOARD, ETH, CHAIN_POSTFIX } from '../../../../util/constants/componentConstants'
 
 export const WalletCardRender = function(coinObj) {
-  const { fiatCurrency, fiatPrices, balances, mainPathArray } = this.props
+  const { fiatCurrency, fiatPrices, balances, mainPathArray, loggingOut } = this.props
 
   const isActive = mainPathArray.includes(`${coinObj.id}_${CHAIN_POSTFIX}`)
   const coinFiatRate = fiatPrices[coinObj.id] ? fiatPrices[coinObj.id][fiatCurrency] : null
@@ -61,7 +61,7 @@ export const WalletCardRender = function(coinObj) {
             </div>
           </div>
         </div>
-        {isActive && 
+        {isActive && !loggingOut &&
         <a
           className="text-right"
           href="#"
@@ -78,23 +78,30 @@ export const WalletTabsRender = function() {
   return [
     <li className="nav-item" role="presentation" key="wallet-dashboard">
       <a
-        className={`nav-link ${this.props.mainPathArray.includes(DASHBOARD ? 'active' : '')}`}
+        className={`nav-link ${this.props.mainPathArray.includes(
+          DASHBOARD ? "active" : ""
+        )}`}
         href="#"
-        onClick={() => this.openDashboard()}
-        style={WalletStyles.secondaryTabBarLink}>
+        onClick={this.openDashboard}
+        style={WalletStyles.secondaryTabBarLink}
+      >
         <i className="fas fa-home" style={WalletStyles.navigationTabIcon} />
-        Dashboard
+        {"Dashboard"}
       </a>
     </li>,
     <li className="nav-item" role="presentation" key="wallet-addcoin">
       <a
         className="nav-link"
-        href="#"
-        style={WalletStyles.secondaryTabBarLink}
-        onClick={this.openAddCoinModal}>
+        href={"#"}
+        style={{
+          ...WalletStyles.secondaryTabBarLink,
+          visibility: this.props.loggingOut ? "hidden" : "unset"
+        }}
+        onClick={this.openAddCoinModal}
+      >
         <i className="fas fa-plus" style={WalletStyles.navigationTabIcon} />
         {"Add Coin"}
       </a>
     </li>
-  ]
+  ];
 }

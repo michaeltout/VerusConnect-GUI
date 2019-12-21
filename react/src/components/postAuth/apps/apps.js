@@ -4,7 +4,7 @@ import {
   AppsRender,
 } from './apps.render';
 import { logoutActiveUser } from '../../../actions/actionDispatchers'
-import { newSnackbar, setMainNavigationPath, initConfig } from '../../../actions/actionCreators'
+import { newSnackbar, setMainNavigationPath, initConfig, setLogoutUser, finishLogoutUser } from '../../../actions/actionCreators'
 import { ERROR_SNACK, POST_AUTH, APPS, SUCCESS_SNACK, MID_LENGTH_ALERT } from '../../../util/constants/componentConstants';
 import { saveConfig } from '../../../util/api/settings/configData';
 
@@ -34,12 +34,15 @@ class Apps extends React.Component {
   
   async logoutAccount() {
     const { dispatch, activatedCoins } = this.props
+    dispatch(setLogoutUser())
 
     this.setState({ logoutDisabled: true }, async () => {
       try {
         await logoutActiveUser(activatedCoins, dispatch)
+        dispatch(finishLogoutUser())
       } catch (e) {
         dispatch(newSnackbar(ERROR_SNACK, `Error logging out: ${e.message}`))
+        dispatch(finishLogoutUser())
         this.setState({ logoutDisabled: false })
       }
     })

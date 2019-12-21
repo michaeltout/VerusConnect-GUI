@@ -103,7 +103,8 @@ const mapStateToProps = (state) => {
     activatedCoins: state.coins.activatedCoins,
     fiatPrices: state.ledger.fiatPrices,
     fiatCurrency: state.settings.config.general.main.fiatCurrency,
-    balances: state.ledger.balances
+    balances: state.ledger.balances,
+    loggingOut: state.users.loggingOut
   };
 };
 

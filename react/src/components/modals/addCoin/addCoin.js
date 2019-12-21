@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { 
   AddCoinRender
 } from './addCoin.render';
+import { newSnackbar } from '../../../actions/actionCreators';
+import { ERROR_SNACK } from '../../../util/constants/componentConstants';
 
 class AddCoin extends React.Component {
   constructor(props) {
@@ -18,6 +20,24 @@ class AddCoin extends React.Component {
     }
 
     this.getAddCoinParams = this.getAddCoinParams.bind(this)
+    this._handleLoggingOut = this._handleLoggingOut.bind(this)
+  }
+
+  _handleLoggingOut() {
+    this.props.closeModal()
+    this.props.dispatch(newSnackbar(ERROR_SNACK, "Cannot add coin while logging out."))
+  }
+
+  componentDidMount() {
+    if (this.props.loggingOut) {
+      this._handleLoggingOut()
+    }
+  }
+
+  componentDidUpdate(lastProps) {
+    if (lastProps.loggingOut != this.props.loggingOut && this.props.loggingOut) {
+      this._handleLoggingOut()
+    }
   }
 
   getAddCoinParams(addCoinParams, callback) {
@@ -32,6 +52,7 @@ class AddCoin extends React.Component {
 const mapStateToProps = (state) => {
   return {
     mainPath: state.navigation.mainPath,
+    loggingOut: state.users.loggingOut
   };
 };
 

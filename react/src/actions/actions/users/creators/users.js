@@ -1,6 +1,6 @@
 import { saveUsers, loadUsers } from '../../../../util/api/users/userData'
 import { encryptKey } from '../../../../util/api/users/pinData'
-import { SET_USERS, LOG_IN, LOG_OUT, SET_DEFAULT_USER, SET_AUTHENTICATION } from '../../../../util/constants/storeType'
+import { SET_USERS, LOG_IN, LOG_OUT, SET_DEFAULT_USER, SET_AUTHENTICATION, SET_LOGOUT_USER, FINISH_LOGOUT_USER } from '../../../../util/constants/storeType'
 import { ETH, ELECTRUM, PRE_AUTH, UX_SELECTOR, POST_AUTH } from '../../../../util/constants/componentConstants'
 import { makeId } from '../../../../util/idGenerator'
 import { setMainNavigationPath } from '../../../actionCreators'
@@ -121,4 +121,18 @@ export const authenticateActiveUser = async (seed) => {
   } catch (e) {
     throw e
   }
+}
+
+/**
+ * Sets the redux "loggingOut" flag to true
+ */
+export const setLogoutUser = () => {
+  return { type: SET_LOGOUT_USER }
+}
+
+/**
+ * Sets the redux "loggingOut" flag to false
+ */
+export const finishLogoutUser = () => {
+  return { type: FINISH_LOGOUT_USER }
 }
