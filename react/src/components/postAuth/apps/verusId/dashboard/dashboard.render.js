@@ -67,7 +67,7 @@ export const DashboardRender = function() {
                         paddingLeft: 20
                       }}
                     >
-                      <strong>{"Commit Name for Verus ID"}</strong>
+                      <strong>{"Commit Name"}</strong>
                     </button>
                     <div
                       className={`dropdown-menu ${
