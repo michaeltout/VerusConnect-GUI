@@ -35,10 +35,18 @@ class CoinSettings extends React.Component {
     }
   }
 
-  callDaemonCmd(args, print) {            
-    const cliCmd = args._.length ? args._[0] : 'help'
-    let cliParams = args._.length ? args._.slice(1, args._.length) : []
+  callDaemonCmd(args, print) {
+    // Filter out blank arguments
+    const argsFiltered = args._.filter(arg => {
+      return arg.length > 0
+    })    
 
+    const cliCmd = argsFiltered.length ? argsFiltered[0] : 'help'
+    let cliParams = argsFiltered.length ? argsFiltered.slice(1, argsFiltered.length) : []
+    let cliCmdsParsed = []
+    let skipIndexes = []
+
+    // Try to parse json strings, turn boolean strings into booleans, and number strings into numbers
     cliParams = cliParams.map(param => {
       try {
         return JSON.parse(param)
@@ -47,11 +55,49 @@ class CoinSettings extends React.Component {
         if (param === "false") return false
         if (!isNaN(Number(param))) return Number(param)
 
-        return param 
+        return param
       }
     })
 
-    customRpcCall(this.props.selectedCoinObj.id, cliCmd, cliParams)
+    // Make arguments with space surrounded by quotes one argument
+    cliParams.forEach((cmdParam, index) => {
+      if (!skipIndexes.includes(index)) {
+        let parsedParam = cmdParam
+
+        if (typeof cmdParam === 'string' && (cmdParam[0] == "'" || cmdParam[0] == '"')) {
+          parsedParam = ""
+          let stepIndex = index
+          let endChar = cmdParam[0]
+          let stepCmd = cliParams[stepIndex]
+          let finishedParse = false
+  
+          while (!finishedParse && typeof stepCmd === 'string' && stepIndex < cliParams.length) {
+            stepCmd = cliParams[stepIndex]
+            parsedParam += stepIndex == index ? stepCmd : ' ' + stepCmd
+            skipIndexes.push(stepIndex)
+            
+            if (stepCmd[stepCmd.length - 1] === endChar) {
+              finishedParse = true
+            }
+  
+            stepIndex++
+          }   
+          
+          parsedParam = parsedParam.replace(endChar === "'" ? /'/g : /"/g, '')
+
+          try {            
+            cliCmdsParsed.push(JSON.parse(parsedParam))
+          } catch(e) {
+            cliCmdsParsed.push(parsedParam)
+          }
+        } else {
+          cliCmdsParsed.push(parsedParam)
+        }
+      }
+    })
+
+    // Make RPC call based on params given
+    customRpcCall(this.props.selectedCoinObj.id, cliCmd, cliCmdsParsed)
     .then(response => {
       if (response) {
         const { result } = response
