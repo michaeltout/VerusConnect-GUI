@@ -14950,9 +14950,9 @@ term-size@^1.2.0:
   dependencies:
     execa "^0.7.0"
 
-"terminal-in-react@https://github.com/VerusCoin/terminal-in-react.git#4.3.1":
-  version "4.3.0"
-  resolved "https://github.com/VerusCoin/terminal-in-react.git#588d420b4de88e929acdefec721a56d23f27a8e9"
+"terminal-in-react@https://github.com/VerusCoin/terminal-in-react.git":
+  version "4.3.1"
+  resolved "https://github.com/VerusCoin/terminal-in-react.git#d276b450df837cf80eb31fd80961895ea8977533"
   dependencies:
     lodash.camelcase "^4.3.0"
     lodash.isequal "^4.5.0"
