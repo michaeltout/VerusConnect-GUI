@@ -194,6 +194,7 @@ export const CHAIN_FALLBACK_IMAGE = 'assets/images/cryptologo/defaultChain.png'
 
 // Addcoin native options
 export const NATIVE_RESCAN = '-rescan'
+export const NATIVE_REINDEX = '-reindex'
 export const NATIVE_STAKE = '-mint'
 export const NATIVE_MINE = '-gen'
 export const NATIVE_MINE_THREADS = '-genproclimit='
