@@ -14,7 +14,9 @@ import {
   SET_AUTHENTICATION,
   UNTRACK_COIN,
   ENABLE_START_WITH_LAST_COINS,
-  ENABLE_START_AT_LAST_LOCATION
+  ENABLE_START_AT_LAST_LOCATION,
+  SET_LOGOUT_USER,
+  FINISH_LOGOUT_USER
 } from '../util/constants/storeType'
 import {
   ETH,
@@ -27,6 +29,7 @@ export const users = (state = {
   loadedUsers: {},
   activeUser: null,
   loggedIn: false,
+  loggingOut: false,
   authenticated: {
     [ETH]: false,
     [ELECTRUM]: false
@@ -122,6 +125,16 @@ export const users = (state = {
           startWithLastCoins: true,
           startCoins: state.activeUser.lastCoins
         }
+      }
+    case SET_LOGOUT_USER: 
+      return {
+        ...state,
+        loggingOut: true
+      }
+    case FINISH_LOGOUT_USER: 
+      return {
+        ...state,
+        loggingOut: false
       }
     case SET_AUTHENTICATION:
       return {

@@ -2,7 +2,8 @@ import React from 'react';
 import CustomTabBar from '../../../../../containers/CustomTabBar/CustomTabBar';
 import SimpleSetting from '../../../../../containers/SimpleSetting/SimpleSetting';
 import Divider from '@material-ui/core/Divider';
-import { Z_ONLY, IS_ZCASH, STAKE_GUARD, IS_VERUS } from '../../../../../util/constants/componentConstants';
+import { Z_ONLY, IS_ZCASH, STAKE_GUARD, IS_VERUS, NATIVE } from '../../../../../util/constants/componentConstants';
+import Terminal from 'terminal-in-react';
 
 export const CoinSettingsRender = function() {
   const { state, handleTabChange } = this
@@ -43,9 +44,17 @@ export const CoinSettingsOptionsRender = function() {
     <div className="card-body">
       {Object.keys(configTypes).map((settingKey, index) => {
         //TODO: Use info as tooltip
-        const { type, displayName, options, info, disabled, hidden } = configTypes[settingKey]
+        const {
+          type,
+          displayName,
+          options,
+          info,
+          disabled,
+          hidden
+        } = configTypes[settingKey];
 
-        return (settingKey === STAKE_GUARD && !tags.includes(IS_VERUS)) || hidden ? null : (
+        return (settingKey === STAKE_GUARD && !tags.includes(IS_VERUS)) ||
+          hidden ? null : (
           <React.Fragment key={index}>
             <SimpleSetting
               name={settingKey}
@@ -65,6 +74,36 @@ export const CoinSettingsOptionsRender = function() {
           </React.Fragment>
         );
       })}
+      {tabs[activeTab] === NATIVE && (
+        <div style={{ paddingLeft: 16, paddingRight: 16 }}>
+          <Terminal
+            descriptions={{
+              run:
+                "makes a call to the blockchain daemon based on the next entered parameters"
+            }}
+            backgroundColor="white"
+            color="black"
+            allowTabs={false}
+            hideTopBar={true}
+            startState="maximised"
+            style={{
+              height: "unset",
+              border: "solid",
+              maxWidth: "100%",
+              maxHeight: 600,
+              borderColor: "rgb(78,115,223)",
+              borderWidth: 1,
+              overflow: "scroll"
+            }}
+            msg='Welcome to the native client terminal! Enter "run" followed by a command name, followed by command parameters.'
+            commands={{
+              run: {
+                method: this.callDaemonCmd
+              }
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }

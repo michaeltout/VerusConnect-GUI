@@ -5,9 +5,9 @@ import {
 } from './configureNative.render';
 import io from 'socket.io-client';
 import { checkZcashParamsFormatted, downloadZcashParams } from '../../../../util/api/setup/zcashParams'
-import { ZCPARAMS_SOCKET, ADDCOIN_DELAY, ERROR_SNACK, SUCCESS_SNACK, MID_LENGTH_ALERT } from '../../../../util/constants/componentConstants'
+import { ZCPARAMS_SOCKET, ADDCOIN_DELAY, ERROR_SNACK, SUCCESS_SNACK, MID_LENGTH_ALERT, ADD_COIN, SELECT_COIN } from '../../../../util/constants/componentConstants'
 import { addCoin } from '../../../../actions/actionDispatchers'
-import { newSnackbar } from '../../../../actions/actionCreators'
+import { newSnackbar, setModalNavigationPath } from '../../../../actions/actionCreators'
 
 class ConfigureNative extends React.Component {
   constructor(props) {
@@ -23,8 +23,10 @@ class ConfigureNative extends React.Component {
         groth16: -1,
       },
       overallProgress: 0,
-      error: false,
       passThrough: false,
+
+      //DEPRECATED, TODO: DELETE
+      error: false,
     };
 
     this.socket = io.connect(`http://127.0.0.1:${this.props.config.general.main.agamaPort}`);
@@ -33,6 +35,7 @@ class ConfigureNative extends React.Component {
     this.calculateProgress = this.calculateProgress.bind(this)
     this.canPassthrough = this.canPassthrough.bind(this)
     this.addCoin = this.addCoin.bind(this)
+    this._handleError = this._handleError.bind(this)
   }
 
   async componentDidMount() {
@@ -107,25 +110,41 @@ class ConfigureNative extends React.Component {
     })
   }
 
+  _handleError(message) {
+    this.props.dispatch(newSnackbar(ERROR_SNACK, message));
+    this.props.dispatch(setModalNavigationPath(`${ADD_COIN}/${SELECT_COIN}`))
+  }
+
   async addCoin() {
-    const { addCoinParams } = this.props
+    const { addCoinParams, activatedCoins } = this.props
 
-    const result = await addCoin(
-      addCoinParams.coinObj,
-      addCoinParams.mode,
-      this.props.dispatch,
-      addCoinParams.startParams
-    );
+    try {
+      const result = await addCoin(
+        addCoinParams.coinObj,
+        addCoinParams.mode,
+        this.props.dispatch,
+        Object.keys(activatedCoins),
+        addCoinParams.startParams
+      );
 
-    if (result.msg === 'error') {
-      this.setState({error: result.result})
-    } else {
-      this.setState({ done: true }, () => {
-        setTimeout(() => {
-          this.props.dispatch(newSnackbar(SUCCESS_SNACK, `${addCoinParams.coinObj.id} added in native mode!`, MID_LENGTH_ALERT))
-          this.props.closeModal()
-        }, ADDCOIN_DELAY)
-      })
+      if (result.msg === "error") {
+        this._handleError(result.result)
+      } else {
+        this.setState({ done: true }, () => {
+          setTimeout(() => {
+            this.props.dispatch(
+              newSnackbar(
+                SUCCESS_SNACK,
+                `${addCoinParams.coinObj.id} added in native mode!`,
+                MID_LENGTH_ALERT
+              )
+            );
+            this.props.closeModal();
+          }, ADDCOIN_DELAY);
+        });
+      }
+    } catch (e) {
+      this._handleError(e.message)
     }
   }
 
@@ -171,7 +190,8 @@ class ConfigureNative extends React.Component {
 const mapStateToProps = (state) => {
   return {
     mainPath: state.navigation.mainPath,
-    config: state.settings.config
+    config: state.settings.config,
+    activatedCoins: state.coins.activatedCoins
   };
 };
 

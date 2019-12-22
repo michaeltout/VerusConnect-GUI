@@ -13,7 +13,7 @@ export const UxSelectorRender = function() {
           {!this.state.loading &&
             <React.Fragment>
               <div className="col-lg-4 col-xl-6 offset-lg-4 offset-xl-3 text-center pre-auth-header-container">
-                <img src="assets/images/Verus-Logo.png" width="367px" height="103px"/>
+                <img src="assets/images/Verus-Logo.png" width="259px" height="134px"/>
               </div>
               <h4 className="text-center under-logo-header">{"Get Started."}</h4>
               <div className="col-lg-8 offset-lg-2 ux-selector-card-container">

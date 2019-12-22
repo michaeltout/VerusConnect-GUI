@@ -67,7 +67,7 @@ export const DashboardRender = function() {
                         paddingLeft: 20
                       }}
                     >
-                      <strong>{"Commit Name for Verus ID"}</strong>
+                      <strong>{"Commit Name"}</strong>
                     </button>
                     <div
                       className={`dropdown-menu ${
@@ -165,7 +165,6 @@ export const DashboardRender = function() {
                 >
                   {verusProtocolCoins.length == 0 ? (
                     <a
-                      className="nav-link"
                       href="#"
                       style={{color: "rgb(78,115,223)"}}
                       onClick={this.openAddCoinModal}

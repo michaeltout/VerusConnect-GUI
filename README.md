@@ -1,2 +1,2 @@
-# Verus-GUI
-Originally a fork of the Agama Wallet's EasyDEX-GUI, Verus-GUI is a collection of ReactJS and HTML files providing graphical user interface to the Verus Multi-Coin Wallet APIs. These APIs facilitate communication to various blockchain daemons, the Ethereum network, and numerous Electrum servers. Instructions on how to use Verus-GUI in combination with Verus for development purposes can be found under the VerusCoin/Verus GitHub repository
+# Verus-Desktop-GUI
+Originally a fork of the Agama Wallet's EasyDEX-GUI, Verus-Desktop-GUI is a collection of ReactJS and HTML files providing graphical user interface to the Verus Multi-Coin Wallet APIs. These APIs facilitate communication to various blockchain daemons, the Ethereum network, and numerous Electrum servers. Instructions on how to use Verus-Desktop-GUI in combination with Verus for development purposes can be found under the VerusCoin/Verus GitHub repository

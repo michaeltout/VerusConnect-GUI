@@ -11,7 +11,8 @@ import {
   NATIVE_MINE,
   NATIVE_RESCAN,
   NATIVE_STAKE,
-  NATIVE_MINE_THREADS
+  NATIVE_MINE_THREADS,
+  NATIVE_REINDEX
 } from "../../../../util/constants/componentConstants";
 
 export const SelectCoinRender = function() {
@@ -154,7 +155,7 @@ export const SelectModeForm = function() {
       { this.state.selectedMode === NATIVE && 
         <div
           className="d-flex d-sm-flex d-md-flex d-lg-flex flex-column align-items-center align-items-sm-center align-items-md-center justify-content-lg-center align-items-lg-center"
-          style={{ paddingTop: 28, paddingBottom: 28 }}
+          style={{ paddingTop: 28 }}
         >
           <div>
             <div>
@@ -176,7 +177,7 @@ export const SelectModeForm = function() {
                   htmlFor="formCheck-1"
                   style={{ color: "rgb(0,0,0)" }}
                 >
-                  Start staking
+                  {"Start staking"}
                 </label>
               </div>
             </div>
@@ -199,7 +200,7 @@ export const SelectModeForm = function() {
                   htmlFor="formCheck-1"
                   style={{ color: "rgb(0,0,0)" }}
                 >
-                  Start mining
+                  {"Start mining"}
                 </label>
               </div>
               <input
@@ -211,6 +212,29 @@ export const SelectModeForm = function() {
                 onChange={this.updateThreads}
                 placeholder="# threads"
               />
+            </div>
+            <div>
+              <div
+                className="form-check d-flex align-items-center"
+                style={{ padding: 0 }}
+              >
+                <CustomCheckbox
+                  checkboxProps={{
+                    checked: this.state.nativeOptions[NATIVE_REINDEX],
+                    onChange: this.checkBox,
+                    name: NATIVE_REINDEX
+                  }}
+                  colorChecked="rgb(78,115,223)"
+                  colorUnchecked="rgb(78,115,223)"
+                />
+                <label
+                  className="form-check-label"
+                  htmlFor="formCheck-1"
+                  style={{ color: "rgb(0,0,0)" }}
+                >
+                  {"Reindex blockchain"}
+                </label>
+              </div>
             </div>
             <div>
               <div
@@ -231,7 +255,7 @@ export const SelectModeForm = function() {
                   htmlFor="formCheck-1"
                   style={{ color: "rgb(0,0,0)" }}
                 >
-                  Rescan blockchain
+                  {"Rescan wallet"}
                 </label>
               </div>
             </div>
@@ -250,7 +274,7 @@ export const SelectModeForm = function() {
             borderColor: "rgb(78,115,223)",
             paddingRight: 20,
             paddingLeft: 20,
-            marginTop: 40,
+            marginTop: 30,
             visibility: this.state.selectedCoin ? "unset" : "hidden"
           }}
         >

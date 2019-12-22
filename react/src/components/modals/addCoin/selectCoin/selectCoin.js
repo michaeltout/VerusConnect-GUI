@@ -13,7 +13,8 @@ import {
   NATIVE_RESCAN,
   NATIVE_STAKE,
   NATIVE_MINE_THREADS,
-  CONFIGURE
+  CONFIGURE,
+  NATIVE_REINDEX
 } from "../../../../util/constants/componentConstants";
 import { getCoinObj } from "../../../../util/coinData";
 import { getPathParent } from "../../../../util/navigationUtils";
@@ -67,7 +68,8 @@ class SelectCoin extends React.Component {
 
   generateStartupParams() {
     let startupOptions = []
-    const { nativeOptions } = this.state
+    const { nativeOptions, chosenCoin } = this.state
+    const { stakeguardConfig } = this.props
     
     for (let key in nativeOptions) {
       if (nativeOptions[key] && typeof nativeOptions[key] === "boolean") {
@@ -75,6 +77,10 @@ class SelectCoin extends React.Component {
       } else if (typeof nativeOptions[key] === "string" && !isNaN(Number(nativeOptions[key]))) {
         startupOptions.push(`${key}${Number(nativeOptions[key])}`)
       }
+    }
+
+    if (stakeguardConfig[chosenCoin.id]) {
+      startupOptions.push(`-cheatcatcher=${stakeguardConfig[chosenCoin.id]}`)
     }
 
     return startupOptions
@@ -113,7 +119,8 @@ class SelectCoin extends React.Component {
         [NATIVE_MINE]: false,
         [NATIVE_MINE_THREADS]: "",
         [NATIVE_STAKE]: false,
-        [NATIVE_RESCAN]: false
+        [NATIVE_RESCAN]: false,
+        [NATIVE_REINDEX]: false
       }
     });
   }
@@ -126,6 +133,7 @@ class SelectCoin extends React.Component {
 const mapStateToProps = (state) => {
   return {
     mainPath: state.navigation.mainPath,
+    stakeguardConfig: state.settings.config.coin.native.stakeGuard
   };
 };
 

@@ -4,6 +4,7 @@ import {
   CoinSettingsRender,
 } from './coinSettings.render';
 import { NATIVE } from '../../../../../util/constants/componentConstants';
+import { customRpcCall } from '../../../../../util/api/wallet/walletCalls';
 
 class CoinSettings extends React.Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class CoinSettings extends React.Component {
 
     this.handleTabChange = this.handleTabChange.bind(this)
     this.setConfigValue = this.setConfigValue.bind(this)
+    this.callDaemonCmd = this.callDaemonCmd.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -31,6 +33,53 @@ class CoinSettings extends React.Component {
 
       this.setState({ activeTab: 0, tabs: this.availableModeArr })
     }
+  }
+
+  callDaemonCmd(args, print) {            
+    const cliCmd = args._.length ? args._[0] : 'help'
+    let cliParams = args._.length ? args._.slice(1, args._.length) : []
+
+    cliParams = cliParams.map(param => {
+      try {
+        return JSON.parse(param)
+      } catch (e) {
+        if (param === "true") return true
+        if (param === "false") return false
+        if (!isNaN(Number(param))) return Number(param)
+
+        return param 
+      }
+    })
+
+    customRpcCall(this.props.selectedCoinObj.id, cliCmd, cliParams)
+    .then(response => {
+      if (response) {
+        const { result } = response
+
+        if (result == null) {
+          print("No response.")
+        } else if (typeof result == 'string') {
+          // Format output string in readable format
+          print(`${result
+            .replace(/{/g, `{`)
+            .replace(/\\"/g, `"`)
+            .replace(/\\n/g, `\n`)
+            .replace(/}/g, `}`)}`)
+        } else if (typeof result == 'object') {
+          // Format JSON in readable format
+          print(JSON.stringify(result)
+            .replace(/,/g, ',\n') 
+            .replace(/":/g, '": ')
+            .replace(/{/g, '{\n')
+            .replace(/}/g, '\n}'))
+        } else {
+          print(result)
+        }
+      }
+    })
+    .catch(e => {
+      print(e.message)
+    })
   }
 
   setConfigValue(name, value) {

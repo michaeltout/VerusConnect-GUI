@@ -21,7 +21,7 @@ import { saveUsers } from '../../../../util/api/users/userData';
 import { getSimpleCoinArray, getCoinObj } from '../../../../util/coinData';
 
 //TODO: Re-add coin settings when needed
-const SETTINGS_TYPES = [PROFILE_SETTINGS, GENERAL_SETTINGS/*, COIN_SETTINGS*/]
+const SETTINGS_TYPES = [PROFILE_SETTINGS, GENERAL_SETTINGS, COIN_SETTINGS]
 
 class Settings extends React.Component {
   constructor(props) {
