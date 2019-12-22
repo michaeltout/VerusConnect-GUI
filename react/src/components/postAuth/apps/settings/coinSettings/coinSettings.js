@@ -46,7 +46,7 @@ class CoinSettings extends React.Component {
         return param
       }
     })
-    
+
     customRpcCall(this.props.selectedCoinObj.id, cliCmd, cliParams)
     .then(response => {
       if (response) {
@@ -54,7 +54,7 @@ class CoinSettings extends React.Component {
 
         if (result == null) {
           print("No response.")
-        } if (typeof result == 'string') {
+        } else if (typeof result == 'string') {
           // Format output string in readable format
           print(`${result
             .replace(/{/g, `{`)
