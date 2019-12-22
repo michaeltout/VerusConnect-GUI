@@ -43,7 +43,11 @@ class CoinSettings extends React.Component {
       try {
         return JSON.parse(param)
       } catch (e) {
-        return param
+        if (param === "true") return true
+        if (param === "false") return false
+        if (!isNaN(Number(param))) return Number(param)
+
+        return param 
       }
     })
 
