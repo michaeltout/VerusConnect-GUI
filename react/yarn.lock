@@ -14950,10 +14950,9 @@ term-size@^1.2.0:
   dependencies:
     execa "^0.7.0"
 
-terminal-in-react@4.3.1:
+"terminal-in-react@https://github.com/VerusCoin/terminal-in-react.git":
   version "4.3.1"
-  resolved "https://registry.yarnpkg.com/terminal-in-react/-/terminal-in-react-4.3.1.tgz#a2e236a1e9a77fd6951bec70227aa96a1b9477c4"
-  integrity sha512-o0uZQgLBsOTjXjBJxc1SY3tps9SpF8uZkzqvifrC/aIvizvyeSvyjoCcnLF/UwibqWlidHcIc9OiG/TFinIO+g==
+  resolved "https://github.com/VerusCoin/terminal-in-react.git#d276b450df837cf80eb31fd80961895ea8977533"
   dependencies:
     lodash.camelcase "^4.3.0"
     lodash.isequal "^4.5.0"
