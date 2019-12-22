@@ -31,6 +31,7 @@ export const API_GET_PRIVKEY = 'get_privkey'
 export const API_GET_PUBKEY = 'get_pubkey'
 export const API_GET_IDENTITY = 'get_identity'
 export const API_STOP = 'stop'
+export const API_CALL_DAEMON = 'call_daemon'
 
 // Write API call names
 export const API_CREATE_ADDRESS = 'get_newaddress'

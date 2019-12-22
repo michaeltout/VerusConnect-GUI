@@ -6,6 +6,7 @@ import Wallet from './wallet/wallet'
 import Settings from './settings/settings'
 import VerusId from './verusId/verusId'
 import fiatList from '../../../util/constants/fiatList'
+import Tooltip from '@material-ui/core/Tooltip';
 
 export const AppsRender = function() {
   const COMPONENT_MAP = {
@@ -69,13 +70,15 @@ export const AppsRender = function() {
             <div
               className={`dropdown ${this.state.currencyDropdownOpen ? 'show' : ''}`}
               ref={node => (this.dropdownMenu = node)}>
-              <button
-                className="btn btn-primary dropdown-toggle noshadow"
-                type="button"
-                onClick={this.toggleCurrencyDropdown}
-                style={AppsStyles.topBarMenuItem}>
-                <i className="fas fa-dollar-sign" style={AppsStyles.topBarMenuItemIcon} />
-              </button>
+              <Tooltip title="Change display currency">
+                <button
+                  className="btn btn-primary dropdown-toggle noshadow"
+                  type="button"
+                  onClick={this.toggleCurrencyDropdown}
+                  style={AppsStyles.topBarMenuItem}>
+                  <i className="fas fa-dollar-sign" style={AppsStyles.topBarMenuItemIcon} />
+                </button>
+              </Tooltip>
               <div
                 className={`dropdown-menu ${this.state.currencyDropdownOpen ? 'show' : ''}`}
                 role="menu"
@@ -97,21 +100,25 @@ export const AppsRender = function() {
                 })}
               </div>
             </div>
-            <button
-              className="btn btn-primary noshadow"
-              type="button"
-              onClick={() => this.selectApp(SETTINGS)}
-              style={AppsStyles.topBarMenuItem}>
-              <i className="fas fa-cog" style={AppsStyles.topBarMenuItemIcon} />
-            </button>
-            <button
-              className="btn btn-primary noshadow"
-              type="button"
-              onClick={ this.logoutAccount }
-              disabled={ this.state.logoutDisabled }
-              style={ AppsStyles.topBarMenuItem }>
-              <i className="fas fa-sign-out-alt" style={AppsStyles.topBarMenuItemIcon} />
-            </button>
+            <Tooltip title="Settings">
+              <button
+                className="btn btn-primary noshadow"
+                type="button"
+                onClick={() => this.selectApp(SETTINGS)}
+                style={AppsStyles.topBarMenuItem}>
+                <i className="fas fa-cog" style={AppsStyles.topBarMenuItemIcon} />
+              </button>
+            </Tooltip>
+            <Tooltip title="Log Out">
+              <button
+                className="btn btn-primary noshadow"
+                type="button"
+                onClick={ this.logoutAccount }
+                disabled={ this.state.logoutDisabled }
+                style={ AppsStyles.topBarMenuItem }>
+                <i className="fas fa-sign-out-alt" style={AppsStyles.topBarMenuItemIcon} />
+              </button>
+            </Tooltip>
           </div>
         </div>
         <div className="row" style={AppsStyles.secondaryTabBarContainer}>
