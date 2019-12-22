@@ -37,7 +37,15 @@ class CoinSettings extends React.Component {
 
   callDaemonCmd(args, print) {            
     const cliCmd = args._.length ? args._[0] : 'help'
-    const cliParams = args._.length ? args._.slice(1, args._.length) : []
+    let cliParams = args._.length ? args._.slice(1, args._.length) : []
+
+    cliParams = cliParams.map(param => {
+      try {
+        return JSON.parse(param)
+      } catch (e) {
+        return param
+      }
+    })
     
     customRpcCall(this.props.selectedCoinObj.id, cliCmd, cliParams)
     .then(response => {
