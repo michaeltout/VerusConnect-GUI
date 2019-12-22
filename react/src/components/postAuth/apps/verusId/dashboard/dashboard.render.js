@@ -165,7 +165,6 @@ export const DashboardRender = function() {
                 >
                   {verusProtocolCoins.length == 0 ? (
                     <a
-                      className="nav-link"
                       href="#"
                       style={{color: "rgb(78,115,223)"}}
                       onClick={this.openAddCoinModal}
