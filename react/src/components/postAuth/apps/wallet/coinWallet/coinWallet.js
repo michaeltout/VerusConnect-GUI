@@ -255,7 +255,7 @@ class CoinWallet extends React.Component {
       if (activeCoin.mode === NATIVE) {
         const infoError = errors[API_GET_INFO][chainTicker]
 
-        if (!infoError.error) {
+        if (!infoError || !infoError.error) {
           const info = this.props.info[chainTicker]
           
           if (info) {
@@ -288,7 +288,7 @@ class CoinWallet extends React.Component {
       } else {
         const balancesError = errors[API_GET_BALANCES][chainTicker]
 
-        if (!balancesError.error) {
+        if (!balancesError || !balancesError.error) {
           walletLoadState = {
             ...walletLoadState,
             message: WALLET_CONNECTED,
