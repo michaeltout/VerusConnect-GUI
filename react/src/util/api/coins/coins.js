@@ -12,7 +12,7 @@ import { API_ACTIVATE_COIN, API_REMOVE_COIN, POST } from '../../constants/compon
  */
 export const initCoin = async (chainTicker, mode, startupParams, overrideDaemon) => {
   try {
-    return await getApiData(mode, API_ACTIVATE_COIN, {chainTicker, launchConfig: {startupParams, overrideDaemon}})
+    return await getApiData(mode, API_ACTIVATE_COIN, {chainTicker, launchConfig: {startupParams, overrideDaemon}}, POST)
   } catch (e) {
     throw e
   }
