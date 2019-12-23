@@ -39,7 +39,7 @@ export const activateCoin = async (coinObj, mode, dispatch) => {
       result: e.message
     })
 
-    return false
+    throw e
   }
 }
 
