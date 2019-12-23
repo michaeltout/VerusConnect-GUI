@@ -70,11 +70,11 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
       }
     }
 
-    if (electrumServers.electrumServers[chainTickerLc]) {
-      available_modes[ELECTRUM] = true
-    }
-
     if (networks[chainTickerLc]) {
+      if (electrumServers.electrumServers[chainTickerLc]) {
+        available_modes[ELECTRUM] = true
+      }
+
       if (networks[chainTickerLc].isZcash) tags[IS_ZCASH] = true
       if (networks[chainTickerLc].sapling) {
         tags[IS_SAPLING] = true

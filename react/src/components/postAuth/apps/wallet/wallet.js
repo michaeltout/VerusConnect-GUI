@@ -30,7 +30,13 @@ class Wallet extends React.Component {
 
   componentDidMount() {
     //Set default navigation path to dashboard if wallet is opened without a sub-navigation location
-    if (!this.props.mainPathArray[3]) this.props.dispatch(setMainNavigationPath(`${this.props.mainPathArray.join('/')}/${DASHBOARD}`)) 
+    if (!this.props.mainPathArray[3]) {
+      const chainTickers = Object.keys(this.props.activatedCoins)
+
+      this.props.dispatch(setMainNavigationPath(`${this.props.mainPathArray.join('/')}/${
+        chainTickers.length > 0 ? `${chainTickers[0]}_${CHAIN_POSTFIX}` : DASHBOARD
+      }`)) 
+    }
   }
 
   componentWillReceiveProps(nextProps) {
