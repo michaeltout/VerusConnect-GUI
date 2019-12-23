@@ -38,7 +38,7 @@ class CoinSettings extends React.Component {
   callDaemonCmd(args, print) {    
     // Filter out blank arguments
     const argsFiltered = args._.filter(arg => {
-      return arg.length > 0
+      return arg.toString().length > 0
     })   
 
     const cliCmd = argsFiltered.length ? argsFiltered[0] : 'help'
