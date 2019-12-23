@@ -35,11 +35,11 @@ class CoinSettings extends React.Component {
     }
   }
 
-  callDaemonCmd(args, print) {
+  callDaemonCmd(args, print) {    
     // Filter out blank arguments
     const argsFiltered = args._.filter(arg => {
       return arg.length > 0
-    })    
+    })   
 
     const cliCmd = argsFiltered.length ? argsFiltered[0] : 'help'
     let cliParams = argsFiltered.length ? argsFiltered.slice(1, argsFiltered.length) : []
@@ -48,15 +48,11 @@ class CoinSettings extends React.Component {
 
     // Try to parse json strings, turn boolean strings into booleans, and number strings into numbers
     cliParams = cliParams.map(param => {
-      try {
-        return JSON.parse(param)
-      } catch (e) {
-        if (param === "true") return true
-        if (param === "false") return false
-        if (!isNaN(Number(param))) return Number(param)
+      if (param === "true") return true
+      if (param === "false") return false
+      if (!isNaN(Number(param))) return Number(param)
 
-        return param
-      }
+      return param
     })
 
     // Make arguments with space surrounded by quotes one argument
@@ -85,7 +81,7 @@ class CoinSettings extends React.Component {
           
           parsedParam = parsedParam.replace(endChar === "'" ? /'/g : /"/g, '')
 
-          try {            
+          try {         
             cliCmdsParsed.push(JSON.parse(parsedParam))
           } catch(e) {
             cliCmdsParsed.push(parsedParam)
@@ -93,7 +89,7 @@ class CoinSettings extends React.Component {
         } else {
           cliCmdsParsed.push(parsedParam)
         }
-      }
+      } 
     })
 
     // Make RPC call based on params given
