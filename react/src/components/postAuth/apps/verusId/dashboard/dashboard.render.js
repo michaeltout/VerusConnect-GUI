@@ -9,6 +9,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteForever from '@material-ui/icons/DeleteForever';
 
 export const DashboardRender = function() {
   //TODO: Move to parent component so this isnt re-calculated at render
@@ -212,11 +214,24 @@ export const DashboardRenderTable = function() {
             }
 
             return (
-              <tr key={index}>
-                <td style={{ color: "rgb(0,0,0)", fontWeight: "bold" }}>
+              <tr
+                key={index}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between"
+                }}
+              >
+                <td
+                  style={{
+                    color: "rgb(0,0,0)",
+                    fontWeight: "bold",
+                    borderTop: 0
+                  }}
+                >
                   {`${namereservation.name}@`}
                 </td>
-                <td>
+                <td style={{ borderTop: 0 }}>
                   <h3
                     className={`d-lg-flex align-items-lg-center coin-type ${
                       reservationObj.confirmations == null || isUsed || loading
@@ -231,9 +246,8 @@ export const DashboardRenderTable = function() {
                       padding: 4,
                       paddingTop: 1,
                       paddingBottom: 1,
-                      marginTop: 2,
-                      marginLeft: 32,
-                      borderWidth: 1
+                      borderWidth: 1,
+                      margin: 0
                     }}
                   >
                     {loading
@@ -247,7 +261,7 @@ export const DashboardRenderTable = function() {
                       : "Pending..."}
                   </h3>
                 </td>
-                <td>
+                <td style={{ borderTop: 0 }}>
                   {
                     <a
                       className="card-link text-right"
@@ -294,6 +308,22 @@ export const DashboardRenderTable = function() {
                         : "Waiting for confirmation..."}
                     </a>
                   }
+                </td>
+                <td style={{ borderTop: 0 }}>
+                  <Tooltip title="Untrack">
+                    <IconButton
+                      size="small"
+                      aria-label="Untrack Name Commitment"
+                      onClick={() =>
+                        this.deleteNameCommitment(
+                          namereservation.name,
+                          chainTicker
+                        )
+                      }
+                    >
+                      <DeleteForever />
+                    </IconButton>
+                  </Tooltip>
                 </td>
               </tr>
             );
