@@ -95,7 +95,7 @@ export const CoinSettingsOptionsRender = function() {
               borderWidth: 1,
               overflow: "scroll"
             }}
-            msg='Welcome to the native client terminal! Enter "run" followed by a command name, followed by command parameters.'
+            msg='Welcome to the native client terminal! Enter "run" (without quotes) followed by a command name, followed by command parameters.'
             commands={{
               run: {
                 method: this.callDaemonCmd
