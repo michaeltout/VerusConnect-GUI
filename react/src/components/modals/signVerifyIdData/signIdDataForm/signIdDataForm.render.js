@@ -1,0 +1,137 @@
+import React from 'react';
+import TextField from "@material-ui/core/TextField";
+import ObjectToTable from '../../../../containers/ObjectToTable/ObjectToTable'
+import { ENTER_DATA } from '../../../../util/constants/componentConstants';
+import { DropzoneArea } from 'material-ui-dropzone'
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CancelIcon from '@material-ui/icons/Cancel';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+
+export const SignIdDataFormRender = function() {
+  const { formStep } = this.props
+  const { isFile } = this.state
+  return (
+    <div
+      className="col-xs-12 backround-gray"
+      style={{
+        width: "100%",
+        height: isFile ? "100%" : "85%",
+        display: "flex",
+        justifyContent: formStep === ENTER_DATA ? "space-evenly" : "center",
+        alignItems: formStep === ENTER_DATA ? "flex-start" : "unset",
+        marginBottom: formStep === ENTER_DATA ? 0 : 20,
+        flexDirection: "column",
+        overflowY: "scroll"
+      }}
+    >
+      { this.props.formStep === ENTER_DATA ? SignIdDataFormEnterRender.call(this) : SignIdDataRender.call(this) }
+    </div>
+  );
+}
+
+export const SignIdDataRender = function() {
+  return (
+    <ObjectToTable 
+      dataObj={ this.state.txDataDisplay }
+      pagination={ false }
+      paperStyle={{ width: "100%" }}
+    />
+  )
+}
+
+export const SignIdDataFormEnterRender = function() {
+  const { state, updateInput, setDataType, setFiles, props, updateAddress } = this
+  const { address, message, isFile, formErrors, fileName } = state;
+  const { identities } = props
+
+  return (
+    <React.Fragment>
+      <FormControl variant="outlined" style={{ width: 250 }}>
+        <InputLabel>{"Data Type"}</InputLabel>
+        <Select value={isFile ? 1 : 0} onChange={setDataType} labelWidth={70}>
+          <MenuItem value={0}>{"Text/Message Input"}</MenuItem>
+          <MenuItem value={1}>{"File Upload"}</MenuItem>
+        </Select>
+      </FormControl>
+      {isFile && (
+        <React.Fragment>
+          <TextField
+            error={formErrors.fileName.length > 0}
+            label="Enter file path or select below"
+            variant="outlined"
+            multiline
+            rowsMax={10}
+            onChange={updateInput}
+            name="fileName"
+            value={fileName}
+            style={{ marginTop: 5, width: "100%" }}
+          />
+          <DropzoneArea
+            onChange={setFiles}
+            filesLimit={1}
+            dropzoneText={"Drop a file to sign or click"}
+            maxFileSize={Infinity}
+            showFileNames={true}
+            getDropRejectMessage={() => {
+              return "File rejected by file picker, try entering the file path manually.";
+            }}
+            acceptedFiles={[
+              "audio/*",
+              "video/*",
+              "image/*",
+              "application/*",
+              "text/*",
+              "font/*",
+              "model/*"
+            ]}
+          />
+        </React.Fragment>
+      )}
+      {!isFile && (
+        <TextField
+          error={formErrors.message.length > 0}
+          helperText={
+            formErrors.message.length > 0
+              ? formErrors.message[0]
+              : "Enter a message to sign."
+          }
+          label="Enter message"
+          variant="outlined"
+          multiline
+          rowsMax={10}
+          onChange={updateInput}
+          name="message"
+          value={message}
+          style={{ marginTop: 5, width: "100%" }}
+        />
+      )}
+      <Autocomplete
+        freeSolo
+        style={{ marginTop: 5, width: "100%" }}
+        options={identities.map(id => `${id.identity.name}@`)}
+        onChange={(event, value) => updateAddress(value)}
+        renderInput={params => (
+          <TextField
+            {...params}
+            error={formErrors.address.length > 0}
+            helperText={
+              formErrors.address.length > 0
+                ? formErrors.address[0]
+                : "Enter the identity or address to sign the data above."
+            }
+            label="Enter identity or address"
+            variant="outlined"            
+            value={address}
+            style={{ width: "100%" }}
+          />
+        )}
+      />
+    </React.Fragment>
+  );
+}
+
+

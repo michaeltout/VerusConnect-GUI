@@ -15,7 +15,8 @@ import {
   TX_INFO,
   OPERATION_INFO,
   IMMATURE_DETAILS,
-  CREATE_IDENTITY
+  CREATE_IDENTITY,
+  SIGN_VERIFY_ID_DATA
 } from '../../util/constants/componentConstants';
 import AddCoin from './addCoin/addCoin'
 import ChainInfo from './chainInfo/chainInfo'
@@ -27,6 +28,7 @@ import CreateIdentity from './createIdentity/createIdentity'
 import TxInfo from './txInfo/txInfo'
 import OperationInfo from './operationInfo/operationInfo'
 import ImmatureDetails from './immatureDetails/immatureDetails';
+import SignVerifyIdData from './signVerifyIdData/signVerifyIdData'
 
 export const ModalRender = function() {
   const COMPONENT_PROPS = {
@@ -83,6 +85,11 @@ export const ModalRender = function() {
     ),
     [IMMATURE_DETAILS]: (
       <ImmatureDetails
+        {...COMPONENT_PROPS}
+      />
+    ),
+    [SIGN_VERIFY_ID_DATA]: (
+      <SignVerifyIdData
         {...COMPONENT_PROPS}
       />
     )

@@ -38,7 +38,7 @@ export const DashboardRender = function() {
             <div className="card-body d-lg-flex flex-row justify-content-between align-items-lg-center">
               <div className="d-lg-flex justify-content-lg-center">
                 <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
-                  Profile
+                  {"Profile"}
                 </h6>
                 <h6
                   style={{

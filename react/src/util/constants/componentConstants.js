@@ -45,6 +45,10 @@ export const API_RECOVER_ID_PREFLIGHT = 'recover_id_preflight'
 export const API_REGISTER_ID_NAME_PREFLIGHT = 'register_id_name_preflight'
 export const API_REGISTER_ID_PREFLIGHT = 'register_id_preflight'
 export const API_DELETE_NAME_COMMITMENT = 'delete_name_commitment'
+export const API_SIGN_MESSAGE = 'sign_message'
+export const API_SIGN_FILE = 'sign_file'
+export const API_VERIFY_MESSAGE = 'verify_message'
+export const API_VERIFY_FILE = 'verify_file'
 
 // Non-blockchain API call paths
 export const LOAD_USERS = 'users/load'
@@ -131,6 +135,7 @@ export const APPS = 'apps'
 export const DASHBOARD = 'dashboard'
 export const CHAIN_POSTFIX = 'chain'
 export const ID_POSTFIX = 'identity'
+export const MINING_POSTFIX = 'mining'
 export const LOGIN = 'login'
 export const SETUP = 'setup'
 export const SIGN_UP = 'sign_up'
@@ -142,6 +147,9 @@ export const PBAAS_CHAIN_INFO = 'pbaas_chain_info'
 export const RECEIVE_COIN = 'receive_coin'
 export const SEND_COIN = 'send_coin'
 export const CREATE_IDENTITY = 'create_identity'
+export const SIGN_VERIFY_ID_DATA = 'sign_verify_id_data'
+export const VERIFY_ID_DATA = 'verify_id_data'
+export const SIGN_ID_DATA = 'sign_id_data'
 export const TX_INFO = 'tx_info'
 export const OPERATION_INFO = 'operation_info'
 export const ID_INFO = 'id_info'
@@ -266,7 +274,7 @@ export const CONFIRM_DATA = 1
 export const SEND_RESULT = 2
 
 // Send coin form errors
-export const ERROR_INVALID_ADDR = 'Invalid to address'
+export const ERROR_INVALID_ADDR = 'Invalid address'
 export const ERROR_INVALID_AMOUNT = 'Invalid send amount'
 export const ERROR_INVALID_FROM = 'Invalid from address'
 export const ERROR_AMOUNT_MORE_THAN_BALANCE = 'Amount is more than available balance.'
@@ -293,5 +301,14 @@ export const Z_SEND = 'z_sendmany'
 // Create Identity form errors
 export const ERROR_NAME_REQUIRED = 'A name is required'
 export const ERROR_INVALID_Z_ADDR = 'Invalid private address'
+
+// Mining states
+export const MS_IDLE = 'idle'
+export const MS_OFF = 'off'
+export const MS_MINING = 'mining'
+export const MS_STAKING = 'staking'
+export const MS_MINING_STAKING = 'mining_staking'
+export const MS_MERGE_MINING = 'merge_mining'
+export const MS_MERGE_MINING_STAKING = 'merge_mining_staking'
 
 

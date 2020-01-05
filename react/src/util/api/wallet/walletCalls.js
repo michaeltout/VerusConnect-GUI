@@ -15,5 +15,7 @@ export * from './writeCalls/createAddress'
 export * from './writeCalls/sendCoin'
 export * from './writeCalls/identity'
 export * from './writeCalls/nameCommitments'
+export * from './writeCalls/signData'
+export * from './writeCalls/verifyData'
 
 export * from './rpcGeneral'

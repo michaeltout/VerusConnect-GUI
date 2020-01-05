@@ -114,6 +114,8 @@ class CoinSettings extends React.Component {
             .replace(/":/g, '": ')
             .replace(/{/g, '{\n')
             .replace(/}/g, '\n}'))
+        } else if (typeof result == 'boolean') {
+          print(result ? "true" : "false")
         } else {
           print(result)
         }
