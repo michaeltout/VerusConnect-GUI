@@ -17,14 +17,6 @@ export const verifyData = async (
   isFile
 ) => {
   try {
-
-    //TODO: DELETE (AFTER DEBUG)
-    console.log(chainTicker)
-    console.log(address)
-    console.log(data)
-    console.log(signature)
-    console.log(isFile)
-
     return await getApiData(
       NATIVE,
       isFile ? API_VERIFY_FILE : API_VERIFY_MESSAGE,

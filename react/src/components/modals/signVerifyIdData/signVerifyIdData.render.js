@@ -29,6 +29,7 @@ export const SignVerifyIdDataRender = function() {
             size="large"
             color="default"
             style={{
+              marginBottom: 10,
               visibility:
                 (formStep === CONFIRM_DATA)
                   ? "unset"
@@ -43,7 +44,7 @@ export const SignVerifyIdDataRender = function() {
             disabled={continueDisabled}
             size="large"
             color="primary"
-            style={{ marginBottom: 5 }}
+            style={{ marginBottom: 10 }}
           >
             {formStep === CONFIRM_DATA ? "Done" : "Continue"}
           </Button>
@@ -87,7 +88,7 @@ export const SignVerifyIdDataRenderLoading = function() {
         className="d-flex d-sm-flex justify-content-center justify-content-sm-center"
         style={{ paddingBottom: 40 }}
       >
-        <SimpleLoader size={75} text={"Checking signature..."}/>
+        <SimpleLoader size={75} text={"Processing file, this may take a while for larger files..."}/>
       </div>
     </div>
   )

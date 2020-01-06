@@ -1,6 +1,5 @@
 import React from 'react';
 import TextField from "@material-ui/core/TextField";
-import ObjectToTable from '../../../../containers/ObjectToTable/ObjectToTable'
 import { ENTER_DATA } from '../../../../util/constants/componentConstants';
 import { DropzoneArea } from 'material-ui-dropzone'
 import InputLabel from '@material-ui/core/InputLabel';
@@ -62,7 +61,7 @@ export const VerifyIdDataFormEnterRender = function() {
     <React.Fragment>
       <FormControl variant="outlined" style={{ width: 250 }}>
         <InputLabel>{"Data Type"}</InputLabel>
-        <Select value={isFile ? 1 : 0} onChange={setDataType} labelWidth={70}>
+        <Select value={isFile ? 1 : 0} onChange={setDataType} labelWidth={75}>
           <MenuItem value={0}>{"Text/Message Input"}</MenuItem>
           <MenuItem value={1}>{"File Upload"}</MenuItem>
         </Select>
@@ -95,6 +94,16 @@ export const VerifyIdDataFormEnterRender = function() {
               "text/*",
               "font/*",
               "model/*",
+              ".dmg",
+              ".s",
+              ".cpp",
+              ".sh",
+              ".bat",
+              ".zip",
+              ".7z",
+              ".tar.gz",
+              ".rar",
+              ".AppImage"
             ]}
           />
         </React.Fragment>

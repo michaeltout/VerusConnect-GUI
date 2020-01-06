@@ -7,8 +7,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CancelIcon from '@material-ui/icons/Cancel';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 export const SignIdDataFormRender = function() {
@@ -52,7 +50,7 @@ export const SignIdDataFormEnterRender = function() {
     <React.Fragment>
       <FormControl variant="outlined" style={{ width: 250 }}>
         <InputLabel>{"Data Type"}</InputLabel>
-        <Select value={isFile ? 1 : 0} onChange={setDataType} labelWidth={70}>
+        <Select value={isFile ? 1 : 0} onChange={setDataType} labelWidth={75}>
           <MenuItem value={0}>{"Text/Message Input"}</MenuItem>
           <MenuItem value={1}>{"File Upload"}</MenuItem>
         </Select>
@@ -86,7 +84,17 @@ export const SignIdDataFormEnterRender = function() {
               "application/*",
               "text/*",
               "font/*",
-              "model/*"
+              "model/*",
+              ".dmg",
+              ".s",
+              ".cpp",
+              ".sh",
+              ".bat",
+              ".zip",
+              ".7z",
+              ".tar.gz",
+              ".rar",
+              ".AppImage"
             ]}
           />
         </React.Fragment>

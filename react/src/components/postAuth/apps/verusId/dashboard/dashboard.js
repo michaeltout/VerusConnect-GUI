@@ -134,19 +134,39 @@ class Dashboard extends React.Component {
   }
 
   toggleReservationDropdown() {
-    this.setState({nameReservationDropdownOpen: !this.state.nameReservationDropdownOpen})
+    this.setState({
+      nameReservationDropdownOpen: !this.state.nameReservationDropdownOpen,
+      idRecoveryDropdownOpen: false,
+      verifyDataDropdownOpen: false,
+      signDataDropdownOpen: false
+    })
   }
 
   toggleRecoveryDropdown() {
-    this.setState({idRecoveryDropdownOpen: !this.state.idRecoveryDropdownOpen})
+    this.setState({
+      idRecoveryDropdownOpen: !this.state.idRecoveryDropdownOpen,
+      nameReservationDropdownOpen: false,
+      verifyDataDropdownOpen: false,
+      signDataDropdownOpen: false
+    });
   }
 
   toggleVerifyDataDropdown() {
-    this.setState({verifyDataDropdownOpen: !this.state.verifyDataDropdownOpen})
+    this.setState({
+      verifyDataDropdownOpen: !this.state.verifyDataDropdownOpen,
+      idRecoveryDropdownOpen: false,
+      nameReservationDropdownOpen: false,
+      signDataDropdownOpen: false
+    });
   }
 
   toggleSignDataDropdown() {
-    this.setState({signDataDropdownOpen: !this.state.signDataDropdownOpen})
+    this.setState({ 
+      signDataDropdownOpen: !this.state.signDataDropdownOpen,
+      verifyDataDropdownOpen: false,
+      idRecoveryDropdownOpen: false,
+      nameReservationDropdownOpen: false
+     });
   }
 
   compileIds() {
