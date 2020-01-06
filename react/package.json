@@ -42,7 +42,7 @@
     "@material-ui/core": "^4.6.0",
     "@material-ui/icons": "^4.5.1",
     "@material-ui/lab": "^4.0.0-alpha.31",
-    "agama-wallet-lib": "https://github.com/VerusCoin/agama-wallet-lib.git#dev",
+    "agama-wallet-lib": "git+https://github.com/VerusCoin/agama-wallet-lib.git#dev",
     "bluebird": "^3.5.0",
     "clsx": "^1.0.4",
     "ethers": "git://github.com/VerusCoin/ethers.js",
