@@ -54,6 +54,7 @@ class SignIdDataForm extends React.Component {
       ["Status:"]: txData[TXDATA_STATUS],
       ["Error:"]: txData[TXDATA_ERROR],
       ["Data Signed:"]: formData.isFile ? formData.fileName : formData.message,
+      ["Address/Identity Used:"]: formData.address,
       ["Signature:"]: txData.result
     };
 
@@ -85,7 +86,8 @@ class SignIdDataForm extends React.Component {
         !Object.keys(this.state.formErrors).every(formInput => {
           return this.state.formErrors[formInput].length == 0;
         }) ||
-          address.length === 0 ||
+          address == null ||
+          (address && address.length === 0) ||
           (!isFile && message.length === 0) ||
           (isFile && fileName.length === 0)
       );
