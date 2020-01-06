@@ -1,7 +1,7 @@
 import React from 'react';
-import VerifyIdDataForm from "./VerifyIdDataForm/VerifyIdDataForm";
-import SignIdDataForm from "./SignIdDataForm/SignIdDataForm";
-import { CONFIRM_DATA, API_SUCCESS, SEND_RESULT, API_REGISTER_ID_NAME, API_RECOVER_ID, API_REGISTER_ID, VERIFY_ID_DATA, SIGN_ID_DATA } from '../../../util/constants/componentConstants';
+import VerifyIdDataForm from "./verifyIdDataForm/verifyIdDataForm";
+import SignIdDataForm from "./signIdDataForm/signIdDataForm";
+import { CONFIRM_DATA, VERIFY_ID_DATA, SIGN_ID_DATA } from '../../../util/constants/componentConstants';
 import Button from '@material-ui/core/Button';
 import SimpleLoader from '../../../containers/SimpleLoader/SimpleLoader'
 
