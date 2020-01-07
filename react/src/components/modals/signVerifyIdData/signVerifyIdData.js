@@ -21,13 +21,14 @@ import { newSnackbar } from '../../../actions/actionCreators';
 class SignVerifyIdData extends React.Component {
   constructor(props) {
     super(props);
+    const { chainTicker } = props.modalProps
 
     switch (props.modalProps.modalType) {
       case VERIFY_ID_DATA:
-        props.setModalHeader('Verify ID Signature')
+        props.setModalHeader(`Verify ${chainTicker} ID Signature`)
         break;
       case SIGN_ID_DATA:
-        props.setModalHeader(`Sign Data`)
+        props.setModalHeader(`Sign Data with ${chainTicker} ID`)
         break;
       default:
         break;
@@ -113,7 +114,7 @@ class SignVerifyIdData extends React.Component {
               this.props.dispatch(
                 newSnackbar(
                   SUCCESS_SNACK,
-                  `Data signed with ID!`,
+                  `Data signed!`,
                   MID_LENGTH_ALERT
                 )
               );

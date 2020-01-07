@@ -32,16 +32,17 @@ import Store from '../../../store'
 class CreateIdentity extends React.Component {
   constructor(props) {
     super(props);
+    const { chainTicker } = props.modalProps
 
     switch (props.modalProps.modalType) {
       case API_REGISTER_ID:
-        props.setModalHeader(`Create ID for ${props.modalProps.nameCommitmentObj.namereservation.name}@`)
+        props.setModalHeader(`Create ${chainTicker} ID for ${props.modalProps.nameCommitmentObj.namereservation.name}@`)
         break;
       case API_REGISTER_ID_NAME:
-        props.setModalHeader('Commit Name')
+        props.setModalHeader(`Commit Name for ${chainTicker} ID`)
         break;
       case API_RECOVER_ID:
-        props.setModalHeader(`Recover Identity`)
+        props.setModalHeader(`Recover ${chainTicker} Identity`)
         break;
       default:
         break;

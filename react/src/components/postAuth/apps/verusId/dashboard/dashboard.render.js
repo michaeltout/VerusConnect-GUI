@@ -17,6 +17,7 @@ export const DashboardRender = function() {
   const verusProtocolCoins = Object.values(this.props.activatedCoins).filter((coinObj) => {
     return coinObj.tags.includes(IS_VERUS) && coinObj.mode === NATIVE
   })
+  const identityChains = Object.keys(this.props.identities)
 
   return (
     <div
@@ -59,8 +60,12 @@ export const DashboardRender = function() {
                     <button
                       className="btn btn-primary"
                       type="button"
-                      onClick={this.toggleReservationDropdown}
-                      disabled={Object.keys(this.props.identities).length == 0}
+                      onClick={
+                        identityChains.length === 1
+                          ? () => this.openCommitNameModal(identityChains[0])
+                          : this.toggleReservationDropdown
+                      }
+                      disabled={identityChains.length === 0}
                       style={{
                         fontSize: 14,
                         backgroundColor: "rgb(78,115,223)",
@@ -88,18 +93,22 @@ export const DashboardRender = function() {
                         {"Select chain:"}
                       </h6>
                       {verusProtocolCoins.map((coinObj, index) => {
-                        if (this.props.identities[coinObj.id] == null) return null
-                        else return (
-                          <a
-                            className="dropdown-item"
-                            key={index}
-                            role="presentation"
-                            href="#"
-                            onClick={() => this.openCommitNameModal(coinObj.id)}
-                          >
-                            {coinObj.name}
-                          </a>
-                        );
+                        if (this.props.identities[coinObj.id] == null)
+                          return null;
+                        else
+                          return (
+                            <a
+                              className="dropdown-item"
+                              key={index}
+                              role="presentation"
+                              href="#"
+                              onClick={() =>
+                                this.openCommitNameModal(coinObj.id)
+                              }
+                            >
+                              {coinObj.name}
+                            </a>
+                          );
                       })}
                     </div>
                   </div>
@@ -116,8 +125,12 @@ export const DashboardRender = function() {
                     <button
                       className="btn btn-primary"
                       type="button"
-                      onClick={this.toggleRecoveryDropdown}
-                      disabled={Object.keys(this.props.identities).length == 0}
+                      onClick={
+                        identityChains.length === 1
+                          ? () => this.openRecoverIdModal(identityChains[0])
+                          : this.toggleRecoveryDropdown
+                      }
+                      disabled={identityChains.length === 0}
                       style={{
                         fontSize: 14,
                         backgroundColor: "rgb(78,115,223)",
@@ -145,18 +158,22 @@ export const DashboardRender = function() {
                         {"Select chain:"}
                       </h6>
                       {verusProtocolCoins.map((coinObj, index) => {
-                        if (this.props.identities[coinObj.id] == null) return null
-                        else return (
-                          <a
-                            className="dropdown-item"
-                            key={index}
-                            role="presentation"
-                            href="#"
-                            onClick={() => this.openRecoverIdModal(coinObj.id)}
-                          >
-                            {coinObj.name}
-                          </a>
-                        );
+                        if (this.props.identities[coinObj.id] == null)
+                          return null;
+                        else
+                          return (
+                            <a
+                              className="dropdown-item"
+                              key={index}
+                              role="presentation"
+                              href="#"
+                              onClick={() =>
+                                this.openRecoverIdModal(coinObj.id)
+                              }
+                            >
+                              {coinObj.name}
+                            </a>
+                          );
                       })}
                     </div>
                   </div>
@@ -173,8 +190,12 @@ export const DashboardRender = function() {
                     <button
                       className="btn btn-primary"
                       type="button"
-                      onClick={this.toggleSignDataDropdown}
-                      disabled={Object.keys(this.props.identities).length == 0}
+                      onClick={
+                        identityChains.length === 1
+                          ? () => this.openSignIdDataModal(identityChains[0])
+                          : this.toggleSignDataDropdown
+                      }
+                      disabled={identityChains.length === 0}
                       style={{
                         fontSize: 14,
                         backgroundColor: "rgb(78,115,223)",
@@ -203,18 +224,22 @@ export const DashboardRender = function() {
                         {"Select chain:"}
                       </h6>
                       {verusProtocolCoins.map((coinObj, index) => {
-                        if (this.props.identities[coinObj.id] == null) return null
-                        else return (
-                          <a
-                            className="dropdown-item"
-                            key={index}
-                            role="presentation"
-                            href="#"
-                            onClick={() => this.openSignIdDataModal(coinObj.id)}
-                          >
-                            {coinObj.name}
-                          </a>
-                        );
+                        if (this.props.identities[coinObj.id] == null)
+                          return null;
+                        else
+                          return (
+                            <a
+                              className="dropdown-item"
+                              key={index}
+                              role="presentation"
+                              href="#"
+                              onClick={() =>
+                                this.openSignIdDataModal(coinObj.id)
+                              }
+                            >
+                              {coinObj.name}
+                            </a>
+                          );
                       })}
                     </div>
                   </div>
@@ -231,8 +256,12 @@ export const DashboardRender = function() {
                     <button
                       className="btn btn-primary"
                       type="button"
-                      onClick={this.toggleVerifyDataDropdown}
-                      disabled={Object.keys(this.props.identities).length == 0}
+                      onClick={
+                        identityChains.length === 1
+                          ? () => this.openVerifyIdDataModal(identityChains[0])
+                          : this.toggleVerifyDataDropdown
+                      }
+                      disabled={identityChains.length === 0}
                       style={{
                         fontSize: 14,
                         backgroundColor: "rgb(78,115,223)",
@@ -260,43 +289,82 @@ export const DashboardRender = function() {
                         {"Select chain:"}
                       </h6>
                       {verusProtocolCoins.map((coinObj, index) => {
-                        if (this.props.identities[coinObj.id] == null) return null
-                        else return (
-                          <a
-                            className="dropdown-item"
-                            key={index}
-                            role="presentation"
-                            href="#"
-                            onClick={() => this.openVerifyIdDataModal(coinObj.id)}
-                          >
-                            {coinObj.name}
-                          </a>
-                        );
+                        if (this.props.identities[coinObj.id] == null)
+                          return null;
+                        else
+                          return (
+                            <a
+                              className="dropdown-item"
+                              key={index}
+                              role="presentation"
+                              href="#"
+                              onClick={() =>
+                                this.openVerifyIdDataModal(coinObj.id)
+                              }
+                            >
+                              {coinObj.name}
+                            </a>
+                          );
                       })}
                     </div>
                   </div>
                 </div>
                 <div
-                  className="col d-lg-flex align-items-lg-start"
+                  className="col d-lg-flex"
                   style={{
                     paddingTop: 9,
-                    justifyContent: "center",
-                    color: "rgb(0,0,0)"
+                    alignItems: "center",
+                    color: "rgb(0,0,0)",
+                    flexDirection: "column",
+                    marginBottom: 5
                   }}
                 >
                   {verusProtocolCoins.length == 0 ? (
                     <a
                       href="#"
-                      style={{color: "rgb(78,115,223)"}}
+                      style={{ color: "rgb(78,115,223)" }}
                       onClick={this.openAddCoinModal}
                     >
-                      {"Add a Verus protocol coin (VRSC or VRSCTEST) to start making IDs!"}
+                      {
+                        "Add a Verus protocol coin (VRSC or VRSCTEST) to start making IDs!"
+                      }
                     </a>
                   ) : this.state.displayNameCommitments.length > 0 ? (
                     DashboardRenderTable.call(this)
                   ) : (
                     "No name commitments. Commit a name to create an ID!"
                   )}
+                  {Object.keys(this.props.activatedCoins).map((chainTicker, index) => {
+                    const { identityErrors, getInfoErrors, activatedCoins } = this.props;
+                    if (activatedCoins[chainTicker].tags.includes(IS_VERUS)) {
+                      const identityError = identityErrors[chainTicker] != null ? identityErrors[chainTicker].error : false
+                      const identityErrorMsg = identityErrors[chainTicker] != null ? identityErrors[chainTicker].result : null
+                      const infoError = getInfoErrors[chainTicker] != null ? getInfoErrors[chainTicker].error : false;
+                      const infoErrorMsg = getInfoErrors[chainTicker] != null ? getInfoErrors[chainTicker].result : null;
+
+                      return identityError || infoError ? (
+                        <div style={{ marginTop: 5 }} key={index}>
+                          <i
+                            className="fas fa-exclamation-triangle"
+                            style={{
+                              marginRight: 6,
+                              color: "rgb(236,124,43)",
+                              fontSize: 18
+                            }}
+                          />
+                          <span>{`Warning, ${chainTicker} IDs not loaded: `}</span>
+                          <span
+                            style={{
+                              color: "rgb(236,124,43)",
+                              fontWeight: "bold"
+                            }}
+                          >
+                            {infoError ? infoErrorMsg : identityErrorMsg}
+                          </span>
+                        </div>
+                      ) : null;
+                    } else return null                    
+                  })}
                 </div>
               </div>
             </div>
@@ -484,10 +552,9 @@ export const DashboardRevokeDialogue = function() {
 
 export const DashboardRenderIds = function() {
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", minWidth: 790 }}>
+    <div style={{ display: "flex", flexWrap: "wrap", marginLeft: "-0.516%", marginRight: "-0.516%" }}>
       {this.state.compiledIds.map((idObj, index) => {
         const { identity } = idObj
-        const isCenter = (index + 2) % 3 == 0
         const zBalance = idObj.balances.native.private.confirmed == null ? 0 : idObj.balances.native.private.confirmed
         const spendableBalance = Number((idObj.balances.native.public.confirmed + zBalance).toFixed(8))
         
@@ -496,9 +563,7 @@ export const DashboardRenderIds = function() {
             style={{
               width: "32.3%",
               minWidth: 255,
-              marginBottom: "1.55%",
-              marginRight: isCenter ? "1.55%" : 0,
-              marginLeft: isCenter ? "1.55%" : 0
+              margin: "0.516%"
             }}
             key={index}
           >
@@ -594,7 +659,7 @@ export const DashboardRenderIds = function() {
                         <button
                           className="btn btn-primary"
                           type="button"
-                          onClick={() => this.openId(idObj.chainTicker, index)}
+                          onClick={() => this.openId(idObj.chainTicker, idObj.index)}
                           style={{
                             fontSize: 10,
                             backgroundColor: "#2f65d0",

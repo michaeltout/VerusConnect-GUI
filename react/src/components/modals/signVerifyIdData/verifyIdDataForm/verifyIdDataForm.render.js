@@ -62,8 +62,8 @@ export const VerifyIdDataFormEnterRender = function() {
       <FormControl variant="outlined" style={{ width: 250 }}>
         <InputLabel>{"Data Type"}</InputLabel>
         <Select value={isFile ? 1 : 0} onChange={setDataType} labelWidth={75}>
-          <MenuItem value={0}>{"Text/Message Input"}</MenuItem>
-          <MenuItem value={1}>{"File Upload"}</MenuItem>
+          <MenuItem value={0}>{"Sign Message/Text"}</MenuItem>
+          <MenuItem value={1}>{"Sign File"}</MenuItem>
         </Select>
       </FormControl>
       {isFile && (

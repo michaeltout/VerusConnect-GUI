@@ -21,7 +21,9 @@ import {
   SELECT_COIN,
   SIGN_VERIFY_ID_DATA,
   VERIFY_ID_DATA,
-  SIGN_ID_DATA
+  SIGN_ID_DATA,
+  API_GET_IDENTITIES,
+  API_GET_INFO
 } from "../../../../../util/constants/componentConstants";
 import { deleteIdName, revokeIdentity } from '../../../../../util/api/wallet/walletCalls';
 import Store from '../../../../../store'
@@ -175,8 +177,8 @@ class Dashboard extends React.Component {
 
     Object.keys(identities).map(chainTicker => {
       if (identities[chainTicker]) {
-        identities[chainTicker].map(id => {
-          compiledIds.push({...id, chainTicker})
+        identities[chainTicker].map((id, index) => {
+          compiledIds.push({...id, chainTicker, index})
         })
       }
     })
@@ -262,9 +264,9 @@ const mapStateToProps = (state) => {
   return {
     mainPathArray: state.navigation.mainPathArray,
     activatedCoins: state.coins.activatedCoins,
-    fiatPrices: state.ledger.fiatPrices,
-    fiatCurrency: state.settings.config.general.main.fiatCurrency,
     identities: state.ledger.identities,
+    identityErrors: state.errors[API_GET_IDENTITIES],
+    getInfoErrors: state.errors[API_GET_INFO],
     nameCommitments: state.ledger.nameCommitments,
     activeUser: state.users.activeUser,
     transactions: state.ledger.transactions
