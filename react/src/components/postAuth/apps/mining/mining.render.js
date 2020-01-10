@@ -1,12 +1,14 @@
 import React from 'react';
 import MiningStyles from './mining.styles'
-import { DASHBOARD, MINING_POSTFIX } from '../../../../util/constants/componentConstants'
+import { DASHBOARD, MINING_POSTFIX, MS_IDLE } from '../../../../util/constants/componentConstants'
+import Tooltip from '@material-ui/core/Tooltip';
 
 export const MiningCardRender = function(coinObj) {
   const {
     balances,
     mainPathArray,
   } = this.props;
+  const miningState = this.state.miningStates[coinObj.id] ? this.state.miningStates[coinObj.id] : MS_IDLE
 
   const isActive = mainPathArray.includes(`${coinObj.id}_${MINING_POSTFIX}`);
   const coinBalance = balances[coinObj.id]
@@ -51,12 +53,14 @@ export const MiningCardRender = function(coinObj) {
                 </h4>
               </div>
             </div>
-            <div style={{ paddingTop: 6 }}>
-              <img
-                src={`assets/images/icons/status_icons/${this.state.miningStates[coinObj.id]}.svg`}
-                width="25px"
-                height="25px"
-              />
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+              <Tooltip title={this.miningStateDescs[miningState]}>
+                <img
+                  src={`assets/images/icons/status_icons/${miningState}.svg`}
+                  width="25px"
+                  height="25px"
+                />
+              </Tooltip>
               <h5 className="text-right" style={MiningStyles.balance}>
                 {`${
                   isNaN(coinBalance)

@@ -15,15 +15,55 @@ import {
   CHAIN_POSTFIX,
   API_GET_IDENTITIES,
   IS_VERUS,
-  API_GET_NAME_COMMITMENTS
+  API_GET_NAME_COMMITMENTS,
+  API_GET_CPU_TEMP,
+  API_GET_CPU_LOAD,
+  API_GET_SYS_TIME
 } from './componentConstants'
+
+/**
+ * This object holds all the settings for deciding the timing and frequency of system data updates,
+ * including things like cpu temperature, load, and system time
+ */
+export const DEFAULT_SYSTEM_UPDATE_PARAMS = {
+  [API_GET_CPU_TEMP]: {
+    tracking_info: {
+      busy: false,
+      location_restrictions: ['@post_auth/apps/mining/dashboard']
+    },
+    interval_info: {
+      interval_id: null,
+      interval: 10000
+    }
+  },
+  [API_GET_CPU_LOAD]: {
+    tracking_info: {
+      busy: false,
+      location_restrictions: ['@post_auth/apps/mining/dashboard']
+    },
+    interval_info: {
+      interval_id: null,
+      interval: 10000
+    }
+  },
+  [API_GET_SYS_TIME]: {
+    tracking_info: {
+      busy: false,
+      location_restrictions: []
+    },
+    interval_info: {
+      interval_id: null,
+      interval: 30000
+    }
+  },
+}
 
 /**
  * The constant parameter object that holds all settings for deciding the timing and frequency of how certain coin modes
  * call their API to get their data.
  * @param {String} ticker The coin to get update parameters for (for location restrictions)
  */
-export const DEFAULT_UPDATE_PARAMS = (ticker) => ({
+export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
   native: {
     [API_GET_INFO]: {
       // Restrictions specify if this interval should only be added to certain types of coins, e.g. 'is_pbaas' for only pbaas chains,
@@ -242,7 +282,7 @@ export const DEFAULT_UPDATE_PARAMS = (ticker) => ({
     },
 
     [API_GET_MININGINFO]: {
-      restrictions: [IS_PBAAS], 
+      restrictions: [], 
       pre_data: {
         tracking_info: {
           needs_update: false,

@@ -22,12 +22,23 @@ class Mining extends React.Component {
       nativeCoins: [],
       miningStates: {}
     }
+
+    this.miningStateDescs = {
+      [MS_IDLE]: "Loading...",
+      [MS_OFF]: "Mining/Staking Off",
+      [MS_STAKING]: "Staking",
+      [MS_MINING]: "Mining",
+      [MS_MINING_STAKING]: "Mining & Staking",
+      [MS_MERGE_MINING]: "Merge Mining",
+      [MS_MERGE_MINING_STAKING]: "Merge Mining & Staking"
+    }
     
     this.setCards = this.setCards.bind(this)
     this.calculateMiningStates = this.calculateMiningStates.bind(this)
     this.setTabs = this.setTabs.bind(this)
     this.openDashboard = this.openDashboard.bind(this)
     this.getNativeCoins = this.getNativeCoins.bind(this)
+    this.openAddCoinModal = this.openAddCoinModal.bind(this)
     this.setTabs()
   }
 
@@ -38,21 +49,15 @@ class Mining extends React.Component {
     this.calculateMiningStates(this.props.activatedCoins)
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (
-      Object.keys(nextProps.activatedCoins).length <
-        Object.keys(this.props.activatedCoins).length ||
-      nextProps.mainPathArray != this.props.mainPathArray
-    ) {
-      this.setCards(nextProps.activatedCoins);
-    } else if (this.props.miningInfo != nextProps.miningInfo) {
+  /*componentWillReceiveProps(nextProps) {
+    if (nextProps != this.props) {
       this.calculateMiningStates(nextProps.activatedCoins)
-    }
-  }
+      this.setCards(nextProps.activatedCoins);
+    } 
+  }*/
   
   componentDidUpdate(lastProps) {
     if (lastProps != this.props) {
-      this.setCards(this.props.activatedCoins)
       this.calculateMiningStates(this.props.activatedCoins)
     }
   }
@@ -84,15 +89,16 @@ class Mining extends React.Component {
     this.getNativeCoins(activatedCoins, () => {
       this.state.nativeCoins.map((chainTicker) => {
         const coinObj = activatedCoins[chainTicker]
-        
+
         if (miningInfo[coinObj.id]) {
-          const { mergemining, staking, generate } = miningInfo[coinObj.id]
+          const { mergemining, staking, generate, numthreads } = miningInfo[coinObj.id]
           const mergeMining = mergemining != null && mergemining > 0
+          const mining = generate && numthreads
   
           if (staking && mergeMining) miningStates[coinObj.id] = MS_MERGE_MINING_STAKING
-          else if (staking && generate) miningStates[coinObj.id] = MS_MINING_STAKING
+          else if (staking && mining) miningStates[coinObj.id] = MS_MINING_STAKING
           else if (mergeMining) miningStates[coinObj.id] = MS_MERGE_MINING
-          else if (generate) miningStates[coinObj.id] = MS_MINING
+          else if (mining) miningStates[coinObj.id] = MS_MINING
           else if (staking) miningStates[coinObj.id] = MS_STAKING
           else miningStates[coinObj.id] = MS_OFF
         } else {
@@ -100,7 +106,9 @@ class Mining extends React.Component {
         }
       })
 
-      this.setState({ miningStates })
+      this.setState({ miningStates }, () => {
+        this.setCards(activatedCoins)
+      })
     })
   }
 
@@ -125,6 +133,7 @@ class Mining extends React.Component {
           <Dashboard
             miningStates={this.state.miningStates}
             nativeCoins={this.state.nativeCoins}
+            miningStateDescs={this.miningStateDescs}
           />
         );
       else {

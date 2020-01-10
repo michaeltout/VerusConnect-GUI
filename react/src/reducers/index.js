@@ -9,6 +9,7 @@ import { coins } from './coins'
 import { users } from './users'
 import { modal } from './modal'
 import { snackbar } from './snackbar'
+import { system } from './system'
 
 const appReducer = combineReducers({
   ledger,
@@ -19,8 +20,9 @@ const appReducer = combineReducers({
   coins,
   users,
   modal,
+  snackbar,
+  system,
   routing: routerReducer,
-  snackbar
 });
 
 // reset app state on logout

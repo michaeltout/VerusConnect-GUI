@@ -49,6 +49,10 @@ export const API_SIGN_MESSAGE = 'sign_message'
 export const API_SIGN_FILE = 'sign_file'
 export const API_VERIFY_MESSAGE = 'verify_message'
 export const API_VERIFY_FILE = 'verify_file'
+export const API_START_MINING = 'start_mining'
+export const API_STOP_MINING = 'stop_mining'
+export const API_START_STAKING = 'start_staking'
+export const API_STOP_STAKING = 'stop_staking'
 
 // Non-blockchain API call paths
 export const LOAD_USERS = 'users/load'
@@ -68,6 +72,10 @@ export const CHECK_ZCASH_PARAMS = 'zcashparamsexist'
 export const DL_ZCASH_PARAMS = 'zcparamsdl'
 export const AUTHENTICATE = 'auth'
 export const LOG_OUT = 'logout' 
+export const GET_STATIC_SYSTEM_DATA = 'get_static_system_data'
+export const API_GET_CPU_TEMP = 'get_cpu_temp'
+export const API_GET_CPU_LOAD = 'get_cpu_load'
+export const API_GET_SYS_TIME = 'get_sys_time'
 
 // API call request types
 export const POST = 'post'
@@ -310,5 +318,6 @@ export const MS_STAKING = 'staking'
 export const MS_MINING_STAKING = 'mining_staking'
 export const MS_MERGE_MINING = 'merge_mining'
 export const MS_MERGE_MINING_STAKING = 'merge_mining_staking'
+
 
 

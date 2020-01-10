@@ -6,7 +6,7 @@ import {
 import {
   OPERATION_INFO,
 } from "../../../util/constants/componentConstants";
-import { timeConverter } from '../../../util/timeUtils';
+import { timeConverter } from '../../../util/displayUtil/timeUtils';
 
 class OperationInfo extends React.Component {
   constructor(props) {

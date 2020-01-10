@@ -29,8 +29,8 @@ import {
 } from '../../../../util/constants/componentConstants'
 import {
   renewData,
-  occupyApiCall,
-  freeApiCall,
+  occupyCoinApiCall,
+  freeCoinApiCall,
   disableUpdateWarningSnack,
   enableUpdateWarningSnack,
   newSnackbar
@@ -63,27 +63,27 @@ export const walletUpdates = {
  * @param {Function} onExpire (Optional) Function to execute on data expiry
  */
 export const udpateWalletData = async (state, dispatch, mode, chainTicker, updateId, onExpire) => {
-  dispatch(occupyApiCall(chainTicker, updateId))
+  dispatch(occupyCoinApiCall(chainTicker, updateId))
   let callCompleted = false
 
   try {
     if(await walletUpdates[updateId](state, dispatch, mode, chainTicker)) {
-      if (state.updates.updateIntervals[chainTicker][updateId].expire_timeout !== ALWAYS_ACTIVATED) {
+      if (state.updates.coinUpdateIntervals[chainTicker][updateId].expire_timeout !== ALWAYS_ACTIVATED) {
         dispatch(renewData(chainTicker, updateId))
       }
 
-      if (state.updates.updateIntervals[chainTicker][updateId].expire_id) {
-        //console.log(`Going to clear expire timeout for ${updateId}: ${state.updates.updateIntervals[chainTicker][updateId].expire_id}`)
-        clearTimeout(state.updates.updateIntervals[chainTicker][updateId].expire_id)
+      if (state.updates.coinUpdateIntervals[chainTicker][updateId].expire_id) {
+        //console.log(`Going to clear expire timeout for ${updateId}: ${state.updates.coinUpdateIntervals[chainTicker][updateId].expire_id}`)
+        clearTimeout(state.updates.coinUpdateIntervals[chainTicker][updateId].expire_id)
       }
-      createExpireTimeout(state.updates.updateIntervals[chainTicker][updateId].expire_timeout, chainTicker, updateId, onExpire)
+      createExpireTimeout(state.updates.coinUpdateIntervals[chainTicker][updateId].expire_timeout, chainTicker, updateId, onExpire)
       callCompleted = true
     }
   } catch (e) {
     console.error(e)
   }
   
-  dispatch(freeApiCall(chainTicker, updateId))
+  dispatch(freeCoinApiCall(chainTicker, updateId))
   
   return callCompleted
 }
@@ -99,7 +99,7 @@ export const udpateWalletData = async (state, dispatch, mode, chainTicker, updat
  * @param {String} updateId Name of API call to update
  */
 export const conditionallyUpdateWallet = async (state, dispatch, mode, chainTicker, updateId) => {
-  const updateInfo = state.updates.updateTracker[chainTicker][updateId]
+  const updateInfo = state.updates.coinUpdateTracker[chainTicker][updateId]
   const currentModalPath = state.navigation.modalPath
   const currentMainPath = state.navigation.mainPath
   const TEST_PASS = 1

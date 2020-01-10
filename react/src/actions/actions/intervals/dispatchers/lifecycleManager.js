@@ -1,4 +1,4 @@
-import { refreshIntervals } from '../../../actionDispatchers'
+import { refreshCoinIntervals } from '../../../actionDispatchers'
 import { NATIVE, ETH, ELECTRUM, PRE_DATA, SYNCING, POST_SYNC, API_GET_INFO } from '../../../../util/constants/componentConstants'
 import { setCoinStatus } from '../../../actionCreators'
 
@@ -10,9 +10,9 @@ export const activateChainLifecycle = (mode, chainTicker) => {
   }
 
   if (mode === NATIVE) {
-    refreshIntervals(mode, chainTicker, {[API_GET_INFO]: {update_expired_oncomplete: ON_COMPLETE_FUNCTIONS[mode]}})
+    refreshCoinIntervals(mode, chainTicker, {[API_GET_INFO]: {update_expired_oncomplete: ON_COMPLETE_FUNCTIONS[mode]}})
   } else if (mode === ETH || mode === ELECTRUM) {
-    refreshIntervals(mode, chainTicker)
+    refreshCoinIntervals(mode, chainTicker)
   } else {
     throw new Error(`${mode} is not a supported coin mode.`)
   }
@@ -22,7 +22,7 @@ export const nativeGetInfoOnComplete = (state, dispatch, chainTicker) => {
   const currentStatus = state.coins.activatedCoins[chainTicker].status
   const getInfoResult = state.ledger.info[chainTicker]
   const getInfoError = state.errors[API_GET_INFO][chainTicker]
-  const refresh = () => refreshIntervals(NATIVE, chainTicker, {[API_GET_INFO]: {update_expired_oncomplete: nativeGetInfoOnComplete}})
+  const refresh = () => refreshCoinIntervals(NATIVE, chainTicker, {[API_GET_INFO]: {update_expired_oncomplete: nativeGetInfoOnComplete}})
 
   if (getInfoError && getInfoError.error) return
 

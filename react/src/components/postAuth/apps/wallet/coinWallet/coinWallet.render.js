@@ -17,7 +17,7 @@ import {
 } from "../../../../../util/constants/componentConstants";
 import { VirtualizedTable } from '../../../../../containers/VirtualizedTable/VirtualizedTable'
 import { TX_TYPES } from '../../../../../util/txUtils/txRenderUtils'
-import { timeConverter } from '../../../../../util/timeUtils'
+import { timeConverter } from '../../../../../util/displayUtil/timeUtils'
 import { SortDirection } from 'react-virtualized';
 import SearchBar from '../../../../../containers/SearchBar/SearchBar'
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
