@@ -8,7 +8,9 @@ import {
   TXDATA_ERROR,
   NATIVE,
   ERROR_INVALID_ADDR,
-  SIGN_VERIFY_ID_DATA
+  SIGN_VERIFY_ID_DATA,
+  TEXT_DATA,
+  FILE_DATA
 } from "../../../../util/constants/componentConstants";
 import { checkAddrValidity } from '../../../../util/addrUtils';
 
@@ -21,7 +23,7 @@ class SignIdDataForm extends React.Component {
       address: '',
       message: '',
       fileName: '',
-      isFile: false,
+      dataType: TEXT_DATA,
       formErrors: {
         address: [],
         message: [],
@@ -53,9 +55,10 @@ class SignIdDataForm extends React.Component {
     let txDataSchema = {
       ["Status:"]: txData[TXDATA_STATUS],
       ["Error:"]: txData[TXDATA_ERROR],
-      ["Data Signed:"]: formData.isFile ? formData.fileName : formData.message,
+      ["Data Signed:"]: formData.dataType === FILE_DATA ? formData.fileName : formData.message,
       ["Address/Identity Used:"]: formData.address,
-      ["Signature:"]: txData.result
+      ["Hash"]: txData.result ? txData.result.hash : null,
+      ["Signature:"]: txData.result ? txData.result.signature : null
     };
 
     Object.keys(txDataSchema).forEach(txDataKey => {
@@ -68,12 +71,13 @@ class SignIdDataForm extends React.Component {
   updateFormErrors() {
     //TODO: Add more errors in here by checking controlAddr and referralId
     const { setContinueDisabled, activeCoin } = this.props
-    const { address, message, fileName, isFile } = this.state
+    const { address, message, fileName, dataType } = this.state
     let formErrors = {
       address: [],
       message: [],
       fileName: [],
     }
+    const isFile = dataType === FILE_DATA
 
     if (address && address.length !== 0 && !checkAddrValidity(address, NATIVE, activeCoin.id)) {
       formErrors.address.push(ERROR_INVALID_ADDR)
@@ -116,11 +120,7 @@ class SignIdDataForm extends React.Component {
   }
 
   setDataType(e) {
-    if (e.target.value === 0) {
-      this.setAndUpdateState({ isFile: false })
-    } else {
-      this.setAndUpdateState({ isFile: true })
-    }
+    this.setState({ dataType: e.target.value })
   }
 
   updateFormData() {
@@ -128,7 +128,7 @@ class SignIdDataForm extends React.Component {
       address,
       message,
       fileName,
-      isFile
+      dataType
     } = this.state;
 
     this.props.setFormData({
@@ -136,7 +136,7 @@ class SignIdDataForm extends React.Component {
       address,
       message,
       fileName,
-      isFile
+      dataType
     });
   }
 

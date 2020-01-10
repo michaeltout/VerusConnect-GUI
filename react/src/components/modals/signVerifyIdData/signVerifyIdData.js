@@ -13,7 +13,8 @@ import {
   SIGN_ID_DATA,
   SIGN_VERIFY_ID_DATA,
   INFO_SNACK,
-  MID_LENGTH_ALERT
+  MID_LENGTH_ALERT,
+  FILE_DATA
 } from "../../../util/constants/componentConstants";
 import { signData, verifyData } from '../../../util/api/wallet/walletCalls';
 import { newSnackbar } from '../../../actions/actionCreators';
@@ -74,12 +75,13 @@ class SignVerifyIdData extends React.Component {
     this.setState({loading: true, loadingProgress: 99}, async () => {      
       try {
         const { 
-          isFile,
+          dataType,
           fileName,
           message,
           signature,
           address
         } = formData;
+        const isFile = dataType === FILE_DATA
         const { chainTicker } = modalProps
 
         if (modalProps.modalType === VERIFY_ID_DATA) {
@@ -88,14 +90,14 @@ class SignVerifyIdData extends React.Component {
             address,
             isFile ? fileName : message,
             signature,
-            isFile
+            dataType
           )
         } else if (modalProps.modalType === SIGN_ID_DATA) {
           _txData = await signData(
             chainTicker,
             address,
             isFile ? fileName : message,
-            isFile
+            dataType
           )
         }
         

@@ -1,7 +1,7 @@
 import React from 'react';
 import TextField from "@material-ui/core/TextField";
 import ObjectToTable from '../../../../containers/ObjectToTable/ObjectToTable'
-import { ENTER_DATA } from '../../../../util/constants/componentConstants';
+import { ENTER_DATA, FILE_DATA } from '../../../../util/constants/componentConstants';
 import { DropzoneArea } from 'material-ui-dropzone'
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -11,13 +11,13 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 
 export const SignIdDataFormRender = function() {
   const { formStep } = this.props
-  const { isFile } = this.state
+  const { dataType } = this.state
   return (
     <div
       className="col-xs-12 backround-gray"
       style={{
         width: "100%",
-        height: isFile ? "100%" : "85%",
+        height: dataType === FILE_DATA ? "100%" : "85%",
         display: "flex",
         justifyContent: formStep === ENTER_DATA ? "space-evenly" : "center",
         alignItems: formStep === ENTER_DATA ? "flex-start" : "unset",
@@ -43,14 +43,15 @@ export const SignIdDataRender = function() {
 
 export const SignIdDataFormEnterRender = function() {
   const { state, updateInput, setDataType, setFiles, props, updateAddress } = this
-  const { address, message, isFile, formErrors, fileName } = state;
+  const { address, message, dataType, formErrors, fileName } = state;
   const { identities } = props
+  const isFile = dataType === FILE_DATA
 
   return (
     <React.Fragment>
       <FormControl variant="outlined" style={{ width: 250 }}>
         <InputLabel>{"Data Type"}</InputLabel>
-        <Select value={isFile ? 1 : 0} onChange={setDataType} labelWidth={75}>
+        <Select value={dataType} onChange={setDataType} labelWidth={75}>
           <MenuItem value={0}>{"Sign Message/Text"}</MenuItem>
           <MenuItem value={1}>{"Sign File"}</MenuItem>
         </Select>

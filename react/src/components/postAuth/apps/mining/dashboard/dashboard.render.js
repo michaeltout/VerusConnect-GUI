@@ -137,7 +137,7 @@ export const DashboardRenderMiningCards = function() {
           miningState === MS_MERGE_MINING_STAKING ? (
             <span>
               {"with "} <span style={{fontWeight: "bold"}}>{`~${hashPow[0]} ${hashPow[2]}H/s`}</span>
-              {" and "}
+              {" & "}
               <span style={{fontWeight: "bold"}}>{`~${stakeCns[0]}${stakeCns[2]} ${coinObj.id}`}</span>
             </span>
           ) : miningState === MS_MERGE_MINING || miningState === MS_MINING ? (

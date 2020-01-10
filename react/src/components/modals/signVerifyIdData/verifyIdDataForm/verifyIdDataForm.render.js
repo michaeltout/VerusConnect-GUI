@@ -1,6 +1,6 @@
 import React from 'react';
 import TextField from "@material-ui/core/TextField";
-import { ENTER_DATA } from '../../../../util/constants/componentConstants';
+import { ENTER_DATA, TEXT_DATA, FILE_DATA } from '../../../../util/constants/componentConstants';
 import { DropzoneArea } from 'material-ui-dropzone'
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -11,13 +11,13 @@ import CancelIcon from '@material-ui/icons/Cancel';
 
 export const VerifyIdDataFormRender = function() {
   const { formStep } = this.props
-  const { isFile } = this.state
+  const { dataType } = this.state
   return (
     <div
       className="col-xs-12 backround-gray"
       style={{
         width: "100%",
-        height: isFile ? "100%" : "85%",
+        height: dataType === FILE_DATA ? "100%" : "85%",
         display: "flex",
         justifyContent: formStep === ENTER_DATA ? "space-evenly" : "center",
         alignItems: formStep === ENTER_DATA ? "flex-start" : "unset",
@@ -55,15 +55,17 @@ export const VerifyIdSigDataRender = function() {
 
 export const VerifyIdDataFormEnterRender = function() {
   const { state, updateInput, setDataType, setFiles } = this
-  const { address, message, signature, isFile, formErrors, fileName } = state;
+  const { address, message, signature, dataType, formErrors, fileName } = state;
+  const isFile = dataType === FILE_DATA
 
   return (
     <React.Fragment>
       <FormControl variant="outlined" style={{ width: 250 }}>
         <InputLabel>{"Data Type"}</InputLabel>
         <Select value={isFile ? 1 : 0} onChange={setDataType} labelWidth={75}>
-          <MenuItem value={0}>{"Sign Message/Text"}</MenuItem>
-          <MenuItem value={1}>{"Sign File"}</MenuItem>
+          <MenuItem value={0}>{"Verify Message/Text"}</MenuItem>
+          <MenuItem value={1}>{"Verify File"}</MenuItem>
+          <MenuItem value={2}>{"Verify Hash"}</MenuItem>
         </Select>
       </FormControl>
       {isFile && (
@@ -114,9 +116,9 @@ export const VerifyIdDataFormEnterRender = function() {
           helperText={
             formErrors.message.length > 0
               ? formErrors.message[0]
-              : "Enter a message to verify."
+              : (dataType === TEXT_DATA ? "Enter a message to verify." : "Enter a hash to verify.")
           }
-          label="Enter message"
+          label={dataType === TEXT_DATA ? "Enter message" : "Enter hash"}
           variant="outlined"
           multiline
           rowsMax={10}

@@ -49,6 +49,7 @@ export const API_SIGN_MESSAGE = 'sign_message'
 export const API_SIGN_FILE = 'sign_file'
 export const API_VERIFY_MESSAGE = 'verify_message'
 export const API_VERIFY_FILE = 'verify_file'
+export const API_VERIFY_HASH = 'verify_hash'
 export const API_START_MINING = 'start_mining'
 export const API_STOP_MINING = 'stop_mining'
 export const API_START_STAKING = 'start_staking'
@@ -318,6 +319,11 @@ export const MS_STAKING = 'staking'
 export const MS_MINING_STAKING = 'mining_staking'
 export const MS_MERGE_MINING = 'merge_mining'
 export const MS_MERGE_MINING_STAKING = 'merge_mining_staking'
+
+// Data types for signature verification
+export const TEXT_DATA = 0
+export const FILE_DATA = 1
+export const HASH_DATA = 2
 
 
 

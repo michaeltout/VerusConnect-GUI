@@ -8,7 +8,9 @@ import {
   TXDATA_ERROR,
   NATIVE,
   ERROR_INVALID_ADDR,
-  SIGN_VERIFY_ID_DATA
+  SIGN_VERIFY_ID_DATA,
+  FILE_DATA,
+  TEXT_DATA
 } from "../../../../util/constants/componentConstants";
 import { checkAddrValidity } from '../../../../util/addrUtils';
 
@@ -20,7 +22,7 @@ class VerifyIdDataForm extends React.Component {
       signature: '',
       message: '',
       fileName: '',
-      isFile: false,
+      dataType: TEXT_DATA,
       formErrors: {
         address: [],
         signature: [],
@@ -55,7 +57,9 @@ class VerifyIdDataForm extends React.Component {
   updateFormErrors() {
     //TODO: Add more errors in here by checking controlAddr and referralId
     const { setContinueDisabled, activeCoin } = this.props
-    const { address, signature, message, fileName, isFile } = this.state
+    const { address, signature, message, fileName, dataType } = this.state
+    const isFile = dataType === FILE_DATA
+    
     let formErrors = {
       address: [],
       signature: [],
@@ -98,11 +102,7 @@ class VerifyIdDataForm extends React.Component {
   }
 
   setDataType(e) {
-    if (e.target.value === 0) {
-      this.setAndUpdateState({ isFile: false })
-    } else {
-      this.setAndUpdateState({ isFile: true })
-    }
+    this.setState({ dataType: e.target.value })
   }
 
   updateFormData() {
@@ -111,7 +111,7 @@ class VerifyIdDataForm extends React.Component {
       signature,
       message,
       fileName,
-      isFile
+      dataType
     } = this.state;
 
     this.props.setFormData({
@@ -120,7 +120,7 @@ class VerifyIdDataForm extends React.Component {
       signature,
       message,
       fileName,
-      isFile
+      dataType
     });
   }
 
