@@ -47,7 +47,6 @@
     "clsx": "^1.0.4",
     "ethers": "git://github.com/VerusCoin/ethers.js",
     "express": "^4.14.0",
-    "material-ui-dropzone": "^2.4.7",
     "node-vibrant": "^3.1.4",
     "passwd-strength": "https://github.com/michaeltout/passwd-strength.git",
     "plotly.js": "^1.47.3",

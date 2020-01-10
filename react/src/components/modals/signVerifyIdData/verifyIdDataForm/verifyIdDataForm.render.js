@@ -1,7 +1,6 @@
 import React from 'react';
 import TextField from "@material-ui/core/TextField";
 import { ENTER_DATA, TEXT_DATA, FILE_DATA } from '../../../../util/constants/componentConstants';
-import { DropzoneArea } from 'material-ui-dropzone'
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -11,13 +10,12 @@ import CancelIcon from '@material-ui/icons/Cancel';
 
 export const VerifyIdDataFormRender = function() {
   const { formStep } = this.props
-  const { dataType } = this.state
   return (
     <div
       className="col-xs-12 backround-gray"
       style={{
         width: "100%",
-        height: dataType === FILE_DATA ? "100%" : "85%",
+        height: "85%",
         display: "flex",
         justifyContent: formStep === ENTER_DATA ? "space-evenly" : "center",
         alignItems: formStep === ENTER_DATA ? "flex-start" : "unset",
@@ -70,6 +68,7 @@ export const VerifyIdDataFormEnterRender = function() {
       </FormControl>
       {isFile && (
         <React.Fragment>
+          {/* TODO: Consider re-adding based on feedback
           <TextField
             error={formErrors.fileName.length > 0}
             label="Enter file path or select below"
@@ -80,34 +79,8 @@ export const VerifyIdDataFormEnterRender = function() {
             name="fileName"
             value={fileName}
             style={{ marginTop: 5, width: "100%" }}
-          />
-          <DropzoneArea
-            onChange={setFiles}
-            filesLimit={1}
-            dropzoneText={"Drop a file to verify or click"}
-            maxFileSize={Infinity}
-            showFileNames={true}
-            getDropRejectMessage={() => {return "File rejected by file picker, try entering the file path manually."}}
-            acceptedFiles={[
-              "audio/*",
-              "video/*",
-              "image/*",
-              "application/*",
-              "text/*",
-              "font/*",
-              "model/*",
-              ".dmg",
-              ".s",
-              ".cpp",
-              ".sh",
-              ".bat",
-              ".zip",
-              ".7z",
-              ".tar.gz",
-              ".rar",
-              ".AppImage"
-            ]}
-          />
+          />*/}
+          <input type="file" id="avatar" onChange={setFiles} />
         </React.Fragment>
       )}
       {!isFile && (

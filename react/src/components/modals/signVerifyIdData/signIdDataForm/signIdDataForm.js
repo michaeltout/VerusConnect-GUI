@@ -110,13 +110,11 @@ class SignIdDataForm extends React.Component {
   }
 
   updateAddress(address) {
-    console.log(address)
-
     this.setAndUpdateState({ address })
   }
 
-  setFiles(files) {
-    this.setAndUpdateState({ fileName: files.length > 0 ? files[0].path : '' })
+  setFiles(event) {    
+    this.setAndUpdateState({ fileName: event.target.files.length > 0 ? event.target.files[0].path : '' })
   }
 
   setDataType(e) {
