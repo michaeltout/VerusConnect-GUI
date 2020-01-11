@@ -17,7 +17,7 @@ export const CreateProfileRender = function() {
               textAlign: "center"
             }
           }}
-          label={"Enter new profile name..."}
+          label={"Enter new profile name"}
           variant="outlined"
           onChange={this.updateInput}
           name="profileName"

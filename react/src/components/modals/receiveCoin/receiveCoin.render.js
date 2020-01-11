@@ -85,7 +85,7 @@ export const ReceiveCoinMainRender = function() {
           {ReceiveCurrencyPickerRender.call(this)}
           <SearchBar
             label={"Address Search"}
-            placeholder={"Type and press enter..."}
+            placeholder={"Type and press enter"}
             name="addressSearchTerm"
             clearable={true}
             style={{

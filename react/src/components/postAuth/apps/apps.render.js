@@ -104,6 +104,7 @@ export const AppsRender = function() {
               <button
                 className="btn btn-primary noshadow"
                 type="button"
+                disabled={currentApp === SETTINGS}
                 onClick={() => this.selectApp(SETTINGS)}
                 style={AppsStyles.topBarMenuItem}>
                 <i className="fas fa-cog" style={AppsStyles.topBarMenuItemIcon} />

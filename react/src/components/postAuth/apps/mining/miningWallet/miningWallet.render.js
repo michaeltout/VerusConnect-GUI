@@ -156,7 +156,7 @@ export const MiningWalletRender = function() {
                     >
                       <SearchBar
                         label={"Transaction Search"}
-                        placeholder={"Type and press enter..."}
+                        placeholder={"Type and press enter"}
                         name="txSearchTerm"
                         clearable={true}
                         style={{

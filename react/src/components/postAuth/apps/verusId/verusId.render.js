@@ -53,13 +53,13 @@ export const IdCardRender = function(coinObj) {
                 name="selectedProfileId"
                 className="custom-select custom-select-lg"
                 style={{ marginTop: 10 }}
-                //Selected index is offset by one due to "Select Identity..." placeholder
+                //Selected index is offset by one due to "Select Identity" placeholder
                 onChange={e =>
                   this.openId(coinObj.id, e.target.selectedIndex - 1)
                 }
               >
                 <option key={-1} value={-1} disabled={true}>
-                  {"Select identity..."}
+                  {"Select identity"}
                 </option>
                 {coinIdentities.map((idObj, index) => {
                   {

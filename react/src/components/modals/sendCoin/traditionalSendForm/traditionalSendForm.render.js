@@ -46,7 +46,7 @@ export const TraditionalSendFormEnterRender = function() {
       <TextField
         error={ formErrors.sendTo.length > 0 }
         helperText={ formErrors.sendTo ? formErrors.sendTo[0] : null }
-        label="Enter destination address..."
+        label="Enter destination address"
         variant="outlined"
         onChange={updateInput}
         name="sendTo"
@@ -56,7 +56,7 @@ export const TraditionalSendFormEnterRender = function() {
       <TextField
         error={ formErrors.amount.length > 0 }
         helperText={ formErrors.amount ? formErrors.amount[0] : null }
-        label="Enter send amount..."
+        label="Enter send amount"
         value={amount}
         onChange={updateInput}
         variant="outlined"
@@ -76,7 +76,7 @@ export const TraditionalSendFormEnterRender = function() {
       />
       {sendTo && sendTo[0] && sendTo[0] === 'z' && 
         <TextField
-          label="Enter memo..."
+          label="Enter memo"
           variant="outlined"
           onChange={updateInput}
           name="memo"
@@ -102,7 +102,7 @@ export const TraditionalSendAddressDropdownRender = function() {
           error={ this.state.formErrors.sendFrom.length > 0 }
           helperText={ this.state.formErrors.sendFrom ? this.state.formErrors.sendFrom[0] : null }
           {...params}
-          label="Select from location..."
+          label="Select from location"
           variant="outlined"
           fullWidth
         />

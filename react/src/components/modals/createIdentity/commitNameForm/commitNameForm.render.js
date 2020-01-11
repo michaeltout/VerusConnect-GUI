@@ -46,7 +46,7 @@ export const CommitNameFormEnterRender = function() {
       <TextField
         error={ formErrors.name.length > 0 }
         helperText={ formErrors.name ? formErrors.name[0] : null }
-        label="Enter name to reserve..."
+        label="Enter name to reserve"
         variant="outlined"
         onChange={updateInput}
         name="name"
@@ -59,7 +59,7 @@ export const CommitNameFormEnterRender = function() {
         error={ formErrors.referralId.length > 0 }
         helperText={ formErrors.referralId ? formErrors.referralId[0] : null }
         items={identities.map(id => `${id.identity.name}@`)}
-        label="Enter referral identity (optional)..."
+        label="Enter referral identity (optional)"
         onChange={updateInput}
         containerStyle={{ marginTop: 5, width: "75%" }}
       />
