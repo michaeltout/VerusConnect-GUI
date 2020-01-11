@@ -27,6 +27,7 @@ class SuggestionInput extends React.Component {
         freeSolo
         style={containerStyle}
         options={items}
+        groupBy={() => "Suggestions:"}
         onChange={(event, value) => onChange({target: {name, value: value == null ? '' : value}})}
         renderOption={renderOption}
         getOptionLabel={getOptionLabel}
