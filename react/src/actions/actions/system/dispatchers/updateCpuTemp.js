@@ -22,5 +22,6 @@ export const updateCpuTemp = async (dispatch) => {
   }
 
   dispatch(systemAction)
+
   return wasSuccess
 }

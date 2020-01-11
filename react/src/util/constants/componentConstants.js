@@ -87,6 +87,7 @@ export const API_ABORTED = 'aborted'
 export const API_SUCCESS = 'success'
 export const API_ERROR = 'error'
 export const API_FAILED = 'failed'
+export const API_UNSUPPORTED_SYSTEM_CALL = 'unsupported_operation'
 
 // API Fetch update intervals
 export const ALWAYS_ACTIVATED = 0

@@ -7,7 +7,7 @@ import { startMining, startStaking, stopMining, stopStaking } from '../../../../
 import { NumberType } from 'io-ts';
 import Store from '../../../../../store'
 import { setMainNavigationPath, setModalNavigationPath, newSnackbar, expireData } from '../../../../../actions/actionCreators';
-import { POST_AUTH, APPS, SETTINGS, PROFILE_SETTINGS, ADD_COIN, SELECT_COIN, NATIVE, API_GET_INFO, API_GET_MININGINFO, ERROR_SNACK, MID_LENGTH_ALERT } from '../../../../../util/constants/componentConstants';
+import { POST_AUTH, APPS, SETTINGS, PROFILE_SETTINGS, ADD_COIN, SELECT_COIN, NATIVE, API_GET_INFO, API_GET_MININGINFO, ERROR_SNACK, MID_LENGTH_ALERT, API_GET_CPU_TEMP } from '../../../../../util/constants/componentConstants';
 import { conditionallyUpdateWallet } from '../../../../../actions/actionDispatchers';
 
 class Dashboard extends React.Component {
@@ -129,6 +129,7 @@ function mapStateToPropsFactory(initialState, ownProps) {
       cpuTemp: state.system.cpuTemp,
       sysTime: state.system.sysTime,
       cpuData: state.system.static ? state.system.static.cpu : {},
+      cpuTempError: state.errors[API_GET_CPU_TEMP],
       getInfoErrors: state.errors[API_GET_INFO],
       miningInfoErrors: state.errors[API_GET_MININGINFO]
     };

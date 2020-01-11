@@ -8,7 +8,7 @@ import {
   generateUpdateCoinDataAction,
   
 } from '../../../actionCreators'
-import { ALWAYS_ACTIVATED, NEVER_ACTIVATED } from '../../../../util/constants/componentConstants'
+import { ALWAYS_ACTIVATED, NEVER_ACTIVATED, API_UNSUPPORTED_SYSTEM_CALL, API_ERROR } from '../../../../util/constants/componentConstants'
 import Store from '../../../../store'
 import { generateUpdateSystemDataAction, setSystemUpdateIntervalId } from '../../updateManager'
 import { conditionallyUpdateSystemData } from '../../system/dispatchers/systemDataUpdates'
@@ -71,17 +71,35 @@ export const createCoinUpdateExpiredInterval = (interval, mode, chainTicker, upd
  * @param {Integer} interval Length of interval in ms
  * @param {String} updateId Name of system data API call
  */
-export const createSystemUpdateDataInterval = (interval, updateId) => {
+export const createSystemUpdateDataInterval = async (interval, updateId) => {
   const intervalAction = async () => {
     const state = Store.getState()
+    const conditionallyUpdateResult = await conditionallyUpdateSystemData(state, Store.dispatch, updateId)
 
-    
-    const updateStatus = await conditionallyUpdateSystemData(state, Store.dispatch, updateId)
+    // If call failed, check to see if it is unsupported, if so, cancel interval.
+    if(conditionallyUpdateResult === API_ERROR) {
+      const newState = Store.getState()
+      const newError = newState.errors[updateId]
+      const intervalInfo = newState.updates.systemUpdateIntervals[updateId]
+
+      if (
+        newError &&
+        newError.result === API_UNSUPPORTED_SYSTEM_CALL &&
+        intervalInfo &&
+        intervalInfo.interval_id
+      ) {
+        console.warn(
+          `${updateId} is not a supported operation on this system, and its update interval has been canceled.`
+        );
+        clearInterval(
+          intervalInfo.interval_id
+        );
+      }
+    } 
   }
 
-  intervalAction()
+  await intervalAction()
   const intervalId = setInterval(async () => intervalAction(), interval);
-  
   Store.dispatch(setSystemUpdateIntervalId(updateId, intervalId))
 }
 

@@ -10,7 +10,8 @@ import {
   MID_LENGTH_ALERT,
   API_GET_SYS_TIME,
   API_GET_CPU_LOAD,
-  API_GET_CPU_TEMP
+  API_GET_CPU_TEMP,
+  API_UNSUPPORTED_SYSTEM_CALL
 } from '../../../../util/constants/componentConstants'
 import {
   disableUpdateWarningSnack,
@@ -51,8 +52,8 @@ export const conditionallyUpdateSystemData = async (state, dispatch, updateId) =
           return false
         } else return true
       })
-    } 
-    
+    }
+
     if (!testPassed) return API_ABORTED
 
     if(await udpateSystemData(dispatch, updateId)) {

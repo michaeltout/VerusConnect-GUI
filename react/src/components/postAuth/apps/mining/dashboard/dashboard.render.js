@@ -1,6 +1,15 @@
 import React from "react";
 import ReactMinimalPieChart from "react-minimal-pie-chart";
-import { MS_OFF, MS_IDLE, MS_MINING_STAKING, MS_MERGE_MINING_STAKING, MS_MERGE_MINING, MS_MINING, IS_VERUS } from "../../../../../util/constants/componentConstants";
+import {
+  MS_OFF,
+  MS_IDLE,
+  MS_MINING_STAKING,
+  MS_MERGE_MINING_STAKING,
+  MS_MERGE_MINING,
+  MS_MINING,
+  IS_VERUS,
+  CPU_TEMP_UNSUPPORTED
+} from "../../../../../util/constants/componentConstants";
 import { secondsToTime } from "../../../../../util/displayUtil/timeUtils";
 import { normalizeNum } from "../../../../../util/displayUtil/numberFormat";
 import Tooltip from '@material-ui/core/Tooltip';
@@ -57,20 +66,26 @@ export const DashboardRender = function() {
 
 export const DashboardRenderSystemData = function() {
   const { coinsMining, coinsStaking } = this.state
-  const { cpuLoad, cpuTemp, sysTime } = this.props
+  const { cpuLoad, cpuTemp, sysTime, cpuTempError } = this.props
   const numMined = coinsMining, numStaked = coinsStaking
+  const includeTemp = cpuTemp.main && !cpuTempError.error
 
-  const displayedSystemData = {
+  let displayedSystemData = {
     ["Mining"]: `${numMined} ${numMined == 1 ? 'coin' : 'coins'}`,
     ["Staking"]: `${numStaked} ${numStaked == 1 ? 'coin' : 'coins'}`,
-    ["CPU Temp"]: `${cpuTemp.main ? cpuTemp.main : '-'} °C`,
-    ["Uptime"]: secondsToTime(sysTime.uptime ? sysTime.uptime : '-'),
-    ["CPU Load"]: `${cpuLoad.currentload ? cpuLoad.currentload.toFixed(2) : '- '}%`
+    //["CPU Temp"]: `${cpuTemp.main ? cpuTemp.main : '-'} °C`,
+    ["CPU Load"]: `${cpuLoad.currentload ? cpuLoad.currentload.toFixed(2) : '- '}%`,
+    ["Uptime"]: secondsToTime(sysTime.uptime ? sysTime.uptime : '-')
+  }
+
+  // If CPU Temp is unsupported, dont show CPU Temp box
+  if (includeTemp) {
+    displayedSystemData["CPU Temp"] = `${cpuTemp.main} °C`
   }
 
   return Object.keys(displayedSystemData).map((dataKey, index) => {
     return (
-      <div style={{ padding: 0, flex: 1, minWidth: index < 3 ? "33.3%" : "50%" }}>
+      <div style={{ padding: 0, flex: 1, minWidth: index < 3 && includeTemp ? "33.3%" : "50%" }}>
         <div className="card border rounded-0" style={{ height: "100%" }}>
           <div className="card-body d-lg-flex flex-row justify-content-between align-items-lg-center">
             <h6
