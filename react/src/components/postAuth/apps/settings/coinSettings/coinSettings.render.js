@@ -48,8 +48,6 @@ export const CoinSettingsOptionsRender = function() {
           type,
           displayName,
           options,
-          info,
-          disabled,
           hidden
         } = configTypes[settingKey];
 

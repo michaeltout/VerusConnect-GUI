@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { 
   CoinSettingsRender,
 } from './coinSettings.render';
-import { NATIVE } from '../../../../../util/constants/componentConstants';
+import { NATIVE, RUN_SIGN_HASH } from '../../../../../util/constants/componentConstants';
 import { customRpcCall } from '../../../../../util/api/wallet/walletCalls';
 
 class CoinSettings extends React.Component {
@@ -18,6 +18,11 @@ class CoinSettings extends React.Component {
       activeTab: 0,
       tabs: this.availableModeArr
     }
+
+    this.COMMAND_OVERRIDES = {
+      [RUN_SIGN_HASH]: ("Signing hashes is disabled through the GUI client, to sign a hash, use the Verus CLI.\n\n" + 
+      "DO NOT SIGN ANYTHING FOR ANYONE ELSE UNLESS YOU KNOW EXACTLY WHAT YOU ARE SIGNING.")
+    };
 
     this.handleTabChange = this.handleTabChange.bind(this)
     this.setConfigValue = this.setConfigValue.bind(this)
@@ -92,38 +97,42 @@ class CoinSettings extends React.Component {
       } 
     })
 
-    // Make RPC call based on params given
-    customRpcCall(this.props.selectedCoinObj.id, cliCmd, cliCmdsParsed)
-    .then(response => {
-      if (response) {
-        const { result } = response
+    if (this.COMMAND_OVERRIDES[cliCmd] != null) {
+      print(this.COMMAND_OVERRIDES[cliCmd])
+    } else {
+      // Make RPC call based on params given
+      customRpcCall(this.props.selectedCoinObj.id, cliCmd, cliCmdsParsed)
+      .then(response => {
+        if (response) {
+          const { result } = response
 
-        if (result == null) {
-          print("No response.")
-        } else if (typeof result == 'string') {
-          // Format output string in readable format
-          print(`${result
-            .replace(/{/g, `{`)
-            .replace(/\\"/g, `"`)
-            .replace(/\\n/g, `\n`)
-            .replace(/}/g, `}`)}`)
-        } else if (typeof result == 'object') {
-          // Format JSON in readable format
-          print(JSON.stringify(result)
-            .replace(/,/g, ',\n') 
-            .replace(/":/g, '": ')
-            .replace(/{/g, '{\n')
-            .replace(/}/g, '\n}'))
-        } else if (typeof result == 'boolean') {
-          print(result ? "true" : "false")
-        } else {
-          print(result)
+          if (result == null) {
+            print("No response.")
+          } else if (typeof result == 'string') {
+            // Format output string in readable format
+            print(`${result
+              .replace(/{/g, `{`)
+              .replace(/\\"/g, `"`)
+              .replace(/\\n/g, `\n`)
+              .replace(/}/g, `}`)}`)
+          } else if (typeof result == 'object') {
+            // Format JSON in readable format
+            print(JSON.stringify(result)
+              .replace(/,/g, ',\n') 
+              .replace(/":/g, '": ')
+              .replace(/{/g, '{\n')
+              .replace(/}/g, '\n}'))
+          } else if (typeof result == 'boolean') {
+            print(result ? "true" : "false")
+          } else {
+            print(result)
+          }
         }
-      }
-    })
-    .catch(e => {
-      print(e.message)
-    })
+      })
+      .catch(e => {
+        print(e.message)
+      })
+    }
   }
 
   setConfigValue(name, value) {

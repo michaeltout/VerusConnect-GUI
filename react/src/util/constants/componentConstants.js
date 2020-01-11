@@ -326,5 +326,8 @@ export const TEXT_DATA = 0
 export const FILE_DATA = 1
 export const HASH_DATA = 2
 
+// Overriden commands in coinSettings.js
+export const RUN_SIGN_HASH = 'signhash'
+
 
 
