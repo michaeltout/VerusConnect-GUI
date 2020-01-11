@@ -332,39 +332,82 @@ export const DashboardRender = function() {
                   ) : this.state.displayNameCommitments.length > 0 ? (
                     DashboardRenderTable.call(this)
                   ) : (
-                    "No name commitments. Commit a name to create an ID!"
+                    <React.Fragment>
+                      <a
+                        href={identityChains.length === 0 ? null : "#"}
+                        style={{
+                          color:
+                            identityChains.length === 0
+                              ? "black"
+                              : "rgb(78,115,223)"
+                        }}
+                        onClick={
+                          identityChains.length === 0
+                            ? () => {
+                                return 0;
+                              }
+                            : identityChains.length === 1
+                            ? () => this.openCommitNameModal(identityChains[0])
+                            : this.toggleReservationDropdown
+                        }
+                      >
+                        {"No name commitments. Commit a name to create an ID!"}
+                      </a>
+                      <div style={{textAlign: "center", marginTop: 5}}>
+                        {"Commiting a name costs as little as one transaction fee, and simply involves " +
+                          "choosing the name you would like, and comitting it into a transaction that you later refer to when creating an identity."}
+                      </div>
+                    </React.Fragment>
                   )}
-                  {Object.keys(this.props.activatedCoins).map((chainTicker, index) => {
-                    const { identityErrors, getInfoErrors, activatedCoins } = this.props;
-                    if (activatedCoins[chainTicker].tags.includes(IS_VERUS)) {
-                      const identityError = identityErrors[chainTicker] != null ? identityErrors[chainTicker].error : false
-                      const identityErrorMsg = identityErrors[chainTicker] != null ? identityErrors[chainTicker].result : null
-                      const infoError = getInfoErrors[chainTicker] != null ? getInfoErrors[chainTicker].error : false;
-                      const infoErrorMsg = getInfoErrors[chainTicker] != null ? getInfoErrors[chainTicker].result : null;
+                  {Object.keys(this.props.activatedCoins).map(
+                    (chainTicker, index) => {
+                      const {
+                        identityErrors,
+                        getInfoErrors,
+                        activatedCoins
+                      } = this.props;
+                      if (activatedCoins[chainTicker].tags.includes(IS_VERUS)) {
+                        const identityError =
+                          identityErrors[chainTicker] != null
+                            ? identityErrors[chainTicker].error
+                            : false;
+                        const identityErrorMsg =
+                          identityErrors[chainTicker] != null
+                            ? identityErrors[chainTicker].result
+                            : null;
+                        const infoError =
+                          getInfoErrors[chainTicker] != null
+                            ? getInfoErrors[chainTicker].error
+                            : false;
+                        const infoErrorMsg =
+                          getInfoErrors[chainTicker] != null
+                            ? getInfoErrors[chainTicker].result
+                            : null;
 
-                      return identityError || infoError ? (
-                        <div style={{ marginTop: 5 }} key={index}>
-                          <i
-                            className="fas fa-exclamation-triangle"
-                            style={{
-                              marginRight: 6,
-                              color: "rgb(236,124,43)",
-                              fontSize: 18
-                            }}
-                          />
-                          <span>{`Warning, ${chainTicker} IDs not loaded: `}</span>
-                          <span
-                            style={{
-                              color: "rgb(236,124,43)",
-                              fontWeight: "bold"
-                            }}
-                          >
-                            {infoError ? infoErrorMsg : identityErrorMsg}
-                          </span>
-                        </div>
-                      ) : null;
-                    } else return null                    
-                  })}
+                        return identityError || infoError ? (
+                          <div style={{ marginTop: 5 }} key={index}>
+                            <i
+                              className="fas fa-exclamation-triangle"
+                              style={{
+                                marginRight: 6,
+                                color: "rgb(236,124,43)",
+                                fontSize: 18
+                              }}
+                            />
+                            <span>{`Warning, ${chainTicker} IDs not loaded: `}</span>
+                            <span
+                              style={{
+                                color: "rgb(236,124,43)",
+                                fontWeight: "bold"
+                              }}
+                            >
+                              {infoError ? infoErrorMsg : identityErrorMsg}
+                            </span>
+                          </div>
+                        ) : null;
+                      } else return null;
+                    }
+                  )}
                 </div>
               </div>
             </div>
@@ -563,7 +606,9 @@ export const DashboardRenderIds = function() {
             style={{
               width: "32.3%",
               minWidth: 255,
-              margin: "0.516%"
+              margin: "0.516%",
+              marginTop: 0,
+              marginBottom: "1.032%"
             }}
             key={index}
           >

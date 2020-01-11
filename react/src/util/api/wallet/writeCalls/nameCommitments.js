@@ -27,14 +27,12 @@ export const deleteIdName = async (chainTicker, name) => {
  * @param {String} preflight Whether or not to actually register the ID name or just return data to confirm
  * @param {String} chainTicker The chain to create the name commitment on
  * @param {String} name The name to create a commitment for 
- * @param {String} controlAddress The address that the name will be attached to
  * @param {String} referralId The refferal id that can be used for a creation discount
  */
 export const registerIdName = async (
   preflight,
   chainTicker,
   name,
-  controlAddress,
   referralId
 ) => {
   try {
@@ -44,7 +42,6 @@ export const registerIdName = async (
       {
         chainTicker,
         name,
-        controlAddress,
         referralId
       }
     );

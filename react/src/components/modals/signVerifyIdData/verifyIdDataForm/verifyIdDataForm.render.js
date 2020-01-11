@@ -60,7 +60,7 @@ export const VerifyIdDataFormEnterRender = function() {
     <React.Fragment>
       <FormControl variant="outlined" style={{ width: 250 }}>
         <InputLabel>{"Data Type"}</InputLabel>
-        <Select value={isFile ? 1 : 0} onChange={setDataType} labelWidth={75}>
+        <Select value={dataType} onChange={setDataType} labelWidth={75}>
           <MenuItem value={0}>{"Verify Message/Text"}</MenuItem>
           <MenuItem value={1}>{"Verify File"}</MenuItem>
           <MenuItem value={2}>{"Verify Hash"}</MenuItem>

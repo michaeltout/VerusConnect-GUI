@@ -1,6 +1,6 @@
 import React from "react";
 import ReactMinimalPieChart from "react-minimal-pie-chart";
-import { MS_OFF, MS_IDLE, MS_MINING_STAKING, MS_MERGE_MINING_STAKING, MS_MERGE_MINING, MS_MINING } from "../../../../../util/constants/componentConstants";
+import { MS_OFF, MS_IDLE, MS_MINING_STAKING, MS_MERGE_MINING_STAKING, MS_MERGE_MINING, MS_MINING, IS_VERUS } from "../../../../../util/constants/componentConstants";
 import { secondsToTime } from "../../../../../util/displayUtil/timeUtils";
 import { normalizeNum } from "../../../../../util/displayUtil/numberFormat";
 import Tooltip from '@material-ui/core/Tooltip';
@@ -65,7 +65,7 @@ export const DashboardRenderSystemData = function() {
     ["Staking"]: `${numStaked} ${numStaked == 1 ? 'coin' : 'coins'}`,
     ["CPU Temp"]: `${cpuTemp.main ? cpuTemp.main : '-'} °C`,
     ["Uptime"]: secondsToTime(sysTime.uptime ? sysTime.uptime : '-'),
-    ["CPU Load"]: `${cpuLoad.currentload ? cpuLoad.currentload.toFixed(2) : '-'}%`
+    ["CPU Load"]: `${cpuLoad.currentload ? cpuLoad.currentload.toFixed(2) : '- '}%`
   }
 
   return Object.keys(displayedSystemData).map((dataKey, index) => {
@@ -237,7 +237,15 @@ export const DashboardRenderMiningCards = function() {
                       </h3>
                     </div>
                   </div>
-                  <div style={{ marginBottom: 5, minHeight: 60, display: "flex", alignItems: "center" }} key={index}>
+                  <div
+                    style={{
+                      marginBottom: 5,
+                      minHeight: 60,
+                      display: "flex",
+                      alignItems: "center"
+                    }}
+                    key={index}
+                  >
                     {miningError || getInfoError ? (
                       <React.Fragment>
                         <i
@@ -273,21 +281,22 @@ export const DashboardRenderMiningCards = function() {
                       flex: 1
                     }}
                   >
-                    <Tooltip
-                      title={isStaking ? "Stop Staking" : "Start Staking"}
-                    >
-                      <span>
-                        <IconButton
-                          onClick={() => toggleStaking(chainTicker)}
-                          disabled={
-                            miningState === MS_IDLE || loading[chainTicker]
-                          }
-                        >
-                        
-                          {isStaking ? <AttachMoneyIcon /> : <MoneyOffIcon />}
-                        </IconButton>
-                      </span>
-                    </Tooltip>
+                    {coinObj.tags.includes(IS_VERUS) && (
+                      <Tooltip
+                        title={isStaking ? "Stop Staking" : "Start Staking"}
+                      >
+                        <span>
+                          <IconButton
+                            onClick={() => toggleStaking(chainTicker)}
+                            disabled={
+                              miningState === MS_IDLE || loading[chainTicker]
+                            }
+                          >
+                            {isStaking ? <AttachMoneyIcon /> : <MoneyOffIcon />}
+                          </IconButton>
+                        </span>
+                      </Tooltip>
+                    )}
                     <FormControl variant="outlined">
                       <InputLabel>{"Mining"}</InputLabel>
                       <Select
@@ -306,8 +315,7 @@ export const DashboardRenderMiningCards = function() {
                           miningState === MS_IDLE || loading[chainTicker]
                         }
                       >
-                        {(miningState === MS_IDLE ||
-                          loading[chainTicker]) && (
+                        {(miningState === MS_IDLE || loading[chainTicker]) && (
                           <MenuItem value={-1}>
                             <em>{"Loading..."}</em>
                           </MenuItem>

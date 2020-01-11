@@ -28,8 +28,21 @@ export const TxInfoRender = function() {
         justifyContent: "space-between"
       }}
     >
-      {activeTab === GENERAL_INFO && <ObjectToTable dataObj={modalObj[activeTab]} pagination={false} />}
-      {activeTab !== GENERAL_INFO && <Paper style={{overflowWrap: "break-word", overflow: "scroll"}}>{ modalObj[activeTab] }</Paper>}
+      {activeTab === GENERAL_INFO && (
+        <ObjectToTable dataObj={modalObj[activeTab]} pagination={false} />
+      )}
+      {activeTab !== GENERAL_INFO && (
+        <Paper
+          style={{
+            overflowWrap: "break-word",
+            overflow: "scroll",
+            fontWeight: 400,
+            fontSize: 18
+          }}
+        >
+          {modalObj[activeTab]}
+        </Paper>
+      )}
       <BottomNavigation
         value={activeTab}
         onChange={(event, newValue) => {
@@ -59,8 +72,8 @@ export const TxInfoRender = function() {
             label={TX_HEX}
             value={TX_HEX}
             icon={<CodeIcon />}
-          />)
-        }
+          />
+        )}
       </BottomNavigation>
     </div>
   );

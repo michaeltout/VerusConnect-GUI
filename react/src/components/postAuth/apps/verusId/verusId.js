@@ -29,6 +29,7 @@ class VerusId extends React.Component {
     this.setTabs = this.setTabs.bind(this)
     this.openId = this.openId.bind(this)
     this.openDashboard = this.openDashboard.bind(this)
+    this.openAddCoinModal = this.openAddCoinModal.bind(this)
     this.setTabs()
   }
 

@@ -12,7 +12,8 @@ import {
   NATIVE_RESCAN,
   NATIVE_STAKE,
   NATIVE_MINE_THREADS,
-  NATIVE_REINDEX
+  NATIVE_REINDEX,
+  IS_VERUS
 } from "../../../../util/constants/componentConstants";
 
 export const SelectCoinRender = function() {
@@ -152,35 +153,37 @@ export const SelectModeForm = function() {
           <strong>Native</strong>
         </button>
       </div>
-      { this.state.selectedMode === NATIVE && 
+      {this.state.selectedMode === NATIVE && (
         <div
           className="d-flex d-sm-flex d-md-flex d-lg-flex flex-column align-items-center align-items-sm-center align-items-md-center justify-content-lg-center align-items-lg-center"
           style={{ paddingTop: 28 }}
         >
           <div>
-            <div>
-              <div
-                className="form-check d-flex align-items-center"
-                style={{ padding: 0 }}
-              >
-                <CustomCheckbox
-                  checkboxProps={{
-                    checked: this.state.nativeOptions[NATIVE_STAKE],
-                    onChange: this.checkBox,
-                    name: NATIVE_STAKE
-                  }}
-                  colorChecked="rgb(78,115,223)"
-                  colorUnchecked="rgb(78,115,223)"
-                />
-                <label
-                  className="form-check-label"
-                  htmlFor="formCheck-1"
-                  style={{ color: "rgb(0,0,0)" }}
+            {this.state.chosenCoin.tags.includes(IS_VERUS) && (
+              <div>
+                <div
+                  className="form-check d-flex align-items-center"
+                  style={{ padding: 0 }}
                 >
-                  {"Start staking"}
-                </label>
+                  <CustomCheckbox
+                    checkboxProps={{
+                      checked: this.state.nativeOptions[NATIVE_STAKE],
+                      onChange: this.checkBox,
+                      name: NATIVE_STAKE
+                    }}
+                    colorChecked="rgb(78,115,223)"
+                    colorUnchecked="rgb(78,115,223)"
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor="formCheck-1"
+                    style={{ color: "rgb(0,0,0)" }}
+                  >
+                    {"Start staking"}
+                  </label>
+                </div>
               </div>
-            </div>
+            )}
             <div className="d-flex d-sm-flex d-md-flex d-lg-flex align-items-center align-items-sm-center align-items-md-center align-items-lg-center">
               <div
                 className="form-check d-flex align-items-center"
@@ -261,7 +264,7 @@ export const SelectModeForm = function() {
             </div>
           </div>
         </div>
-      }
+      )}
       <div className="d-flex d-sm-flex justify-content-center justify-content-sm-center">
         <button
           className="btn btn-primary"

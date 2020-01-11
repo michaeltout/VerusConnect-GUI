@@ -3,6 +3,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import ObjectToTable from '../../../../containers/ObjectToTable/ObjectToTable'
 import { ENTER_DATA } from '../../../../util/constants/componentConstants';
+import SuggestionInput from '../../../../containers/SuggestionInput/SuggestionInput'
 
 export const CommitNameFormRender = function() {
   const { formStep } = this.props
@@ -36,8 +37,10 @@ export const CommitNameTxDataRender = function() {
 }
 
 export const CommitNameFormEnterRender = function() {
-  const { state, updateInput } = this
+  const { state, updateInput, props } = this
   const { name, referralId, formErrors } = state
+  const { identities } = props
+
   return (
     <React.Fragment>
       <TextField
@@ -50,50 +53,17 @@ export const CommitNameFormEnterRender = function() {
         value={name}
         style={{ marginTop: 5, width: "100%" }}
       />
-      {CommitNameAddressDropdownRender.call(this)}
-      <TextField
+      <SuggestionInput 
+        value={referralId}
+        name="referralId"
         error={ formErrors.referralId.length > 0 }
         helperText={ formErrors.referralId ? formErrors.referralId[0] : null }
+        items={identities.map(id => `${id.identity.name}@`)}
         label="Enter referral identity (optional)..."
-        variant="outlined"
         onChange={updateInput}
-        name="referralId"
-        value={referralId}
-        style={{ marginTop: 5, width: "75%" }}
+        containerStyle={{ marginTop: 5, width: "75%" }}
       />
     </React.Fragment>
-  )
-}
-
-export const CommitNameAddressDropdownRender = function() {
-  return (
-    <Autocomplete
-      options={this.state.addressList}
-      getOptionLabel={option => option.label}
-      style={{ marginTop: 5, width: "100%" }}
-      value={this.state.controlAddr}
-      disableClearable={true}
-      onChange={(e, value) => this.updateControlAddr(value)}
-      renderInput={params => (
-        <TextField
-          error={ this.state.formErrors.controlAddr.length > 0 }
-          helperText={ this.state.formErrors.controlAddr ? this.state.formErrors.controlAddr[0] : null }
-          {...params}
-          label="Select address to register name with..."
-          variant="outlined"
-          fullWidth
-        />
-      )}
-      renderOption={option => {
-        return (
-          <h1
-            className="d-lg-flex align-items-lg-center"
-            style={{ marginBottom: 0, fontSize: 16 }}>
-            {option.label}
-          </h1>
-        );
-      }}
-    />
   )
 }
 

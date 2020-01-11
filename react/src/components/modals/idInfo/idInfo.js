@@ -20,7 +20,7 @@ class IdInfo extends React.Component {
       ["Parent:"]: identity.parent,
       ["Revocation Authority:"]: identity.revocationauthority,
       ["Recovery Authority:"]: identity.recoveryauthority,
-      ["Status:"]: `${activeIdentity.status} as of block ${activeIdentity.blockheight}`,
+      ["Status:"]: `${activeIdentity.status} as of block ${activeIdentity.blockheight}.`,
       ["Transaction ID:"]: activeIdentity.txid,
       ["Can Spend:"]: activeIdentity.canspendfor ? "Yes" : "No",
       ["Can Sign:"]: activeIdentity.cansignfor ? "Yes" : "No",

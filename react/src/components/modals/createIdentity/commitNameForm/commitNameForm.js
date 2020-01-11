@@ -19,38 +19,17 @@ import { newSnackbar } from '../../../../actions/actionCreators';
 class CommitNameForm extends React.Component {
   constructor(props) {
     super(props);
-
-    const { addresses, chainTicker } = props
-
-    const initAddresslist = () => {
-      let addressList = addresses[chainTicker][PUBLIC_ADDRS].map(addressObj => {
-        return {
-          label: `${addressObj.address} (${addressObj.balances.native} ${chainTicker})`,
-          address: addressObj.address,
-          balance: addressObj.balances.native
-        }
-      })
-
-      return addressList
-    }
-
-    const addressListFormatted = initAddresslist()
-    
     this.state = {
-      controlAddr: addressListFormatted[0],
       name: '',
       referralId: '',
-      addressList: addressListFormatted,
       formErrors: {
         referralId: [],
-        controlAddr: [],
         name: []
       },
       txDataDisplay: {}
     }
 
     this.updateFormData = this.updateFormData.bind(this)
-    this.updateControlAddr = this.updateControlAddr.bind(this)
     this.setAndUpdateState = this.setAndUpdateState.bind(this)
     this.updateInput = this.updateInput.bind(this)
     this.updateFormErrors = this.updateFormErrors.bind(this)
@@ -63,10 +42,6 @@ class CommitNameForm extends React.Component {
     }
   }
 
-  updateControlAddr(value) {
-    this.setAndUpdateState({ controlAddr: value })
-  }
-
   generateWarningSnack(warnings) {    
     this.props.dispatch(newSnackbar(WARNING_SNACK, warnings[0].message))
   }
@@ -74,14 +49,14 @@ class CommitNameForm extends React.Component {
   generateTxDataDisplay() {
     const { txData, formStep } = this.props
 
-    const { namereservation } = txData
+    const { namereservation, controlAddress } = txData
 
     let txDataSchema = {
       ["Status:"]: formStep === CONFIRM_DATA ? null : txData[TXDATA_STATUS],
       ["Error:"]: txData[TXDATA_ERROR],
       ["Chain:"]: txData.coin,
       ["Transaction ID:"]: txData[TXDATA_TXID],
-      ["Control Address:"]: namereservation ? namereservation.controlAddress : null,
+      ["Control Address:"]: controlAddress,
       ["Name:"]: namereservation ? namereservation.name : null,
       ["Referral ID:"]: namereservation && namereservation.referral && namereservation.referral.length > 0 ? namereservation.referral : null,
       ["Name Address:"]: namereservation ? namereservation.nameid : null
@@ -99,12 +74,11 @@ class CommitNameForm extends React.Component {
   }
 
   updateFormErrors() {
-    //TODO: Add more errors in here by checking controlAddr and referralId
+    //TODO: Add more errors in here by checking referralId
     const { setContinueDisabled } = this.props
-    const { referralId, controlAddr, name } = this.state
+    const { referralId, name } = this.state
     let formErrors = {
       referralId: [],
-      controlAddr: [],
       name: []
     }
 
@@ -130,19 +104,18 @@ class CommitNameForm extends React.Component {
     })
   }
 
-  updateInput(e) {
-    this.setAndUpdateState({ [e.target.name]: e.target.value })
+  updateInput(e, value = false) {
+    this.setAndUpdateState({ [e.target.name]: value === false ? e.target.value : (value == null ? '' : value)})
   }
 
   updateFormData() {
     const { chainTicker } = this.props
-    const { name, controlAddr, referralId } = this.state
+    const { name, referralId } = this.state
 
     this.props.setFormData({
       chainTicker,
       name,
-      referralId,
-      controlAddress: controlAddr.address
+      referralId
     })
   }
 
@@ -157,6 +130,7 @@ const mapStateToProps = (state) => {
   return {
     addresses: state.ledger.addresses,
     activeCoin: state.coins.activatedCoins[chainTicker],
+    identities: state.ledger.identities[chainTicker]
   };
 };
 
