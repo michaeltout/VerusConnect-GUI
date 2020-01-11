@@ -4,10 +4,9 @@ import {
   DashboardRender,
 } from './dashboard.render';
 import { startMining, startStaking, stopMining, stopStaking } from '../../../../../util/api/wallet/walletCalls'
-import { NumberType } from 'io-ts';
 import Store from '../../../../../store'
-import { setMainNavigationPath, setModalNavigationPath, newSnackbar, expireData } from '../../../../../actions/actionCreators';
-import { POST_AUTH, APPS, SETTINGS, PROFILE_SETTINGS, ADD_COIN, SELECT_COIN, NATIVE, API_GET_INFO, API_GET_MININGINFO, ERROR_SNACK, MID_LENGTH_ALERT, API_GET_CPU_TEMP } from '../../../../../util/constants/componentConstants';
+import { setModalNavigationPath, newSnackbar, expireData } from '../../../../../actions/actionCreators';
+import { ADD_COIN, SELECT_COIN, NATIVE, API_GET_INFO, API_GET_MININGINFO, ERROR_SNACK, MID_LENGTH_ALERT, API_GET_CPU_TEMP } from '../../../../../util/constants/componentConstants';
 import { conditionallyUpdateWallet } from '../../../../../actions/actionDispatchers';
 
 class Dashboard extends React.Component {
