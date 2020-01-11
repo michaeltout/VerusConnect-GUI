@@ -6,7 +6,16 @@ import {
 import { setMainNavigationPath, getPathParent } from '../../../actions/actionCreators'
 import { activateCoin } from '../../../actions/actionDispatchers'
 
-import { NATIVE, POST_AUTH, UX_SELECTOR, CHAIN_POSTFIX, APPS, WALLET } from '../../../util/constants/componentConstants'
+import {
+  NATIVE,
+  POST_AUTH,
+  UX_SELECTOR,
+  CHAIN_POSTFIX,
+  APPS,
+  WALLET,
+  ID_POSTFIX,
+  VERUSID
+} from "../../../util/constants/componentConstants";
 
 class UxSelector extends React.Component {
   constructor(props) {
@@ -29,7 +38,7 @@ class UxSelector extends React.Component {
 
   async selectUx(navLocation) {
     this.setState({ loading: true }, async () => {
-      const { activatedCoins, dispatch, activeUser, authenticated } = this.props
+      const { activatedCoins, dispatch, activeUser, authenticated, identities } = this.props
 
       Object.values(activeUser.startCoins).map(async (coinObj) => {
         if (coinObj.mode === NATIVE || authenticated[coinObj.mode]) {
@@ -49,6 +58,19 @@ class UxSelector extends React.Component {
           return
         }
       } 
+
+      if (navLocation.includes(`_${ID_POSTFIX}`)) {
+        const identityWalletName = navLocation.split('/').filter(value => {
+          return value.includes(`_${ID_POSTFIX}`)
+        })
+        
+        if (!identities[identityWalletName[1]] || !identities[identityWalletName[1]][[Number(identityWalletName[0])]]) {
+          dispatch(setMainNavigationPath(`${POST_AUTH}/${APPS}/${VERUSID}`))
+          return
+        }
+      }
+
+      // TODO: Mining wallet here as well
   
       dispatch(setMainNavigationPath(navLocation))
       return
@@ -66,7 +88,8 @@ const mapStateToProps = (state) => {
     activeUser: state.users.activeUser,
     mainPathArray: state.navigation.mainPathArray,
     authenticated: state.users.authenticated,
-    activatedCoins: state.coins.activatedCoins
+    activatedCoins: state.coins.activatedCoins,
+    identities: state.ledger.identities
   };
 };
 

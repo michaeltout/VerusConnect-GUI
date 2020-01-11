@@ -59,25 +59,33 @@ class VerusId extends React.Component {
    * @param {Object} activatedCoins 
    */
   setCards(activatedCoins) {
-    const walletApp = this.props.mainPathArray[3] ? this.props.mainPathArray[3] : null
+    const { setCards, mainPathArray, identities } = this.props
+    const walletApp = mainPathArray[3] ? mainPathArray[3] : null
     
     const updateCards = () => {
       const verusProtocolCoins = Object.values(activatedCoins).filter((coinObj) => {
         return coinObj.tags.includes(IS_VERUS)
       })
   
-      this.props.setCards(verusProtocolCoins.map((coinObj) => {
+      setCards(verusProtocolCoins.map((coinObj) => {
         return IdCardRender.call(this, coinObj)
       }))
     }
 
     if (walletApp) {
-      const pathDestination = walletApp.split('_')
+      const pathDestination = walletApp.split('_') 
+      let activeId = {chainTicker: null, idIndex: null}
+
       if (pathDestination.length > 2 && pathDestination[2] === ID_POSTFIX) {
-        this.setState({ activeId: {chainTicker: pathDestination[1], idIndex: pathDestination[0]}}, updateCards)
-      } else {
-        this.setState({ activeId: {chainTicker: null, idIndex: null}}, updateCards)
-      }  
+        const idIndex = pathDestination[0]
+        const chainTicker = pathDestination[1]
+
+        if (identities[chainTicker] != null && identities[chainTicker][idIndex] != null) {
+          activeId = { chainTicker, idIndex }
+        } 
+      } 
+
+      this.setState({ activeId }, updateCards)
     } else updateCards()
   }
 
