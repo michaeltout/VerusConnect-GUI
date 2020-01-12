@@ -100,6 +100,7 @@
     "jasmine-spec-reporter": "^2.4.0",
     "jest": "^24.7.1",
     "mini-css-extract-plugin": "^0.4.4",
+    "node-sass": "^4.13.0",
     "protractor": "^5.4.0",
     "react-test-renderer": "^16.8.6",
     "sass-loader": "^7.1.0",
@@ -108,10 +109,9 @@
     "uglifyjs-webpack-plugin": "^2.0.1",
     "url-loader": "^1.1.2",
     "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.10",
     "webpack-dashboard": "^2.0.0",
-    "webpack-dev-server": "^3.1.10",
-    "node-sass": "^4.13.0",
-    "webpack-cli": "^3.3.10"
+    "webpack-dev-server": "^3.1.10"
   },
   "resolutions": {
     "lodash": "^4.17.15",
