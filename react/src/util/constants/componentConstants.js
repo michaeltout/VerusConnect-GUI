@@ -274,6 +274,7 @@ export const TEXT_INPUT = 'text_input'
 export const NUMBER_INPUT = 'number_input'
 export const CHECKBOX = 'checkbox'
 export const STAKE_GUARD = 'stakeGuard'
+export const DATA_DIR = 'dataDir'
 
 // Send coin form 
 export const TRANSPARENT_FUNDS = 'Transparent Funds'

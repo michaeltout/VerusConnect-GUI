@@ -101,7 +101,6 @@ export const ProfileSettingsStartScreenRender = function() {
                   <option 
                     key={PLACEHOLDER}
                     value={PLACEHOLDER}
-                    selected
                     disabled>{"Choose screen"}</option>
                   {this.locationPresets.map((app) => {
                     return (

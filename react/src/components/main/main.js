@@ -48,7 +48,7 @@ class Main extends React.Component {
       })
 
       const { loadedUsers, config } = this.props
-      const { defaultUserId } = config
+      const { defaultUserId } = config.general.main
 
       // Setup initial navigation state
       if (defaultUserId && defaultUserId.length > 0 && loadedUsers[defaultUserId]) {
@@ -63,7 +63,8 @@ class Main extends React.Component {
         }
       } else if (defaultUserId && defaultUserId.length > 0) {
         try {
-          dispatch(await setConfigParams(config, { defaultUserId: '' }))
+          dispatch(await setConfigParams(config, { defaultUserId: '' }, 'general.main'))
+
         } catch (e) {
           dispatch(newSnackbar(ERROR_SNACK, e.message))
           console.error(e)

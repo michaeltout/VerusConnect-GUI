@@ -68,8 +68,7 @@ class SelectCoin extends React.Component {
 
   generateStartupParams() {
     let startupOptions = []
-    const { nativeOptions, chosenCoin } = this.state
-    const { stakeguardConfig } = this.props
+    const { nativeOptions } = this.state
     
     for (let key in nativeOptions) {
       if (nativeOptions[key] && typeof nativeOptions[key] === "boolean") {
@@ -77,10 +76,6 @@ class SelectCoin extends React.Component {
       } else if (typeof nativeOptions[key] === "string" && !isNaN(Number(nativeOptions[key]))) {
         startupOptions.push(`${key}${Number(nativeOptions[key])}`)
       }
-    }
-
-    if (stakeguardConfig[chosenCoin.id]) {
-      startupOptions.push(`-cheatcatcher=${stakeguardConfig[chosenCoin.id]}`)
     }
 
     return startupOptions
@@ -133,7 +128,7 @@ class SelectCoin extends React.Component {
 const mapStateToProps = (state) => {
   return {
     mainPath: state.navigation.mainPath,
-    stakeguardConfig: state.settings.config.coin.native.stakeGuard
+    coinNativeConfig: state.settings.config.coin.native,
   };
 };
 
