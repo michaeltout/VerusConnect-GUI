@@ -221,6 +221,26 @@ export const ReceiveAddressTableRender = function() {
             width: 75,
             flexGrow: 1,
             cellDataGetter: ({ rowData }) => {
+              return (
+                <div
+                  style={{
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    width: "100%",
+                    textOverflow: "ellipsis"
+                  }}
+                >
+                  {rowData.tag}
+                </div>
+              );
+            },
+            label: 'Type',
+            dataKey: 'tag',
+          },
+          {
+            width: 75,
+            flexGrow: 1,
+            cellDataGetter: ({ rowData }) => {
               return ReceiveAddressOptionsRender.call(this, rowData.address)
             },
             label: 'Options',
