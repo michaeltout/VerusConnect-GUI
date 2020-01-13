@@ -54,7 +54,6 @@ export const DashboardRender = function() {
               >
                 {"Mining/Staking Overview"}
               </h6>
-
               { DashboardRenderMiningCards.call(this) }
             </div>
           </div>
@@ -132,37 +131,80 @@ export const DashboardRenderMiningCards = function() {
   const { loading } = state
 
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", marginLeft: "-0.516%", marginRight: "-0.516%", marginTop: 10 }}>
-      {nativeCoins.map((coinObj, index) => {  
-        const chainTicker = coinObj.id
-        const miningState = miningStates[chainTicker] ? miningStates[chainTicker] : MS_IDLE
-        
-        const isStaking = miningState !== MS_IDLE && miningInfo[chainTicker].staking
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        marginLeft: "-0.516%",
+        marginRight: "-0.516%",
+        marginTop: 10
+      }}
+    >
+      {nativeCoins.length === 0 && (
+        <a
+          href="#"
+          style={{ color: "rgb(78,115,223)", marginLeft: "0.516%" }}
+          onClick={this.openAddCoinModal}
+        >
+          {"Add a coin in native mode to start mining and/or staking coins!"}
+        </a>
+      )}
+      {nativeCoins.map((coinObj, index) => {
+        const chainTicker = coinObj.id;
+        const miningState = miningStates[chainTicker]
+          ? miningStates[chainTicker]
+          : MS_IDLE;
 
-        const hashPow = normalizeNum(miningInfo[chainTicker] ? miningInfo[chainTicker].localhashps : 0)
-        const stakeCns = normalizeNum(balances[chainTicker] ? balances[chainTicker].native.public.confirmed : 0)
-        
-        const miningError = miningInfoErrors[chainTicker] ? miningInfoErrors[chainTicker].error : null
-        const getInfoError = getInfoErrors[chainTicker] ? getInfoErrors[chainTicker].error : null
+        const isStaking =
+          miningState !== MS_IDLE && miningInfo[chainTicker].staking;
 
-        const coresArr = Array.apply(null, Array(cpuData.cores ? cpuData.cores : 0));
+        const hashPow = normalizeNum(
+          miningInfo[chainTicker] ? miningInfo[chainTicker].localhashps : 0
+        );
+        const stakeCns = normalizeNum(
+          balances[chainTicker]
+            ? balances[chainTicker].native.public.confirmed
+            : 0
+        );
+
+        const miningError = miningInfoErrors[chainTicker]
+          ? miningInfoErrors[chainTicker].error
+          : null;
+        const getInfoError = getInfoErrors[chainTicker]
+          ? getInfoErrors[chainTicker].error
+          : null;
+
+        const coresArr = Array.apply(
+          null,
+          Array(cpuData.cores ? cpuData.cores : 0)
+        );
 
         const descNumData =
           miningState === MS_MINING_STAKING ||
           miningState === MS_MERGE_MINING_STAKING ? (
             <span>
-              {"with "} <span style={{fontWeight: "bold"}}>{`~${hashPow[0]} ${hashPow[2]}H/s`}</span>
+              {"with "}{" "}
+              <span
+                style={{ fontWeight: "bold" }}
+              >{`~${hashPow[0]} ${hashPow[2]}H/s`}</span>
               {" & "}
-              <span style={{fontWeight: "bold"}}>{`~${stakeCns[0]}${stakeCns[2]} ${coinObj.id}`}</span>
+              <span
+                style={{ fontWeight: "bold" }}
+              >{`~${stakeCns[0]}${stakeCns[2]} ${coinObj.id}`}</span>
             </span>
           ) : miningState === MS_MERGE_MINING || miningState === MS_MINING ? (
             <span>
-              {"with "} <span style={{fontWeight: "bold"}}>{`~${hashPow[0]} ${hashPow[2]}H/s`}</span>
+              {"with "}{" "}
+              <span
+                style={{ fontWeight: "bold" }}
+              >{`~${hashPow[0]} ${hashPow[2]}H/s`}</span>
             </span>
           ) : (
             <span>
               {"with "}
-              <span style={{fontWeight: "bold"}}>{`~${stakeCns[0]}${stakeCns[2]} ${coinObj.id}`}</span>
+              <span
+                style={{ fontWeight: "bold" }}
+              >{`~${stakeCns[0]}${stakeCns[2]} ${coinObj.id}`}</span>
             </span>
           );
 
@@ -174,19 +216,19 @@ export const DashboardRenderMiningCards = function() {
               ) : miningState === MS_OFF ? (
                 `Not mining or staking ${coinObj.name}`
               ) : (
-                <span style={{fontWeight: "bold"}}>
+                <span style={{ fontWeight: "bold" }}>
                   {miningStateDescs[miningState]
                     .toLowerCase()
                     .replace(/^\w/, c => c.toUpperCase())}
                 </span>
               )}
             </span>
-            { miningState !== MS_IDLE && miningState !== MS_OFF &&
+            {miningState !== MS_IDLE && miningState !== MS_OFF && (
               <React.Fragment>
-                {` ${coinObj.name} `} 
+                {` ${coinObj.name} `}
                 {descNumData}
               </React.Fragment>
-            }
+            )}
           </span>
         );
 
@@ -351,7 +393,7 @@ export const DashboardRenderMiningCards = function() {
             </div>
           </div>
         );
-      })} 
+      })}
     </div>
-  )
+  );
 }
