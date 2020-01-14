@@ -22,6 +22,9 @@ class SuggestionInput extends React.Component {
       getOptionLabel
     } = this.props;
 
+    //TODO: Solve warning/error in console where if option for getOptionLabel
+    //is not string, "getOptionLabel returns undefined"
+
     return (
       <Autocomplete
         freeSolo
@@ -30,7 +33,8 @@ class SuggestionInput extends React.Component {
         groupBy={() => "Suggestions:"}
         onChange={(event, value) => onChange({target: {name, value: value == null ? '' : value}})}
         renderOption={renderOption}
-        getOptionLabel={getOptionLabel}
+        getOptionLabel={getOptionLabel == null ? option => option : getOptionLabel}
+        value = { this.props.value }
         renderInput={params => (
           <TextField
             {...params}
@@ -39,7 +43,6 @@ class SuggestionInput extends React.Component {
             label={label}
             variant="outlined"
             onChange={(event) => onChange({target: {name, value: event.target.value}})}
-            value={ this.props.value }
             style={{ width: "100%" }}
             InputProps={inputProps}
           />
