@@ -101,7 +101,6 @@ export const testConfig = {
   "VRSC",
   "VRSCTEST",
   "SPLTEST",
-  "LUMBER",
   "KMD",
   "KOMODO",
   "zcashd",
