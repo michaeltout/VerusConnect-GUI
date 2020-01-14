@@ -320,15 +320,17 @@ export const DashboardRender = function() {
                   }}
                 >
                   {verusProtocolCoins.length == 0 ? (
-                    <a
-                      href="#"
-                      style={{ color: "rgb(78,115,223)" }}
-                      onClick={this.openAddCoinModal}
-                    >
-                      {
-                        "Add a Verus protocol coin (VRSC or VRSCTEST) to start making IDs!"
-                      }
-                    </a>
+                    <div style={{ textAlign: "center" }}>
+                      <a
+                        href="#"
+                        style={{ color: "rgb(78,115,223)" }}
+                        onClick={this.openAddCoinModal}
+                      >
+                        {
+                          "Add a Verus protocol coin (VRSC or VRSCTEST) to start making IDs!"
+                        }
+                      </a>
+                    </div>
                   ) : this.state.displayNameCommitments.length > 0 ? (
                     DashboardRenderTable.call(this)
                   ) : (
