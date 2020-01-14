@@ -6,8 +6,6 @@ class PreAuth extends React.Component {
   constructor(props) {
     super(props);
 
-    console.log(props)
-
     this.state = {
       selectedUser: null
     }
