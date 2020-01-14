@@ -168,7 +168,7 @@ export const conditionallyUpdateWallet = async (state, dispatch, mode, chainTick
       
       setTimeout(() => {
         dispatch(enableUpdateWarningSnack())
-      }, 60000)
+      }, 300000)
     }
   }
 
