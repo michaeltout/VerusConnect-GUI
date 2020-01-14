@@ -4,7 +4,27 @@ import {
   DashboardRender,
 } from './dashboard.render';
 import { setModalParams, setModalNavigationPath, expireData, newSnackbar, setMainNavigationPath } from '../../../../../actions/actionCreators';
-import { CREATE_IDENTITY, NATIVE, API_GET_NAME_COMMITMENTS, ERROR_SNACK, MID_LENGTH_ALERT, SUCCESS_SNACK, ID_POSTFIX, API_REGISTER_ID, API_REGISTER_ID_NAME, API_RECOVER_ID, API_SUCCESS, INFO_SNACK, ADD_COIN, SELECT_COIN } from '../../../../../util/constants/componentConstants';
+import {
+  CREATE_IDENTITY,
+  NATIVE,
+  API_GET_NAME_COMMITMENTS,
+  ERROR_SNACK,
+  MID_LENGTH_ALERT,
+  SUCCESS_SNACK,
+  ID_POSTFIX,
+  API_REGISTER_ID,
+  API_REGISTER_ID_NAME,
+  API_RECOVER_ID,
+  API_SUCCESS,
+  INFO_SNACK,
+  ADD_COIN,
+  SELECT_COIN,
+  SIGN_VERIFY_ID_DATA,
+  VERIFY_ID_DATA,
+  SIGN_ID_DATA,
+  API_GET_IDENTITIES,
+  API_GET_INFO
+} from "../../../../../util/constants/componentConstants";
 import { deleteIdName, revokeIdentity } from '../../../../../util/api/wallet/walletCalls';
 import Store from '../../../../../store'
 import { conditionallyUpdateWallet } from '../../../../../actions/actionDispatchers';
@@ -19,6 +39,8 @@ class Dashboard extends React.Component {
       displayNameCommitments: [],
       nameReservationDropdownOpen: false,
       idRecoveryDropdownOpen: false,
+      verifyDataDropdownOpen: false,
+      signDataDropdownOpen: false,
       revokeDialogueOpen: false,
       revokeId: null
     }
@@ -28,12 +50,16 @@ class Dashboard extends React.Component {
     this.openModal = this.openModal.bind(this)
     this.toggleReservationDropdown = this.toggleReservationDropdown.bind(this)
     this.toggleRecoveryDropdown = this.toggleRecoveryDropdown.bind(this)
+    this.toggleVerifyDataDropdown = this.toggleVerifyDataDropdown.bind(this)
+    this.toggleSignDataDropdown = this.toggleSignDataDropdown.bind(this)
     this.openCommitNameModal = this.openCommitNameModal.bind(this)
     this.handleClick = this.handleClick.bind(this)
     this.openRegisterIdentityModal = this.openRegisterIdentityModal.bind(this)
     this.deleteNameCommitment = this.deleteNameCommitment.bind(this)
     this.openId = this.openId.bind(this)
     this.openRecoverIdModal = this.openRecoverIdModal.bind(this)
+    this.openVerifyIdDataModal = this.openVerifyIdDataModal.bind(this)
+    this.openSignIdDataModal = this.openSignIdDataModal.bind(this)
     this.openRevokeDialogue = this.openRevokeDialogue.bind(this)
     this.closeRevokeDialogue = this.closeRevokeDialogue.bind(this)
     this.revokeId = this.revokeId.bind(this)
@@ -57,8 +83,20 @@ class Dashboard extends React.Component {
   }
 
   handleClick(e) {
-    if (this.reservationDropdownMenu.contains(e.target) || this.recoveryDropdownMenu.contains(e.target)) return
-    else this.setState({nameReservationDropdownOpen: false, idRecoveryDropdownOpen: false})
+    if (
+      this.reservationDropdownMenu.contains(e.target) ||
+      this.recoveryDropdownMenu.contains(e.target) ||
+      this.verifyDataDropdownMenu.contains(e.target) ||
+      this.signDataDropdownMenu.contains(e.target)
+    )
+      return;
+    else
+      this.setState({
+        nameReservationDropdownOpen: false,
+        idRecoveryDropdownOpen: false,
+        verifyDataDropdownOpen: false,
+        signDataDropdownOpen: false
+      });
   }
 
   openRevokeDialogue(revokeId) {
@@ -98,11 +136,39 @@ class Dashboard extends React.Component {
   }
 
   toggleReservationDropdown() {
-    this.setState({nameReservationDropdownOpen: !this.state.nameReservationDropdownOpen})
+    this.setState({
+      nameReservationDropdownOpen: !this.state.nameReservationDropdownOpen,
+      idRecoveryDropdownOpen: false,
+      verifyDataDropdownOpen: false,
+      signDataDropdownOpen: false
+    })
   }
 
   toggleRecoveryDropdown() {
-    this.setState({idRecoveryDropdownOpen: !this.state.idRecoveryDropdownOpen})
+    this.setState({
+      idRecoveryDropdownOpen: !this.state.idRecoveryDropdownOpen,
+      nameReservationDropdownOpen: false,
+      verifyDataDropdownOpen: false,
+      signDataDropdownOpen: false
+    });
+  }
+
+  toggleVerifyDataDropdown() {
+    this.setState({
+      verifyDataDropdownOpen: !this.state.verifyDataDropdownOpen,
+      idRecoveryDropdownOpen: false,
+      nameReservationDropdownOpen: false,
+      signDataDropdownOpen: false
+    });
+  }
+
+  toggleSignDataDropdown() {
+    this.setState({ 
+      signDataDropdownOpen: !this.state.signDataDropdownOpen,
+      verifyDataDropdownOpen: false,
+      idRecoveryDropdownOpen: false,
+      nameReservationDropdownOpen: false
+     });
   }
 
   compileIds() {
@@ -111,8 +177,8 @@ class Dashboard extends React.Component {
 
     Object.keys(identities).map(chainTicker => {
       if (identities[chainTicker]) {
-        identities[chainTicker].map(id => {
-          compiledIds.push({...id, chainTicker})
+        identities[chainTicker].map((id, index) => {
+          compiledIds.push({...id, chainTicker, index})
         })
       }
     })
@@ -135,6 +201,14 @@ class Dashboard extends React.Component {
 
   openRecoverIdModal(chainTicker) {
     this.openModal(CREATE_IDENTITY, { modalType: API_RECOVER_ID, chainTicker} )
+  }
+
+  openVerifyIdDataModal(chainTicker) {
+    this.openModal(SIGN_VERIFY_ID_DATA, { modalType: VERIFY_ID_DATA, chainTicker })
+  }
+
+  openSignIdDataModal(chainTicker) {
+    this.openModal(SIGN_VERIFY_ID_DATA, { modalType: SIGN_ID_DATA, chainTicker })
   }
 
   async deleteNameCommitment(name, chainTicker) {
@@ -190,9 +264,9 @@ const mapStateToProps = (state) => {
   return {
     mainPathArray: state.navigation.mainPathArray,
     activatedCoins: state.coins.activatedCoins,
-    fiatPrices: state.ledger.fiatPrices,
-    fiatCurrency: state.settings.config.general.main.fiatCurrency,
     identities: state.ledger.identities,
+    identityErrors: state.errors[API_GET_IDENTITIES],
+    getInfoErrors: state.errors[API_GET_INFO],
     nameCommitments: state.ledger.nameCommitments,
     activeUser: state.users.activeUser,
     transactions: state.ledger.transactions

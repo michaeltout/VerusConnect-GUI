@@ -133,7 +133,7 @@ class Settings extends React.Component {
 
       if (!error) {
         this.setState({ loading: false })
-        dispatch(newSnackbar(SUCCESS_SNACK, "Settings saved succesfully!", MID_LENGTH_ALERT))
+        dispatch(newSnackbar(SUCCESS_SNACK, "Settings saved succesfully! Restart for them to take effect.", MID_LENGTH_ALERT))
       }
     })
   }

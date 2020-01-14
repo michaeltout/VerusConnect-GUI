@@ -24,7 +24,13 @@ import {
   SET_COIN_IDENTITIES,
   SET_COIN_NAME_COMMITMENTS,
   ERROR_COIN_IDENTITIES,
-  ERROR_COIN_NAME_COMMITMENTS
+  ERROR_COIN_NAME_COMMITMENTS,
+  SET_CPU_TEMP,
+  SET_SYS_TIME,
+  ERROR_CPU_TEMP,
+  ERROR_CPU_LOAD,
+  ERROR_SYS_TIME,
+  SET_CPU_LOAD
 } from '../util/constants/storeType'
 import {
   API_GET_ZOPERATIONSTATUSES,
@@ -37,10 +43,14 @@ import {
   API_GET_FIATPRICE,
   API_ACTIVATE_COIN,
   API_GET_IDENTITIES,
-  API_GET_NAME_COMMITMENTS
+  API_GET_NAME_COMMITMENTS,
+  API_GET_CPU_TEMP,
+  API_GET_CPU_LOAD,
+  API_GET_SYS_TIME
 } from '../util/constants/componentConstants'
 
 export const errors = (state = {
+  // Ledger calls for coins
   [API_ACTIVATE_COIN]: {},
   [API_GET_BALANCES]: {},
   [API_GET_TRANSACTIONS]: {},
@@ -51,7 +61,12 @@ export const errors = (state = {
   [API_GET_DEFINEDCHAINS]: {},
   [API_GET_FIATPRICE]: {},
   [API_GET_IDENTITIES]: {},
-  [API_GET_NAME_COMMITMENTS]: {}
+  [API_GET_NAME_COMMITMENTS]: {},
+
+  // System information calls
+  [API_GET_CPU_TEMP]: {},
+  [API_GET_CPU_LOAD]: {},
+  [API_GET_SYS_TIME]: {}
 }, action) => {
   switch (action.type) {
     case ERROR_ACTIVATE_COIN:
@@ -109,6 +124,21 @@ export const errors = (state = {
         ...state,
         [API_GET_NAME_COMMITMENTS]: {...state[API_GET_NAME_COMMITMENTS], [action.chainTicker]: {error: true, result: action.result}}
       };
+    case ERROR_CPU_TEMP:
+      return {
+        ...state,
+        [API_GET_CPU_TEMP]: {error: true, result: action.result}
+      };
+    case ERROR_CPU_LOAD:
+      return {
+        ...state,
+        [API_GET_CPU_LOAD]: {error: true, result: action.result}
+      };
+    case ERROR_SYS_TIME:
+      return {
+        ...state,
+        [API_GET_SYS_TIME]: {error: true, result: action.result}
+      };
     case ACTIVATE_COIN:
       return {
         ...state,
@@ -163,6 +193,21 @@ export const errors = (state = {
       return {
         ...state,
         [API_GET_NAME_COMMITMENTS]: {...state[API_GET_NAME_COMMITMENTS], [action.chainTicker]: {error: false, result: null}}
+      };
+    case SET_CPU_TEMP:
+      return {
+        ...state,
+        [API_GET_CPU_TEMP]: {error: false, result: null}
+      };
+    case SET_CPU_LOAD:
+      return {
+        ...state,
+        [API_GET_CPU_LOAD]: {error: false, result: null}
+      };
+    case SET_SYS_TIME:
+      return {
+        ...state,
+        [API_GET_SYS_TIME]: {error: false, result: null}
       };
     default:
       return state;

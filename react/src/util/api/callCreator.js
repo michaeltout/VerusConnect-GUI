@@ -56,8 +56,7 @@ export const apiGet = (callPath, params) => {
  * @param {String} callPath The full location of the specified call, e.g. native/get_balances
  * @param {Object} params Parameters to pass to api call
  */
-export const apiPost = (callPath, params) => {
-  
+export const apiPost = (callPath, params) => {  
   return new Promise((resolve, reject) => {
     fetch(
       `http://127.0.0.1:${agamaPort}/api/${callPath}`,

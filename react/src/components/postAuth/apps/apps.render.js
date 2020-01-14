@@ -86,12 +86,13 @@ export const AppsRender = function() {
                 <h6 className="dropdown-header" role="presentation">
                   {"fiat currency"}
                 </h6>
-                {fiatList.map(currency => {
+                {fiatList.map((currency, index) => {
                   return (
                     <a
                       className={`dropdown-item ${this.props.fiatCurrency === currency.toUpperCase() ? 'disabled' : ''}`}
                       role="presentation"
                       href="#"
+                      id={index}
                       onClick={() => this.selectFiatCurrency(currency)}
                     >
                       { currency.toUpperCase() }
@@ -104,6 +105,7 @@ export const AppsRender = function() {
               <button
                 className="btn btn-primary noshadow"
                 type="button"
+                disabled={currentApp === SETTINGS}
                 onClick={() => this.selectApp(SETTINGS)}
                 style={AppsStyles.topBarMenuItem}>
                 <i className="fas fa-cog" style={AppsStyles.topBarMenuItemIcon} />

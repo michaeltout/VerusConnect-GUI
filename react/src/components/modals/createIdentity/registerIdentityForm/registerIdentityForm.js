@@ -4,17 +4,15 @@ import {
   RegisterIdentityFormRender
 } from './registerIdentityForm.render';
 import {
-  PUBLIC_ADDRS,
   WARNING_SNACK,
   TXDATA_STATUS,
   TXDATA_ERROR,
-  TXDATA_TXID,
   CONFIRM_DATA,
   CREATE_IDENTITY,
-  ERROR_NAME_REQUIRED,
   ERROR_INVALID_Z_ADDR,
   ENTER_DATA,
-  ERROR_INVALID_ID
+  ERROR_INVALID_ID,
+  PRIVATE_ADDRS
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar } from '../../../../actions/actionCreators';
 
@@ -25,10 +23,10 @@ class RegisterIdentityForm extends React.Component {
     if (props.formStep === ENTER_DATA) this.initFormData(props)
 
     // TODO: Let the user create an ID with more then one address
-    //const { addresses, chainTicker } = props
+    const { addresses, chainTicker } = props
 
-    /*const initAddresslist = () => {
-      let addressList = addresses[chainTicker][PUBLIC_ADDRS].map(addressObj => {
+    const initAddresslist = () => {
+      let addressList = addresses[chainTicker][PRIVATE_ADDRS].map(addressObj => {
         return {
           label: `${addressObj.address} (${addressObj.balances.native} ${chainTicker})`,
           address: addressObj.address,
@@ -37,12 +35,12 @@ class RegisterIdentityForm extends React.Component {
       })
 
       return addressList
-    }*/
+    }
 
-    //const addressListFormatted = initAddresslist()
+    const addressListFormatted = initAddresslist()
 
     this.state = {
-      //controlAddr: addressListFormatted[0],
+      addrList: addressListFormatted,
       revocationId: '',
       recoveryId: '',
       privateAddr: '',
@@ -185,7 +183,7 @@ class RegisterIdentityForm extends React.Component {
     })
   }
 
-  updateInput(e) {
+  updateInput(e) {    
     this.setAndUpdateState({ [e.target.name]: e.target.value })
   }
 
@@ -211,6 +209,7 @@ const mapStateToProps = (state) => {
   return {
     addresses: state.ledger.addresses,
     activeCoin: state.coins.activatedCoins[chainTicker],
+    identities: state.ledger.identities[chainTicker]
   };
 };
 

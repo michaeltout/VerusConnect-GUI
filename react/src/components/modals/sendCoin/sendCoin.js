@@ -45,7 +45,7 @@ class SendCoin extends React.Component {
 
   advanceFormStep() {
     const { mode } = this.props.activeCoin
-    const { formStep, formData, loadingProgress } = this.state
+    const { formStep, formData, loadingProgress, txData } = this.state
     let _txData
 
     this.props.setModalLock(true)
@@ -100,7 +100,7 @@ class SendCoin extends React.Component {
               toAddress,
               Number(amount),
               Number(customFee),
-              Number(btcFee)
+              txData.feePerByte
             );
             break;
         }

@@ -1,5 +1,6 @@
 import { saveConfig, loadConfig, getConfigSchema } from '../../../../util/api/settings/configData'
 import { SET_CONFIG, SET_CONFIG_SCHEMA } from '../../../../util/constants/storeType'
+import { useStringAsKey, editValueByKeyPath } from '../../../../util/objectUtil'
 
 /**
  * Loads the config object from the config file and returns
@@ -19,10 +20,14 @@ export const initConfig = async () => {
  * and returns an action to dispatch to the store.
  * @param {Object} configObj The current config object
  * @param {Object} params The config paramters to change
+ * @param {String} configLocation The location of the parameter to change (optional)
  */
-export const setConfigParams = async (configObj, params) => {
-  const newConfig = {...configObj, ...params}
-
+export const setConfigParams = async (configObj, params, configLocation = null) => {
+  const newConfig =
+    configLocation == null
+      ? { ...configObj, ...params }
+      : editValueByKeyPath(configObj, configLocation.split('.'), { ...useStringAsKey(configObj, configLocation), ...params })
+  
   try {
     await saveConfig(newConfig)
     return setConfig(newConfig)

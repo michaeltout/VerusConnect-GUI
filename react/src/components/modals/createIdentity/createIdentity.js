@@ -32,16 +32,18 @@ import Store from '../../../store'
 class CreateIdentity extends React.Component {
   constructor(props) {
     super(props);
+    const { activeCoin } = props
+    const { name } = activeCoin
 
     switch (props.modalProps.modalType) {
       case API_REGISTER_ID:
-        props.setModalHeader(`Create ID for ${props.modalProps.nameCommitmentObj.namereservation.name}@`)
+        props.setModalHeader(`Create ${name} ID for ${props.modalProps.nameCommitmentObj.namereservation.name}@`)
         break;
       case API_REGISTER_ID_NAME:
-        props.setModalHeader('Commit Name')
+        props.setModalHeader(`Commit Name for ${name} ID`)
         break;
       case API_RECOVER_ID:
-        props.setModalHeader(`Recover Identity`)
+        props.setModalHeader(`Recover ${name} Identity`)
         break;
       default:
         break;
@@ -103,7 +105,6 @@ class CreateIdentity extends React.Component {
             !formStep,
             chainTicker,
             name,
-            controlAddress,
             referralId.length > 0 ? referralId : null
           );
         } else if (modalProps.modalType === API_REGISTER_ID) {

@@ -65,7 +65,7 @@ class UnlockProfile extends React.Component {
 const mapStateToProps = (state) => {
   return {
     mainPath: state.navigation.mainPath,
-    defaultUser: state.settings.config.defaultUserId,
+    defaultUser: state.settings.config.general.main.defaultUserId,
     loadedUsers: state.users.loadedUsers,
   };
 };

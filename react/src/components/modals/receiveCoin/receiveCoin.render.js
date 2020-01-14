@@ -85,7 +85,7 @@ export const ReceiveCoinMainRender = function() {
           {ReceiveCurrencyPickerRender.call(this)}
           <SearchBar
             label={"Address Search"}
-            placeholder={"Type and press enter..."}
+            placeholder={"Type and press enter"}
             name="addressSearchTerm"
             clearable={true}
             style={{
@@ -216,6 +216,26 @@ export const ReceiveAddressTableRender = function() {
             flexGrow: 1,
             label: `Amount\u00A0(${balanceCurr})`,
             dataKey: 'amount',
+          },
+          {
+            width: 75,
+            flexGrow: 1,
+            cellDataGetter: ({ rowData }) => {
+              return (
+                <div
+                  style={{
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    width: "100%",
+                    textOverflow: "ellipsis"
+                  }}
+                >
+                  {rowData.tag}
+                </div>
+              );
+            },
+            label: 'Type',
+            dataKey: 'tag',
           },
           {
             width: 75,

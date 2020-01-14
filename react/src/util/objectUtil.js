@@ -33,6 +33,7 @@ export const expandObj = (obj) => {
   return obj;
 }
 
+//ref: https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-with-string-key
 /**
  * Uses a string as a key to search through an object and find a property.
  * E.g. the string "animalNoises.cat" would return "meow" on { animalNoises: { cat: "meow" }}
@@ -52,4 +53,27 @@ export const useStringAsKey = (o, s) => {
       }
   }
   return o;
+}
+
+/**
+ * Uses an array of properties (in parent -> child order) 
+ * as a key to search through an object and add or edit an
+ * element, assuming the property list correctly maps the object.
+ * Returns the modified object.
+ * 
+ * @param {Object} o The object to edit or add to
+ * @param {String[]} propList The property list
+ * @param {any} value Any value to add into the object or replace an object value with
+ */
+export const editValueByKeyPath = (o, propList, value) => {
+  if (propList.length === 1) {
+		let newO = { ...o }
+    delete newO[propList[0]]
+    return { ...o, [propList[0]]: value }
+	} else {
+  	let newProps = propList.slice()
+    const newProp = newProps.shift()
+    
+  	return {...o, [newProp]: editValueByKeyPath(o[newProp], newProps, value)}
+  }
 }

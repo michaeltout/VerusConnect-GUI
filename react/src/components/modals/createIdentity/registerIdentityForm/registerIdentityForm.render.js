@@ -5,6 +5,7 @@ import ObjectToTable from '../../../../containers/ObjectToTable/ObjectToTable'
 import { ENTER_DATA } from '../../../../util/constants/componentConstants';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
+import SuggestionInput from '../../../../containers/SuggestionInput/SuggestionInput'
 
 export const RegisterIdentityFormRender = function() {
   const { formStep } = this.props
@@ -38,71 +39,84 @@ export const RegisterIdentityTxDataRender = function() {
 }
 
 export const RegisterIdentityFormEnterRender = function() {
-  const { state, updateInput } = this
-  const { revocationId, recoveryId, privateAddr, formErrors } = state;
+  const { state, updateInput, props, setRecoverSelf, setRevokeSelf } = this
+  const { revocationId, recoveryId, privateAddr, formErrors, addrList } = state;
+  const { identities } = props
+
   return (
     <React.Fragment>
-      <TextField
+      <SuggestionInput
+        value={revocationId}
+        name="revocationId"
         error={formErrors.revocationId.length > 0}
         helperText={
           formErrors.revocationId.length > 0
             ? formErrors.revocationId[0]
             : "The ID entered here will be able to disable your created ID in case of loss or theft."
         }
+        items={identities.map(id => `${id.identity.name}@`)}
         label="Enter revocation ID"
-        variant="outlined"
         onChange={updateInput}
-        name="revocationId"
-        value={revocationId}
-        style={{ marginTop: 5, width: "100%" }}
-        InputProps={{
+        containerStyle={{ marginTop: 5, width: "100%" }}
+        inputProps={{
           endAdornment: (
-            <InputAdornment
-              onClick={ this.setRevokeSelf }
-              position="end"
-            >
+            <InputAdornment onClick={setRevokeSelf} position="end">
               <Button>{"SELF"}</Button>
             </InputAdornment>
           )
         }}
       />
-      <TextField
+      <SuggestionInput
+        value={recoveryId}
+        name="recoveryId"
         error={formErrors.recoveryId.length > 0}
         helperText={
           formErrors.recoveryId.length > 0
             ? formErrors.recoveryId[0]
             : "The ID entered here will be able to revive your created ID if it is revoked."
         }
+        items={identities.map(id => `${id.identity.name}@`)}
         label="Enter recovery ID"
-        variant="outlined"
         onChange={updateInput}
-        name="recoveryId"
-        value={recoveryId}
-        style={{ marginTop: 5, width: "100%" }}
-        InputProps={{
+        containerStyle={{ marginTop: 5, width: "100%" }}
+        inputProps={{
           endAdornment: (
-            <InputAdornment
-              onClick={ this.setRecoverSelf }
-              position="end"
-            >
+            <InputAdornment onClick={setRecoverSelf} position="end">
               <Button>{"SELF"}</Button>
             </InputAdornment>
           )
         }}
       />
-      <TextField
+      <SuggestionInput
+        value={privateAddr}
+        name="privateAddr"
         error={formErrors.privateAddr.length > 0}
         helperText={
           formErrors.privateAddr.length > 0
             ? formErrors.privateAddr[0]
             : "The private address here will be used to receive private transactions to your ID."
         }
+        items={addrList}
         label="Enter private address"
-        variant="outlined"
-        onChange={updateInput}
-        name="privateAddr"
-        value={privateAddr}
-        style={{ marginTop: 5, width: "100%" }}
+        onChange={event =>
+          updateInput({
+            target: {
+              name: event.target.name,
+              value: typeof event.target.value === 'string' ? event.target.value : event.target.value.address
+            }
+          })
+        }
+        containerStyle={{ marginTop: 5, width: "100%" }}
+        renderOption={option => {
+          return (
+            <h1
+              className="d-lg-flex align-items-lg-center"
+              style={{ marginBottom: 0, fontSize: 16 }}
+            >
+              {option.label}
+            </h1>
+          );
+        }}
       />
     </React.Fragment>
   );

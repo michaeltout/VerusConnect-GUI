@@ -1,5 +1,6 @@
 import { getApiData } from '../../callCreator'
-import { API_SENDTX, API_TX_PREFLIGHT, NATIVE, ELECTRUM, ETH } from '../../../constants/componentConstants'
+import { API_SENDTX, API_TX_PREFLIGHT, NATIVE, ELECTRUM, ETH, API_SUCCESS } from '../../../constants/componentConstants'
+import { getNetworkFees } from '../../network/networkFees';
 
 /**
  * Send or preflight check a non-reserve, traditional native transaction (sendtoaddress or z_sendmany)
@@ -60,7 +61,7 @@ export const sendNative = async (
  * @param {String} toAddress The address to send to
  * @param {Number} amount The amount to send
  * @param {Number} customFee (optional) Specify a custom tx fee
- * @param {Number} btcFee (required if chainticker === 'BTC') specify the btc feer per byte for this transaction
+ * @param {Number} feePerByte (required if chainticker === 'BTC') specify the fee per byte for this transaction
  */
 export const sendElectrum = async (
   preflight = true,
@@ -68,8 +69,15 @@ export const sendElectrum = async (
   toAddress,
   amount,
   customFee,
-  btcFee
+  feePerByte
 ) => {
+  if (feePerByte == null) {
+    const tryFeeFetch = await getNetworkFees(chainTicker)
+
+    // TODO: Optionally increase or decrease fee amount
+    if (tryFeeFetch.msg === API_SUCCESS) feePerByte = tryFeeFetch.result.mid
+  }
+
   return await getApiData(
     ELECTRUM,
     preflight ? API_TX_PREFLIGHT : API_SENDTX,
@@ -79,7 +87,7 @@ export const sendElectrum = async (
       amount,
       verify: true,
       lumpFee: customFee,
-      feePerByte: btcFee
+      feePerByte
     },
     "post"
   );

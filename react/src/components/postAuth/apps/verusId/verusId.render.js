@@ -44,17 +44,22 @@ export const IdCardRender = function(coinObj) {
                 </h4>
               </div>
               <select
-                value={activeId.idIndex != null ? JSON.stringify(coinIdentities[activeId.idIndex]) : -1}
+                value={
+                  activeId.idIndex != null &&
+                  activeId.chainTicker === coinObj.id
+                    ? JSON.stringify(coinIdentities[activeId.idIndex])
+                    : -1
+                }
                 name="selectedProfileId"
                 className="custom-select custom-select-lg"
                 style={{ marginTop: 10 }}
-                //Selected index is offset by one due to "Select Identity..." placeholder
+                //Selected index is offset by one due to "Select Identity" placeholder
                 onChange={e =>
                   this.openId(coinObj.id, e.target.selectedIndex - 1)
                 }
               >
                 <option key={-1} value={-1} disabled={true}>
-                  {"Select identity..."}
+                  {"Select identity"}
                 </option>
                 {coinIdentities.map((idObj, index) => {
                   {
@@ -79,13 +84,27 @@ export const IdTabsRender = function() {
   return [
     <li className="nav-item" role="presentation" key="wallet-dashboard">
       <a
-        className={`nav-link ${this.props.mainPathArray.includes(DASHBOARD ? 'active' : '')}`}
+        className={`nav-link ${this.props.mainPathArray.includes(
+          DASHBOARD ? "active" : ""
+        )}`}
         href="#"
         onClick={() => this.openDashboard()}
-        style={VerusIdStyles.secondaryTabBarLink}>
+        style={VerusIdStyles.secondaryTabBarLink}
+      >
         <i className="fas fa-home" style={VerusIdStyles.navigationTabIcon} />
         {"ID Dashboard"}
       </a>
+    </li>,
+    <li className="nav-item" role="presentation" key="wallet-addcoin">
+      <a
+        className="nav-link"
+        href={"#"}
+        style={VerusIdStyles.secondaryTabBarLink}
+        onClick={this.openAddCoinModal}
+      >
+        <i className="fas fa-plus" style={VerusIdStyles.navigationTabIcon} />
+        {"Add Coin"}
+      </a>
     </li>
-  ]
+  ];
 }

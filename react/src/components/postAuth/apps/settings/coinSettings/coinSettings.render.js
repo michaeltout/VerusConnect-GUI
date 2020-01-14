@@ -48,8 +48,6 @@ export const CoinSettingsOptionsRender = function() {
           type,
           displayName,
           options,
-          info,
-          disabled,
           hidden
         } = configTypes[settingKey];
 
@@ -63,10 +61,7 @@ export const CoinSettingsOptionsRender = function() {
               handleChange={this.setConfigValue}
               value={displayConfig.coin[tabs[activeTab]][settingKey][id]}
               values={options}
-              disabled={
-                settingKey !== STAKE_GUARD &&
-                (tags.includes(Z_ONLY) || !tags.includes(IS_ZCASH))
-              }
+              disabled={false}
             />
             <div style={{ paddingTop: 16, paddingBottom: 16 }}>
               <Divider variant="middle" />

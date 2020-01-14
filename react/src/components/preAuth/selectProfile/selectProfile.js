@@ -31,7 +31,7 @@ class SelectProfile extends React.Component {
 
     const dispatchDefaultUser = async () => {
       try {
-        dispatch(await setConfigParams(config, { defaultUserId: setAsDefaultUser ? selectedUser : "" }))
+        dispatch(await setConfigParams(config, { defaultUserId: setAsDefaultUser ? selectedUser : "" }, 'general.main'))
       } catch (e) {
         dispatch(newSnackbar(ERROR_SNACK, e.message))
         console.error(e)

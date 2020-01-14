@@ -101,8 +101,7 @@ export const ProfileSettingsStartScreenRender = function() {
                   <option 
                     key={PLACEHOLDER}
                     value={PLACEHOLDER}
-                    selected
-                    disabled>{"Choose screen..."}</option>
+                    disabled>{"Choose screen"}</option>
                   {this.locationPresets.map((app) => {
                     return (
                       <option 
@@ -200,7 +199,7 @@ export const ProfileSettingsStartCoinsRender = function() {
                     key={PLACEHOLDER}
                     value={PLACEHOLDER}
                     selected
-                    disabled>{"Select Coin..."}</option>
+                    disabled>{"Select Coin"}</option>
                   {this.startCoinOptions.map((coin, index) => {
                     return (
                       <option 

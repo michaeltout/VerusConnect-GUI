@@ -5,6 +5,7 @@ import RecoverIdentityForm from "./recoverIdentityForm/recoverIdentityForm";
 import { CONFIRM_DATA, API_SUCCESS, SEND_RESULT, API_REGISTER_ID_NAME, API_RECOVER_ID, API_REGISTER_ID } from '../../../util/constants/componentConstants';
 import Button from '@material-ui/core/Button';
 import PieChart from 'react-minimal-pie-chart';
+import SimpleLoader from '../../../containers/SimpleLoader/SimpleLoader'
 
 export const CreateIdentityRender = function() {
   const { advanceFormStep, state, back, props } = this
@@ -97,21 +98,7 @@ export const CreateIdentityRenderLoading = function() {
         className="d-flex d-sm-flex justify-content-center justify-content-sm-center"
         style={{ paddingBottom: 40 }}
       >
-        <PieChart
-          data={[{ value: 1, key: 1, color: "rgb(78,115,223)" }]}
-          reveal={ this.state.loadingProgress }
-          lineWidth={20}
-          animate
-          labelPosition={0}
-          label={() => Math.round(this.state.loadingProgress) + "%"}
-          labelStyle={{
-            fontSize: "25px"
-          }}
-          style={{
-            maxHeight: "60px",
-            maxWidth: "60px"
-          }}
-        />
+        <SimpleLoader size={75} text={"Loading..."}/>
       </div>
     </div>
   )

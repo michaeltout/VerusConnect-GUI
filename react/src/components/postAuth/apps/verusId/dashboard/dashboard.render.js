@@ -17,6 +17,7 @@ export const DashboardRender = function() {
   const verusProtocolCoins = Object.values(this.props.activatedCoins).filter((coinObj) => {
     return coinObj.tags.includes(IS_VERUS) && coinObj.mode === NATIVE
   })
+  const identityChains = Object.keys(this.props.identities)
 
   return (
     <div
@@ -52,21 +53,27 @@ export const DashboardRender = function() {
                     }`}
                     ref={node => (this.reservationDropdownMenu = node)}
                     style={{
-                      marginBottom: 5
+                      marginBottom: 5,
+                      width: "100%"
                     }}
                   >
                     <button
                       className="btn btn-primary"
                       type="button"
-                      onClick={this.toggleReservationDropdown}
-                      disabled={Object.keys(this.props.identities).length == 0}
+                      onClick={
+                        identityChains.length === 1
+                          ? () => this.openCommitNameModal(identityChains[0])
+                          : this.toggleReservationDropdown
+                      }
+                      disabled={identityChains.length === 0}
                       style={{
                         fontSize: 14,
                         backgroundColor: "rgb(78,115,223)",
                         borderWidth: 1,
                         borderColor: "rgb(78,115,223)",
                         paddingRight: 20,
-                        paddingLeft: 20
+                        paddingLeft: 20,
+                        width: "100%"
                       }}
                     >
                       <strong>{"Commit Name"}</strong>
@@ -86,18 +93,22 @@ export const DashboardRender = function() {
                         {"Select chain:"}
                       </h6>
                       {verusProtocolCoins.map((coinObj, index) => {
-                        if (this.props.identities[coinObj.id] == null) return null
-                        else return (
-                          <a
-                            className="dropdown-item"
-                            key={index}
-                            role="presentation"
-                            href="#"
-                            onClick={() => this.openCommitNameModal(coinObj.id)}
-                          >
-                            {coinObj.name}
-                          </a>
-                        );
+                        if (this.props.identities[coinObj.id] == null)
+                          return null;
+                        else
+                          return (
+                            <a
+                              className="dropdown-item"
+                              key={index}
+                              role="presentation"
+                              href="#"
+                              onClick={() =>
+                                this.openCommitNameModal(coinObj.id)
+                              }
+                            >
+                              {coinObj.name}
+                            </a>
+                          );
                       })}
                     </div>
                   </div>
@@ -107,21 +118,27 @@ export const DashboardRender = function() {
                     }`}
                     ref={node => (this.recoveryDropdownMenu = node)}
                     style={{
-                      marginBottom: 5
+                      marginBottom: 5,
+                      width: "100%"
                     }}
                   >
                     <button
                       className="btn btn-primary"
                       type="button"
-                      onClick={this.toggleRecoveryDropdown}
-                      disabled={Object.keys(this.props.identities).length == 0}
+                      onClick={
+                        identityChains.length === 1
+                          ? () => this.openRecoverIdModal(identityChains[0])
+                          : this.toggleRecoveryDropdown
+                      }
+                      disabled={identityChains.length === 0}
                       style={{
                         fontSize: 14,
                         backgroundColor: "rgb(78,115,223)",
                         borderWidth: 1,
                         borderColor: "rgb(78,115,223)",
                         paddingRight: 20,
-                        paddingLeft: 20
+                        paddingLeft: 20,
+                        width: "100%"
                       }}
                     >
                       <strong>{"Recover a Verus ID"}</strong>
@@ -141,42 +158,259 @@ export const DashboardRender = function() {
                         {"Select chain:"}
                       </h6>
                       {verusProtocolCoins.map((coinObj, index) => {
-                        if (this.props.identities[coinObj.id] == null) return null
-                        else return (
-                          <a
-                            className="dropdown-item"
-                            key={index}
-                            role="presentation"
-                            href="#"
-                            onClick={() => this.openRecoverIdModal(coinObj.id)}
-                          >
-                            {coinObj.name}
-                          </a>
-                        );
+                        if (this.props.identities[coinObj.id] == null)
+                          return null;
+                        else
+                          return (
+                            <a
+                              className="dropdown-item"
+                              key={index}
+                              role="presentation"
+                              href="#"
+                              onClick={() =>
+                                this.openRecoverIdModal(coinObj.id)
+                              }
+                            >
+                              {coinObj.name}
+                            </a>
+                          );
+                      })}
+                    </div>
+                  </div>
+                  <div
+                    className={`dropdown ${
+                      this.state.signDataDropdownOpen ? "show" : ""
+                    }`}
+                    ref={node => (this.signDataDropdownMenu = node)}
+                    style={{
+                      marginBottom: 5,
+                      width: "100%"
+                    }}
+                  >
+                    <button
+                      className="btn btn-primary"
+                      type="button"
+                      onClick={
+                        identityChains.length === 1
+                          ? () => this.openSignIdDataModal(identityChains[0])
+                          : this.toggleSignDataDropdown
+                      }
+                      disabled={identityChains.length === 0}
+                      style={{
+                        fontSize: 14,
+                        backgroundColor: "rgb(78,115,223)",
+                        borderWidth: 1,
+                        borderColor: "rgb(78,115,223)",
+                        paddingRight: 20,
+                        paddingLeft: 20,
+                        width: "100%",
+                        marginTop: 10
+                      }}
+                    >
+                      <strong>{"Sign Data"}</strong>
+                    </button>
+                    <div
+                      className={`dropdown-menu ${
+                        this.state.signDataDropdownOpen ? "show" : ""
+                      }`}
+                      role="menu"
+                      style={{
+                        overflowY: "scroll",
+                        height: "max-content",
+                        maxHeight: 217
+                      }}
+                    >
+                      <h6 className="dropdown-header" role="presentation">
+                        {"Select chain:"}
+                      </h6>
+                      {verusProtocolCoins.map((coinObj, index) => {
+                        if (this.props.identities[coinObj.id] == null)
+                          return null;
+                        else
+                          return (
+                            <a
+                              className="dropdown-item"
+                              key={index}
+                              role="presentation"
+                              href="#"
+                              onClick={() =>
+                                this.openSignIdDataModal(coinObj.id)
+                              }
+                            >
+                              {coinObj.name}
+                            </a>
+                          );
+                      })}
+                    </div>
+                  </div>
+                  <div
+                    className={`dropdown ${
+                      this.state.verifyDataDropdownOpen ? "show" : ""
+                    }`}
+                    ref={node => (this.verifyDataDropdownMenu = node)}
+                    style={{
+                      marginBottom: 5,
+                      width: "100%"
+                    }}
+                  >
+                    <button
+                      className="btn btn-primary"
+                      type="button"
+                      onClick={
+                        identityChains.length === 1
+                          ? () => this.openVerifyIdDataModal(identityChains[0])
+                          : this.toggleVerifyDataDropdown
+                      }
+                      disabled={identityChains.length === 0}
+                      style={{
+                        fontSize: 14,
+                        backgroundColor: "rgb(78,115,223)",
+                        borderWidth: 1,
+                        borderColor: "rgb(78,115,223)",
+                        paddingRight: 20,
+                        paddingLeft: 20,
+                        width: "100%"
+                      }}
+                    >
+                      <strong>{"Verify Signed Data"}</strong>
+                    </button>
+                    <div
+                      className={`dropdown-menu ${
+                        this.state.verifyDataDropdownOpen ? "show" : ""
+                      }`}
+                      role="menu"
+                      style={{
+                        overflowY: "scroll",
+                        height: "max-content",
+                        maxHeight: 217
+                      }}
+                    >
+                      <h6 className="dropdown-header" role="presentation">
+                        {"Select chain:"}
+                      </h6>
+                      {verusProtocolCoins.map((coinObj, index) => {
+                        if (this.props.identities[coinObj.id] == null)
+                          return null;
+                        else
+                          return (
+                            <a
+                              className="dropdown-item"
+                              key={index}
+                              role="presentation"
+                              href="#"
+                              onClick={() =>
+                                this.openVerifyIdDataModal(coinObj.id)
+                              }
+                            >
+                              {coinObj.name}
+                            </a>
+                          );
                       })}
                     </div>
                   </div>
                 </div>
                 <div
-                  className="col d-lg-flex align-items-lg-start"
+                  className="col d-lg-flex"
                   style={{
                     paddingTop: 9,
-                    justifyContent: "center",
-                    color: "rgb(0,0,0)"
+                    alignItems: "center",
+                    color: "rgb(0,0,0)",
+                    flexDirection: "column",
+                    marginBottom: 5
                   }}
                 >
                   {verusProtocolCoins.length == 0 ? (
-                    <a
-                      href="#"
-                      style={{color: "rgb(78,115,223)"}}
-                      onClick={this.openAddCoinModal}
-                    >
-                      {"Add a Verus protocol coin (VRSC or VRSCTEST) to start making IDs!"}
-                    </a>
+                    <div style={{ textAlign: "center" }}>
+                      <a
+                        href="#"
+                        style={{ color: "rgb(78,115,223)" }}
+                        onClick={this.openAddCoinModal}
+                      >
+                        {
+                          "Add a Verus protocol coin (VRSC or VRSCTEST) to start making IDs!"
+                        }
+                      </a>
+                    </div>
                   ) : this.state.displayNameCommitments.length > 0 ? (
                     DashboardRenderTable.call(this)
                   ) : (
-                    "No name commitments. Commit a name to create an ID!"
+                    <React.Fragment>
+                      <div style={{textAlign: "center"}}>
+                        <a
+                          href={identityChains.length === 0 ? null : "#"}
+                          style={{
+                            color:
+                              identityChains.length === 0
+                                ? "black"
+                                : "rgb(78,115,223)"
+                          }}
+                          onClick={
+                            identityChains.length === 0
+                              ? () => {
+                                  return 0;
+                                }
+                              : identityChains.length === 1
+                              ? () => this.openCommitNameModal(identityChains[0])
+                              : this.toggleReservationDropdown
+                          }
+                        >
+                          {"No name commitments. Commit a name to create an ID!"}
+                        </a>
+                      </div>
+                      <div style={{textAlign: "center", marginTop: 5}}>
+                        {"Commiting a name costs as little as one transaction fee, and simply involves " +
+                          "choosing the name you would like, and comitting it into a transaction that you later refer to when creating an identity."}
+                      </div>
+                    </React.Fragment>
+                  )}
+                  {Object.keys(this.props.activatedCoins).map(
+                    (chainTicker, index) => {
+                      const {
+                        identityErrors,
+                        getInfoErrors,
+                        activatedCoins
+                      } = this.props;
+                      if (activatedCoins[chainTicker].tags.includes(IS_VERUS)) {
+                        const identityError =
+                          identityErrors[chainTicker] != null
+                            ? identityErrors[chainTicker].error
+                            : false;
+                        const identityErrorMsg =
+                          identityErrors[chainTicker] != null
+                            ? identityErrors[chainTicker].result
+                            : null;
+                        const infoError =
+                          getInfoErrors[chainTicker] != null
+                            ? getInfoErrors[chainTicker].error
+                            : false;
+                        const infoErrorMsg =
+                          getInfoErrors[chainTicker] != null
+                            ? getInfoErrors[chainTicker].result
+                            : null;
+
+                        return identityError || infoError ? (
+                          <div style={{ marginTop: 5 }} key={index}>
+                            <i
+                              className="fas fa-exclamation-triangle"
+                              style={{
+                                marginRight: 6,
+                                color: "rgb(236,124,43)",
+                                fontSize: 18
+                              }}
+                            />
+                            <span>{`Warning, ${chainTicker} IDs not loaded: `}</span>
+                            <span
+                              style={{
+                                color: "rgb(236,124,43)",
+                                fontWeight: "bold"
+                              }}
+                            >
+                              {infoError ? infoErrorMsg : identityErrorMsg}
+                            </span>
+                          </div>
+                        ) : null;
+                      } else return null;
+                    }
                   )}
                 </div>
               </div>
@@ -365,10 +599,9 @@ export const DashboardRevokeDialogue = function() {
 
 export const DashboardRenderIds = function() {
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", minWidth: 790 }}>
+    <div style={{ display: "flex", flexWrap: "wrap", marginLeft: "-0.516%", marginRight: "-0.516%" }}>
       {this.state.compiledIds.map((idObj, index) => {
         const { identity } = idObj
-        const isCenter = (index + 2) % 3 == 0
         const zBalance = idObj.balances.native.private.confirmed == null ? 0 : idObj.balances.native.private.confirmed
         const spendableBalance = Number((idObj.balances.native.public.confirmed + zBalance).toFixed(8))
         
@@ -377,9 +610,9 @@ export const DashboardRenderIds = function() {
             style={{
               width: "32.3%",
               minWidth: 255,
-              marginBottom: "1.55%",
-              marginRight: isCenter ? "1.55%" : 0,
-              marginLeft: isCenter ? "1.55%" : 0
+              margin: "0.516%",
+              marginTop: 0,
+              marginBottom: "1.032%"
             }}
             key={index}
           >
@@ -475,7 +708,7 @@ export const DashboardRenderIds = function() {
                         <button
                           className="btn btn-primary"
                           type="button"
-                          onClick={() => this.openId(idObj.chainTicker, index)}
+                          onClick={() => this.openId(idObj.chainTicker, idObj.index)}
                           style={{
                             fontSize: 10,
                             backgroundColor: "#2f65d0",
