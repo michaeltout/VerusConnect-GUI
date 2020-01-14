@@ -19,10 +19,10 @@ class CoinSettings extends React.Component {
       tabs: this.availableModeArr
     }
 
-    this.COMMAND_OVERRIDES = {
-      [RUN_SIGN_HASH]: ("Signing hashes is disabled through the GUI client, to sign a hash, use the Verus CLI.\n\n" + 
-      "DO NOT SIGN ANYTHING FOR ANYONE ELSE UNLESS YOU KNOW EXACTLY WHAT YOU ARE SIGNING.")
-    };
+    // Any properties here will prevent the command with their key from being run
+    // on the console by typing run <key>, and will print our their value instead.
+    // E.g., to override help, you could do ['help'] = "No."
+    this.COMMAND_OVERRIDES = {};
 
     this.handleTabChange = this.handleTabChange.bind(this)
     this.setConfigValue = this.setConfigValue.bind(this)
