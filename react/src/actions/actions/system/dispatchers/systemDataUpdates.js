@@ -78,7 +78,7 @@ export const conditionallyUpdateSystemData = async (state, dispatch, updateId) =
       
       setTimeout(() => {
         dispatch(enableUpdateWarningSnack())
-      }, 60000)
+      }, 300000)
     }
   }
 

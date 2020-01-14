@@ -39,7 +39,7 @@ export const RegisterIdentityTxDataRender = function() {
 }
 
 export const RegisterIdentityFormEnterRender = function() {
-  const { state, updateInput, props } = this
+  const { state, updateInput, props, setRecoverSelf, setRevokeSelf } = this
   const { revocationId, recoveryId, privateAddr, formErrors, addrList } = state;
   const { identities } = props
 
@@ -60,7 +60,7 @@ export const RegisterIdentityFormEnterRender = function() {
         containerStyle={{ marginTop: 5, width: "100%" }}
         inputProps={{
           endAdornment: (
-            <InputAdornment onClick={this.setRevokeSelf} position="end">
+            <InputAdornment onClick={setRevokeSelf} position="end">
               <Button>{"SELF"}</Button>
             </InputAdornment>
           )
@@ -81,7 +81,7 @@ export const RegisterIdentityFormEnterRender = function() {
         containerStyle={{ marginTop: 5, width: "100%" }}
         inputProps={{
           endAdornment: (
-            <InputAdornment onClick={this.setRecoverSelf} position="end">
+            <InputAdornment onClick={setRecoverSelf} position="end">
               <Button>{"SELF"}</Button>
             </InputAdornment>
           )
@@ -107,7 +107,6 @@ export const RegisterIdentityFormEnterRender = function() {
           })
         }
         containerStyle={{ marginTop: 5, width: "100%" }}
-        getOptionLabel={option => option.address}
         renderOption={option => {
           return (
             <h1

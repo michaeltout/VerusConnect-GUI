@@ -333,26 +333,28 @@ export const DashboardRender = function() {
                     DashboardRenderTable.call(this)
                   ) : (
                     <React.Fragment>
-                      <a
-                        href={identityChains.length === 0 ? null : "#"}
-                        style={{
-                          color:
+                      <div style={{textAlign: "center"}}>
+                        <a
+                          href={identityChains.length === 0 ? null : "#"}
+                          style={{
+                            color:
+                              identityChains.length === 0
+                                ? "black"
+                                : "rgb(78,115,223)"
+                          }}
+                          onClick={
                             identityChains.length === 0
-                              ? "black"
-                              : "rgb(78,115,223)"
-                        }}
-                        onClick={
-                          identityChains.length === 0
-                            ? () => {
-                                return 0;
-                              }
-                            : identityChains.length === 1
-                            ? () => this.openCommitNameModal(identityChains[0])
-                            : this.toggleReservationDropdown
-                        }
-                      >
-                        {"No name commitments. Commit a name to create an ID!"}
-                      </a>
+                              ? () => {
+                                  return 0;
+                                }
+                              : identityChains.length === 1
+                              ? () => this.openCommitNameModal(identityChains[0])
+                              : this.toggleReservationDropdown
+                          }
+                        >
+                          {"No name commitments. Commit a name to create an ID!"}
+                        </a>
+                      </div>
                       <div style={{textAlign: "center", marginTop: 5}}>
                         {"Commiting a name costs as little as one transaction fee, and simply involves " +
                           "choosing the name you would like, and comitting it into a transaction that you later refer to when creating an identity."}
