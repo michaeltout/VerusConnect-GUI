@@ -75,7 +75,7 @@ export const sendElectrum = async (
     const tryFeeFetch = await getNetworkFees(chainTicker)
 
     // TODO: Optionally increase or decrease fee amount
-    if (tryFeeFetch.msg === API_SUCCESS) feePerByte = tryFeeFetch.result.max
+    if (tryFeeFetch.msg === API_SUCCESS) feePerByte = tryFeeFetch.result.mid
   }
 
   return await getApiData(
