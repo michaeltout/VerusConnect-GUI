@@ -23,7 +23,7 @@ export const MiningCardRender = function(coinObj) {
   return (
     <button
       className="unstyled-button"
-      onClick={() => { this.props.dispatch(newSnackbar(INFO_SNACK, `The ${coinObj.name} mining screen is currently in progress and will be available in the near future!`, MID_LENGTH_ALERT))}}
+      onClick={() => { this.openCoin(coinObj.id) }}
       key={coinObj.id}
       style={MiningStyles.cardClickableContainer}
     >

@@ -37,8 +37,6 @@ const CONDITIONAL_UPDATES = [API_GET_BALANCES, API_GET_TRANSACTIONS, API_GET_FIA
 class CoinWallet extends React.Component {
   constructor(props) {
     super(props);
-
-    this.getDisplayTransactions = this.getDisplayTransactions.bind(this)
     this.state = {
       walletDisplayBalances: [{
         balanceAddrType: PUBLIC_BALANCE,
@@ -62,63 +60,19 @@ class CoinWallet extends React.Component {
         percentage: 0
       },
       chevronVisible: false,
-      txSearchTerm: '',
-      displayTransactions: this.getDisplayTransactions(props.transactions[props.coin] || [])
     }
 
     this.calculateBalances = this.calculateBalances.bind(this)
     this.calculateLoadState = this.calculateLoadState.bind(this)
     this.initState = this.initState.bind(this)
     this.openModal = this.openModal.bind(this)
-    this.openTxInfo = this.openTxInfo.bind(this)
     this.openOpInfo = this.openOpInfo.bind(this)
     this.setInput = this.setInput.bind(this)
-    this.clearTxSearch = this.clearTxSearch.bind(this)
-    this.filterTransactions = this.filterTransactions.bind(this)
   }
 
   initState() {
     this.calculateBalances()
     this.calculateLoadState()
-  }
-
-  getDisplayTransactions(transactions) {
-    let transactionsComps = transactions.map((tx, index) => {
-      return {
-        type: tx.type ? tx.type : tx.category, // "category" is used on native, while "type" is used for electrum & eth/erc20
-        amount: Number(tx.amount),
-        address: tx.address,
-        confirmations: Number(tx.confirmations),
-        time: Number(tx.blocktime != null ? tx.blocktime : tx.timestamp),
-        affectedBalance: renderAffectedBalance(tx),
-        txIndex: index
-      };
-    });
-
-    transactionsComps.sort((a, b) => (a.confirmations > b.confirmations) ? 1 : -1)
-
-    return transactionsComps
-  }
-
-  filterTransactions(transactions) {
-    const { txSearchTerm } = this.state
-    const { coin } = this.props
-    const txList = this.props.transactions[coin] || []
-    const term = txSearchTerm.toLowerCase()
-    
-    // TODO: Make this work for balance types and normal transaction types as they are displayed as well
-    const newTransactions = transactions.filter((tx) => {
-      const fullTx = txList[tx.txIndex]
-
-      if (tx.type != null && tx.type.includes(term) || term.includes(tx.type)) return true
-      if (tx.amount != null && tx.amount.toString().includes(term)) return true
-      if (fullTx.txid != null && fullTx.txid.includes(term)) return true
-      if (fullTx.blockhash != null && fullTx.blockhash.includes(term)) return true
-      if (tx.confirmations != null && tx.confirmations.toString().includes(term)) return true
-      if (tx.address != null && tx.address.toLowerCase().includes(term)) return true
-    })
-
-    this.setState({displayTransactions: newTransactions})
   }
 
   openModal(e, modalParams = {}, modal) {
@@ -128,11 +82,6 @@ class CoinWallet extends React.Component {
     this.props.dispatch(setModalNavigationPath(_modal))
   }
 
-  openTxInfo(rowData) {
-    const { transactions, coin } = this.props
-    this.openModal(null, {txObj: transactions[coin][rowData.txIndex]}, TX_INFO)
-  }
-
   openOpInfo(rowData) {
     const { zOperations, coin } = this.props
     this.openModal(null, {opObj: zOperations[coin][rowData.opIndex]}, OPERATION_INFO)
@@ -140,16 +89,6 @@ class CoinWallet extends React.Component {
 
   componentDidMount() {
     this.initState()
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.transactions[nextProps.coin] != this.props.transactions[this.props.coin]) {
-      if (this.state.txSearchTerm.length === 0) {
-        this.setState({ displayTransactions: this.getDisplayTransactions(nextProps.transactions[nextProps.coin] || []) })
-      } else {
-        this.filterTransactions(this.getDisplayTransactions(nextProps.transactions[nextProps.coin] || []))
-      }
-    }
   }
 
   componentDidUpdate(lastProps) {
@@ -310,13 +249,6 @@ class CoinWallet extends React.Component {
 
   setInput(e) {
     this.setState({ [e.target.name]: e.target.value })
-  }
-
-  clearTxSearch() {
-    this.setState({
-      displayTransactions: this.getDisplayTransactions(this.props.transactions[this.props.coin]),
-      txSearchTerm: ''
-    })
   }
 
   render() {

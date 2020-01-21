@@ -8,6 +8,7 @@ import { updateZOperations } from './updateZOperationStatuses'
 import { updateFiatPrice } from './updateFiatPrice'
 import { updateIdentities } from './updateIdentities'
 import { updateNameCommitments } from './updateNameCommitments'
+import { updateCurrentSupply } from './updateCurrentSupply'
 import { readNavigationUrl } from '../../../../util/navigationUtils'
 import {
   API_GET_ADDRESSES,
@@ -25,7 +26,8 @@ import {
   MID_LENGTH_ALERT,
   API_GET_IDENTITIES,
   API_GET_NAME_COMMITMENTS,
-  ALWAYS_ACTIVATED
+  ALWAYS_ACTIVATED,
+  API_GET_CURRENTSUPPLY
 } from '../../../../util/constants/componentConstants'
 import {
   renewData,
@@ -49,7 +51,8 @@ export const walletUpdates = {
   [API_GET_ZOPERATIONSTATUSES]: updateZOperations,
   [API_GET_FIATPRICE]: updateFiatPrice,
   [API_GET_IDENTITIES]: updateIdentities,
-  [API_GET_NAME_COMMITMENTS]: updateNameCommitments
+  [API_GET_NAME_COMMITMENTS]: updateNameCommitments,
+  [API_GET_CURRENTSUPPLY]: updateCurrentSupply
 }
 
 /**

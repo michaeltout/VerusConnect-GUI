@@ -21,7 +21,9 @@ import { timeConverter } from '../../../../../util/displayUtil/timeUtils'
 import { SortDirection } from 'react-virtualized';
 import SearchBar from '../../../../../containers/SearchBar/SearchBar'
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
-import ArrowDownward from '@material-ui/icons/ArrowDownward'
+import ArrowDownward from '@material-ui/icons/ArrowDownward';
+import WalletPaper from '../../../../../containers/WalletPaper/WalletPaper'
+import TransactionCard from '../../../../../containers/TransactionCard/TransactionCard'
 
 export const CoinWalletRender = function() {
   return (
@@ -29,176 +31,154 @@ export const CoinWalletRender = function() {
       className="col-md-8 col-lg-9"
       style={{ padding: 16, width: "80%", overflow: "scroll" }}
     >
-      <div className="d-flex" style={{ marginBottom: 16 }}>
-        <div style={{ padding: 0, flex: 1 }}>
-          <div className="card border rounded-0" style={{ height: "100%" }}>
-            <div className="card-body">
-              <div className="d-flex flex-row justify-content-between">
-                <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
-                  {`Current ${this.props.coin} Balance`}
-                </h6>
-                {/*<button
-                  className="btn btn-primary"
-                  type="button"
-                  name={RECEIVE_COIN}
-                  onClick={e => this.openModal(e, null)}
-                  style={{
-                    fontSize: 14,
-                    backgroundColor: "rgb(0,178,26)",
-                    borderWidth: 1,
-                    borderColor: "rgb(0,178,26)",
-                    fontWeight: "bold"
-                  }}
-                >
-                  {"Receive"}
-                </button>*/}
-              </div>
-              <div style={{ paddingTop: 5 }}>
-                <div className="d-lg-flex justify-content-lg-start">
-                  <h5
-                    style={{
-                      color: "rgb(0,0,0)",
-                      fontSize: 36,
-                      fontWeight: "bold"
-                    }}
-                  >
-                    {Number(this.state.spendableBalance.crypto.toFixed(8))}
-                  </h5>
-                  <h5
-                    className="d-lg-flex align-items-lg-end"
-                    style={{
-                      color: "rgb(0,0,0)",
-                      fontSize: 16,
-                      paddingBottom: 5,
-                      paddingLeft: 8,
-                      fontWeight: "bold"
-                    }}
-                  >
-                    {this.props.coin}
-                  </h5>
-                </div>
-                <div className="d-lg-flex justify-content-lg-start">
-                  <h1 style={{ margin: 0, fontSize: 16, color: "rgb(0,0,0)" }}>
-                    {`${
-                      this.state.spendableBalance.fiat == null
-                        ? "-"
-                        : this.state.spendableBalance.fiat
-                    } ${this.props.fiatCurrency}`}
-                  </h1>
-                </div>
-              </div>
-            </div>
+      <WalletPaper
+        style={{
+          marginBottom: 16,
+          display: "flex",
+          padding: 0,
+          border: "none"
+        }}
+      >
+        <WalletPaper style={{ padding: 16, display: "flex", flexDirection: "column", flex: 1 }}>
+          <div className="d-flex flex-row justify-content-between">
+            <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
+              {`Current ${this.props.coin} Balance`}
+            </h6>
           </div>
-        </div>
-        {this.state.spendableBalance.crypto !=
-          this.state.pendingBalance.crypto && (
-          <div style={{ padding: 0, flex: 1 }}>
-            <div className="card border rounded-0" style={{ height: "100%" }}>
-              <div className="card-body">
-                <div className="d-flex flex-row justify-content-between">
-                  <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
-                    {`Pending ${this.props.coin} Balance`}
-                  </h6>
-                </div>
-                <div style={{ paddingTop: 5 }}>
-                  <div className="d-lg-flex justify-content-lg-start">
-                    <h5
-                      style={{
-                        color: "rgb(0,0,0)",
-                        fontSize: 36,
-                        fontWeight: "bold"
-                      }}
-                    >
-                      {Number(this.state.pendingBalance.crypto.toFixed(8))}
-                    </h5>
-                    <h5
-                      className="d-lg-flex align-items-lg-end"
-                      style={{
-                        color: "rgb(0,0,0)",
-                        fontSize: 16,
-                        paddingBottom: 5,
-                        paddingLeft: 8,
-                        fontWeight: "bold"
-                      }}
-                    >
-                      {this.props.coin}
-                    </h5>
-                  </div>
-                  <div className="d-lg-flex justify-content-lg-start">
-                    <h1
-                      style={{ margin: 0, fontSize: 16, color: "rgb(0,0,0)" }}
-                    >
-                      {`${
-                        this.state.pendingBalance.fiat == null
-                          ? "-"
-                          : this.state.pendingBalance.fiat
-                      } ${this.props.fiatCurrency}`}
-                    </h1>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-        <div style={{ padding: 0, flex: 1 }}>
-          <div className="card border rounded-0" style={{ height: "100%" }}>
-            <div className="card-body">
-              <div className="d-flex flex-row justify-content-between">
-                <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
-                  Blockchain Status
-                </h6>
-                <button
-                  className="btn btn-primary border rounded"
-                  type="button"
-                  name={CHAIN_INFO}
-                  onClick={e => this.openModal(e, null)}
-                  style={{
-                    fontSize: 14,
-                    backgroundColor: "rgba(0,178,26,0)",
-                    borderWidth: 0,
-                    color: "rgb(133,135,150)",
-                    borderColor: "rgb(133, 135, 150)",
-                    fontWeight: "bold"
-                  }}
-                >
-                  {"Chain Info"}
-                </button>
-              </div>
-              <div
-                className="d-lg-flex"
+          <div style={{ paddingTop: 5 }}>
+            <div style={{ display: "flex", alignItems: "baseline" }}>
+              <h5
                 style={{
-                  display: "flex",
-                  justifyContent: "start",
-                  alignItems: "center"
+                  color: "rgb(0,0,0)",
+                  fontSize: 36,
+                  fontWeight: "bold"
                 }}
               >
-                {WalletRenderPie.call(this)}
-                <h1
+                {Number(this.state.spendableBalance.crypto.toFixed(8))}
+              </h5>
+              <h5
+                className="d-lg-flex align-items-lg-end"
+                style={{
+                  color: "rgb(0,0,0)",
+                  fontSize: 16,
+                  paddingBottom: 5,
+                  paddingLeft: 8,
+                  fontWeight: "bold"
+                }}
+              >
+                {this.props.coin}
+              </h5>
+            </div>
+            <div className="d-lg-flex justify-content-lg-start">
+              <h1 style={{ margin: 0, fontSize: 16, color: "rgb(0,0,0)" }}>
+                {`${
+                  this.state.spendableBalance.fiat == null
+                    ? "-"
+                    : this.state.spendableBalance.fiat
+                } ${this.props.fiatCurrency}`}
+              </h1>
+            </div>
+          </div>
+        </WalletPaper>
+        {this.state.spendableBalance.crypto !=
+          this.state.pendingBalance.crypto && (
+          <WalletPaper style={{ padding: 16, display: "flex", flexDirection: "column", flex: 1 }}>
+            <div className="d-flex flex-row justify-content-between">
+              <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
+                {`Pending ${this.props.coin} Balance`}
+              </h6>
+            </div>
+            <div style={{ paddingTop: 5 }}>
+              <div style={{ display: "flex", alignItems: "baseline" }}>
+                <h5
                   style={{
-                    margin: 0,
-                    fontSize: 16,
                     color: "rgb(0,0,0)",
-                    paddingLeft: 23,
-                    overflow: "-webkit-paged-x"
+                    fontSize: 36,
+                    fontWeight: "bold"
                   }}
                 >
-                  {this.state.walletLoadState.error && (
-                    <i
-                      className="fas fa-exclamation-triangle"
-                      style={{
-                        marginRight: 6,
-                        color: "rgb(236,124,43)",
-                        fontSize: 18
-                      }}
-                    />
-                  )}
-                  {this.state.walletLoadState.message}
+                  {Number(this.state.pendingBalance.crypto.toFixed(8))}
+                </h5>
+                <h5
+                  className="d-lg-flex align-items-lg-end"
+                  style={{
+                    color: "rgb(0,0,0)",
+                    fontSize: 16,
+                    paddingBottom: 5,
+                    paddingLeft: 8,
+                    fontWeight: "bold"
+                  }}
+                >
+                  {this.props.coin}
+                </h5>
+              </div>
+              <div className="d-lg-flex justify-content-lg-start">
+                <h1 style={{ margin: 0, fontSize: 16, color: "rgb(0,0,0)" }}>
+                  {`${
+                    this.state.pendingBalance.fiat == null
+                      ? "-"
+                      : this.state.pendingBalance.fiat
+                  } ${this.props.fiatCurrency}`}
                 </h1>
               </div>
             </div>
+          </WalletPaper>
+        )}
+        <WalletPaper style={{ padding: 16, display: "flex", flexDirection: "column", flex: 1 }}>
+          <div className="d-flex flex-row justify-content-between">
+            <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
+              Blockchain Status
+            </h6>
+            <button
+              className="btn btn-primary border rounded"
+              type="button"
+              name={CHAIN_INFO}
+              onClick={e => this.openModal(e, null)}
+              style={{
+                fontSize: 14,
+                backgroundColor: "rgba(0,178,26,0)",
+                borderWidth: 0,
+                color: "rgb(133,135,150)",
+                borderColor: "rgb(133, 135, 150)",
+                fontWeight: "bold"
+              }}
+            >
+              {"Chain Info"}
+            </button>
           </div>
-        </div>
-      </div>
+          <div
+            className="d-lg-flex"
+            style={{
+              display: "flex",
+              justifyContent: "start",
+              alignItems: "center"
+            }}
+          >
+            {WalletRenderPie.call(this)}
+            <h1
+              style={{
+                margin: 0,
+                fontSize: 16,
+                color: "rgb(0,0,0)",
+                paddingLeft: 23,
+                overflow: "-webkit-paged-x"
+              }}
+            >
+              {this.state.walletLoadState.error && (
+                <i
+                  className="fas fa-exclamation-triangle"
+                  style={{
+                    marginRight: 6,
+                    color: "rgb(236,124,43)",
+                    fontSize: 18
+                  }}
+                />
+              )}
+              {this.state.walletLoadState.message}
+            </h1>
+          </div>
+        </WalletPaper>
+      </WalletPaper>
       <div style={{ position: "relative" }}>
         {this.state.chevronVisible && (
           <div
@@ -240,82 +220,25 @@ export const CoinWalletRender = function() {
         )}
       </div>
       {WalletRenderBalances.call(this)}
-      <div className="d-flex flex-fill flex-wrap" style={{ marginBottom: 16 }}>
-        <div className="flex-grow-1">
-          <div className="col-lg-12" style={{ padding: 0 }}>
-            <div className="card border rounded-0">
-              <div className="card-body">
-                <h6
-                  className="card-title"
-                  style={{ fontSize: 14, margin: 0, width: "max-content" }}
-                >
-                  {"Transactions"}
-                </h6>
-                {this.props.transactions[this.props.coin] &&
-                  this.props.transactions[this.props.coin].length > 0 && (
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        width: "100%"
-                      }}
-                    >
-                      <SearchBar
-                        label={"Transaction Search"}
-                        placeholder={"Type and press enter"}
-                        name="txSearchTerm"
-                        clearable={true}
-                        style={{
-                          width: 300
-                        }}
-                        onChange={this.setInput}
-                        onClear={this.clearTxSearch}
-                        onSubmit={() =>
-                          this.filterTransactions(
-                            this.getDisplayTransactions(
-                              this.props.transactions[this.props.coin]
-                            )
-                          )
-                        }
-                        value={this.state.txSearchTerm}
-                      />
-                    </div>
-                  )}
-                {this.props.transactions[this.props.coin] &&
-                this.props.transactions[this.props.coin].length > 0 ? (
-                  WalletRenderTransactions.call(this)
-                ) : (
-                  <div style={{ marginTop: 20 }}>
-                    {"No transactions found."}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <TransactionCard
+        transactions={
+          this.props.transactions[this.props.coin] != null
+            ? this.props.transactions[this.props.coin]
+            : []
+        }
+        coin={this.props.coin}
+      />
       {this.props.zOperations[this.props.coin] &&
         this.props.zOperations[this.props.coin].length > 0 && (
-          <div
-            className="d-flex flex-fill flex-wrap"
-            style={{ marginBottom: 16 }}
-          >
-            <div className="flex-grow-1">
-              <div className="col-lg-12" style={{ padding: 0 }}>
-                <div className="card border rounded-0">
-                  <div className="card-body">
-                    <h6
-                      className="card-title"
-                      style={{ fontSize: 14, margin: 0, width: "max-content" }}
-                    >
-                      {"Pending Transaction Log:"}
-                    </h6>
-                    {WalletRenderOperations.call(this)}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <WalletPaper>
+            <h6
+              className="card-title"
+              style={{ fontSize: 14, margin: 0, width: "max-content" }}
+            >
+              {"Pending Transaction Log:"}
+            </h6>
+            {WalletRenderOperations.call(this)}
+          </WalletPaper>
         )}
     </div>
   );
@@ -324,7 +247,7 @@ export const CoinWalletRender = function() {
 export const WalletRenderPie = function() {
   return (
     <PieChart
-      data={[{ value: 1, key: 1, color: "rgb(78,115,223)" }]}
+      data={[{ value: 1, key: 1, color: `rgb(78,115,223)` }]}
       reveal={this.state.walletLoadState.percentage}
       lineWidth={20}
       animate
@@ -345,14 +268,14 @@ export const WalletRenderPie = function() {
 
 export const WalletRenderBalances = function() {
   return (
-    <div
-      className="d-flex flex-fill"
+    <WalletPaper
       style={{
         marginBottom: 16,
         backgroundColor: "#ffffff",
         paddingLeft: 8,
         paddingRight: 8,
-        overflowX: "scroll"
+        overflowX: "scroll",
+        display: "flex"
       }}>
       {this.state.walletDisplayBalances.map(balanceObj => {
         const {
@@ -387,8 +310,6 @@ export const WalletRenderBalances = function() {
             className="flex-grow-1"
             key={Math.random()}
             style={{
-              paddingBottom: 16,
-              paddingTop: 16,
               paddingRight: 8,
               paddingLeft: 8,
               maxWidth: "100%",
@@ -517,77 +438,9 @@ export const WalletRenderBalances = function() {
           </div>
         );
       })}
-    </div>
+    </WalletPaper>
   );
 };
-
-export const WalletRenderTransactions = function() {  
-  return (
-    <div style={{ height: ((50 * this.state.displayTransactions.length) + 50), maxHeight: 500, width: '100%' }}>
-      <VirtualizedTable
-        rowCount={this.state.displayTransactions.length}
-        sortBy="confirmations"
-        sortDirection={ SortDirection.ASC }
-        onRowClick={ ({rowData}) => this.openTxInfo(rowData) }
-        rowGetter={({ index }) => this.state.displayTransactions[index]}
-        columns={[
-          {
-            width: 150,
-            cellDataGetter: ({ rowData }) => {
-              return TX_TYPES[rowData.type]
-            },
-            flexGrow: 1,
-            label: 'Type',
-            dataKey: 'type',
-          },
-          {
-            width: 150,
-            cellDataGetter: ({ rowData }) => {
-              return <strong>{rowData.amount}</strong>
-            },
-            flexGrow: 1,
-            label: 'Amount',
-            dataKey: 'amount',
-          },
-          {
-            width: 120,
-            flexGrow: 1,
-            cellDataGetter: ({ rowData }) => {
-              return rowData.confirmations
-            },
-            label: 'Confirmations',
-            dataKey: 'confirmations',
-          },
-          {
-            width: 125,
-            cellDataGetter: ({ rowData }) => {
-              const time = timeConverter(rowData.time == null ? rowData.timestamp : rowData.time)
-              return time ? time : '-'
-            },
-            flexGrow: 1,
-            label: 'Time',
-            dataKey: 'time',
-          },
-          {
-            width: 150,
-            flexGrow: 1,
-            label: 'Balance',
-            dataKey: 'affectedBalance',
-          },
-          {
-            width: 200,
-            cellDataGetter: ({ rowData }) => {
-              return <div style={{overflow: "hidden", whiteSpace: "nowrap", width: "100%", textOverflow: "ellipsis"}}>{rowData.address}</div>
-            },
-            flexGrow: 1,
-            label: 'Address',
-            dataKey: 'address'
-          },
-        ]}
-      />
-    </div>
-  )
-}
 
 export const WalletRenderOperations = function() {
   const zOperations = this.props.zOperations[this.props.coin]
@@ -641,7 +494,7 @@ export const WalletRenderOperations = function() {
           {
             width: 150,
             flexGrow: 1,
-            label: 'Id',
+            label: 'ID',
             dataKey: 'id',
           },
           {

@@ -2,10 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { CHECKBOX, NUMBER_INPUT, TEXT_INPUT, DROPDOWN } from '../../util/constants/componentConstants';
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox'
+import InfoIcon from '@material-ui/icons/Info';
+import { Tooltip } from '@material-ui/core';
 
 class SimpleSetting extends React.Component {
   render() {
-    const { label, handleChange, value, values, disabled, placeholder, inputType, name, hidden } = this.props
+    const {
+      label,
+      handleChange,
+      value,
+      values,
+      disabled,
+      placeholder,
+      inputType,
+      name,
+      hidden,
+      toolTip
+    } = this.props;
 
     const getInput = () => {
       switch (inputType) {
@@ -67,7 +80,7 @@ class SimpleSetting extends React.Component {
       }
     }
 
-    return (hidden ? null : (
+    return hidden ? null : (
       <div
         style={{
           display: "flex",
@@ -81,15 +94,20 @@ class SimpleSetting extends React.Component {
           className="card-title"
           style={{ fontSize: 14, margin: 0, width: "max-content" }}
         >
-          { label }
+          {label}
+          {toolTip != null && (
+            <Tooltip title={toolTip}>
+              <InfoIcon fontSize='small' color='primary' style={{ marginBottom: 2, marginLeft: 3 }}/>
+            </Tooltip>
+          )}
         </h6>
         <div className="d-flex d-sm-flex d-md-flex d-lg-flex flex-column align-items-center align-items-sm-center align-items-md-center justify-content-lg-center align-items-lg-center">
           <div className="d-flex d-sm-flex d-md-flex d-lg-flex align-items-center align-items-sm-center align-items-md-center align-items-lg-center">
-            { getInput() }
+            {getInput()}
           </div>
         </div>
       </div>
-    ))
+    );
   }
 }
 
@@ -102,7 +120,8 @@ SimpleSetting.propTypes = {
   values: PropTypes.array,
   placeholder: PropTypes.string,
   name: PropTypes.string,
-  hidden: PropTypes.bool
+  hidden: PropTypes.bool,
+  toolTip: PropTypes.string
 };
 
 export default SimpleSetting

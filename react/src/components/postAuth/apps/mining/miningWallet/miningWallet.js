@@ -3,312 +3,131 @@ import { connect } from 'react-redux';
 import { 
   MiningWalletRender,
 } from './miningWallet.render';
-import { 
-  NATIVE_BALANCE, 
-  CONFIRMED_BALANCE, 
-  API_GET_BALANCES,
-  API_GET_TRANSACTIONS,
-  API_GET_FIATPRICE,
-  API_GET_INFO,
-  PUBLIC_BALANCE,
-  TX_INFO,
-  UNCONFIRMED_BALANCE,
-  OPERATION_INFO,
-} from '../../../../../util/constants/componentConstants'
-import { renderAffectedBalance } from '../../../../../util/txUtils/txRenderUtils'
-import { setModalNavigationPath, setModalParams, setMainNavigationPath } from '../../../../../actions/actionCreators'
-
-//TODO: Use these to update on mount conditionally
-import { conditionallyUpdateWallet } from '../../../../../actions/actionDispatchers'
+import { startMining, startStaking, stopMining, stopStaking } from '../../../../../util/api/wallet/walletCalls'
 import Store from '../../../../../store'
-import { getPathParent } from '../../../../../util/navigationUtils';
-
-const CONDITIONAL_UPDATES = [API_GET_BALANCES, API_GET_TRANSACTIONS, API_GET_FIATPRICE, API_GET_INFO]
+import { setModalNavigationPath, newSnackbar, expireData, setMainNavigationPath } from '../../../../../actions/actionCreators';
+import { ADD_COIN, SELECT_COIN, NATIVE, API_GET_INFO, API_GET_MININGINFO, ERROR_SNACK, MID_LENGTH_ALERT, API_GET_CPU_TEMP, API_GET_CURRENTSUPPLY } from '../../../../../util/constants/componentConstants';
+import { conditionallyUpdateWallet } from '../../../../../actions/actionDispatchers';
 
 class MiningWallet extends React.Component {
   constructor(props) {
     super(props);
 
-    if (props.activeIdentity == null) {
-      props.dispatch(setMainNavigationPath(getPathParent(props.mainPathArray)))
+    this.state = {
+      coinsMining: 0,
+      coinsStaking: 0,
+      loading: {}
     }
 
-    this.state = {
-      walletDisplayBalances: [
-        {
-          balanceAddrType: PUBLIC_BALANCE,
-          balanceType: CONFIRMED_BALANCE,
-          balance: "-",
-          balanceFiat: "-"
-        }
-      ],
-      spendableBalance: {
-        crypto: 0,
-        fiat: 0.0
-      },
-      walletLoadState: {
-        message: "Loading...",
-        error: false,
-        percentage: 0
-      },
-      chevronVisible: false,
-      txSearchTerm: "",
-      identityTransactions: [],
-      displayTransactions: []
-    };
-
-    this.calculateBalances = this.calculateBalances.bind(this);
-    this.initState = this.initState.bind(this);
-    this.openModal = this.openModal.bind(this);
-    this.openTxInfo = this.openTxInfo.bind(this);
-    this.setInput = this.setInput.bind(this);
-    this.clearTxSearch = this.clearTxSearch.bind(this);
-    this.filterTransactions = this.filterTransactions.bind(this);
-    this.openOpInfo = this.openOpInfo.bind(this)
-    this.getDisplayTransactions = this.getDisplayTransactions.bind(this);
-  }
-
-  initState() {
-    const identityTransactions = this.getIdentityTransactions(
-      this.props.transactions,
-      this.props.activeIdentity
-    );
-
-    this.calculateBalances();
-    this.setState({ identityTransactions, displayTransactions: this.getDisplayTransactions(identityTransactions) })
-  }
-
-  getIdentityTransactions(transactions, identity) {
-    if (!identity || !transactions) return [];
-    let txIndexes = []
-
-    const pubAddrs = identity.addresses.public.map(addrObj => addrObj.address);
-    const privAddrs = identity.addresses.private.map(addrObj => addrObj.address);
-
-    return transactions.filter((tx, index) => {
-      if (tx.address != null && (pubAddrs.includes(tx.address) || privAddrs.includes(tx.address))) {
-        txIndexes.push(index)
-        return true
-      } else return false
-    }).map((tx, index) => {return {...tx, txIndex: txIndexes[index]}});
-  }
-
-  getDisplayTransactions(transactions) {
-    let transactionsComps = transactions.map((tx) => {
-      return {
-        type: tx.type ? tx.type : tx.category, // "category" is used on native, while "type" is used for electrum & eth/erc20
-        amount: Number(tx.amount),
-        address: tx.address,
-        confirmations: Number(tx.confirmations),
-        time: Number(tx.blocktime != null ? tx.blocktime : tx.timestamp),
-        affectedBalance: renderAffectedBalance(tx),
-        txIndex: tx.txIndex
-      };
-    });
-
-    transactionsComps.sort((a, b) =>
-      a.confirmations > b.confirmations ? 1 : -1
-    );
-
-    return transactionsComps;
-  }
-
-  filterTransactions(transactions) {
-    const { txSearchTerm } = this.state;
-    const term = txSearchTerm.toLowerCase();
-
-    // TODO: Make this work for balance types and normal transaction types as they are displayed as well
-    const newTransactions = transactions.filter(tx => {
-      if ((tx.type != null && tx.type.includes(term)) || term.includes(tx.type))
-        return true;
-      if (tx.amount != null && tx.amount.toString().includes(term)) return true;
-      if (
-        tx.confirmations != null &&
-        tx.confirmations.toString().includes(term)
-      )
-        return true;
-      if (tx.address != null && tx.address.toLowerCase().includes(term))
-        return true;
-    });
-
-    this.setState({ displayTransactions: newTransactions });
-  }
-
-  openModal(e, modalParams = {}, modal) {
-    const _modal = modal ? modal : e.target.name;
-
-    this.props.dispatch(
-      setModalParams(_modal, { chainTicker: this.props.coin, ...modalParams })
-    );
-    this.props.dispatch(setModalNavigationPath(_modal));
-  }
-
-  openOpInfo(rowData) {
-    const { zOperations } = this.props
-    this.openModal(null, {opObj: zOperations[rowData.opIndex]}, OPERATION_INFO)
-  }
-
-  openTxInfo(rowData) {
-    const { transactions } = this.props;
-    this.openModal(null, { txObj: transactions[rowData.txIndex] }, TX_INFO);
+    this.openAddCoinModal = this.openAddCoinModal.bind(this)
+    this.updateMineStakeCoins = this.updateMineStakeCoins.bind(this)
+    this.handleThreadChange = this.handleThreadChange.bind(this)
+    this.toggleStaking = this.toggleStaking.bind(this)
   }
 
   componentDidMount() {
-    this.initState();
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const {
-      getDisplayTransactions,
-      filterTransactions,
-      getIdentityTransactions,
-      props,
-      state,
-      setState
-    } = this;
-    const { transactions, activeIdentity } = props;
-    const { txSearchTerm } = state;
-
-    if (nextProps.transactions != transactions || nextProps.activeIdentity != activeIdentity) {
-      const identityTransactions = getIdentityTransactions(
-        nextProps.transactions,
-        nextProps.activeIdentity
-      );
-
-      if (txSearchTerm.length > 0) {
-        setState({
-          displayTransactions: getDisplayTransactions(identityTransactions)
-        });
-      } else {
-        filterTransactions(getDisplayTransactions(identityTransactions));
-      }
-    }
+    this.updateMineStakeCoins()
   }
 
   componentDidUpdate(lastProps) {
-    if (this.props != lastProps && this.props.activatedCoins[this.props.coin]) {
-      if (this.props.coin != lastProps.coin) {
-        const stateSnapshot = Store.getState();
-        const { dispatch, coin, activatedCoins } = this.props;
-        const activeCoin = activatedCoins[coin];
-        const { mode, id } = activeCoin;
+    if (lastProps.miningInfo != this.props.miningInfo) {
+      this.updateMineStakeCoins()
 
-        CONDITIONAL_UPDATES.map(updateId => {
-          conditionallyUpdateWallet(
-            stateSnapshot,
-            dispatch,
-            mode,
-            id,
-            updateId
-          );
-        });
-      }
-
-      this.initState();
-    }
-  }
-
-  calculateBalances() {
-    const { props } = this
-    const { activeIdentity, fiatPrices, fiatCurrency, coin } = props
-    const { balances } = activeIdentity
-
-    let spendableBalance = {
-      crypto: 0,
-      fiat: null
-    };
-    
-    let walletDisplayBalances = [];
-    const chainTicker = coin;
-    
-
-    if (balances) {
-      const nativeBalances = balances[NATIVE_BALANCE];
-
-      for (let balanceAddrType in nativeBalances) {
-        for (let balanceType in nativeBalances[balanceAddrType]) {
-          const balance = nativeBalances[balanceAddrType][balanceType];
-
-          if (balance != null) {
-            if (balanceType === CONFIRMED_BALANCE) {
-              spendableBalance.crypto += balance;
-            }
-
-            if (
-              (balance != 0 || balanceType === CONFIRMED_BALANCE) &&
-              balanceType != UNCONFIRMED_BALANCE
-            ) {
-              walletDisplayBalances.push({
-                balanceAddrType,
-                balanceType,
-                balance,
-                balanceFiat: "-"
-              });
-            }
-          }
+      Object.keys(this.props.miningInfo).map(chainTicker => {
+        // If mining info data is refreshed, stop loading
+        if (this.state.loading[chainTicker]) {
+          this.setState({ loading: { ...this.state.loading, [chainTicker]: false }})
         }
-      }
-
-      if (fiatPrices[chainTicker] && fiatPrices[chainTicker][fiatCurrency]) {
-        const fiatPrice = fiatPrices[chainTicker][fiatCurrency];
-        spendableBalance.fiat = (spendableBalance.crypto * fiatPrice).toFixed(
-          2
-        );
-
-        walletDisplayBalances = walletDisplayBalances.map(balanceObj => {
-          return {
-            ...balanceObj,
-            balanceFiat: (balanceObj.balance * fiatPrice).toFixed(2)
-          };
-        });
-      }
+      })
     }
-
-    let stateObj = {
-      spendableBalance,
-      walletDisplayBalances:
-        walletDisplayBalances.length > 0
-          ? walletDisplayBalances
-          : [
-              {
-                balanceAddrType: PUBLIC_BALANCE,
-                balanceType: CONFIRMED_BALANCE,
-                balance: "-",
-                balanceFiat: "-"
-              }
-            ]
-    };
-
-    this.setState(stateObj);
   }
 
-  setInput(e) {
-    this.setState({ [e.target.name]: e.target.value });
+  toggleStaking(chainTicker) {
+    const { miningInfo, dispatch } = this.props
+
+    if (miningInfo[chainTicker]) {
+      this.setState({ loading: { ...this.state.loading, [chainTicker]: true }}, async () => {
+        try {
+          // Try to dispatch call to stop or start staking
+          if (miningInfo[chainTicker].staking) {
+            await stopStaking(NATIVE, chainTicker)
+          } else {
+            await startStaking(NATIVE, chainTicker)
+          }
+  
+          // If successful, expire mining data and update all other expired data
+          dispatch(expireData(chainTicker, API_GET_MININGINFO))
+          conditionallyUpdateWallet(Store.getState(), dispatch, NATIVE, chainTicker, API_GET_MININGINFO)
+        } catch (e) {
+          // If failed, cancel loading
+          this.setState({ loading: { ...this.state.loading, [chainTicker]: false }})
+          dispatch(newSnackbar(ERROR_SNACK, e.message, MID_LENGTH_ALERT))
+        }
+      })
+    }
   }
 
-  clearTxSearch() {
-    this.setState({
-      displayTransactions: this.getDisplayTransactions(this.state.identityTransactions),
-      txSearchTerm: ""
-    });
+  // Dispatch call to stop or start mining, then expire and update mining data
+  handleThreadChange(event, chainTicker) {
+    const newThreads = event.target.value
+    const { dispatch, miningInfo } = this.props
+
+    if (miningInfo[chainTicker] && newThreads !== miningInfo[chainTicker].numthreads) {
+      this.setState({ loading: { ...this.state.loading, [chainTicker]: true }}, async () => {
+        try {
+          // Try to dispatch call to stop or start mining
+          if (newThreads === 0) {
+            await stopMining(NATIVE, chainTicker)
+          } else {
+            await startMining(NATIVE, chainTicker, newThreads)
+          }
+  
+          // If successful, expire mining data and update all other expired data
+          dispatch(expireData(chainTicker, API_GET_MININGINFO))
+          conditionallyUpdateWallet(Store.getState(), dispatch, NATIVE, chainTicker, API_GET_MININGINFO)
+        } catch (e) {
+          // If failed, cancel loading
+          this.setState({ loading: { ...this.state.loading, [chainTicker]: false }})
+          dispatch(newSnackbar(ERROR_SNACK, e.message, MID_LENGTH_ALERT))
+        }
+      })
+    }
+  }
+
+  updateMineStakeCoins() {
+    //TODO: DELETE & PUT UPDATES HERE
+    console.log("update here")
+  }
+
+  openAddCoinModal() {
+    this.props.dispatch(setModalNavigationPath(`${ADD_COIN}/${SELECT_COIN}`))
   }
 
   render() {
-    return this.props.activeIdentity ? MiningWalletRender.call(this) : null;
+    return MiningWalletRender.call(this);
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    activatedCoins: state.coins.activatedCoins,
-    fiatPrices: state.ledger.fiatPrices,
-    fiatCurrency: state.settings.config.general.main.fiatCurrency,
-    activeIdentity: state.ledger.identities[ownProps.coin] ? state.ledger.identities[ownProps.coin][ownProps.idIndex] : null,
-    transactions: state.ledger.transactions[ownProps.coin],
-    zOperations: state.ledger.zOperations[ownProps.coin],
-    info: state.ledger.info,
-    mainPathArray: state.navigation.mainPathArray
+// Minor performance improvement when filtering activatedCoins
+function mapStateToPropsFactory(initialState, ownProps) {
+  return function mapStateToProps(state) {
+    return {
+      activatedCoins: state.coins.activatedCoins,
+      nativeCoins: Object.values(state.coins.activatedCoins).filter(coinObj => { return coinObj.mode === NATIVE }),
+      balances: state.ledger.balances,
+      miningInfo: state.ledger.miningInfo,
+      info: state.ledger.info,
+      currentSupply: state.ledger.currentSupply,
+      cpuLoad: state.system.cpuLoad,
+      cpuTemp: state.system.cpuTemp,
+      sysTime: state.system.sysTime,
+      cpuData: state.system.static ? state.system.static.cpu : {},
+      cpuTempError: state.errors[API_GET_CPU_TEMP],
+      getInfoErrors: state.errors[API_GET_INFO],
+      miningInfoErrors: state.errors[API_GET_MININGINFO],
+      currentSupplyError: state.errors[API_GET_CURRENTSUPPLY]  
+    };
   };
-};
+}
 
-export default connect(mapStateToProps)(MiningWallet);
+export default connect(mapStateToPropsFactory)(MiningWallet);

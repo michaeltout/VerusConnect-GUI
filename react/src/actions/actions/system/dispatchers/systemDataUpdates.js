@@ -65,7 +65,7 @@ export const conditionallyUpdateSystemData = async (state, dispatch, updateId) =
 
     if (!updateWarningSnackDisabled) {
       // Disable spamming of update warnings if many updates are taking a while,
-      // max. 1 warning every 60 seconds
+      // max. 1 warning every 10 minutes
       
       dispatch(disableUpdateWarningSnack())
       dispatch(
@@ -78,7 +78,7 @@ export const conditionallyUpdateSystemData = async (state, dispatch, updateId) =
       
       setTimeout(() => {
         dispatch(enableUpdateWarningSnack())
-      }, 300000)
+      }, 600000)
     }
   }
 

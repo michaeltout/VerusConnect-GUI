@@ -39,6 +39,7 @@ class Mining extends React.Component {
     this.openDashboard = this.openDashboard.bind(this)
     this.getNativeCoins = this.getNativeCoins.bind(this)
     this.openAddCoinModal = this.openAddCoinModal.bind(this)
+    this.openCoin = this.openCoin.bind(this)
     this.setTabs()
   }
 
@@ -122,6 +123,10 @@ class Mining extends React.Component {
 
   setTabs() {
     this.props.setTabs(MiningTabsRender.call(this))
+  }
+
+  openCoin(wallet) {
+    this.props.dispatch(setMainNavigationPath(`${getPathParent(this.props.mainPathArray)}/${wallet}_${MINING_POSTFIX}`))
   }
 
   render() {

@@ -13,7 +13,8 @@ import {
   SET_COIN_FIATPRICE,
   DEACTIVATE_COIN,
   SET_COIN_IDENTITIES,
-  SET_COIN_NAME_COMMITMENTS
+  SET_COIN_NAME_COMMITMENTS,
+  SET_COIN_CURRENTSUPPLY
 } from '../util/constants/storeType'
 
 export const ledger = (state = {
@@ -26,7 +27,8 @@ export const ledger = (state = {
   definedChains: {},
   fiatPrices: {},
   identities: {},
-  nameCommitments: {}
+  nameCommitments: {},
+  currentSupply: {}
 }, action) => {
   switch (action.type) {
     case DEACTIVATE_COIN:
@@ -40,7 +42,8 @@ export const ledger = (state = {
         definedChains,
         fiatPrices,
         identities,
-        nameCommitments
+        nameCommitments,
+        currentSupply
       } = state
       let newLedger = {
         balances,
@@ -52,7 +55,8 @@ export const ledger = (state = {
         definedChains,
         fiatPrices,
         identities,
-        nameCommitments
+        nameCommitments,
+        currentSupply
       }
 
       Object.keys(newLedger).map(infoType => {
@@ -112,6 +116,11 @@ export const ledger = (state = {
       return {
         ...state,
         nameCommitments: {...state.nameCommitments, [action.chainTicker]: action.nameCommitments}
+      }
+    case SET_COIN_CURRENTSUPPLY:
+      return {
+        ...state,
+        currentSupply: {...state.currentSupply, [action.chainTicker]: action.currentSupply}
       }
     default:
       return state;
