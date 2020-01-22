@@ -125,7 +125,9 @@ function mapStateToPropsFactory(initialState, ownProps) {
       cpuTempError: state.errors[API_GET_CPU_TEMP],
       getInfoErrors: state.errors[API_GET_INFO],
       miningInfoErrors: state.errors[API_GET_MININGINFO],
-      currentSupplyError: state.errors[API_GET_CURRENTSUPPLY]  
+      currentSupplyError: state.errors[API_GET_CURRENTSUPPLY],
+      blockReward: state.ledger.blockReward,
+      transactions: state.ledger.transactions
     };
   };
 }

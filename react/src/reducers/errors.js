@@ -32,12 +32,15 @@ import {
   ERROR_SYS_TIME,
   SET_CPU_LOAD,
   SET_COIN_CURRENTSUPPLY,
-  ERROR_COIN_CURRENTSUPPLY
+  ERROR_COIN_CURRENTSUPPLY,
+  ERROR_COIN_BLOCKREWARD,
+  SET_COIN_BLOCKREWARD
 } from '../util/constants/storeType'
 import {
   API_GET_ZOPERATIONSTATUSES,
   API_GET_BALANCES,
   API_GET_DEFINEDCHAINS,
+  API_GET_BLOCKREWARD,
   API_GET_INFO,
   API_GET_TRANSACTIONS,
   API_GET_MININGINFO,
@@ -66,6 +69,7 @@ export const errors = (state = {
   [API_GET_IDENTITIES]: {},
   [API_GET_NAME_COMMITMENTS]: {},
   [API_GET_CURRENTSUPPLY]: {},
+  [API_GET_BLOCKREWARD]: {},
 
   // System information calls
   [API_GET_CPU_TEMP]: {},
@@ -97,6 +101,11 @@ export const errors = (state = {
       return {
         ...state,
         [API_GET_CURRENTSUPPLY]: {...state[API_GET_CURRENTSUPPLY], [action.chainTicker]: {error: true, result: action.result}}
+      };
+    case ERROR_COIN_BLOCKREWARD:
+      return {
+        ...state,
+        [API_GET_BLOCKREWARD]: {...state[API_GET_BLOCKREWARD], [action.chainTicker]: {error: true, result: action.result}}
       };
     case ERROR_COIN_INFO:
       return {
@@ -172,6 +181,11 @@ export const errors = (state = {
       return {
         ...state,
         [API_GET_CURRENTSUPPLY]: {...state[API_GET_CURRENTSUPPLY], [action.chainTicker]: {error: false, result: null}}
+      };
+    case SET_COIN_BLOCKREWARD:
+      return {
+        ...state,
+        [API_GET_BLOCKREWARD]: {...state[API_GET_BLOCKREWARD], [action.chainTicker]: {error: false, result: null}}
       };
     case SET_COIN_INFO:
       return {

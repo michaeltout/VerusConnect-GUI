@@ -7,6 +7,7 @@ import {
   API_GET_ADDRESSES,
   API_GET_BALANCES,
   API_GET_DEFINEDCHAINS,
+  API_GET_BLOCKREWARD,
   API_GET_INFO,
   API_GET_MININGINFO,
   API_GET_TRANSACTIONS,
@@ -386,6 +387,58 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
       }
     },
 
+    [API_GET_BLOCKREWARD]: {
+      restrictions: [], 
+      pre_data: {
+        tracking_info: {
+          needs_update: false,
+          busy: false,
+          location_restrictions: [],
+          location_and_type_restrictions: []
+        },
+        interval_info: {
+          expire_id: null,
+          update_expired_id: null,
+          expire_oncomplete: null,
+          update_expired_oncomplete: null,
+          expire_timeout: NEVER_ACTIVATED,
+          update_expired_interval: NEVER_ACTIVATED
+        }
+      },
+      syncing: {
+        tracking_info: {
+          needs_update: true,
+          busy: false,
+          location_restrictions: ['@post_auth/apps/mining'],
+          location_and_type_restrictions: []
+        },
+        interval_info: {
+          expire_id: null,
+          update_expired_id: null,
+          expire_oncomplete: null,
+          update_expired_oncomplete: null,
+          expire_timeout: 60000,
+          update_expired_interval: 10000
+        }
+      },
+      post_sync: {
+        tracking_info: {
+          needs_update: true,
+          busy: false,
+          location_restrictions: ['@post_auth/apps/mining'],
+          location_and_type_restrictions: []
+        },
+        interval_info: {
+          expire_id: null,
+          update_expired_id: null,
+          expire_oncomplete: null,
+          update_expired_oncomplete: null,
+          expire_timeout: 60000,
+          update_expired_interval: 10000
+        }
+      }
+    },
+
     [API_GET_ADDRESSES]: {
       restrictions: [], 
       pre_data: {
@@ -593,8 +646,6 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         }
       }
     },
-
-    
 
     [API_GET_DEFINEDCHAINS]: {
       restrictions: [IS_PBAAS_ROOT], 

@@ -10,10 +10,12 @@ import { updateIdentities } from './updateIdentities'
 import { updateNameCommitments } from './updateNameCommitments'
 import { updateCurrentSupply } from './updateCurrentSupply'
 import { readNavigationUrl } from '../../../../util/navigationUtils'
+import { updateBlockReward } from './updateBlockReward'
 import {
   API_GET_ADDRESSES,
   API_GET_BALANCES,
   API_GET_DEFINEDCHAINS,
+  API_GET_BLOCKREWARD,
   API_GET_INFO,
   API_GET_MININGINFO,
   API_GET_TRANSACTIONS,
@@ -52,7 +54,8 @@ export const walletUpdates = {
   [API_GET_FIATPRICE]: updateFiatPrice,
   [API_GET_IDENTITIES]: updateIdentities,
   [API_GET_NAME_COMMITMENTS]: updateNameCommitments,
-  [API_GET_CURRENTSUPPLY]: updateCurrentSupply
+  [API_GET_CURRENTSUPPLY]: updateCurrentSupply,
+  [API_GET_BLOCKREWARD]: updateBlockReward
 }
 
 /**

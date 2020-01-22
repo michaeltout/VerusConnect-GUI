@@ -11,6 +11,7 @@ export * from './readCalls/getNameCommitments'
 export * from './readCalls/getPrivkey'
 export * from './readCalls/getPubkey'
 export * from './readCalls/getCurrentSupply'
+export * from './readCalls/getBlockReward'
 
 export * from './writeCalls/createAddress'
 export * from './writeCalls/sendCoin'

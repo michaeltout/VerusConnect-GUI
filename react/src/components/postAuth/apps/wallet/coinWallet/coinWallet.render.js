@@ -13,7 +13,11 @@ import {
   SEND_COIN,
   API_SUCCESS,
   API_FAILED,
-  IMMATURE_BALANCE
+  IMMATURE_BALANCE,
+  MINED_TX,
+  MINTED_TX,
+  IMMATURE_TX,
+  STAKE_TX
 } from "../../../../../util/constants/componentConstants";
 import { VirtualizedTable } from '../../../../../containers/VirtualizedTable/VirtualizedTable'
 import { TX_TYPES } from '../../../../../util/txUtils/txRenderUtils'
@@ -39,7 +43,14 @@ export const CoinWalletRender = function() {
           border: "none"
         }}
       >
-        <WalletPaper style={{ padding: 16, display: "flex", flexDirection: "column", flex: 1 }}>
+        <WalletPaper
+          style={{
+            padding: 16,
+            display: "flex",
+            flexDirection: "column",
+            flex: 1
+          }}
+        >
           <div className="d-flex flex-row justify-content-between">
             <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
               {`Current ${this.props.coin} Balance`}
@@ -82,7 +93,14 @@ export const CoinWalletRender = function() {
         </WalletPaper>
         {this.state.spendableBalance.crypto !=
           this.state.pendingBalance.crypto && (
-          <WalletPaper style={{ padding: 16, display: "flex", flexDirection: "column", flex: 1 }}>
+          <WalletPaper
+            style={{
+              padding: 16,
+              display: "flex",
+              flexDirection: "column",
+              flex: 1
+            }}
+          >
             <div className="d-flex flex-row justify-content-between">
               <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
                 {`Pending ${this.props.coin} Balance`}
@@ -124,7 +142,14 @@ export const CoinWalletRender = function() {
             </div>
           </WalletPaper>
         )}
-        <WalletPaper style={{ padding: 16, display: "flex", flexDirection: "column", flex: 1 }}>
+        <WalletPaper
+          style={{
+            padding: 16,
+            display: "flex",
+            flexDirection: "column",
+            flex: 1
+          }}
+        >
           <div className="d-flex flex-row justify-content-between">
             <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
               Blockchain Status
@@ -223,7 +248,14 @@ export const CoinWalletRender = function() {
       <TransactionCard
         transactions={
           this.props.transactions[this.props.coin] != null
-            ? this.props.transactions[this.props.coin]
+            ? this.props.transactions[this.props.coin].filter(tx => {
+                return (
+                  tx.category !== MINED_TX &&
+                  tx.category !== MINTED_TX &&
+                  tx.category !== IMMATURE_TX &&
+                  tx.category !== STAKE_TX
+                );
+              })
             : []
         }
         coin={this.props.coin}

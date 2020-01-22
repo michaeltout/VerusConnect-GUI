@@ -2,8 +2,9 @@ import React from "react";
 import { secondsToTime } from "../../../../../util/displayUtil/timeUtils";
 import { normalizeNum } from "../../../../../util/displayUtil/numberFormat";
 import WalletPaper from "../../../../../containers/WalletPaper/WalletPaper";
-import { SYNCING, PRE_DATA } from "../../../../../util/constants/componentConstants";
+import { SYNCING, PRE_DATA, MINED_TX, MINTED_TX, IMMATURE_TX, STAKE_TX } from "../../../../../util/constants/componentConstants";
 import WalletBooklet from "../../../../../containers/WalletBooklet/WalletBooklet";
+import TransactionCard from "../../../../../containers/TransactionCard/TransactionCard";
 
 export const MiningWalletRender = function() {
   return (
@@ -32,17 +33,33 @@ export const MiningWalletRender = function() {
         containerStyle={{ marginBottom: 16 }}
         defaultPageIndex={0}
       />
+      <TransactionCard
+        transactions={
+          this.props.transactions[this.props.coin] != null
+            ? this.props.transactions[this.props.coin].filter(tx => {
+                return (
+                  tx.category === MINED_TX ||
+                  tx.category === MINTED_TX ||
+                  tx.category === IMMATURE_TX ||
+                  tx.category === STAKE_TX
+                );
+              })
+            : []
+        }
+        coin={this.props.coin}
+      />
     </div>        
   );
 };
 
 export const MiningWalletRenderOverview = function() {
-  const { miningInfo, activatedCoins, coin, info, currentSupply, currentSupplyError } = this.props
+  const { miningInfo, activatedCoins, coin, info, currentSupply, currentSupplyError, blockReward } = this.props
   const _info = info[coin]
   const _coinObj = activatedCoins[coin]
   const _miningInfo = miningInfo[coin]
-  const _supply = currentSupply[coin]
+  const _supply = currentSupply[coin] != null ? normalizeNum(currentSupply[coin].total) : null
   const _supplyError = currentSupplyError[coin]
+  const _reward = blockReward[coin] != null ? normalizeNum(blockReward[coin].miner) : null
 
   const currentTime = Math.round((new Date()).getTime() / 1000);
   const timeSinceLastBlock = _info && ((currentTime - _info.tiptime) > 0) ? currentTime - _info.tiptime : null
@@ -77,7 +94,11 @@ export const MiningWalletRenderOverview = function() {
             _coinObj.status === SYNCING
             ? "Syncing..."
             : _supplyError.result
-          : `${_supply ? _supply.total.toFixed(2) : "-"} ${coin}`,
+          : `${_supply ? `${_supply[0]}${_supply[2]}` : "-"} ${coin}`,
+      error: false
+    },
+    ["Block Reward"]: {
+      text: `${_reward ? `${_reward[0]}${_reward[2]}` : "-"} ${coin}`,
       error: false
     }
   };

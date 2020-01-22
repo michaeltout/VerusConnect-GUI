@@ -14,7 +14,8 @@ import {
   DEACTIVATE_COIN,
   SET_COIN_IDENTITIES,
   SET_COIN_NAME_COMMITMENTS,
-  SET_COIN_CURRENTSUPPLY
+  SET_COIN_CURRENTSUPPLY,
+  SET_COIN_BLOCKREWARD
 } from '../util/constants/storeType'
 
 export const ledger = (state = {
@@ -28,7 +29,8 @@ export const ledger = (state = {
   fiatPrices: {},
   identities: {},
   nameCommitments: {},
-  currentSupply: {}
+  currentSupply: {},
+  blockReward: {}
 }, action) => {
   switch (action.type) {
     case DEACTIVATE_COIN:
@@ -43,7 +45,8 @@ export const ledger = (state = {
         fiatPrices,
         identities,
         nameCommitments,
-        currentSupply
+        currentSupply,
+        blockReward
       } = state
       let newLedger = {
         balances,
@@ -56,7 +59,8 @@ export const ledger = (state = {
         fiatPrices,
         identities,
         nameCommitments,
-        currentSupply
+        currentSupply,
+        blockReward
       }
 
       Object.keys(newLedger).map(infoType => {
@@ -101,6 +105,11 @@ export const ledger = (state = {
       return {
         ...state,
         definedChains: {...state.definedChains, [action.chainTicker]: action.definedChains}
+      };
+    case SET_COIN_BLOCKREWARD:
+      return {
+        ...state,
+        blockReward: {...state.blockReward, [action.chainTicker]: action.blockReward}
       };
     case SET_COIN_FIATPRICE:
       return {
