@@ -1,5 +1,6 @@
 import React from "react";
 import PieChart from "react-minimal-pie-chart";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import {
   CONFIRMED_BALANCE,
   PRIVATE_BALANCE,
@@ -277,14 +278,25 @@ export const CoinWalletRender = function() {
 };
 
 export const WalletRenderPie = function() {
-  return (
+  const { percentage, error } = this.state.walletLoadState
+
+  return error ? (
+    <div style={{ color: `rgb(78,115,223)` }}>
+      <CircularProgress
+        variant={"indeterminate"}
+        thickness={4.5}
+        size={60}
+        color="inherit"
+      />
+    </div>
+  ) : (
     <PieChart
       data={[{ value: 1, key: 1, color: `rgb(78,115,223)` }]}
-      reveal={this.state.walletLoadState.percentage}
+      reveal={percentage}
       lineWidth={20}
       animate
       labelPosition={0}
-      label={() => Math.round(this.state.walletLoadState.percentage) + "%"}
+      label={() => Math.round(percentage) + "%"}
       labelStyle={{
         fontSize: "25px"
       }}
