@@ -275,6 +275,7 @@ export const NATIVE_ZCASH_PARAMS_SRC = 'native.zcashParamsSrc'
 export const DROPDOWN = 'dropdown'
 export const TEXT_INPUT = 'text_input'
 export const NUMBER_INPUT = 'number_input'
+export const DECIMAL_INPUT = 'decimal_input'
 export const CHECKBOX = 'checkbox'
 export const STAKE_GUARD = 'stakeGuard'
 export const DATA_DIR = 'dataDir'
@@ -329,6 +330,15 @@ export const MS_MERGE_MINING_STAKING = 'merge_mining_staking'
 export const TEXT_DATA = 0
 export const FILE_DATA = 1
 export const HASH_DATA = 2
+
+// Generator card types
+export const MINING_CARD = 'mining'
+export const STAKING_CARD = 'staking'
+
+// Staking warning
+export const STAKE_WARNING =
+         "This number is based off of the assumption that all of your confirmed " +
+         "transparent balance is stakeable. If you have any freshly minted funds, this may not be the case.";
 
 
 

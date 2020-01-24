@@ -2,11 +2,14 @@ import React from "react";
 import { secondsToTime } from "../../../../../util/displayUtil/timeUtils";
 import { normalizeNum } from "../../../../../util/displayUtil/numberFormat";
 import WalletPaper from "../../../../../containers/WalletPaper/WalletPaper";
-import { SYNCING, PRE_DATA, MINED_TX, MINTED_TX, IMMATURE_TX, STAKE_TX } from "../../../../../util/constants/componentConstants";
+import { SYNCING, PRE_DATA, MINED_TX, MINTED_TX, IMMATURE_TX, STAKE_TX, MS_IDLE, MS_STAKING, MS_MINING, STAKING_CARD, MINING_CARD } from "../../../../../util/constants/componentConstants";
 import WalletBooklet from "../../../../../containers/WalletBooklet/WalletBooklet";
 import TransactionCard from "../../../../../containers/TransactionCard/TransactionCard";
+import GeneratorCard from "../../../../../containers/GeneratorCard/GeneratorCard";
 
 export const MiningWalletRender = function() {
+  const { miningState, coin, miningInfo, currentSupply, balances } = this.props
+
   return (
     <div
       className="col-md-8 col-lg-9"
@@ -23,13 +26,61 @@ export const MiningWalletRender = function() {
           {MiningWalletRenderOverview.call(this)}
         </div>
       </WalletPaper>
-      <WalletBooklet 
-        pages={[{ title: "Staking Overview", content: <strong>{"LOREM IPSUM"}</strong>}]}
+      <WalletBooklet
+        pages={[
+          {
+            title: `Staking Overview - (Staking: ${
+              miningState === MS_IDLE
+                ? "-"
+                : miningState.includes(MS_STAKING)
+                ? "On"
+                : "Off"
+            })`,
+            content: (<GeneratorCard 
+              miningStatus={miningState}
+              cardType={STAKING_CARD}
+              miningInfo={miningInfo[coin]}
+              currentSupply={currentSupply[coin]}
+              miningFunction={() => {return 0}}
+              stakingFunction={() => {return 0}}
+              updateFunction={() => {return 0}}
+              stakeableBalance={ balances[coin] != null ? balances[coin].native.public.confirmed : 0 }
+            />)
+            /*miningStatus: PropTypes.string.isRequired,
+              cardType: PropTypes.oneOf([MINING_CARD, STAKING_CARD]).isRequired,
+              miningInfo: PropTypes.any.isRequired,
+              currentSupply: PropTypes.any.isRequired,
+              miningFunction: PropTypes.func, // Takes in isMining and numThreads as parameters
+              stakingFunction: PropTypes.func, // Takes in isStaking as parameter
+              updateFunction: PropTypes.func.isRequired, // Function that updates mining and staking status in store
+              stakeableBalance: PropTypes.number*/
+          }
+        ]}
         containerStyle={{ marginBottom: 16 }}
         defaultPageIndex={0}
       />
-      <WalletBooklet 
-        pages={[{ title: "Mining Overview", content: "Lorem ipsum"}]}
+      <WalletBooklet
+         pages={[
+          {
+            title: `Mining Overview - (Mining: ${
+              miningState === MS_IDLE
+                ? "-"
+                : miningState.includes(MS_MINING)
+                ? "On"
+                : "Off"
+            })`,
+            content: (<GeneratorCard 
+              miningStatus={miningState}
+              cardType={MINING_CARD}
+              miningInfo={miningInfo[coin]}
+              currentSupply={currentSupply[coin]}
+              miningFunction={() => {return 0}}
+              stakingFunction={() => {return 0}}
+              updateFunction={() => {return 0}}
+              stakeableBalance={ balances[coin] != null ? balances[coin].native.public.confirmed : 0 }
+            />)
+          }
+        ]}
         containerStyle={{ marginBottom: 16 }}
         defaultPageIndex={0}
       />
@@ -48,7 +99,7 @@ export const MiningWalletRender = function() {
         }
         coin={this.props.coin}
       />
-    </div>        
+    </div>
   );
 };
 
@@ -93,6 +144,8 @@ export const MiningWalletRenderOverview = function() {
             _coinObj &&
             _coinObj.status === SYNCING
             ? "Syncing..."
+            : _supplyError.result.includes("ENOTFOUND")
+            ? "Loading..."
             : _supplyError.result
           : `${_supply ? `${_supply[0]}${_supply[2]}` : "-"} ${coin}`,
       error: false

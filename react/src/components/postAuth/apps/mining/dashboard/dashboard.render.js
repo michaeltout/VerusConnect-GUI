@@ -8,11 +8,13 @@ import {
   MS_MERGE_MINING,
   MS_MINING,
   IS_VERUS,
-  CPU_TEMP_UNSUPPORTED
+  CPU_TEMP_UNSUPPORTED,
+  STAKE_WARNING
 } from "../../../../../util/constants/componentConstants";
 import { secondsToTime } from "../../../../../util/displayUtil/timeUtils";
 import { normalizeNum } from "../../../../../util/displayUtil/numberFormat";
 import Tooltip from '@material-ui/core/Tooltip';
+import InfoIcon from '@material-ui/icons/Info';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -190,6 +192,13 @@ export const DashboardRenderMiningCards = function() {
               <span
                 style={{ fontWeight: "bold" }}
               >{`~${stakeCns[0]}${stakeCns[2]} ${coinObj.id}`}</span>
+              <Tooltip title={STAKE_WARNING}>
+                <InfoIcon
+                  fontSize="small"
+                  color="primary"
+                  style={{ paddingBottom: 2, marginLeft: 3 }}
+                />
+              </Tooltip>
             </span>
           ) : miningState === MS_MERGE_MINING || miningState === MS_MINING ? (
             <span>
@@ -204,6 +213,13 @@ export const DashboardRenderMiningCards = function() {
               <span
                 style={{ fontWeight: "bold" }}
               >{`~${stakeCns[0]}${stakeCns[2]} ${coinObj.id}`}</span>
+              <Tooltip title={STAKE_WARNING}>
+                <InfoIcon
+                  fontSize="small"
+                  color="primary"
+                  style={{ paddingBottom: 2, marginLeft: 3 }}
+                />
+              </Tooltip>
             </span>
           );
 

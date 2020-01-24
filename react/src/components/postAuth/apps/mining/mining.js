@@ -147,7 +147,11 @@ class Mining extends React.Component {
         if (pathDestination.length > 1 && pathDestination[1] === MINING_POSTFIX)
           return (
             <MiningWallet
-              miningState={this.state.miningStates[pathDestination[0]]}
+              miningState={
+                this.state.miningStates[pathDestination[0]] == null
+                  ? MS_IDLE
+                  : this.state.miningStates[pathDestination[0]]
+              }
               coin={pathDestination[0]}
             />
           );

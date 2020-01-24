@@ -1,6 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { CHECKBOX, NUMBER_INPUT, TEXT_INPUT, DROPDOWN } from '../../util/constants/componentConstants';
+import {
+  CHECKBOX,
+  NUMBER_INPUT,
+  TEXT_INPUT,
+  DROPDOWN,
+  DECIMAL_INPUT
+} from "../../util/constants/componentConstants";
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox'
 import InfoIcon from '@material-ui/icons/Info';
 import { Tooltip } from '@material-ui/core';
@@ -37,10 +43,21 @@ class SimpleSetting extends React.Component {
         case NUMBER_INPUT:
           return (
             <input
-             type="number"
+              type="number"
               style={{ fontSize: 14 }}
               value={ value }
               step={1}
+              onChange={(e) => handleChange(name, Number(e.target.value))}
+              placeholder={ placeholder ? placeholder : '' }
+            />
+          );
+        case DECIMAL_INPUT:
+          return (
+            <input
+              type="number"
+              style={{ fontSize: 14 }}
+              value={ value }
+              step={0.01}
               onChange={(e) => handleChange(name, Number(e.target.value))}
               placeholder={ placeholder ? placeholder : '' }
             />
