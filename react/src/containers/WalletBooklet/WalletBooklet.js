@@ -71,6 +71,7 @@ function WalletBooklet(props) {
             square
             expanded={isExpanded}
             onChange={handleChange(`panel${index + 1}`)}
+            key={index}
           >
             <ExpansionPanelSummary
               aria-controls={`panel${index + 1}d-content`}

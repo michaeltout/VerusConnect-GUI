@@ -93,3 +93,6 @@ export const SET_SNACK_TIMER = 'SET_SNACK_TIMER'
 // System Data
 export const SET_STATIC_DATA = 'SET_STATIC_DATA'
 
+// Debugging
+export const LOG_WARNING = 'LOG_WARNING'
+

@@ -10,6 +10,7 @@ import { users } from './users'
 import { modal } from './modal'
 import { snackbar } from './snackbar'
 import { system } from './system'
+import { debug } from './debug'
 
 const appReducer = combineReducers({
   ledger,
@@ -22,6 +23,7 @@ const appReducer = combineReducers({
   modal,
   snackbar,
   system,
+  debug,
   routing: routerReducer,
 });
 

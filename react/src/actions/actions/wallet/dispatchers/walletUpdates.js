@@ -40,6 +40,7 @@ import {
   newSnackbar
 } from "../../../actionCreators";
 import { createExpireTimeout } from '../../../actionDispatchers'
+import { logDebugWarning } from '../../debug/creators/debugWarnings'
 
 // Map of update functions to be able to call them through standardized 
 // API call constants. Each function requires the same three parameters: (store, mode, chainTicker)
@@ -159,7 +160,10 @@ export const conditionallyUpdateWallet = async (state, dispatch, mode, chainTick
   } else if (updateInfo && updateInfo.needs_update && updateInfo.busy) {
     const { updateWarningSnackDisabled } = state.updates
 
-    if (!updateWarningSnackDisabled) {
+    dispatch(logDebugWarning(`The ${updateId} call for ${chainTicker} is taking a very long time to complete. This may impact performace.`))
+
+    // TODO: Deprecated, delete
+    /*if (!updateWarningSnackDisabled) {
       // Disable spamming of update warnings if many updates are taking a while,
       // max. 1 warning every 60 seconds
       
@@ -175,7 +179,7 @@ export const conditionallyUpdateWallet = async (state, dispatch, mode, chainTick
       setTimeout(() => {
         dispatch(enableUpdateWarningSnack())
       }, 300000)
-    }
+    }*/
   }
 
   return API_ABORTED
