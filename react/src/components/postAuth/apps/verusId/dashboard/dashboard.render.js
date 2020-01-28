@@ -1,5 +1,5 @@
 import React from 'react';
-import { IS_VERUS, NATIVE } from '../../../../../util/constants/componentConstants';
+import { IS_VERUS, NATIVE, ID_REVOKED } from '../../../../../util/constants/componentConstants';
 import Tooltip from '@material-ui/core/Tooltip';
 import Block from '@material-ui/icons/Block';
 import Button from '@material-ui/core/Button';
@@ -12,6 +12,7 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import WalletPaper from '../../../../../containers/WalletPaper/WalletPaper';
+import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
 
 export const DashboardRender = function() {
   //TODO: Move to parent component so this isnt re-calculated at render
@@ -566,7 +567,7 @@ export const DashboardRevokeDialogue = function() {
     </DialogTitle>
     <DialogContent>
       <DialogContentText id="alert-dialog-description">
-        {`Are you sure you would like to revoke ${identity.name}@? This will prevent it from being able to be used until it is recovered. It will also disappear from your ID list, so make sure to remember its name.`}
+        {`Are you sure you would like to revoke ${identity.name}@? This will prevent it from being able to be used until it is recovered.`}
       </DialogContentText>
     </DialogContent>
     <DialogActions>
@@ -635,7 +636,9 @@ export const DashboardRenderIds = function() {
                   {`${identity.name}@`}
                 </h3>
                 <h3
-                  className="d-lg-flex align-items-lg-center coin-type native"
+                  className={`d-lg-flex align-items-lg-center coin-type ${
+                    idObj.status === ID_REVOKED ? "red" : "native"
+                  }`}
                   style={{
                     fontSize: 12,
                     width: "max-content",
@@ -645,7 +648,13 @@ export const DashboardRenderIds = function() {
                     borderWidth: 1
                   }}
                 >
-                  {idObj.canspendfor ? "Can Spend" : "Can Sign"}
+                  {idObj.canspendfor
+                    ? "Can Spend"
+                    : idObj.cansignfor
+                    ? "Can Sign"
+                    : idObj.status === ID_REVOKED
+                    ? "Revoked"
+                    : "Can't Sign/Spend"}
                 </h3>
               </div>
             </div>
@@ -672,26 +681,51 @@ export const DashboardRenderIds = function() {
                   flex: 1
                 }}
               >
-                <Tooltip title="Revoke">
-                  <button
-                    className="btn btn-primary"
-                    type="button"
-                    onClick={() => this.openRevokeDialogue(idObj)}
-                    style={{
-                      fontSize: 10,
-                      backgroundColor: "rgb(236,43,43)",
-                      borderWidth: 1,
-                      borderColor: "rgb(236,43,43)",
-                      fontWeight: "bold",
-                      visibility:
-                        identity.recoveryauthority === identity.identityaddress
-                          ? "hidden"
-                          : "unset"
-                    }}
-                  >
-                    <Block />
-                  </button>
-                </Tooltip>
+                {identity.recoveryauthority !== identity.identityaddress &&
+                  idObj.status !== ID_REVOKED && (
+                    <Tooltip title="Revoke">
+                      <button
+                        className="btn btn-primary"
+                        type="button"
+                        onClick={() => this.openRevokeDialogue(idObj)}
+                        style={{
+                          fontSize: 10,
+                          backgroundColor: "rgb(236,43,43)",
+                          borderWidth: 1,
+                          borderColor: "rgb(236,43,43)",
+                          fontWeight: "bold"
+                        }}
+                      >
+                        <Block />
+                      </button>
+                    </Tooltip>
+                  )}
+                {idObj.status === ID_REVOKED && (
+                  <Tooltip title="Recover">
+                    <button
+                      className="btn btn-primary"
+                      type="button"
+                      onClick={() =>
+                        this.openRecoverIdModal(idObj.chainTicker, {
+                          primaryAddress: identity.primaryaddresses[0], // TODO: Add support for multisig
+                          revocationId: identity.revocationauthority,
+                          recoveryId: identity.recoveryauthority,
+                          privateAddr: identity.privateaddress,
+                          name: `${identity.name}@`
+                        })
+                      }
+                      style={{
+                        fontSize: 10,
+                        backgroundColor: "rgb(0,178,26)",
+                        borderWidth: 1,
+                        borderColor: "rgb(0,178,26)",
+                        fontWeight: "bold"
+                      }}
+                    >
+                      <SettingsBackupRestoreIcon />
+                    </button>
+                  </Tooltip>
+                )}
                 <Tooltip title="Open">
                   <button
                     className="btn btn-primary"

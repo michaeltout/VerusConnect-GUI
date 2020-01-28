@@ -11,6 +11,7 @@ import {
   LIGHT_CARD, 
   IMMATURE_BALANCE, 
   RESERVE_BALANCE,
+  STAKING_BALANCE,
   NATIVE,
   API_GET_BALANCES,
   API_GET_TRANSACTIONS,
@@ -131,7 +132,7 @@ class CoinWallet extends React.Component {
         for (let balanceType in nativeBalances[balanceAddrType]) {
           const balance = nativeBalances[balanceAddrType][balanceType]
 
-          if (balance != null) {
+          if (balance != null && balanceType !== STAKING_BALANCE) {
             pendingBalance.crypto += balance
 
             if (balanceType === CONFIRMED_BALANCE) {

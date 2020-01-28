@@ -92,6 +92,18 @@ export const ledger = (state = {
         addresses: {...state.addresses, [action.chainTicker]: action.addresses}
       };
     case SET_COIN_MININGINFO:
+      if (state.miningInfo[action.chainTicker]) {
+        if (
+          state.miningInfo[action.chainTicker].maxrecordedhps <
+          action.miningInfo.localhashps
+        ) {
+          action.miningInfo.maxrecordedhps = action.miningInfo.localhashps;
+        } else {
+          action.miningInfo.maxrecordedhps = state.miningInfo[action.chainTicker].localhashps;
+        }
+          
+      } else action.miningInfo.maxrecordedhps = 0;
+
       return {
         ...state,
         miningInfo: {...state.miningInfo, [action.chainTicker]: action.miningInfo}

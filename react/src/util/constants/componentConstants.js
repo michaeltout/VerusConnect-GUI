@@ -57,6 +57,8 @@ export const API_START_MINING = 'start_mining'
 export const API_STOP_MINING = 'stop_mining'
 export const API_START_STAKING = 'start_staking'
 export const API_STOP_STAKING = 'stop_staking'
+export const API_SHIELDCOINBASE = 'shieldcoinbase'
+export const API_SHIELDCOINBASE_PREFLIGHT = 'shieldcoinbase_preflight'
 
 // Non-blockchain API call paths
 export const LOAD_USERS = 'users/load'
@@ -159,6 +161,7 @@ export const CHAIN_INFO = 'chain_info'
 export const PBAAS_CHAIN_INFO = 'pbaas_chain_info'
 export const RECEIVE_COIN = 'receive_coin'
 export const SEND_COIN = 'send_coin'
+export const SHIELDCOINBASE = 'shieldcoinbase'
 export const CREATE_IDENTITY = 'create_identity'
 export const SIGN_VERIFY_ID_DATA = 'sign_verify_id_data'
 export const VERIFY_ID_DATA = 'verify_id_data'
@@ -187,6 +190,7 @@ export const TRANSPARENT_BALANCE = 'transparent'
 export const IMMATURE_BALANCE = 'immature'
 export const INTEREST_BALANCE = 'interest'
 export const UNCONFIRMED_BALANCE = 'unconfirmed'
+export const STAKING_BALANCE = 'staking'
 export const NO_BALANCE = 'None'
 export const UNKNOWN_BALANCE = '?'
 export const FUND = 'fund'
@@ -283,6 +287,9 @@ export const DATA_DIR = 'dataDir'
 // Send coin form 
 export const TRANSPARENT_FUNDS = 'Transparent Funds'
 
+// Shield coinbase form
+export const ALL_UNSHIELDED_FUNDS = 'All unshielded funds'
+
 // Send coin
 export const ENTER_DATA = 0
 export const CONFIRM_DATA = 1
@@ -309,6 +316,13 @@ export const TXDATA_LAST_PRICE = 'lastPrice'
 export const TXDATA_STATUS = 'status'
 export const TXDATA_ERROR = 'error'
 export const TXDATA_TXID = 'txid'
+
+// Shield coinbase obj keys
+export const TXDATA_OPID = 'opid'
+export const TXDATA_SHIELDVAL = 'shieldingValue'
+export const TXDATA_REMAININGVAL = 'remainingValue'
+export const TXDATA_FROMADDR = 'fromAddress'
+export const TXDATA_TOADDR = 'toAddress'
 
 // Send command types
 export const Z_SEND = 'z_sendmany'
@@ -339,6 +353,13 @@ export const STAKING_CARD = 'staking'
 export const STAKE_WARNING =
          "This number is based off of the assumption that all of your confirmed " +
          "transparent balance is stakeable. If you have any freshly minted funds, this may not be the case.";
+export const STAKE_BALANCE_INFO =
+  "This number includes your coins eligible for staking " +
+  "(public coins that have been sent at least once since they were mined/staked).";
+
+// Identity statuses
+export const ID_ACTIVE = 'active'
+export const ID_REVOKED = 'revoked'
 
 
 

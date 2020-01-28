@@ -199,8 +199,8 @@ class Dashboard extends React.Component {
     this.openModal(CREATE_IDENTITY, { modalType: API_REGISTER_ID, chainTicker: nameCommitmentObj.chainTicker, nameCommitmentObj })
   }
 
-  openRecoverIdModal(chainTicker) {
-    this.openModal(CREATE_IDENTITY, { modalType: API_RECOVER_ID, chainTicker} )
+  openRecoverIdModal(chainTicker, formData) {
+    this.openModal(CREATE_IDENTITY, { modalType: API_RECOVER_ID, chainTicker, formData} )
   }
 
   openVerifyIdDataModal(chainTicker) {

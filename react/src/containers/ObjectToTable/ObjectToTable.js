@@ -34,15 +34,15 @@ class ObjectToTable extends React.Component {
 
   render() {
     const { props, state, handleChangePage, handleChangeRowsPerPage } = this
-    const { pagination, dataObj, paperStyle } = props
+    const { pagination, dataObj, paperStyle, tableProps, paperProps } = props
     const { rowsPerPage, page } = state
     const rows = dataObj ? Object.keys(dataObj) : []
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
     
     return (
-      <Paper style={{ paperStyle }}>
+      <Paper style={{ paperStyle }} { ...paperProps }>
         <div style={{ overflow: "auto" }}>
-          <Table>
+          <Table { ...tableProps }>
             <TableBody>
               {(rowsPerPage > 0
                 ? rows.slice(
@@ -108,7 +108,9 @@ ObjectToTable.propTypes = {
   dataObj: PropTypes.object.isRequired,
   pagination: PropTypes.bool,
   defaultRowsPerPage: PropTypes.number,
-  paperStyle: PropTypes.object
+  paperStyle: PropTypes.object,
+  tableProps: PropTypes.object,
+  paperProps: PropTypes.object
 };
 
 export default ObjectToTable

@@ -6,7 +6,12 @@
 import { 
   SET_MODAL_PARAMS
 } from '../util/constants/storeType'
-import { SEND_COIN, RECEIVE_COIN, CREATE_IDENTITY } from '../util/constants/componentConstants'
+import {
+  SEND_COIN,
+  RECEIVE_COIN,
+  CREATE_IDENTITY,
+  SHIELDCOINBASE
+} from "../util/constants/componentConstants";
 
 export const modal = (state = {
   [SEND_COIN]: {
@@ -14,6 +19,9 @@ export const modal = (state = {
     balanceTag: null,
     fund: false,
     isMessage: false
+  },
+  [SHIELDCOINBASE]: {
+    chainTicker: null,
   },
   [RECEIVE_COIN]: {
     chainTicker: null,

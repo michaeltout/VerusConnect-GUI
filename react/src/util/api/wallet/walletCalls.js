@@ -20,5 +20,6 @@ export * from './writeCalls/nameCommitments'
 export * from './writeCalls/signData'
 export * from './writeCalls/verifyData'
 export * from './writeCalls/generate'
+export * from './writeCalls/shieldCoinbase'
 
 export * from './rpcGeneral'

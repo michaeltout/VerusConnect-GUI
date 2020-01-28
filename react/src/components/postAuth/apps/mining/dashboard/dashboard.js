@@ -16,82 +16,14 @@ class Dashboard extends React.Component {
     this.state = {
       coinsMining: 0,
       coinsStaking: 0,
-      loading: {}
     }
 
     this.openAddCoinModal = this.openAddCoinModal.bind(this)
     this.updateMineStakeCoins = this.updateMineStakeCoins.bind(this)
-    this.handleThreadChange = this.handleThreadChange.bind(this)
-    this.toggleStaking = this.toggleStaking.bind(this)
   }
 
   componentDidMount() {
     this.updateMineStakeCoins()
-  }
-
-  componentDidUpdate(lastProps) {
-    if (lastProps.miningInfo != this.props.miningInfo) {
-      this.updateMineStakeCoins()
-
-      Object.keys(this.props.miningInfo).map(chainTicker => {
-        // If mining info data is refreshed, stop loading
-        if (this.state.loading[chainTicker]) {
-          this.setState({ loading: { ...this.state.loading, [chainTicker]: false }})
-        }
-      })
-    }
-  }
-
-  toggleStaking(chainTicker) {
-    const { miningInfo, dispatch } = this.props
-
-    if (miningInfo[chainTicker]) {
-      this.setState({ loading: { ...this.state.loading, [chainTicker]: true }}, async () => {
-        try {
-          // Try to dispatch call to stop or start staking
-          if (miningInfo[chainTicker].staking) {
-            await stopStaking(NATIVE, chainTicker)
-          } else {
-            await startStaking(NATIVE, chainTicker)
-          }
-  
-          // If successful, expire mining data and update all other expired data
-          dispatch(expireData(chainTicker, API_GET_MININGINFO))
-          conditionallyUpdateWallet(Store.getState(), dispatch, NATIVE, chainTicker, API_GET_MININGINFO)
-        } catch (e) {
-          // If failed, cancel loading
-          this.setState({ loading: { ...this.state.loading, [chainTicker]: false }})
-          dispatch(newSnackbar(ERROR_SNACK, e.message, MID_LENGTH_ALERT))
-        }
-      })
-    }
-  }
-
-  // Dispatch call to stop or start mining, then expire and update mining data
-  handleThreadChange(event, chainTicker) {
-    const newThreads = event.target.value
-    const { dispatch, miningInfo } = this.props
-
-    if (miningInfo[chainTicker] && newThreads !== miningInfo[chainTicker].numthreads) {
-      this.setState({ loading: { ...this.state.loading, [chainTicker]: true }}, async () => {
-        try {
-          // Try to dispatch call to stop or start mining
-          if (newThreads === 0) {
-            await stopMining(NATIVE, chainTicker)
-          } else {
-            await startMining(NATIVE, chainTicker, newThreads)
-          }
-  
-          // If successful, expire mining data and update all other expired data
-          dispatch(expireData(chainTicker, API_GET_MININGINFO))
-          conditionallyUpdateWallet(Store.getState(), dispatch, NATIVE, chainTicker, API_GET_MININGINFO)
-        } catch (e) {
-          // If failed, cancel loading
-          this.setState({ loading: { ...this.state.loading, [chainTicker]: false }})
-          dispatch(newSnackbar(ERROR_SNACK, e.message, MID_LENGTH_ALERT))
-        }
-      })
-    }
   }
 
   updateMineStakeCoins() {
@@ -106,6 +38,12 @@ class Dashboard extends React.Component {
       
       this.setState({ coinsMining, coinsStaking })
     })
+  }
+
+  componentDidUpdate(lastProps) {
+    if (lastProps.miningInfo != this.props.miningInfo) {
+      this.updateMineStakeCoins()
+    }
   }
 
   openAddCoinModal() {
@@ -123,14 +61,12 @@ function mapStateToPropsFactory(initialState, ownProps) {
     return {
       nativeCoins: Object.values(state.coins.activatedCoins).filter(coinObj => { return coinObj.mode === NATIVE }),
       balances: state.ledger.balances,
-      miningInfo: state.ledger.miningInfo,
       cpuLoad: state.system.cpuLoad,
       cpuTemp: state.system.cpuTemp,
       sysTime: state.system.sysTime,
       cpuData: state.system.static ? state.system.static.cpu : {},
       cpuTempError: state.errors[API_GET_CPU_TEMP],
       getInfoErrors: state.errors[API_GET_INFO],
-      miningInfoErrors: state.errors[API_GET_MININGINFO]
     };
   };
 }

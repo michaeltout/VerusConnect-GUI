@@ -15,7 +15,7 @@ export const debug = (state = {
     case LOG_WARNING:
       return {
         ...state,
-        warnings: [...warnings, action.warning]
+        warnings: [...state.warnings, action.warning]
       }
     default:
       return state;

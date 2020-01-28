@@ -2,13 +2,32 @@ import React from "react";
 import { secondsToTime } from "../../../../../util/displayUtil/timeUtils";
 import { normalizeNum } from "../../../../../util/displayUtil/numberFormat";
 import WalletPaper from "../../../../../containers/WalletPaper/WalletPaper";
-import { SYNCING, PRE_DATA, MINED_TX, MINTED_TX, IMMATURE_TX, STAKE_TX, MS_IDLE, MS_STAKING, MS_MINING, STAKING_CARD, MINING_CARD } from "../../../../../util/constants/componentConstants";
+import { SYNCING, PRE_DATA, MINED_TX, MINTED_TX, IMMATURE_TX, STAKE_TX, MS_IDLE, MS_STAKING, MS_MINING, STAKING_CARD, MINING_CARD, IS_VERUS } from "../../../../../util/constants/componentConstants";
 import WalletBooklet from "../../../../../containers/WalletBooklet/WalletBooklet";
 import TransactionCard from "../../../../../containers/TransactionCard/TransactionCard";
 import GeneratorCard from "../../../../../containers/GeneratorCard/GeneratorCard";
+import { FormControl, InputLabel, Select, MenuItem, Switch } from "@material-ui/core";
+import Tachometer from "../../../../../containers/Tachometer/Tachometer";
+import TabSandwich from "../../../../../containers/TabSandwich/TabSandwich";
+import Cockpit from "../../../../../containers/Cockpit/Cockpit";
+import EarningCard from "../../../../../containers/EarningCard/EarningCard";
 
 export const MiningWalletRender = function() {
-  const { miningState, coin, miningInfo, currentSupply, balances } = this.props
+  const {
+    miningState,
+    coin,
+    coinObj,
+    miningInfo,
+    currentSupply,
+    balances,
+    handleThreadChange,
+    loading,
+    cpuData,
+    blockReward,
+    fiatPrice,
+    fiatCurrency,
+    toggleStaking
+  } = this.props;
 
   return (
     <div
@@ -23,44 +42,63 @@ export const MiningWalletRender = function() {
         }}
       >
         <div style={{ display: "flex", flexWrap: "wrap" }}>
-          {MiningWalletRenderOverview.call(this)}
+          {MiningWalletRenderNetworkOverview.call(this)}
         </div>
       </WalletPaper>
+      {MiningWalletFunctions.call(this)}
+      {coinObj.tags.includes(IS_VERUS) && (
+        <WalletBooklet
+          pages={[
+            {
+              title: `Staking Overview - (Staking: ${
+                miningState === MS_IDLE
+                  ? "-"
+                  : miningState.includes(MS_STAKING)
+                  ? "On"
+                  : "Off"
+              })`,
+              content: (
+                <React.Fragment>
+                  {
+                    <GeneratorCard
+                      coin={coin}
+                      miningStatus={miningState}
+                      cardType={STAKING_CARD}
+                      miningInfo={miningInfo}
+                      currentSupply={currentSupply}
+                      stakingFunction={() => toggleStaking(coin)}
+                      stakeableBalance={
+                        balances != null ? balances.native.public.staking : null
+                      }
+                      totalBalance={
+                        balances != null
+                          ? balances.native.public.confirmed +
+                            balances.native.public.unconfirmed +
+                            balances.native.public.immature +
+                            (balances.native.private.confirmed || 0)
+                          : null
+                      }
+                      maxCores={cpuData.cores ? cpuData.cores : 0}
+                      currentReward={blockReward ? blockReward.miner : null}
+                      fiatPrice={
+                        fiatPrice != null
+                          ? Number(fiatPrice[fiatCurrency])
+                          : null
+                      }
+                      fiatCurr={fiatCurrency}
+                      loading={loading}
+                    />
+                  }
+                </React.Fragment>
+              )
+            }
+          ]}
+          containerStyle={{ marginBottom: 16 }}
+          defaultPageIndex={0}
+        />
+      )}
       <WalletBooklet
         pages={[
-          {
-            title: `Staking Overview - (Staking: ${
-              miningState === MS_IDLE
-                ? "-"
-                : miningState.includes(MS_STAKING)
-                ? "On"
-                : "Off"
-            })`,
-            content: (<GeneratorCard 
-              miningStatus={miningState}
-              cardType={STAKING_CARD}
-              miningInfo={miningInfo[coin]}
-              currentSupply={currentSupply[coin]}
-              miningFunction={() => {return 0}}
-              stakingFunction={() => {return 0}}
-              updateFunction={() => {return 0}}
-              stakeableBalance={ balances[coin] != null ? balances[coin].native.public.confirmed : 0 }
-            />)
-            /*miningStatus: PropTypes.string.isRequired,
-              cardType: PropTypes.oneOf([MINING_CARD, STAKING_CARD]).isRequired,
-              miningInfo: PropTypes.any.isRequired,
-              currentSupply: PropTypes.any.isRequired,
-              miningFunction: PropTypes.func, // Takes in isMining and numThreads as parameters
-              stakingFunction: PropTypes.func, // Takes in isStaking as parameter
-              updateFunction: PropTypes.func.isRequired, // Function that updates mining and staking status in store
-              stakeableBalance: PropTypes.number*/
-          }
-        ]}
-        containerStyle={{ marginBottom: 16 }}
-        defaultPageIndex={0}
-      />
-      <WalletBooklet
-         pages={[
           {
             title: `Mining Overview - (Mining: ${
               miningState === MS_IDLE
@@ -69,16 +107,25 @@ export const MiningWalletRender = function() {
                 ? "On"
                 : "Off"
             })`,
-            content: (<GeneratorCard 
-              miningStatus={miningState}
-              cardType={MINING_CARD}
-              miningInfo={miningInfo[coin]}
-              currentSupply={currentSupply[coin]}
-              miningFunction={() => {return 0}}
-              stakingFunction={() => {return 0}}
-              updateFunction={() => {return 0}}
-              stakeableBalance={ balances[coin] != null ? balances[coin].native.public.confirmed : 0 }
-            />)
+            content: (
+              <GeneratorCard
+                coin={coin}
+                miningStatus={miningState}
+                cardType={MINING_CARD}
+                miningInfo={miningInfo}
+                currentSupply={currentSupply}
+                handleMiningThreadChange={(value, coin) =>
+                  handleThreadChange({ target: { value } }, coin)
+                }
+                maxCores={cpuData.cores ? cpuData.cores : 0}
+                currentReward={blockReward ? blockReward.miner : null}
+                fiatPrice={
+                  fiatPrice != null ? Number(fiatPrice[fiatCurrency]) : null
+                }
+                fiatCurr={fiatCurrency}
+                loading={loading}
+              />
+            )
           }
         ]}
         containerStyle={{ marginBottom: 16 }}
@@ -86,8 +133,8 @@ export const MiningWalletRender = function() {
       />
       <TransactionCard
         transactions={
-          this.props.transactions[this.props.coin] != null
-            ? this.props.transactions[this.props.coin].filter(tx => {
+          this.props.transactions != null
+            ? this.props.transactions.filter(tx => {
                 return (
                   tx.category === MINED_TX ||
                   tx.category === MINTED_TX ||
@@ -103,19 +150,24 @@ export const MiningWalletRender = function() {
   );
 };
 
-export const MiningWalletRenderOverview = function() {
-  const { miningInfo, activatedCoins, coin, info, currentSupply, currentSupplyError, blockReward } = this.props
-  const _info = info[coin]
-  const _coinObj = activatedCoins[coin]
-  const _miningInfo = miningInfo[coin]
-  const _supply = currentSupply[coin] != null ? normalizeNum(currentSupply[coin].total) : null
+export const MiningWalletRenderNetworkOverview = function() {
+  const {
+    miningInfo,
+    coin,
+    info,
+    currentSupply,
+    currentSupplyError,
+    blockReward,
+    coinObj
+  } = this.props;
+  const _supply = currentSupply != null ? normalizeNum(currentSupply.total) : null
   const _supplyError = currentSupplyError[coin]
-  const _reward = blockReward[coin] != null ? normalizeNum(blockReward[coin].miner) : null
+  const _reward = blockReward != null ? normalizeNum(blockReward.miner) : null
 
   const currentTime = Math.round((new Date()).getTime() / 1000);
-  const timeSinceLastBlock = _info && ((currentTime - _info.tiptime) > 0) ? currentTime - _info.tiptime : null
+  const timeSinceLastBlock = info && ((currentTime - info.tiptime) > 0) ? currentTime - info.tiptime : null
 
-  const netHashrate = _miningInfo != null ? normalizeNum(_miningInfo.networkhashps) : null
+  const netHashrate = miningInfo != null ? normalizeNum(miningInfo.networkhashps) : null
 
   let displayedSystemData = {
     ["Network Hashrate"]: {
@@ -125,14 +177,14 @@ export const MiningWalletRenderOverview = function() {
       error: false
     },
     ["Block Height"]: {
-      text: `${_info ? _info.longestchain : "-"}`,
+      text: `${info ? info.longestchain : "-"}`,
       error: false
     },
     ["Last Block"]: {
       text:
-        _coinObj && _coinObj.status === SYNCING
+        coinObj && coinObj.status === SYNCING
           ? "Syncing..."
-          : timeSinceLastBlock != null && _coinObj.status !== PRE_DATA
+          : timeSinceLastBlock != null && coinObj.status !== PRE_DATA
           ? `${secondsToTime(timeSinceLastBlock)} ago`
           : "-",
       error: false
@@ -141,8 +193,8 @@ export const MiningWalletRenderOverview = function() {
       text:
         _supplyError != null && _supplyError.error
           ? _supplyError.result === "Loading..." &&
-            _coinObj &&
-            _coinObj.status === SYNCING
+            coinObj &&
+            coinObj.status === SYNCING
             ? "Syncing..."
             : _supplyError.result.includes("ENOTFOUND")
             ? "Loading..."
@@ -203,3 +255,184 @@ export const MiningWalletRenderOverview = function() {
     );
   });
 }
+
+export const MiningWalletRenderGenerateOverview = function() {
+  return (
+    <WalletPaper style={{ marginBottom: 16 }}>
+      <h6
+        className="card-title"
+        style={{ fontSize: 14, margin: 0, width: "100%" }}
+      >
+        {"Portfolio Overview"}
+      </h6>
+      {numCoins == 0 && (
+        <a
+          href="#"
+          style={{
+            color: "rgb(78,115,223)",
+            paddingTop: 10,
+            display: "block"
+          }}
+          onClick={this.openAddCoinModal}
+        >
+          {"No coins added yet, click here to add one!"}
+        </a>
+      )}
+      {numCoins > 0 && (
+        <div className="d-lg-flex justify-content-lg-center">
+          <div className="col-lg-3" style={{ padding: 0, marginTop: 20 }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+            >
+              {DashboardRenderPie.call(this)}
+            </div>
+          </div>
+          <div
+            className="col d-lg-flex align-items-lg-center"
+            style={{ marginTop: 20 }}
+          >
+            {DashboardRenderTable.call(this)}
+          </div>
+        </div>
+      )}
+    </WalletPaper>
+  );
+};
+
+export const MiningWalletFunctions = function() {
+  const { props } = this
+  const {
+    coin,
+    miningState,
+    toggleStaking,
+    handleThreadChange,
+    loading,
+    cpuData,
+    miningInfo,
+    addresses,
+    coinObj
+  } = props;
+
+  const coinAddresses = addresses
+
+  const coresArr = Array.apply(
+    null,
+    Array(cpuData.cores ? cpuData.cores : 0)
+  );
+
+  return (
+    <WalletPaper
+      style={{
+        marginBottom: 16,
+        padding: 0,
+        border: "none",
+        display: "flex"
+      }}
+    >
+      {coinObj.tags.includes(IS_VERUS) && (
+        <WalletPaper
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flex: 1,
+            justifyContent: "space-between"
+          }}
+        >
+          <h6
+            className="card-title"
+            style={{ fontSize: 14, margin: 0, width: "max-content" }}
+          >
+            {"Staking"}
+          </h6>
+          <div style={{ color: `rgb(78,115,223)` }}>
+            <Switch
+              checked={miningState.includes(MS_STAKING)}
+              onChange={() => toggleStaking(coin)}
+              disabled={miningState === MS_IDLE}
+              value="staking"
+              color="primary"
+            />
+          </div>
+        </WalletPaper>
+      )}
+      <WalletPaper
+        style={{
+          display: "flex",
+          alignItems: "center",
+          flex: 1,
+          justifyContent: "space-between"
+        }}
+      >
+        <h6
+          className="card-title"
+          style={{ fontSize: 14, margin: 0, width: "max-content" }}
+        >
+          {"Mining"}
+        </h6>
+        <FormControl variant="outlined">
+          <Select
+            style={{ width: 120 }}
+            value={
+              miningState !== MS_IDLE && !loading
+                ? miningInfo.generate
+                  ? miningInfo.numthreads
+                  : 0
+                : -1
+            }
+            onChange={event => handleThreadChange(event, coin)}
+            disabled={miningState === MS_IDLE || loading}
+          >
+            {(miningState === MS_IDLE || loading) && (
+              <MenuItem value={-1}>
+                <em>{"Loading..."}</em>
+              </MenuItem>
+            )}
+            <MenuItem value={0}>{"Off"}</MenuItem>
+            {coresArr.map((value, index) => {
+              return (
+                <MenuItem key={index} value={index + 1}>{`${index + 1} ${
+                  index == 0 ? "thread" : "threads"
+                }`}</MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+      </WalletPaper>
+      <WalletPaper
+        style={{
+          display: "flex",
+          alignItems: "center",
+          flex: 1,
+          justifyContent: "space-between"
+        }}
+      >
+        <h6
+          className="card-title"
+          style={{ fontSize: 14, margin: 0, width: "max-content" }}
+        >
+          {"Shielding"}
+        </h6>
+        <button
+          className="btn btn-primary border rounded"
+          type="button"
+          onClick={this.openShieldCoinbaseModal}
+          disabled={coinAddresses == null}
+          style={{
+            fontSize: 14,
+            backgroundColor: "rgba(0,178,26,0)",
+            borderWidth: 0,
+            color: "rgb(133,135,150)",
+            borderColor: "rgb(133, 135, 150)",
+            fontWeight: "bold"
+          }}
+        >
+          {"Shield Rewards"}
+        </button>
+      </WalletPaper>
+    </WalletPaper>
+  );
+};

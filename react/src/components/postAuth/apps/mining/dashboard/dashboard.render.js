@@ -9,8 +9,10 @@ import {
   MS_MINING,
   IS_VERUS,
   CPU_TEMP_UNSUPPORTED,
-  STAKE_WARNING
+  STAKE_WARNING,
+  STAKE_BALANCE_INFO
 } from "../../../../../util/constants/componentConstants";
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import { secondsToTime } from "../../../../../util/displayUtil/timeUtils";
 import { normalizeNum } from "../../../../../util/displayUtil/numberFormat";
 import Tooltip from '@material-ui/core/Tooltip';
@@ -118,7 +120,6 @@ export const DashboardRenderSystemData = function() {
 }
 
 export const DashboardRenderMiningCards = function() {
-  const { handleThreadChange, props, state, toggleStaking } = this
   const {
     miningStates,
     miningStateDescs,
@@ -127,9 +128,12 @@ export const DashboardRenderMiningCards = function() {
     miningInfoErrors,
     miningInfo,
     balances,
-    cpuData
-  } = props;
-  const { loading } = state
+    cpuData,
+    handleThreadChange,
+    toggleStaking,
+    loadingCoins,
+    openCoin
+  } = this.props;
 
   return (
     <div
@@ -164,7 +168,9 @@ export const DashboardRenderMiningCards = function() {
         );
         const stakeCns = normalizeNum(
           balances[chainTicker]
-            ? balances[chainTicker].native.public.confirmed
+            ? balances[chainTicker].native.public.staking
+              ? balances[chainTicker].native.public.staking
+              : balances[chainTicker].native.public.confirmed
             : 0
         );
 
@@ -192,7 +198,14 @@ export const DashboardRenderMiningCards = function() {
               <span
                 style={{ fontWeight: "bold" }}
               >{`~${stakeCns[0]}${stakeCns[2]} ${coinObj.id}`}</span>
-              <Tooltip title={STAKE_WARNING}>
+              <Tooltip
+                title={
+                  balances[chainTicker] &&
+                  balances[chainTicker].native.public.staking == null
+                    ? STAKE_WARNING
+                    : STAKE_BALANCE_INFO
+                }
+              >
                 <InfoIcon
                   fontSize="small"
                   color="primary"
@@ -213,7 +226,14 @@ export const DashboardRenderMiningCards = function() {
               <span
                 style={{ fontWeight: "bold" }}
               >{`~${stakeCns[0]}${stakeCns[2]} ${coinObj.id}`}</span>
-              <Tooltip title={STAKE_WARNING}>
+              <Tooltip
+                title={
+                  balances[chainTicker] &&
+                  balances[chainTicker].native.public.staking == null
+                    ? STAKE_WARNING
+                    : STAKE_BALANCE_INFO
+                }
+              >
                 <InfoIcon
                   fontSize="small"
                   color="primary"
@@ -350,7 +370,9 @@ export const DashboardRenderMiningCards = function() {
                   <span>
                     <IconButton
                       onClick={() => toggleStaking(chainTicker)}
-                      disabled={miningState === MS_IDLE || loading[chainTicker]}
+                      disabled={
+                        miningState === MS_IDLE || loadingCoins[chainTicker]
+                      }
                     >
                       {isStaking ? <AttachMoneyIcon /> : <MoneyOffIcon />}
                     </IconButton>
@@ -363,15 +385,18 @@ export const DashboardRenderMiningCards = function() {
                   labelWidth={50}
                   style={{ width: 120 }}
                   value={
-                    miningState !== MS_IDLE && !loading[chainTicker]
-                      ? miningInfo[chainTicker].numthreads
+                    miningState !== MS_IDLE && !loadingCoins[chainTicker]
+                      ? miningInfo[chainTicker].generate
+                        ? miningInfo[chainTicker].numthreads
+                        : 0
                       : -1
                   }
                   onChange={event => handleThreadChange(event, chainTicker)}
-                  //labelWidth={50}
-                  disabled={miningState === MS_IDLE || loading[chainTicker]}
+                  disabled={
+                    miningState === MS_IDLE || loadingCoins[chainTicker]
+                  }
                 >
-                  {(miningState === MS_IDLE || loading[chainTicker]) && (
+                  {(miningState === MS_IDLE || loadingCoins[chainTicker]) && (
                     <MenuItem value={-1}>
                       <em>{"Loading..."}</em>
                     </MenuItem>
@@ -386,6 +411,24 @@ export const DashboardRenderMiningCards = function() {
                   })}
                 </Select>
               </FormControl>
+              <Tooltip title="Open">
+                <button
+                  className="btn btn-primary"
+                  type="button"
+                  onClick={() => openCoin(chainTicker)}
+                  style={{
+                    fontSize: 10,
+                    backgroundColor: "#2f65d0",
+                    borderWidth: 1,
+                    marginLeft: 8,
+                    borderColor: "#2f65d0",
+                    fontWeight: "bold",
+                    height: "95%"
+                  }}
+                >
+                  <OpenInNewIcon />
+                </button>
+              </Tooltip>
             </div>
           </WalletPaper>
         );
