@@ -1,14 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { DASHBOARD, ADD_COIN, SELECT_COIN, NATIVE, MINING_POSTFIX, MS_MERGE_MINING_STAKING, MS_MINING_STAKING, MS_MINING, MS_STAKING, MS_MERGE_MINING, MS_OFF, MS_IDLE } from '../../../../util/constants/componentConstants'
+import { DASHBOARD, ADD_COIN, SELECT_COIN, NATIVE, MINING_POSTFIX, MS_MERGE_MINING_STAKING, MS_MINING_STAKING, MS_MINING, MS_STAKING, MS_MERGE_MINING, MS_OFF, MS_IDLE, ERROR_SNACK, MID_LENGTH_ALERT, API_GET_MININGINFO } from '../../../../util/constants/componentConstants'
 import Dashboard from './dashboard/dashboard'
 import MiningWallet from './miningWallet/miningWallet'
 import {
   MiningCardRender,
   MiningTabsRender
 } from './mining.render'
-import { setMainNavigationPath, setModalNavigationPath } from '../../../../actions/actionCreators'
+import Store from '../../../../store'
+import { setMainNavigationPath, setModalNavigationPath, expireData, newSnackbar } from '../../../../actions/actionCreators'
 import { getPathParent } from '../../../../util/navigationUtils'
+import { stopStaking, startStaking, stopMining, startMining } from '../../../../util/api/wallet/walletCalls';
+import { conditionallyUpdateWallet } from '../../../../actions/actionDispatchers';
 
 const COMPONENT_MAP = {
   [DASHBOARD]: <Dashboard />,
@@ -20,7 +23,8 @@ class Mining extends React.Component {
 
     this.state = {
       nativeCoins: [],
-      miningStates: {}
+      miningStates: {},
+      loading: {}
     }
 
     this.miningStateDescs = {
@@ -39,6 +43,9 @@ class Mining extends React.Component {
     this.openDashboard = this.openDashboard.bind(this)
     this.getNativeCoins = this.getNativeCoins.bind(this)
     this.openAddCoinModal = this.openAddCoinModal.bind(this)
+    this.openCoin = this.openCoin.bind(this)
+    this.handleThreadChange = this.handleThreadChange.bind(this)
+    this.toggleStaking = this.toggleStaking.bind(this)
     this.setTabs()
   }
 
@@ -47,6 +54,58 @@ class Mining extends React.Component {
     if (!this.props.mainPathArray[3]) this.props.dispatch(setMainNavigationPath(`${this.props.mainPathArray.join('/')}/${DASHBOARD}`)) 
     
     this.calculateMiningStates(this.props.activatedCoins)
+  }
+
+  toggleStaking(chainTicker) {
+    const { miningInfo, dispatch } = this.props
+
+    if (miningInfo[chainTicker]) {
+      this.setState({ loading: { ...this.state.loading, [chainTicker]: true }}, async () => {
+        try {
+          // Try to dispatch call to stop or start staking
+          if (miningInfo[chainTicker].staking) {
+            await stopStaking(NATIVE, chainTicker)
+          } else {
+            await startStaking(NATIVE, chainTicker)
+          }
+  
+          // If successful, expire mining data and update all other expired data
+          dispatch(expireData(chainTicker, API_GET_MININGINFO))
+          conditionallyUpdateWallet(Store.getState(), dispatch, NATIVE, chainTicker, API_GET_MININGINFO)
+        } catch (e) {
+          // If failed, cancel loading
+          this.setState({ loading: { ...this.state.loading, [chainTicker]: false }})
+          dispatch(newSnackbar(ERROR_SNACK, e.message, MID_LENGTH_ALERT))
+        }
+      })
+    }
+  }
+
+  // Dispatch call to stop or start mining, then expire and update mining data
+  handleThreadChange(event, chainTicker) {
+    const newThreads = event.target.value
+    const { dispatch, miningInfo } = this.props
+
+    if (miningInfo[chainTicker] && newThreads !== miningInfo[chainTicker].numthreads) {
+      this.setState({ loading: { ...this.state.loading, [chainTicker]: true }}, async () => {
+        try {
+          // Try to dispatch call to stop or start mining
+          if (newThreads === 0) {
+            await stopMining(NATIVE, chainTicker)
+          } else {
+            await startMining(NATIVE, chainTicker, newThreads)
+          }
+  
+          // If successful, expire mining data and update all other expired data
+          dispatch(expireData(chainTicker, API_GET_MININGINFO))
+          conditionallyUpdateWallet(Store.getState(), dispatch, NATIVE, chainTicker, API_GET_MININGINFO)
+        } catch (e) {
+          // If failed, cancel loading
+          this.setState({ loading: { ...this.state.loading, [chainTicker]: false }})
+          dispatch(newSnackbar(ERROR_SNACK, e.message, MID_LENGTH_ALERT))
+        }
+      })
+    }
   }
 
   /*componentWillReceiveProps(nextProps) {
@@ -59,6 +118,15 @@ class Mining extends React.Component {
   componentDidUpdate(lastProps) {
     if (lastProps != this.props) {
       this.calculateMiningStates(this.props.activatedCoins)
+    }
+
+    if (lastProps.miningInfo != this.props.miningInfo) {
+      Object.keys(this.props.miningInfo).map(chainTicker => {
+        // If mining info data is refreshed, stop loading
+        if (this.state.loading[chainTicker]) {
+          this.setState({ loading: { ...this.state.loading, [chainTicker]: false }})
+        }
+      })
     }
   }
 
@@ -124,6 +192,10 @@ class Mining extends React.Component {
     this.props.setTabs(MiningTabsRender.call(this))
   }
 
+  openCoin(wallet) {
+    this.props.dispatch(setMainNavigationPath(`${getPathParent(this.props.mainPathArray)}/${wallet}_${MINING_POSTFIX}`))
+  }
+
   render() {
     const walletApp = this.props.mainPathArray[3] ? this.props.mainPathArray[3] : null
 
@@ -134,6 +206,12 @@ class Mining extends React.Component {
             miningStates={this.state.miningStates}
             nativeCoins={this.state.nativeCoins}
             miningStateDescs={this.miningStateDescs}
+            openCoin={this.openCoin}
+            handleThreadChange={this.handleThreadChange}
+            toggleStaking={this.toggleStaking}
+            loadingCoins={this.state.loading}
+            miningInfo={this.props.miningInfo}
+            miningInfoErrors={this.props.miningInfoErrors}
           />
         );
       else {
@@ -142,8 +220,17 @@ class Mining extends React.Component {
         if (pathDestination.length > 1 && pathDestination[1] === MINING_POSTFIX)
           return (
             <MiningWallet
-              miningState={this.state.miningStates[pathDestination[0]]}
+              miningState={
+                this.state.miningStates[pathDestination[0]] == null
+                  ? MS_IDLE
+                  : this.state.miningStates[pathDestination[0]]
+              }
               coin={pathDestination[0]}
+              loading={this.state.loading[pathDestination[0]]}
+              handleThreadChange={this.handleThreadChange}
+              toggleStaking={this.toggleStaking}
+              miningInfo={this.props.miningInfo[pathDestination[0]]}
+              miningInfoErrors={this.props.miningInfoErrors[pathDestination[0]]}
             />
           );
       }
@@ -158,7 +245,8 @@ const mapStateToProps = (state) => {
     mainPathArray: state.navigation.mainPathArray,
     activatedCoins: state.coins.activatedCoins,
     miningInfo: state.ledger.miningInfo,
-    balances: state.ledger.balances
+    balances: state.ledger.balances,
+    miningInfoErrors: state.errors[API_GET_MININGINFO]
   };
 };
 

@@ -16,7 +16,8 @@ import {
 import {
   disableUpdateWarningSnack,
   enableUpdateWarningSnack,
-  newSnackbar
+  newSnackbar,
+  logDebugWarning
 } from "../../../actionCreators";
 import { occupySystemApiCall, freeSystemApiCall } from '../../updateManager'
 
@@ -63,9 +64,12 @@ export const conditionallyUpdateSystemData = async (state, dispatch, updateId) =
   } else if (updateInfo && updateInfo.busy) {
     const { updateWarningSnackDisabled } = state.updates
 
-    if (!updateWarningSnackDisabled) {
+    dispatch(logDebugWarning(`The ${updateId} call is taking a very long time to complete. This may impact performace.`))
+
+    // TODO: Deprecated, delete
+    /*if (!updateWarningSnackDisabled) {
       // Disable spamming of update warnings if many updates are taking a while,
-      // max. 1 warning every 60 seconds
+      // max. 1 warning every 10 minutes
       
       dispatch(disableUpdateWarningSnack())
       dispatch(
@@ -78,8 +82,8 @@ export const conditionallyUpdateSystemData = async (state, dispatch, updateId) =
       
       setTimeout(() => {
         dispatch(enableUpdateWarningSnack())
-      }, 300000)
-    }
+      }, 600000)
+    }*/
   }
 
   return API_ABORTED

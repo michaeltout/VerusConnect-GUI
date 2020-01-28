@@ -16,19 +16,24 @@ class CustomTabBar extends React.Component {
       tabLabelExtractor,
       handleTabChange,
       activeTab,
-      tabProps
+      tabProps,
+      bottom,
+      tabStyle
     } = this.props;
 
     const CustomTab = withStyles({
       root: {
         backgroundColor: tabColor ? tabColor : undefined,
-        fontFamily: "inherit"
+        fontFamily: "inherit",
+        ...tabStyle
       },
     })(props => <Tab color="default" {...props} />);
     
     const CustomAppBar = withStyles({
       root: {
         backgroundColor: color ? color : undefined,
+        top: 'auto',
+        bottom: bottom ? 0 : 'unset'
       },
     })(props => <AppBar color="default" {...props} />);
 
@@ -52,7 +57,8 @@ CustomTabBar.propTypes = {
   tabs: PropTypes.array.isRequired,
   tabLabelExtractor: PropTypes.func,
   tabColor: PropTypes.string,
-  handleTabChange: PropTypes.func
+  handleTabChange: PropTypes.func,
+  bottom: PropTypes.bool
 };
 
 export default CustomTabBar

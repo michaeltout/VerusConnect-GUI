@@ -145,13 +145,17 @@ class ReceiveCoin extends React.Component {
     const term = addressSearchTerm.toLowerCase()
     
     const newPrivate = addresses[PRIVATE_ADDRS].filter((addr) => {
-      if (addr.tag.includes(term) || term.includes(addr.tag)) return true
+      const tag = addr.tag.toLowerCase()
+
+      if (tag.includes(term) || term.includes(tag)) return true
       if (addr.balances.native.toString().includes(term)) return true
       if (addr.address.toLowerCase().includes(term)) return true
     })
 
     const newPublic = addresses[PUBLIC_ADDRS].filter((addr) => {
-      if (addr.tag.includes(term) || term.includes(addr.tag)) return true
+      const tag = addr.tag.toLowerCase()
+
+      if (tag.includes(term) || term.includes(tag)) return true
       if (addr.balances.native.toString().includes(term)) return true
       if (Object.keys(addr.balances.reserve).includes(term)) return true
       if (addr.address.toLowerCase().includes(term)) return true

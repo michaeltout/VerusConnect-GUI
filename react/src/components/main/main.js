@@ -19,6 +19,7 @@ import SnackbarAlert from '../snackbarAlert/snackbarAlert'
 import { newSnackbar, setConfigParams } from '../../actions/actionCreators'
 
 import Store from '../../store'
+import { getCurrentSupply } from '../../util/api/wallet/walletCalls';
 
 class Main extends React.Component {
   constructor(props) {

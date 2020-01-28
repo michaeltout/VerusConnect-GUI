@@ -19,6 +19,8 @@ import { SortDirection } from 'react-virtualized';
 import SearchBar from '../../../../../containers/SearchBar/SearchBar'
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import ArrowDownward from '@material-ui/icons/ArrowDownward'
+import TransactionCard from "../../../../../containers/TransactionCard/TransactionCard";
+import WalletPaper from "../../../../../containers/WalletPaper/WalletPaper";
 
 //TODO: Combine this with HOCs from coinWallet.js
 
@@ -30,201 +32,150 @@ export const IdWalletRender = function() {
       className="col-md-8 col-lg-9"
       style={{ padding: 16, width: "80%", overflow: "scroll" }}
     >
-      <div className="d-flex" style={{ marginBottom: 16 }}>
-        <div style={{ padding: 0, flex: 1 }}>
-          <div className="card border rounded-0" style={{ height: "100%" }}>
-            <div className="card-body">
-              <div className="d-flex flex-row justify-content-between">
-                <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
-                  {`${activeIdentity.identity.name}@ ${coin} Balance`}
-                </h6>
-              </div>
-              <div style={{ paddingTop: 5 }}>
-                <div className="d-lg-flex justify-content-lg-start">
-                  <h5
-                    style={{
-                      color: "rgb(0,0,0)",
-                      fontSize: 36,
-                      fontWeight: "bold"
-                    }}
-                  >
-                    {Number(spendableBalance.crypto.toFixed(8))}
-                  </h5>
-                  <h5
-                    className="d-lg-flex align-items-lg-end"
-                    style={{
-                      color: "rgb(0,0,0)",
-                      fontSize: 16,
-                      paddingBottom: 5,
-                      paddingLeft: 8,
-                      fontWeight: "bold"
-                    }}
-                  >
-                    {coin}
-                  </h5>
-                </div>
-                <div className="d-lg-flex justify-content-lg-start">
-                  <h1 style={{ margin: 0, fontSize: 16, color: "rgb(0,0,0)" }}>
-                    {`${
-                      spendableBalance.fiat == null
-                        ? "-"
-                        : spendableBalance.fiat
-                    } ${fiatCurrency}`}
-                  </h1>
-                </div>
-              </div>
-            </div>
+      <WalletPaper
+        style={{
+          marginBottom: 16,
+          display: "flex",
+          padding: 0,
+          border: "none"
+        }}
+      >
+        <WalletPaper
+          style={{
+            padding: 16,
+            display: "flex",
+            flexDirection: "column",
+            flex: 1
+          }}
+        >
+          <div className="d-flex flex-row justify-content-between">
+            <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
+              {`${activeIdentity.identity.name}@ ${coin} Balance`}
+            </h6>
           </div>
-        </div>
-        <div style={{ padding: 0, flex: 1 }}>
-          <div className="card border rounded-0" style={{ height: "100%" }}>
-            <div className="card-body">
-              <div className="d-flex flex-row justify-content-between">
-                <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
-                  {"ID Information"}
-                </h6>
-                <button
-                  className="btn btn-primary border rounded"
-                  type="button"
-                  name={ID_INFO}
-                  onClick={e => this.openModal(e, { activeIdentity })}
-                  style={{
-                    fontSize: 14,
-                    backgroundColor: "rgba(0,178,26,0)",
-                    borderWidth: 0,
-                    color: "rgb(133,135,150)",
-                    borderColor: "rgb(133, 135, 150)",
-                    fontWeight: "bold"
-                  }}
-                >
-                  {"ID Info"}
-                </button>
-              </div>
-              <div
-                className="d-lg-flex"
+          <div style={{ paddingTop: 5 }}>
+            <div className="d-lg-flex justify-content-lg-start">
+              <h5
                 style={{
-                  display: "flex",
-                  justifyContent: "start",
-                  alignItems: "center"
+                  color: "rgb(0,0,0)",
+                  fontSize: 36,
+                  fontWeight: "bold"
                 }}
               >
-                <h1
-                  style={{
-                    margin: 0,
-                    fontSize: 16,
-                    color: "rgb(0,0,0)",
-                    overflow: "-webkit-paged-x"
-                  }}
-                >
-                  {activeIdentity.status !== 'active' && (
-                    <i
-                      className="fas fa-exclamation-triangle"
-                      style={{
-                        marginRight: 6,
-                        color: "rgb(236,124,43)",
-                        fontSize: 18
-                      }}
-                    />
-                  )}
-                  {`Status: ${activeIdentity.status} as of block ${activeIdentity.blockheight}.`}
-                </h1>
-              </div>
+                {Number(spendableBalance.crypto.toFixed(8))}
+              </h5>
+              <h5
+                className="d-lg-flex align-items-lg-end"
+                style={{
+                  color: "rgb(0,0,0)",
+                  fontSize: 16,
+                  paddingBottom: 5,
+                  paddingLeft: 8,
+                  fontWeight: "bold"
+                }}
+              >
+                {coin}
+              </h5>
+            </div>
+            <div className="d-lg-flex justify-content-lg-start">
+              <h1 style={{ margin: 0, fontSize: 16, color: "rgb(0,0,0)" }}>
+                {`${
+                  spendableBalance.fiat == null ? "-" : spendableBalance.fiat
+                } ${fiatCurrency}`}
+              </h1>
             </div>
           </div>
-        </div>
-      </div>
-      {WalletRenderBalances.call(this)}
-      <div className="d-flex flex-fill flex-wrap" style={{ marginBottom: 16 }}>
-        <div className="flex-grow-1">
-          <div className="col-lg-12" style={{ padding: 0 }}>
-            <div className="card border rounded-0">
-              <div className="card-body">
-                <h6
-                  className="card-title"
-                  style={{ fontSize: 14, margin: 0, width: "max-content" }}
-                >
-                  {"Transactions"}
-                </h6>
-                {identityTransactions &&
-                  identityTransactions.length > 0 && (
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        width: "100%"
-                      }}
-                    >
-                      <SearchBar
-                        label={"Transaction Search"}
-                        placeholder={"Type and press enter"}
-                        name="txSearchTerm"
-                        clearable={true}
-                        style={{
-                          width: 300
-                        }}
-                        onChange={this.setInput}
-                        onClear={this.clearTxSearch}
-                        onSubmit={() =>
-                          this.filterTransactions(
-                            this.getDisplayTransactions(
-                              identityTransactions
-                            )
-                          )
-                        }
-                        value={txSearchTerm}
-                      />
-                    </div>
-                  )}
-                {identityTransactions &&
-                identityTransactions.length > 0 ? (
-                  WalletRenderTransactions.call(this)
-                ) : (
-                  <div style={{ marginTop: 20 }}>
-                    {"No transactions found."}
-                  </div>
-                )}
-              </div>
-            </div>
+        </WalletPaper>
+        <WalletPaper
+          style={{
+            padding: 16,
+            display: "flex",
+            flexDirection: "column",
+            flex: 1
+          }}
+        >
+          <div className="d-flex flex-row justify-content-between">
+            <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
+              {"ID Information"}
+            </h6>
+            <button
+              className="btn btn-primary border rounded"
+              type="button"
+              name={ID_INFO}
+              onClick={e => this.openModal(e, { activeIdentity })}
+              style={{
+                fontSize: 14,
+                backgroundColor: "rgba(0,178,26,0)",
+                borderWidth: 0,
+                color: "rgb(133,135,150)",
+                borderColor: "rgb(133, 135, 150)",
+                fontWeight: "bold"
+              }}
+            >
+              {"ID Info"}
+            </button>
           </div>
-        </div>
-      </div>
-      {this.props.zOperations &&
-        this.props.zOperations.length > 0 && (
           <div
-            className="d-flex flex-fill flex-wrap"
-            style={{ marginBottom: 16 }}
+            className="d-lg-flex"
+            style={{
+              display: "flex",
+              justifyContent: "start",
+              alignItems: "center"
+            }}
           >
-            <div className="flex-grow-1">
-              <div className="col-lg-12" style={{ padding: 0 }}>
-                <div className="card border rounded-0">
-                  <div className="card-body">
-                    <h6
-                      className="card-title"
-                      style={{ fontSize: 14, margin: 0, width: "max-content" }}
-                    >
-                      {"Pending Transaction Log:"}
-                    </h6>
-                    {WalletRenderOperations.call(this)}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <h1
+              style={{
+                margin: 0,
+                fontSize: 16,
+                color: "rgb(0,0,0)",
+                overflow: "-webkit-paged-x"
+              }}
+            >
+              {activeIdentity.status !== "active" && (
+                <i
+                  className="fas fa-exclamation-triangle"
+                  style={{
+                    marginRight: 6,
+                    color: "rgb(236,124,43)",
+                    fontSize: 18
+                  }}
+                />
+              )}
+              {`Status: ${activeIdentity.status} as of block ${activeIdentity.blockheight}.`}
+            </h1>
           </div>
-        )}
+        </WalletPaper>
+      </WalletPaper>
+      {WalletRenderBalances.call(this)}
+      <TransactionCard
+        transactions={identityTransactions != null ? identityTransactions : []}
+        coin={coin}
+      />
+      {this.props.zOperations && this.props.zOperations.length > 0 && (
+        <WalletPaper>
+          <h6
+            className="card-title"
+            style={{ fontSize: 14, margin: 0, width: "max-content" }}
+          >
+            {"Pending Transaction Log:"}
+          </h6>
+          {WalletRenderOperations.call(this)}
+        </WalletPaper>
+      )}
     </div>
   );
 };
 
 export const WalletRenderBalances = function() {
   return (
-    <div
-      className="d-flex flex-fill"
+    <WalletPaper
       style={{
         marginBottom: 16,
         backgroundColor: "#ffffff",
         paddingLeft: 8,
         paddingRight: 8,
-        overflowX: "scroll"
+        overflowX: "scroll",
+        display: "flex"
       }}>
       {this.state.walletDisplayBalances.map(balanceObj => {
         const {
@@ -250,8 +201,6 @@ export const WalletRenderBalances = function() {
             className="flex-grow-1"
             key={Math.random()}
             style={{
-              paddingBottom: 16,
-              paddingTop: 16,
               paddingRight: 8,
               paddingLeft: 8,
               maxWidth: "100%",
@@ -379,79 +328,9 @@ export const WalletRenderBalances = function() {
           </div>
         );
       })}
-    </div>
+    </WalletPaper>
   );
 };
-
-export const WalletRenderTransactions = function() {  
-  const { displayTransactions } = this.state
-
-  return (
-    <div style={{ height: ((50 * displayTransactions.length) + 50), maxHeight: 500, width: '100%' }}>
-      <VirtualizedTable
-        rowCount={displayTransactions.length}
-        sortBy="confirmations"
-        sortDirection={ SortDirection.ASC }
-        onRowClick={ ({rowData}) => this.openTxInfo(rowData) }
-        rowGetter={({ index }) => displayTransactions[index]}
-        columns={[
-          {
-            width: 150,
-            cellDataGetter: ({ rowData }) => {
-              return TX_TYPES[rowData.type]
-            },
-            flexGrow: 1,
-            label: 'Type',
-            dataKey: 'type',
-          },
-          {
-            width: 150,
-            cellDataGetter: ({ rowData }) => {
-              return <strong>{rowData.amount}</strong>
-            },
-            flexGrow: 1,
-            label: 'Amount',
-            dataKey: 'amount',
-          },
-          {
-            width: 120,
-            flexGrow: 1,
-            cellDataGetter: ({ rowData }) => {
-              return rowData.confirmations
-            },
-            label: 'Confirmations',
-            dataKey: 'confirmations',
-          },
-          {
-            width: 125,
-            cellDataGetter: ({ rowData }) => {
-              const time = timeConverter(rowData.time == null ? rowData.timestamp : rowData.time)
-              return time ? time : '-'
-            },
-            flexGrow: 1,
-            label: 'Time',
-            dataKey: 'time',
-          },
-          {
-            width: 150,
-            flexGrow: 1,
-            label: 'Balance',
-            dataKey: 'affectedBalance',
-          },
-          {
-            width: 200,
-            cellDataGetter: ({ rowData }) => {
-              return <div style={{overflow: "hidden", whiteSpace: "nowrap", width: "100%", textOverflow: "ellipsis"}}>{rowData.address}</div>
-            },
-            flexGrow: 1,
-            label: 'Address',
-            dataKey: 'address'
-          },
-        ]}
-      />
-    </div>
-  )
-}
 
 export const WalletRenderOperations = function() {
   const zOperations = this.props.zOperations
@@ -505,7 +384,7 @@ export const WalletRenderOperations = function() {
           {
             width: 150,
             flexGrow: 1,
-            label: 'Id',
+            label: 'ID',
             dataKey: 'id',
           },
           {

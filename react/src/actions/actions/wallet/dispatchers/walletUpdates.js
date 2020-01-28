@@ -8,11 +8,14 @@ import { updateZOperations } from './updateZOperationStatuses'
 import { updateFiatPrice } from './updateFiatPrice'
 import { updateIdentities } from './updateIdentities'
 import { updateNameCommitments } from './updateNameCommitments'
+import { updateCurrentSupply } from './updateCurrentSupply'
 import { readNavigationUrl } from '../../../../util/navigationUtils'
+import { updateBlockReward } from './updateBlockReward'
 import {
   API_GET_ADDRESSES,
   API_GET_BALANCES,
   API_GET_DEFINEDCHAINS,
+  API_GET_BLOCKREWARD,
   API_GET_INFO,
   API_GET_MININGINFO,
   API_GET_TRANSACTIONS,
@@ -25,7 +28,8 @@ import {
   MID_LENGTH_ALERT,
   API_GET_IDENTITIES,
   API_GET_NAME_COMMITMENTS,
-  ALWAYS_ACTIVATED
+  ALWAYS_ACTIVATED,
+  API_GET_CURRENTSUPPLY
 } from '../../../../util/constants/componentConstants'
 import {
   renewData,
@@ -36,6 +40,7 @@ import {
   newSnackbar
 } from "../../../actionCreators";
 import { createExpireTimeout } from '../../../actionDispatchers'
+import { logDebugWarning } from '../../debug/creators/debugWarnings'
 
 // Map of update functions to be able to call them through standardized 
 // API call constants. Each function requires the same three parameters: (store, mode, chainTicker)
@@ -49,7 +54,9 @@ export const walletUpdates = {
   [API_GET_ZOPERATIONSTATUSES]: updateZOperations,
   [API_GET_FIATPRICE]: updateFiatPrice,
   [API_GET_IDENTITIES]: updateIdentities,
-  [API_GET_NAME_COMMITMENTS]: updateNameCommitments
+  [API_GET_NAME_COMMITMENTS]: updateNameCommitments,
+  [API_GET_CURRENTSUPPLY]: updateCurrentSupply,
+  [API_GET_BLOCKREWARD]: updateBlockReward
 }
 
 /**
@@ -153,7 +160,10 @@ export const conditionallyUpdateWallet = async (state, dispatch, mode, chainTick
   } else if (updateInfo && updateInfo.needs_update && updateInfo.busy) {
     const { updateWarningSnackDisabled } = state.updates
 
-    if (!updateWarningSnackDisabled) {
+    dispatch(logDebugWarning(`The ${updateId} call for ${chainTicker} is taking a very long time to complete. This may impact performace.`))
+
+    // TODO: Deprecated, delete
+    /*if (!updateWarningSnackDisabled) {
       // Disable spamming of update warnings if many updates are taking a while,
       // max. 1 warning every 60 seconds
       
@@ -169,7 +179,7 @@ export const conditionallyUpdateWallet = async (state, dispatch, mode, chainTick
       setTimeout(() => {
         dispatch(enableUpdateWarningSnack())
       }, 300000)
-    }
+    }*/
   }
 
   return API_ABORTED

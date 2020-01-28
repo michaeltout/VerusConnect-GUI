@@ -59,7 +59,10 @@ class Dashboard extends React.Component {
           id: chainTicker,
           spotPrice: null,
           priceChange1h: null,
-          balance: balances[chainTicker].native.public.confirmed,
+          balance: balances[chainTicker].native.public.confirmed +
+            (balances[chainTicker].native.private.confirmed
+              ? balances[chainTicker].native.private.confirmed
+              : 0),
           balanceFiat: null,
           mode: coinData.mode,
         }
@@ -69,7 +72,7 @@ class Dashboard extends React.Component {
             ...coinPortfolio,
             spotPrice: Number(fiatPrices[chainTicker][fiatCurrency]).toFixed(2),
             priceChange1h: fiatPrices[chainTicker].priceChange.data.percent_change_1h,
-            balanceFiat: balances[chainTicker].native.public.confirmed * fiatPrices[chainTicker][fiatCurrency]
+            balanceFiat: coinPortfolio.balance * fiatPrices[chainTicker][fiatCurrency]
           }
 
           totalPortfolioValue += coinPortfolio.balanceFiat

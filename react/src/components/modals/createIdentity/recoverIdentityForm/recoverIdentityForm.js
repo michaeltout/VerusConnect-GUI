@@ -52,6 +52,30 @@ class RecoverIdentityForm extends React.Component {
     }
   }
 
+  componentDidMount() {
+    const { startFormData } = this.props 
+    
+    if (startFormData != null) {
+      const {
+        name,
+        primaryAddress,
+        revocationId,
+        recoveryId,
+        privateAddr,
+      } = startFormData
+
+      this.setState({
+        name,
+        primaryAddress,
+        revocationId,
+        recoveryId,
+        privateAddr,
+      }, () => {
+        this.updateFormErrors(this.updateFormData)
+      })
+    }
+  }
+
   generateWarningSnack(warnings) {    
     this.props.dispatch(newSnackbar(WARNING_SNACK, warnings[0].message))
   }
@@ -101,7 +125,7 @@ class RecoverIdentityForm extends React.Component {
     this.setState({ txDataDisplay: txDataSchema })
   }
 
-  updateFormErrors() {
+  updateFormErrors(cb) {
     //TODO: Add more errors in here by checking controlAddr and referralId
     const { setContinueDisabled, activeCoin } = this.props
     const { name, primaryAddress, revocationId, recoveryId, privateAddr } = this.state
@@ -146,6 +170,7 @@ class RecoverIdentityForm extends React.Component {
           privateAddr.length === 0 ||
           primaryAddress.length === 0
       );
+      if (cb != null) cb()
     })
   }
 
@@ -188,6 +213,7 @@ const mapStateToProps = (state) => {
   const { chainTicker } = state.modal[CREATE_IDENTITY]
 
   return {
+    startFormData: state.modal[CREATE_IDENTITY].formData,
     addresses: state.ledger.addresses,
     activeCoin: state.coins.activatedCoins[chainTicker],
   };

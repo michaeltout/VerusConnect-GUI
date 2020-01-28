@@ -19,4 +19,11 @@
     border-color: rgb(0, 0, 0);
     color: rgb(0, 0, 0);
   }
+
+  &.red {
+    background-color: rgb(236,43,43);
+    border: solid;
+    border-color: rgb(236,43,43);
+    color: rgb(255,255,255);
+  }
 }

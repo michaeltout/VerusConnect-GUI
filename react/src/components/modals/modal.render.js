@@ -1,10 +1,10 @@
-import React from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import CloseIcon from '@material-ui/icons/Close';
-import IconButton from '@material-ui/core/IconButton';
+import React from "react";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import CloseIcon from "@material-ui/icons/Close";
+import IconButton from "@material-ui/core/IconButton";
 import {
   ADD_COIN,
   CHAIN_INFO,
@@ -16,19 +16,21 @@ import {
   OPERATION_INFO,
   IMMATURE_DETAILS,
   CREATE_IDENTITY,
-  SIGN_VERIFY_ID_DATA
-} from '../../util/constants/componentConstants';
-import AddCoin from './addCoin/addCoin'
-import ChainInfo from './chainInfo/chainInfo'
-import IdInfo from './idInfo/idInfo'
-import PbaasChainInfo from './pbaasChainInfo/pbaasChainInfo'
-import ReceiveCoin from './receiveCoin/receiveCoin'
-import SendCoin from './sendCoin/sendCoin'
-import CreateIdentity from './createIdentity/createIdentity'
-import TxInfo from './txInfo/txInfo'
-import OperationInfo from './operationInfo/operationInfo'
-import ImmatureDetails from './immatureDetails/immatureDetails';
-import SignVerifyIdData from './signVerifyIdData/signVerifyIdData'
+  SIGN_VERIFY_ID_DATA,
+  SHIELDCOINBASE
+} from "../../util/constants/componentConstants";
+import AddCoin from "./addCoin/addCoin";
+import ChainInfo from "./chainInfo/chainInfo";
+import IdInfo from "./idInfo/idInfo";
+import PbaasChainInfo from "./pbaasChainInfo/pbaasChainInfo";
+import ReceiveCoin from "./receiveCoin/receiveCoin";
+import SendCoin from "./sendCoin/sendCoin";
+import CreateIdentity from "./createIdentity/createIdentity";
+import TxInfo from "./txInfo/txInfo";
+import OperationInfo from "./operationInfo/operationInfo";
+import ImmatureDetails from "./immatureDetails/immatureDetails";
+import SignVerifyIdData from "./signVerifyIdData/signVerifyIdData";
+import ShieldCoinbase from "./shieldCoinbase/shieldCoinbase";
 
 export const ModalRender = function() {
   const COMPONENT_PROPS = {
@@ -90,6 +92,11 @@ export const ModalRender = function() {
     ),
     [SIGN_VERIFY_ID_DATA]: (
       <SignVerifyIdData
+        {...COMPONENT_PROPS}
+      />
+    ),
+    [SHIELDCOINBASE]: (
+      <ShieldCoinbase
         {...COMPONENT_PROPS}
       />
     )

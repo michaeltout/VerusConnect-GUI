@@ -14,7 +14,9 @@ import {
   APPS,
   WALLET,
   ID_POSTFIX,
-  VERUSID
+  VERUSID,
+  MINING_POSTFIX,
+  MINING
 } from "../../../util/constants/componentConstants";
 
 class UxSelector extends React.Component {
@@ -66,6 +68,17 @@ class UxSelector extends React.Component {
         
         if (!identities[identityWalletName[1]] || !identities[identityWalletName[1]][[Number(identityWalletName[0])]]) {
           dispatch(setMainNavigationPath(`${POST_AUTH}/${APPS}/${VERUSID}`))
+          return
+        }
+      }
+
+      if (navLocation.includes(`_${MINING_POSTFIX}`)) {
+        const miningWalletName = navLocation.split('/').filter(value => {
+          return value.includes(`_${MINING_POSTFIX}`)
+        })
+        
+        if (!activatedCoins[miningWalletName[0]]) {
+          dispatch(setMainNavigationPath(`${POST_AUTH}/${APPS}/${MINING}`))
           return
         }
       }

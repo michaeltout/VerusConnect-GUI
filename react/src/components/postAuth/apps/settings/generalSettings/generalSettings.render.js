@@ -48,6 +48,7 @@ export const GeneralSettingsOptionsRender = function() {
             <SimpleSetting
               name={ settingKey }
               label={ displayName }
+              toolTip={ info }
               inputType={ type }
               handleChange={ this.setConfigValue }
               value={ displayConfig.general[tabs[activeTab]][settingKey] }
