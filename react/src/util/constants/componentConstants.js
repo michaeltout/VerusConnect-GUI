@@ -178,7 +178,10 @@ export const IMMATURE_DETAILS = 'immature_details'
 // Coin object data
 export const DEFAULT_DUST_THRESHOLD = 0.00001
 export const DEFAULT_DAEMON = 'verusd'
+export const ZCASH_DAEMON = 'zcashd'
 export const KOMODO_DAEMON = 'komodod'
+export const ZCASH_CONF_NAME = 'zcash'
+export const KOMODO_CONF_NAME = 'komodo'
 
 // Coin wallet screen
 export const NATIVE_BALANCE = 'native'
@@ -197,7 +200,7 @@ export const FUND = 'fund'
 export const SEND = 'send'
 export const DARK_CARD = 'dark'
 export const LIGHT_CARD = 'light'
-export const SYNCING_CHAIN = 'Syncing native chain...'
+export const SYNCING_CHAIN = 'Syncing with blockchain...'
 export const WALLET_CONNECTED = 'Wallet connected.'
 export const FINDING_LONGEST_CHAIN = 'Finding longest chain, possibly forked...'
 export const CONNECTING_TO_PEERS = 'Connecting to peers...'
@@ -360,6 +363,10 @@ export const STAKE_BALANCE_INFO =
 // Identity statuses
 export const ID_ACTIVE = 'active'
 export const ID_REVOKED = 'revoked'
+
+// Sections of the app that can load by being indicated as 'loading' in the
+// loading reducer
+export const MINING_FUNCTIONS = 'mining_functions'
 
 
 

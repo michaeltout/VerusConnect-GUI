@@ -63,6 +63,7 @@ class CoinWallet extends React.Component {
       chevronVisible: false,
     }
 
+    this.NO_HEIGHT = -1
     this.calculateBalances = this.calculateBalances.bind(this)
     this.calculateLoadState = this.calculateLoadState.bind(this)
     this.initState = this.initState.bind(this)
@@ -200,14 +201,19 @@ class CoinWallet extends React.Component {
           
           if (info) {
             const { connections, longestchain, blocks } = info
-            const percentage = longestchain < blocks ? 0 : Number(((blocks / longestchain) * 100).toFixed(2))
+            const percentage =
+              longestchain == null
+                ? this.NO_HEIGHT
+                : longestchain < blocks
+                ? 0
+                : Number(((blocks / longestchain) * 100).toFixed(2));
             
 
             walletLoadState = {
               ...walletLoadState,
               message:
                 percentage < 100
-                  ? SYNCING_CHAIN
+                  ? `${SYNCING_CHAIN} (${blocks} blocks)`
                   : connections === 0
                   ? CONNECTING_TO_PEERS
                   : longestchain < blocks

@@ -177,7 +177,7 @@ export const MiningWalletRenderNetworkOverview = function() {
       error: false
     },
     ["Block Height"]: {
-      text: `${info ? info.longestchain : "-"}`,
+      text: `${info && info.longestchain ? info.longestchain : "-"}`,
       error: false
     },
     ["Last Block"]: {

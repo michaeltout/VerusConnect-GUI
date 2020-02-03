@@ -19,27 +19,38 @@ export const activateChainLifecycle = (mode, chainTicker) => {
 }
 
 export const nativeGetInfoOnComplete = (state, dispatch, chainTicker) => {
-  const currentStatus = state.coins.activatedCoins[chainTicker].status
-  const getInfoResult = state.ledger.info[chainTicker]
-  const getInfoError = state.errors[API_GET_INFO][chainTicker]
-  const refresh = () => refreshCoinIntervals(NATIVE, chainTicker, {[API_GET_INFO]: {update_expired_oncomplete: nativeGetInfoOnComplete}})
+  const currentStatus = state.coins.activatedCoins[chainTicker].status;
+  const getInfoResult = state.ledger.info[chainTicker];
+  const getInfoError = state.errors[API_GET_INFO][chainTicker];
+  const refresh = () =>
+    refreshCoinIntervals(NATIVE, chainTicker, {
+      [API_GET_INFO]: { update_expired_oncomplete: nativeGetInfoOnComplete }
+    });
 
-  if (getInfoError && getInfoError.error) return
+  if (getInfoError && getInfoError.error) return;
 
-  if (typeof getInfoResult !== 'object' || !getInfoResult.hasOwnProperty('blocks') || !getInfoResult.hasOwnProperty('longestchain')  || getInfoResult.longestchain === 0) {
+  if (
+    typeof getInfoResult !== "object" ||
+    !getInfoResult.hasOwnProperty("blocks") ||
+    (getInfoResult.hasOwnProperty("longestchain") &&
+      getInfoResult.longestchain === 0)
+  ) {
     if (currentStatus !== PRE_DATA) {
-      dispatch(setCoinStatus(chainTicker, PRE_DATA))
-      refresh()
+      dispatch(setCoinStatus(chainTicker, PRE_DATA));
+      refresh();
     }
-  } else if (getInfoResult.longestchain > getInfoResult.blocks) {
+  } else if (
+    getInfoResult.longestchain != null &&
+    getInfoResult.longestchain > getInfoResult.blocks
+  ) {
     if (currentStatus !== SYNCING) {
-      dispatch(setCoinStatus(chainTicker, SYNCING))
-      refresh()
+      dispatch(setCoinStatus(chainTicker, SYNCING));
+      refresh();
     }
   } else {
     if (currentStatus !== POST_SYNC) {
-      dispatch(setCoinStatus(chainTicker, POST_SYNC))
-      refresh()
+      dispatch(setCoinStatus(chainTicker, POST_SYNC));
+      refresh();
     }
   }
-}
+};

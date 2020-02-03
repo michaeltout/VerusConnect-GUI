@@ -11,6 +11,7 @@ import { modal } from './modal'
 import { snackbar } from './snackbar'
 import { system } from './system'
 import { debug } from './debug'
+import { loading } from './loading'
 
 const appReducer = combineReducers({
   ledger,
@@ -25,6 +26,7 @@ const appReducer = combineReducers({
   system,
   debug,
   routing: routerReducer,
+  loading
 });
 
 // reset app state on logout

@@ -12,7 +12,13 @@ export const startMining = async (mode, chainTicker, numThreads) => {
   let completed = false
 
   try {
+    //TODO: DELETE
+    console.log("STARTING MINING")
+
     completed = await getApiData(mode, API_START_MINING, params)
+
+    //TODO: DELETE
+    console.log("FINISHED CALL")
   } catch (e) {
     throw e
   }

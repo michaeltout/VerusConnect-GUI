@@ -44,6 +44,12 @@ class Dashboard extends React.Component {
     if (lastProps.miningInfo != this.props.miningInfo) {
       this.updateMineStakeCoins()
     }
+
+    //TODO: DELETE
+    if (lastProps.loadingCoins != this.props.loadingCoins) {
+      console.log("LOADING IS NOW")
+      console.log(this.props.loadingCoins)
+    }
   }
 
   openAddCoinModal() {

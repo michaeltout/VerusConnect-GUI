@@ -7,12 +7,25 @@ import { API_ACTIVATE_COIN, API_REMOVE_COIN, POST } from '../../constants/compon
  * @param {String} mode native || electrum || eth
  * @param {String[]} startupParams (Native only) An array of the paramters to be passed to the daemon on chain start, 
  * e.g. ['-mint', '-pubkey=...']
- * @param {String} overrideDaemon (Native only) The name of the chain daemon executable. 
+ * @param {String} daemon (Native only) The name of the chain daemon executable. 
+ * @param {Object} dirNames (Native only) The names of the chains data directory on darwin, linux, and windows
  * "verusd" for Verus based coins and "komodod" for Komodo based coins
+ * @param {String} confName (Native only) Name of the conf file of the chain (without .conf)
  */
-export const initCoin = async (chainTicker, mode, startupParams, overrideDaemon) => {
+export const initCoin = async (chainTicker, mode, startupParams, daemon, dirNames, confName) => {
+  //TODO: DELETE
+  console.log(confName)
+  
   try {
-    return await getApiData(mode, API_ACTIVATE_COIN, {chainTicker, launchConfig: {startupParams, overrideDaemon}}, POST)
+    return await getApiData(
+      mode,
+      API_ACTIVATE_COIN,
+      {
+        chainTicker,
+        launchConfig: { startupParams, daemon, dirNames, confName }
+      },
+      POST
+    );
   } catch (e) {
     throw e
   }

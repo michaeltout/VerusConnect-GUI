@@ -19,6 +19,13 @@ class MiningWallet extends React.Component {
     this.openShieldCoinbaseModal = this.openShieldCoinbaseModal.bind(this)
   }
 
+  // DELET
+  componentDidUpdate(oldProps) {
+    if (oldProps.loading != this.props.loading) {
+      console.log("LOADING IS NOW " + this.props.loading)
+    }
+  }
+
   openAddCoinModal() {
     this.props.dispatch(setModalNavigationPath(`${ADD_COIN}/${SELECT_COIN}`))
   }

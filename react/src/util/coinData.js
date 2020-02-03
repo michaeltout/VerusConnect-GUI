@@ -13,7 +13,10 @@ import {
   DEFAULT_DAEMON,
   KOMODO_DAEMON,
   Z_ONLY,
-  IS_VERUS
+  IS_VERUS,
+  ZCASH_DAEMON,
+  ZCASH_CONF_NAME,
+  KOMODO_CONF_NAME
 } from './constants/componentConstants'
 import erc20ContractId from 'agama-wallet-lib/src/eth-erc20-contract-id'
 import electrumServers from 'agama-wallet-lib/src/electrum-servers'
@@ -22,6 +25,7 @@ import { fromSats } from 'agama-wallet-lib/src/utils'
 import komodoUtils from 'agama-wallet-lib/src/coin-helpers';
 import * as Vibrant from 'node-vibrant'
 import * as randomColor from 'randomcolor'
+import { coinDataDirectories } from './constants/coinDataDirectories';
 
 /**
  * Aggregates all relevant coin data needed in order to add
@@ -63,8 +67,16 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
         tags = {...tags, [IS_ZCASH]: true, [IS_SAPLING]: true, [Z_ONLY]: true}
       }
 
-      if (komodoUtils.isKomodoCoin && chainTickerUc !== 'VRSC' && chainTickerUc !== 'VRSCTEST') {
+      coinObj.options.dataDirNames = coinDataDirectories[chainTickerUc]
+
+      if (komodoUtils.isKomodoCoin(chainTickerUc) && chainTickerUc !== 'VRSC' && chainTickerUc !== 'VRSCTEST') {
         coinObj.options.daemon = KOMODO_DAEMON  // komodod
+
+        if (chainTickerUc === 'KMD') coinObj.options.confName = KOMODO_CONF_NAME // komodo.conf
+
+      } else if (chainTickerUc === 'ZEC') {
+        coinObj.options.daemon = ZCASH_DAEMON // zcashd
+        coinObj.options.confName = ZCASH_CONF_NAME // zcash.conf
       } else {
         coinObj.options.daemon = DEFAULT_DAEMON // verusd
       }

@@ -278,7 +278,9 @@ export const CoinWalletRender = function() {
 };
 
 export const WalletRenderPie = function() {
-  const { percentage, error } = this.state.walletLoadState
+  const { NO_HEIGHT, state } = this
+  const { percentage, error } = state.walletLoadState
+  const noHeight = percentage === NO_HEIGHT
 
   return error ? (
     <div style={{ color: `rgb(78,115,223)` }}>
@@ -292,11 +294,13 @@ export const WalletRenderPie = function() {
   ) : (
     <PieChart
       data={[{ value: 1, key: 1, color: `rgb(78,115,223)` }]}
-      reveal={percentage}
+      reveal={noHeight ? 100 : percentage}
       lineWidth={20}
       animate
       labelPosition={0}
-      label={() => Math.round(percentage) + "%"}
+      label={() => {
+        return noHeight ? "-" : Math.round(percentage) + "%"
+      }}
       labelStyle={{
         fontSize: "25px"
       }}
