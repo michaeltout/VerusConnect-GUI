@@ -87,7 +87,7 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
         available_modes[ELECTRUM] = true
       }
 
-      if (networks[chainTickerLc].isZcash) tags[IS_ZCASH] = true
+      if (chainTickerUc !== 'KMD' && networks[chainTickerLc].isZcash) tags[IS_ZCASH] = true
       if (networks[chainTickerLc].sapling) {
         tags[IS_SAPLING] = true
         coinObj.options.saplingHeight = networks[chainTickerLc].saplingActivationHeight

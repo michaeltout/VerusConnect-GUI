@@ -12,10 +12,7 @@ import { API_ACTIVATE_COIN, API_REMOVE_COIN, POST } from '../../constants/compon
  * "verusd" for Verus based coins and "komodod" for Komodo based coins
  * @param {String} confName (Native only) Name of the conf file of the chain (without .conf)
  */
-export const initCoin = async (chainTicker, mode, startupParams, daemon, dirNames, confName) => {
-  //TODO: DELETE
-  console.log(confName)
-  
+export const initCoin = async (chainTicker, mode, startupParams, daemon, dirNames, confName) => {  
   try {
     return await getApiData(
       mode,

@@ -34,11 +34,6 @@ export const coinDataDirectories = {
     linux: "komodo/BOTS",
     win32: "Komodo/BOTS"
   },
-  BTCH: {
-    darwin: "Komodo/BTCH",
-    linux: "komodo/BTCH",
-    win32: "Komodo/BTCH"
-  },
   CEAL: {
     darwin: "Komodo/CEAL",
     linux: "komodo/CEAL",

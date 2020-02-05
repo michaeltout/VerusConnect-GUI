@@ -216,6 +216,7 @@ export const SELF_TX = 'self'
 export const STAKE_TX = 'stake'
 export const IMMATURE_TX = 'immature'
 export const UNKNOWN_TX = 'unknown'
+export const INTEREST_TX = 'interest'
 
 // Fallback image 
 export const CHAIN_FALLBACK_IMAGE = 'assets/images/cryptologo/defaultChain.png'
@@ -275,9 +276,9 @@ export const HOST = 'host'
 export const APP_PORT = 'agamaPort'
 export const SPV_USE_PROXY = 'proxy'
 export const SPV_SOCKET_TIMEOUT = 'spv.socketTimeout'
-export const SPV_MAX_TX_LENGTH = 'spv.listtransactionsMaxLength'
+export const SPV_MAX_TX_LENGTH = 'spv.maxTxListLength'
 export const NATIVE_CLI_STOP_TIMEOUT = 'native.cliStopTimeout'
-export const NATIVE_MAX_TX_LENGTH = 'native.listtransactionsMaxLength'
+export const NATIVE_MAX_TX_LENGTH = 'native.maxTxListLength'
 export const NATIVE_ZCASH_PARAMS_SRC = 'native.zcashParamsSrc'
 export const DROPDOWN = 'dropdown'
 export const TEXT_INPUT = 'text_input'
@@ -289,6 +290,7 @@ export const DATA_DIR = 'dataDir'
 
 // Send coin form 
 export const TRANSPARENT_FUNDS = 'Transparent Funds'
+export const CONFIRMED_TRANSPARENT_FUNDS = 'Confirmed transparent funds'
 
 // Shield coinbase form
 export const ALL_UNSHIELDED_FUNDS = 'All unshielded funds'
@@ -305,6 +307,7 @@ export const ERROR_INVALID_FROM = 'Invalid from address'
 export const ERROR_AMOUNT_MORE_THAN_BALANCE = 'Amount is more than available balance.'
 export const ERROR_Z_AND_NO_FROM = 'Sending a Z transaction requires a from address.'
 export const ERROR_Z_NOT_SUPPORTED = 'Private transactions are not supported in this mode.'
+export const ERROR_NO_Z_INTEREST = 'You must claim interest to a public address.'
 export const ERROR_INVALID_ID = 'Invalid identity, identities must start with an \'i\' or end in an \'@\'.'
 
 // Send coin preflight obj keys
@@ -314,6 +317,7 @@ export const TXDATA_VALUE = 'value'
 export const TXDATA_FEE = 'fee'
 export const TXDATA_TOTAL_AMOUNT = 'total'
 export const TXDATA_BALANCE = 'balance'
+export const TXDATA_INTEREST = 'interest'
 export const TXDATA_REMAINING_BALANCE = 'remainingBalance'
 export const TXDATA_LAST_PRICE = 'lastPrice'
 export const TXDATA_STATUS = 'status'
@@ -329,6 +333,7 @@ export const TXDATA_TOADDR = 'toAddress'
 
 // Send command types
 export const Z_SEND = 'z_sendmany'
+export const SEND_TO_ADDRESS = 'sendtoaddress'
 
 // Create Identity form errors
 export const ERROR_NAME_REQUIRED = 'A name is required'

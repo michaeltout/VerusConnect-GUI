@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { 
   SendCoinRender
 } from './sendCoin.render';
-import { SEND_COIN, ENTER_DATA, NATIVE, ETH, ELECTRUM, API_SUCCESS, ERROR_SNACK, API_ERROR, SUCCESS_SNACK, CONFIRM_DATA, API_GET_TRANSACTIONS, API_GET_BALANCES, API_GET_ZOPERATIONSTATUSES, Z_SEND, INFO_SNACK } from '../../../util/constants/componentConstants';
+import { SEND_COIN, ENTER_DATA, NATIVE, ETH, ELECTRUM, API_SUCCESS, ERROR_SNACK, API_ERROR, SUCCESS_SNACK, CONFIRM_DATA, API_GET_TRANSACTIONS, API_GET_BALANCES, API_GET_ZOPERATIONSTATUSES, Z_SEND, INFO_SNACK, INTEREST_BALANCE } from '../../../util/constants/componentConstants';
 import { sendNative, sendEth, sendElectrum } from '../../../util/api/wallet/walletCalls';
 import { newSnackbar, expireData } from '../../../actions/actionCreators';
 
@@ -11,7 +11,13 @@ class SendCoin extends React.Component {
   constructor(props) {
     super(props);
 
-    props.setModalHeader("Send Coin")
+    props.setModalHeader(
+      props.modalProps &&
+        props.modalProps.balanceTag &&
+        props.modalProps.balanceTag === INTEREST_BALANCE
+        ? "Claim Interest"
+        : "Send Coin"
+    );
     this.state = {
       formStep: ENTER_DATA,
       txData: {},

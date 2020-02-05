@@ -112,12 +112,6 @@ export const conditionallyUpdateWallet = async (state, dispatch, mode, chainTick
   const TEST_PASS = 1
   const TEST_EMPTY = 0
   const TEST_FAIL = -1
-
-  //TODO: DELETE
-  if (updateId === 'get_mininginfo') {
-    console.log(updateId)
-    console.log(chainTicker)
-  }
   
   if (updateInfo && updateInfo.needs_update && !updateInfo.busy) {
     // -1 denotes a failed restriction test, 0 denotes empty, and 1 denotes a pass
@@ -187,9 +181,6 @@ export const conditionallyUpdateWallet = async (state, dispatch, mode, chainTick
       }, 300000)
     }*/
   }
-
-  //TODO: DELETE
-  if (updateId === 'get_mininginfo') console.log("ABORTED")
 
   return API_ABORTED
 }

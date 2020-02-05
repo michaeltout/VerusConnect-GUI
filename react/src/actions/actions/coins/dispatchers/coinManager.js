@@ -16,9 +16,6 @@ import { newSnackbar } from '../../../actionCreators'
 export const activateCoin = async (coinObj, mode, dispatch) => {
   let daemonResult
   try {
-    //TODO: DELETE
-    console.log(coinObj)
-
     daemonResult = await initCoin(
       coinObj.id,
       mode,

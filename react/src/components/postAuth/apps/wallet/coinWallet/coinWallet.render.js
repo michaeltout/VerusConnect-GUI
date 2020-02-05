@@ -18,7 +18,8 @@ import {
   MINED_TX,
   MINTED_TX,
   IMMATURE_TX,
-  STAKE_TX
+  STAKE_TX,
+  INTEREST_BALANCE
 } from "../../../../../util/constants/componentConstants";
 import { VirtualizedTable } from '../../../../../containers/VirtualizedTable/VirtualizedTable'
 import { TX_TYPES } from '../../../../../util/txUtils/txRenderUtils'
@@ -331,8 +332,8 @@ export const WalletRenderBalances = function() {
           balanceAddrType,
           balance,
           balanceFiat,
-          fundable,
-          unusable
+          sendable,
+          receivable,
         } = balanceObj;
 
         /*const balanceTag = balanceChain === RESERVE_BALANCE
@@ -350,6 +351,8 @@ export const WalletRenderBalances = function() {
             ? TRANSPARENT_BALANCE
             : balanceType === IMMATURE_BALANCE
             ? IMMATURE_BALANCE
+            : balanceType === INTEREST_BALANCE
+            ? INTEREST_BALANCE
             : null;
 
 
@@ -381,7 +384,7 @@ export const WalletRenderBalances = function() {
                         className={`far ${balanceTag === PRIVATE_BALANCE ? 'fa-eye-slash' : 'fa-eye'}`}
                         style={{ paddingRight: 6, color: "rgb(133, 135, 150)" }}
                       />
-                      { balanceTag + " Balance" }
+                      { balanceTag === INTEREST_BALANCE ? "Unclaimed Interest" : balanceTag + " Balance" }
                     </h6>
                   </div>
                   <div>
@@ -418,13 +421,13 @@ export const WalletRenderBalances = function() {
                         disabled={ balance === 0 || balance === '-' || !this.props.addresses[this.props.coin] }
                         style={{
                           fontSize: 10,
-                          backgroundColor: "rgb(236,43,43)",
+                          backgroundColor: balanceTag === INTEREST_BALANCE ? "rgb(78,115,223)" : "rgb(236,43,43)",
                           borderWidth: 1,
-                          borderColor: "rgb(236,43,43)",
+                          borderColor: balanceTag === INTEREST_BALANCE ? "rgb(78,115,223)" : "rgb(236,43,43)",
                           fontWeight: "bold",
-                          visibility: unusable ? "hidden" : "unset"
+                          visibility: sendable != null && !sendable ? "hidden" : "unset"
                         }}>
-                        <ArrowUpward name={ SEND_COIN }/>
+                        {balanceTag === INTEREST_BALANCE ? <ArrowDownward name={ SEND_COIN }/> : <ArrowUpward name={ SEND_COIN }/>}
                       </button>
                       <button
                         className="btn btn-primary"
@@ -437,7 +440,7 @@ export const WalletRenderBalances = function() {
                           borderWidth: 1,
                           borderColor: "rgb(0,178,26)",
                           fontWeight: "bold",
-                          visibility: unusable ? "hidden" : "unset"
+                          visibility: receivable != null && !receivable ? "hidden" : "unset"
                         }}
                       >
                         <ArrowDownward />

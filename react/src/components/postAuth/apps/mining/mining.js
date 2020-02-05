@@ -96,12 +96,6 @@ class Mining extends React.Component {
     const newThreads = event.target.value
     const { dispatch, miningInfo } = this.props
 
-    //TODO: DELETE
-    console.log("_________START_________")
-    console.log(miningInfo[chainTicker])
-    console.log(newThreads)
-    console.log(miningInfo)
-
     if (
       miningInfo[chainTicker] &&
       (newThreads !== miningInfo[chainTicker].numthreads || 
@@ -118,11 +112,7 @@ class Mining extends React.Component {
         }
 
         // If successful, expire mining data and update all other expired data
-        //TODO: DELETE
-        console.log("Handling wallet update, expiring");
         dispatch(expireData(chainTicker, API_GET_MININGINFO));
-        //TODO: DELETE
-        console.log("Handling wallet update, conditionally updating");
         if (
           (await conditionallyUpdateWallet(
             Store.getState(),
@@ -135,9 +125,6 @@ class Mining extends React.Component {
           throw new Error("Failed to update mining status.");
         } else this.props.dispatch(finishLoadingMiningFunctions(chainTicker));
       } catch (e) {
-        //TODO: DELETE
-        console.error(e);
-
         // If failed, cancel loading
         this.props.dispatch(finishLoadingMiningFunctions(chainTicker));
         dispatch(newSnackbar(ERROR_SNACK, e.message, MID_LENGTH_ALERT));

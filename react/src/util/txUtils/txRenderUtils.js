@@ -15,7 +15,8 @@ import {
   PRIVATE_BALANCE,
   PUBLIC_BALANCE,
   NO_BALANCE,
-  UNKNOWN_BALANCE
+  UNKNOWN_BALANCE,
+  INTEREST_TX
 } from "../constants/componentConstants";
 import { expandObj } from '../objectUtil'
 
@@ -107,6 +108,20 @@ export const TX_TYPES = {
           style={{ paddingRight: 3, fontSize: 7, paddingBottom: 1 }}
         />
         stake
+      </h3>
+    </div>
+  ),
+
+  [INTEREST_TX]: (
+    <div style={{ minWidth: "max-content" }}>
+      <h3
+        className="text-uppercase d-lg-flex align-items-lg-center"
+        style={{ marginBottom: 0, fontSize: 16, fontWeight: "bold", color: "rgb(0,178,26)"  }}>
+        <i
+          className="fas fa-circle"
+          style={{ paddingRight: 3, fontSize: 7, paddingBottom: 1 }}
+        />
+        interest
       </h3>
     </div>
   ),

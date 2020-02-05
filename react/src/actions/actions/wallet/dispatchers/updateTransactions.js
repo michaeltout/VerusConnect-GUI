@@ -28,7 +28,7 @@ export const updateTransactions = async (state, dispatch, mode, chainTicker) => 
               chainTicker
             ]
           : null,
-        state.settings.config.general.native.listtransactionsMaxLength
+        state.settings.config.general.native.maxTxListLength
       );
       
       if (apiResult.msg === 'success') {
