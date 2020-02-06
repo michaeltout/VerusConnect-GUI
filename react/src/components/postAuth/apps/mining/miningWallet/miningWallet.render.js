@@ -154,6 +154,7 @@ export const MiningWalletRender = function() {
             : []
         }
         coin={this.props.coin}
+        title={coinObj.tags.includes(IS_VERUS) ? "Mining/Staking Transactions" : "Mining Transactions"}
       />
     </div>
   );

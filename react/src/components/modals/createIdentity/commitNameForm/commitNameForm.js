@@ -12,7 +12,8 @@ import {
   CONFIRM_DATA,
   CREATE_IDENTITY,
   ERROR_NAME_REQUIRED,
-  ERROR_INVALID_ID
+  ERROR_INVALID_ID,
+  ENTER_DATA
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar } from '../../../../actions/actionCreators';
 
@@ -39,6 +40,15 @@ class CommitNameForm extends React.Component {
   componentWillMount() {
     if (Object.keys(this.props.txData).length > 0) {
       this.generateTxDataDisplay()
+    }
+  }
+
+  componentDidUpdate(lastProps) {
+    const { formStep, setContinueDisabled } = this.props
+    
+    if (lastProps.formStep !== formStep && formStep === ENTER_DATA) {
+      setContinueDisabled(true)
+      this.updateFormData()
     }
   }
 
@@ -82,7 +92,7 @@ class CommitNameForm extends React.Component {
       name: []
     }
 
-    if (name == null || name.length == 0) {
+    if (name != null && name.length == 0) {
       formErrors.name.push(ERROR_NAME_REQUIRED)
     }  
 

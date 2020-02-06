@@ -19,7 +19,8 @@ import {
   TXDATA_REMAININGVAL,
   SHIELDCOINBASE,
   TXDATA_TOADDR,
-  TXDATA_FROMADDR
+  TXDATA_FROMADDR,
+  ENTER_DATA
 } from "../../../../util/constants/componentConstants";
 
 class ShieldCoinbaseForm extends React.Component {
@@ -36,14 +37,17 @@ class ShieldCoinbaseForm extends React.Component {
     const addrTypes = [PRIVATE_ADDRS, PUBLIC_ADDRS]
 
     addrTypes.map(addrType => {
-      addresses[addrType].map(addressObj => {
-        addrType === PRIVATE_ADDRS ? toAddrOptions.push(addressObj.address) : fromAddrOptions.push({
-          label: `${addressObj.address} (${addressObj.balances.native} ${chainTicker})`,
-          address: addressObj.address,
-          balance: addressObj.balances.native
-        })
-      })
-    })
+      addresses[addrType].forEach(addressObj => {
+        if (addrType === PRIVATE_ADDRS) toAddrOptions.push(addressObj.address);
+        else if (addressObj.balances.native > 0) {
+          fromAddrOptions.push({
+            label: `${addressObj.address} (${addressObj.balances.native} ${chainTicker})`,
+            address: addressObj.address,
+            balance: addressObj.balances.native
+          });
+        }
+      });
+    });
     
     fromAddrOptions.unshift(unshieldAll)
     
@@ -75,15 +79,20 @@ class ShieldCoinbaseForm extends React.Component {
   }
 
   updateSendFrom(value) {
-    console.log(value)
-
     this.setAndUpdateState({ sendFrom: value })
   }
 
   updateSendTo(value) {
-    console.log(value)
-
     this.setAndUpdateState({ sendTo: value })
+  }
+
+  componentDidUpdate(lastProps) {
+    const { formStep } = this.props
+    
+    if (lastProps.formStep !== formStep && formStep === ENTER_DATA) {
+      this.updateFormErrors()
+      this.updateFormData()
+    }
   }
 
   generateTxDataDisplay() {
@@ -119,14 +128,14 @@ class ShieldCoinbaseForm extends React.Component {
       sendTo: []
     }
 
-    if (sendTo == null || (sendTo.length !== 0 && !checkAddrValidity(sendTo, mode, chainTicker))) {
+    if (sendTo != null && (sendTo.length !== 0 && !checkAddrValidity(sendTo, mode, chainTicker))) {
       formErrors.sendTo.push(ERROR_INVALID_ADDR)
     }
 
     this.setState({ formErrors }, () => {
       setContinueDisabled(!Object.keys(this.state.formErrors).every((formInput) => {
         return (this.state.formErrors[formInput].length == 0)
-      }) || sendTo.length === 0)
+      }) || sendTo == null || sendTo.length === 0)
     })
   }
 

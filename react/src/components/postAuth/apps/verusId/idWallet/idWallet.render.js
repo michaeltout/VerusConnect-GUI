@@ -150,6 +150,7 @@ export const IdWalletRender = function() {
       <TransactionCard
         transactions={identityTransactions != null ? identityTransactions : []}
         coin={coin}
+        title={`Transactions for ${activeIdentity.identity.name}@`}
       />
       {this.props.zOperations && this.props.zOperations.length > 0 && (
         <WalletPaper>

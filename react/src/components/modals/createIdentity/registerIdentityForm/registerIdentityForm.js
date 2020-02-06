@@ -69,13 +69,16 @@ class RegisterIdentityForm extends React.Component {
   }
 
   componentDidUpdate(lastProps) {
-    if (lastProps.formStep != this.props.formStep && this.props.formStep === ENTER_DATA) {
+    const { formStep } = this.props
+    
+    if (lastProps.formStep !== formStep && formStep === ENTER_DATA) {
       this.initFormData(this.props)
+      this.updateFormData()
     }
   }
 
   initFormData(props) {
-    const { chainTicker, nameCommitmentObj } = props
+    const { chainTicker, nameCommitmentObj, setContinueDisabled } = props
     const { txid, namereservation, controlAddress } = nameCommitmentObj
     const { salt, referral, nameid, name } = namereservation
 
@@ -107,7 +110,7 @@ class RegisterIdentityForm extends React.Component {
   }
 
   generateTxDataDisplay() {
-    const { txData, formData, formStep } = this.props
+    const { txData, formStep } = this.props
 
     const {
       privateaddress,
@@ -172,7 +175,7 @@ class RegisterIdentityForm extends React.Component {
     this.setState({ formErrors }, () => {
       setContinueDisabled(!Object.keys(this.state.formErrors).every((formInput) => {
         return (this.state.formErrors[formInput].length == 0)
-      }) || revocationId.length === 0 || recoveryId.length === 0 || privateAddr.length === 0)
+      }) || revocationId.length === 0 || recoveryId.length === 0)
     })
   }
 

@@ -31,7 +31,8 @@ import {
   API_SUCCESS,
   ERROR_Z_NOT_SUPPORTED,
   TXDATA_INTEREST,
-  SEND_TO_ADDRESS
+  SEND_TO_ADDRESS,
+  ENTER_DATA
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar } from '../../../../actions/actionCreators';
 
@@ -50,11 +51,14 @@ class TraditionalSendForm extends React.Component {
     }
 
     const initAddresslist = () => {
-      let addressList = addresses[balanceTag === PRIVATE_BALANCE ? PRIVATE_ADDRS : PUBLIC_ADDRS].map(addressObj => {
-        return {
-          label: `${addressObj.address} (${addressObj.balances.native} ${chainTicker})`,
-          address: addressObj.address,
-          balance: addressObj.balances.native
+      let addressList = []
+      addresses[balanceTag === PRIVATE_BALANCE ? PRIVATE_ADDRS : PUBLIC_ADDRS].forEach(addressObj => {
+        if (addressObj.balances.native > 0) {
+          addressList.push({
+            label: `${addressObj.address} (${addressObj.balances.native} ${chainTicker})`,
+            address: addressObj.address,
+            balance: addressObj.balances.native
+          })
         }
       })
 
@@ -96,6 +100,15 @@ class TraditionalSendForm extends React.Component {
   componentWillMount() {
     if (Object.keys(this.props.txData).length > 0) {
       this.generateTxDataDisplay()
+    }
+  }
+
+  componentDidUpdate(lastProps) {
+    const { formStep } = this.props
+    
+    if (lastProps.formStep !== formStep && formStep === ENTER_DATA) {
+      this.updateFormErrors()
+      this.updateFormData()
     }
   }
 

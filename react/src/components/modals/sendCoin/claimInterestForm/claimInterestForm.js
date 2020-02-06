@@ -65,14 +65,13 @@ class ClaimInterestForm extends React.Component {
   }
 
   componentDidMount() {
-    this.updateFormData()
     this.updateFormErrors()
   }
 
   componentDidUpdate(lastProps) {
     const { formStep } = this.props
+    
     if (formStep !== lastProps.formStep && formStep === ENTER_DATA) {
-      console.log(this.state)
       this.updateFormData()
       this.updateFormErrors()
     }

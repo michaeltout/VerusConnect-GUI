@@ -23,7 +23,7 @@ class SplashScreen extends React.Component {
             marginBottom: 24
           }}
         />
-        <LinearProgress style={{ width: 256, height: 8 }}/>
+        <LinearProgress style={{ width: 200, height: 8 }}/>
       </div>
     );
   }
