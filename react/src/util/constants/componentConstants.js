@@ -250,6 +250,7 @@ export const SPROUT_ADDR = 'sprout'
 // Tx Info Modal
 export const GENERAL_INFO = 'General Info'
 export const RAW_TX = 'Raw Transaction'
+export const TX_EXPLORER = 'Explorer'
 export const TX_MESSAGE = 'Message'
 export const TX_HEX = 'Hex'
 

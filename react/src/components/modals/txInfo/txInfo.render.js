@@ -6,17 +6,20 @@ import EmailIcon from '@material-ui/icons/Email';
 import InfoIcon from '@material-ui/icons/Info';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import CodeIcon from '@material-ui/icons/Code';
+import OpenInBrowserIcon from '@material-ui/icons/OpenInBrowser';
 import {
   TX_MESSAGE,
   GENERAL_INFO,
   RAW_TX,
-  TX_HEX
+  TX_HEX,
+  TX_EXPLORER
 } from "../../../util/constants/componentConstants";
 import Paper from '@material-ui/core/Paper';
 
 export const TxInfoRender = function() {
-  const { modalObj, setActiveTab, state } = this
+  const { modalObj, setActiveTab, state, props } = this;
   const { activeTab } = state
+  const { explorerUrl } = props
 
   return (
     <div
@@ -67,6 +70,13 @@ export const TxInfoRender = function() {
           value={RAW_TX}
           icon={<ReceiptIcon />}
         />
+        {explorerUrl && (
+          <BottomNavigationAction
+            label={TX_EXPLORER}
+            value={TX_EXPLORER}
+            icon={<OpenInBrowserIcon />}
+          />
+        )}
         {modalObj[TX_HEX] && (
           <BottomNavigationAction
             label={TX_HEX}
