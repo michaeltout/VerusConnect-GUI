@@ -168,7 +168,7 @@ export const DashboardRenderMiningCards = function() {
         );
         const stakeCns = normalizeNum(
           balances[chainTicker]
-            ? balances[chainTicker].native.public.staking
+            ? balances[chainTicker].native.public.staking != null
               ? balances[chainTicker].native.public.staking
               : balances[chainTicker].native.public.confirmed
             : 0
