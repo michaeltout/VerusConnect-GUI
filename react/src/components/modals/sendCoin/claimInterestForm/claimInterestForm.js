@@ -65,7 +65,10 @@ class ClaimInterestForm extends React.Component {
   }
 
   componentDidMount() {
-    this.updateFormErrors()
+    if (this.props.formStep === ENTER_DATA) {
+      this.updateFormData()
+      this.updateFormErrors()
+    }
   }
 
   componentDidUpdate(lastProps) {
@@ -146,6 +149,13 @@ class ClaimInterestForm extends React.Component {
   updateFormData() {
     const { chainTicker, balance } = this.props
     const { sendTo } = this.state
+
+    //DELET
+    console.log({
+      chainTicker,
+      toAddress: sendTo.address,
+      amount: balance.native.public.confirmed
+    })
 
     this.props.setFormData({
       chainTicker,
