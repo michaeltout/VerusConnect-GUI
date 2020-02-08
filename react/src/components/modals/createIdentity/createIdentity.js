@@ -100,6 +100,8 @@ class CreateIdentity extends React.Component {
           privateAddress
         } = formData;
 
+        const _privateAddress = privateAddress == null || privateAddress.length === 0 ? null : privateAddress
+
         if (modalProps.modalType === API_REGISTER_ID_NAME) {
           _txData = await registerIdName(
             !formStep,
@@ -119,7 +121,7 @@ class CreateIdentity extends React.Component {
             [],               // contentHashes,
             revocationAuthority,
             recoveryAuthority,
-            privateAddress,
+            _privateAddress,
             null,
             referralId && referralId.length > 0 ? referralId : null
           );
@@ -133,7 +135,7 @@ class CreateIdentity extends React.Component {
             [],               // contentHashes,
             revocationAuthority,
             recoveryAuthority,
-            privateAddress,
+            _privateAddress,
           );
         }
         

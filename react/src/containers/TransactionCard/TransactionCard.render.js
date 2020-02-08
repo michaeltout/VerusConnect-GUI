@@ -8,7 +8,7 @@ import SearchBar from '../SearchBar/SearchBar';
 
 export const TxCardRender = (openTxInfo, getDisplayTxs, filterTxs, state, props, dispatch) => {
   const { setTxSearchTerm, txSearchTerm, displayTxs, setDisplayTxs } = state
-  const { transactions } = props
+  const { transactions, title } = props
 
   return (
     <WalletPaper style={{ marginBottom: 16 }}>
@@ -16,7 +16,7 @@ export const TxCardRender = (openTxInfo, getDisplayTxs, filterTxs, state, props,
         className="card-title"
         style={{ fontSize: 14, margin: 0, width: "max-content" }}
       >
-        {"Transactions"}
+        {title == null ? "Transactions" : title}
       </h6>
       {transactions && transactions.length > 0 && (
         <div

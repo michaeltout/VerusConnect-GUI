@@ -3,7 +3,8 @@ import FundForm from "./fundForm/fundForm";
 import MessageSendForm from "./messageSendForm/messageSendForm";
 import ReserveSendForm from "./reserveSendForm/reserveSendForm";
 import TraditionalSendForm from "./traditionalSendForm/traditionalSendForm";
-import { TRANSPARENT_BALANCE, PRIVATE_BALANCE, RESERVE_BALANCE, CONFIRM_DATA, API_SUCCESS, SEND_RESULT } from '../../../util/constants/componentConstants';
+import ClaimInterestForm from "./claimInterestForm/claimInterestForm";
+import { TRANSPARENT_BALANCE, PRIVATE_BALANCE, RESERVE_BALANCE, CONFIRM_DATA, API_SUCCESS, SEND_RESULT, INTEREST_BALANCE } from '../../../util/constants/componentConstants';
 import Button from '@material-ui/core/Button';
 import PieChart from 'react-minimal-pie-chart';
 import SimpleLoader from '../../../containers/SimpleLoader/SimpleLoader'
@@ -74,6 +75,15 @@ export const SendCoinFormRender = function() {
       case TRANSPARENT_BALANCE:
         return (
           <TraditionalSendForm
+            {...modalProps}
+            {...state}
+            setFormData={getFormData}
+            setContinueDisabled={getContinueDisabled}
+          />
+        );
+      case INTEREST_BALANCE:
+        return (
+          <ClaimInterestForm
             {...modalProps}
             {...state}
             setFormData={getFormData}

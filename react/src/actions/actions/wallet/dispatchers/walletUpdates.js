@@ -112,7 +112,7 @@ export const conditionallyUpdateWallet = async (state, dispatch, mode, chainTick
   const TEST_PASS = 1
   const TEST_EMPTY = 0
   const TEST_FAIL = -1
-
+  
   if (updateInfo && updateInfo.needs_update && !updateInfo.busy) {
     // -1 denotes a failed restriction test, 0 denotes empty, and 1 denotes a pass
     let restrictionResults = []

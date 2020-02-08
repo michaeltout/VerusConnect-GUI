@@ -29,7 +29,10 @@ import {
   CONFIRM_DATA,
   Z_SEND,
   API_SUCCESS,
-  ERROR_Z_NOT_SUPPORTED
+  ERROR_Z_NOT_SUPPORTED,
+  TXDATA_INTEREST,
+  SEND_TO_ADDRESS,
+  ENTER_DATA
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar } from '../../../../actions/actionCreators';
 
@@ -48,11 +51,14 @@ class TraditionalSendForm extends React.Component {
     }
 
     const initAddresslist = () => {
-      let addressList = addresses[balanceTag === PRIVATE_BALANCE ? PRIVATE_ADDRS : PUBLIC_ADDRS].map(addressObj => {
-        return {
-          label: `${addressObj.address} (${addressObj.balances.native} ${chainTicker})`,
-          address: addressObj.address,
-          balance: addressObj.balances.native
+      let addressList = []
+      addresses[balanceTag === PRIVATE_BALANCE ? PRIVATE_ADDRS : PUBLIC_ADDRS].forEach(addressObj => {
+        if (addressObj.balances.native > 0) {
+          addressList.push({
+            label: `${addressObj.address} (${addressObj.balances.native} ${chainTicker})`,
+            address: addressObj.address,
+            balance: addressObj.balances.native
+          })
         }
       })
 
@@ -97,6 +103,15 @@ class TraditionalSendForm extends React.Component {
     }
   }
 
+  componentDidUpdate(lastProps) {
+    const { formStep } = this.props
+    
+    if (lastProps.formStep !== formStep && formStep === ENTER_DATA) {
+      this.updateFormErrors()
+      this.updateFormData()
+    }
+  }
+
   updateSendFrom(value) {
     this.setAndUpdateState({ sendFrom: value })
   }
@@ -126,9 +141,24 @@ class TraditionalSendForm extends React.Component {
       ["To:"]: txData[TXDATA_TO],
       ["From:"]: txData[TXDATA_FROM],
       ["Amount Entered"]: txData[TXDATA_ERROR] ? null : formData.amount,
-      ["Transaction Amount:"]: txData[TXDATA_VALUE],
+      ["Transaction Amount:"]:
+        !txData[TXDATA_VALUE] &&
+        !txData[TXDATA_ERROR] &&
+        Number(txData[TXDATA_VALUE]) === Number(formData.amount)
+          ? null
+          : txData[TXDATA_VALUE],
       ["Fee:"]: txData[TXDATA_FEE],
-      ["Total to be Deducted:"]: txData[TXDATA_TOTAL_AMOUNT],
+      [txData.cliCmd === SEND_TO_ADDRESS
+        ? formStep === CONFIRM_DATA
+          ? "Interest to Claim:"
+          : "Interest Claimed:"
+        : "Max. Interest Loss"]: txData[TXDATA_INTEREST],
+      ["Change in Balance:"]:
+        txData[TXDATA_TOTAL_AMOUNT] != null
+          ? `${Number(txData[TXDATA_TOTAL_AMOUNT]) < 0 ? "+" : "-"}${
+              txData[TXDATA_TOTAL_AMOUNT]
+            }`
+          : null,
       ["Current Balance:"]: txData[TXDATA_BALANCE],
       ["Est. Balance After Transaction:"]: txData[TXDATA_REMAINING_BALANCE]
     };
@@ -140,8 +170,6 @@ class TraditionalSendForm extends React.Component {
     if (formStep === CONFIRM_DATA && txData.warnings && txData.warnings.length > 0) {
       this.generateWarningSnack(txData.warnings)
     }
-
-    //TODO: TEST ETH AND NATIVE
 
     this.setState({ txDataDisplay: txDataSchema })
   }

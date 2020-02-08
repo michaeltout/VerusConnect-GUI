@@ -210,8 +210,12 @@ export const ReceiveAddressTableRender = function() {
             width: 150,
             cellDataGetter: ({ rowData }) => {
               const { balances } = rowData
+              const displayBalance =
+                balanceCurr === activeCoin.id
+                  ? balances.native
+                  : balances.reserve[balanceCurr];
 
-              return balanceCurr === activeCoin.id ? balances.native : balances.reserve[balanceCurr]
+              return displayBalance == null ? '-' : displayBalance
             },
             flexGrow: 1,
             label: `Amount\u00A0(${balanceCurr})`,

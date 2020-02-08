@@ -12,7 +12,8 @@ import {
   ERROR_INVALID_Z_ADDR,
   NATIVE,
   ERROR_INVALID_ADDR,
-  ERROR_INVALID_ID
+  ERROR_INVALID_ID,
+  ENTER_DATA
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar } from '../../../../actions/actionCreators';
 import { checkAddrValidity } from '../../../../util/addrUtils';
@@ -21,75 +22,105 @@ class RecoverIdentityForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      primaryAddress: '',
-      revocationId: '',
-      recoveryId: '',
-      privateAddr: '',
+      name: "",
+      primaryAddress: "",
+      revocationId: "",
+      recoveryId: "",
+      privateAddr: "",
       formErrors: {
         name: [],
         primaryAddress: [],
         revocationId: [],
         recoveryId: [],
-        privateAddr: [],
+        privateAddr: []
       },
       txDataDisplay: {}
-    }
+    };
 
-    this.updateFormData = this.updateFormData.bind(this)
+    this.updateFormData = this.updateFormData.bind(this);
     //this.updateControlAddr = this.updateControlAddr.bind(this)
-    this.setAndUpdateState = this.setAndUpdateState.bind(this)
-    this.updateInput = this.updateInput.bind(this)
-    this.updateFormErrors = this.updateFormErrors.bind(this)
-    this.generateTxDataDisplay = this.generateTxDataDisplay.bind(this)
-    this.setRecoverSelf = this.setRecoverSelf.bind(this)
-    this.setRevokeSelf = this.setRevokeSelf.bind(this)
+    this.setAndUpdateState = this.setAndUpdateState.bind(this);
+    this.updateInput = this.updateInput.bind(this);
+    this.updateFormErrors = this.updateFormErrors.bind(this);
+    this.generateTxDataDisplay = this.generateTxDataDisplay.bind(this);
+    this.setRecoverSelf = this.setRecoverSelf.bind(this);
+    this.setRevokeSelf = this.setRevokeSelf.bind(this);
+    this.initFormData = this.initFormData.bind(this);
   }
 
   componentWillMount() {
     if (Object.keys(this.props.txData).length > 0) {
-      this.generateTxDataDisplay()
+      this.generateTxDataDisplay();
     }
   }
 
   componentDidMount() {
-    const { startFormData } = this.props 
-    
-    if (startFormData != null) {
-      const {
-        name,
-        primaryAddress,
-        revocationId,
-        recoveryId,
-        privateAddr,
-      } = startFormData
+    const { formStep, startFormData } = this.props
 
-      this.setState({
-        name,
-        primaryAddress,
-        revocationId,
-        recoveryId,
-        privateAddr,
-      }, () => {
-        this.updateFormErrors(this.updateFormData)
-      })
+    if (formStep === ENTER_DATA && startFormData != null) {
+      this.initFormData()
     }
   }
 
-  generateWarningSnack(warnings) {    
-    this.props.dispatch(newSnackbar(WARNING_SNACK, warnings[0].message))
+  initFormData() {
+    const {
+      name,
+      primaryAddress,
+      revocationId,
+      recoveryId,
+      privateAddr
+    } = this.props.startFormData;
+
+    this.setState(
+      {
+        name,
+        primaryAddress,
+        revocationId,
+        recoveryId,
+        privateAddr
+      },
+      () => {
+        this.updateFormErrors(this.updateFormData);
+      }
+    );
+  }
+
+  componentDidUpdate(lastProps) {
+    const { formStep, startFormData } = this.props;
+
+    if (lastProps.formStep !== formStep && formStep === ENTER_DATA) {
+      setContinueDisabled(true)
+
+      if (startFormData != null) {
+        this.initFormData()
+      }
+    }
+  }
+
+  generateWarningSnack(warnings) {
+    this.props.dispatch(newSnackbar(WARNING_SNACK, warnings[0].message));
   }
 
   setRecoverSelf() {
-    this.updateInput({target: {name: 'recoveryId', value: `${this.props.nameCommitmentObj.namereservation.name}@`}})
+    this.updateInput({
+      target: {
+        name: "recoveryId",
+        value: `${this.props.nameCommitmentObj.namereservation.name}@`
+      }
+    });
   }
 
   setRevokeSelf() {
-    this.updateInput({target: {name: 'revocationId', value: `${this.props.nameCommitmentObj.namereservation.name}@`}})
+    this.updateInput({
+      target: {
+        name: "revocationId",
+        value: `${this.props.nameCommitmentObj.namereservation.name}@`
+      }
+    });
   }
 
   generateTxDataDisplay() {
-    const { txData, formStep } = this.props
+    const { txData, formStep } = this.props;
 
     const {
       chainTicker,
@@ -111,50 +142,84 @@ class RecoverIdentityForm extends React.Component {
       ["Primary Address:"]: primaryaddresses ? primaryaddresses[0] : null,
       ["Revocation ID:"]: revocationauthority,
       ["Recovery ID:"]: recoveryauthority,
-      ["Private Address:"]: privateaddress
+      ["Private Address:"]:
+        privateaddress != null && privateaddress.length > 0
+          ? privateaddress
+          : null
     };
 
     Object.keys(txDataSchema).forEach(txDataKey => {
-      if (txDataSchema[txDataKey] == null) delete txDataSchema[txDataKey]
-    })
+      if (txDataSchema[txDataKey] == null) delete txDataSchema[txDataKey];
+    });
 
     if (formStep === CONFIRM_DATA && warnings && warnings.length > 0) {
-      this.generateWarningSnack(warnings)
+      this.generateWarningSnack(warnings);
     }
 
-    this.setState({ txDataDisplay: txDataSchema })
+    this.setState({ txDataDisplay: txDataSchema });
   }
 
   updateFormErrors(cb) {
     //TODO: Add more errors in here by checking controlAddr and referralId
-    const { setContinueDisabled, activeCoin } = this.props
-    const { name, primaryAddress, revocationId, recoveryId, privateAddr } = this.state
+    const { setContinueDisabled, activeCoin } = this.props;
+    const {
+      name,
+      primaryAddress,
+      revocationId,
+      recoveryId,
+      privateAddr
+    } = this.state;
     let formErrors = {
       name: [],
       primaryAddress: [],
       revocationId: [],
       recoveryId: [],
-      privateAddr: [],
+      privateAddr: []
+    };
+
+    if (
+      privateAddr != null &&
+      privateAddr.length > 0 &&
+      !(
+        privateAddr[0] === "z" &&
+        (privateAddr.length === 95 || privateAddr.length === 78)
+      )
+    ) {
+      formErrors.privateAddr.push(ERROR_INVALID_Z_ADDR);
     }
 
-    if (privateAddr.length > 0 && !(privateAddr[0] === 'z' && (privateAddr.length === 95 || privateAddr.length === 78))) {
-      formErrors.privateAddr.push(ERROR_INVALID_Z_ADDR)
+    if (
+      primaryAddress.length !== 0 &&
+      !checkAddrValidity(primaryAddress, NATIVE, activeCoin.id)
+    ) {
+      formErrors.primaryAddress.push(ERROR_INVALID_ADDR);
     }
 
-    if (primaryAddress.length !== 0 && !checkAddrValidity(primaryAddress, NATIVE, activeCoin.id)) {
-      formErrors.primaryAddress.push(ERROR_INVALID_ADDR)
-    }  
-
-    if (revocationId != null && revocationId.length > 0 && revocationId[revocationId.length - 1] !== '@' && revocationId[0] !== 'i') {
-      formErrors.revocationId.push(ERROR_INVALID_ID)
+    if (
+      revocationId != null &&
+      revocationId.length > 0 &&
+      revocationId[revocationId.length - 1] !== "@" &&
+      revocationId[0] !== "i"
+    ) {
+      formErrors.revocationId.push(ERROR_INVALID_ID);
     }
 
-    if (recoveryId != null && recoveryId.length > 0 && recoveryId[recoveryId.length - 1] !== '@' && recoveryId[0] !== 'i') {
-      formErrors.recoveryId.push(ERROR_INVALID_ID)
+    if (
+      recoveryId != null &&
+      recoveryId.length > 0 &&
+      recoveryId[recoveryId.length - 1] !== "@" &&
+      recoveryId[0] !== "i"
+    ) {
+      formErrors.recoveryId.push(ERROR_INVALID_ID);
     }
 
-    if (name != null && name.length > 0 && name[name.length - 1] !== '@' && name[0] !== 'i') {
-      formErrors.name.push(ERROR_INVALID_ID)
+    if (
+      name != null &&
+      name.length > 0 &&
+      name[name.length - 1] !== "@" &&
+      name[0] !== "i"
+    ) {
+      formErrors.name.push(ERROR_INVALID_ID);
     }
 
     //TODO: ID & name validation
@@ -167,22 +232,21 @@ class RecoverIdentityForm extends React.Component {
           name.length === 0 ||
           revocationId.length === 0 ||
           recoveryId.length === 0 ||
-          privateAddr.length === 0 ||
           primaryAddress.length === 0
       );
-      if (cb != null) cb()
-    })
+      if (cb != null) cb();
+    });
   }
 
   setAndUpdateState(stateModifiers) {
     this.setState(stateModifiers, () => {
-      this.updateFormErrors()
-      this.updateFormData()
-    })
+      this.updateFormErrors();
+      this.updateFormData();
+    });
   }
 
   updateInput(e) {
-    this.setAndUpdateState({ [e.target.name]: e.target.value })
+    this.setAndUpdateState({ [e.target.name]: e.target.value });
   }
 
   updateFormData() {

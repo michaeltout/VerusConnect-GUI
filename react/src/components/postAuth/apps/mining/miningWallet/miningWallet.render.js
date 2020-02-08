@@ -2,15 +2,24 @@ import React from "react";
 import { secondsToTime } from "../../../../../util/displayUtil/timeUtils";
 import { normalizeNum } from "../../../../../util/displayUtil/numberFormat";
 import WalletPaper from "../../../../../containers/WalletPaper/WalletPaper";
-import { SYNCING, PRE_DATA, MINED_TX, MINTED_TX, IMMATURE_TX, STAKE_TX, MS_IDLE, MS_STAKING, MS_MINING, STAKING_CARD, MINING_CARD, IS_VERUS } from "../../../../../util/constants/componentConstants";
+import {
+  SYNCING,
+  PRE_DATA,
+  MINED_TX,
+  MINTED_TX,
+  IMMATURE_TX,
+  STAKE_TX,
+  MS_IDLE,
+  MS_STAKING,
+  MS_MINING,
+  STAKING_CARD,
+  MINING_CARD,
+  IS_VERUS
+} from "../../../../../util/constants/componentConstants";
 import WalletBooklet from "../../../../../containers/WalletBooklet/WalletBooklet";
 import TransactionCard from "../../../../../containers/TransactionCard/TransactionCard";
 import GeneratorCard from "../../../../../containers/GeneratorCard/GeneratorCard";
-import { FormControl, InputLabel, Select, MenuItem, Switch } from "@material-ui/core";
-import Tachometer from "../../../../../containers/Tachometer/Tachometer";
-import TabSandwich from "../../../../../containers/TabSandwich/TabSandwich";
-import Cockpit from "../../../../../containers/Cockpit/Cockpit";
-import EarningCard from "../../../../../containers/EarningCard/EarningCard";
+import { FormControl, Select, MenuItem, Switch } from "@material-ui/core";
 
 export const MiningWalletRender = function() {
   const {
@@ -145,6 +154,7 @@ export const MiningWalletRender = function() {
             : []
         }
         coin={this.props.coin}
+        title={coinObj.tags.includes(IS_VERUS) ? "Mining/Staking Transactions" : "Mining Transactions"}
       />
     </div>
   );
@@ -177,7 +187,7 @@ export const MiningWalletRenderNetworkOverview = function() {
       error: false
     },
     ["Block Height"]: {
-      text: `${info ? info.longestchain : "-"}`,
+      text: `${info && info.longestchain ? info.longestchain : "-"}`,
       error: false
     },
     ["Last Block"]: {

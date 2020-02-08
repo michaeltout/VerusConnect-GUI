@@ -305,7 +305,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: ['@post_auth/apps/mining/dashboard'],
+          location_restrictions: ['@post_auth/apps/mining'],
           location_and_type_restrictions: []
         },
         interval_info: {
@@ -321,7 +321,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: [/*'@post_auth/apps/mining/dashboard'*/],
+          location_restrictions: ['@post_auth/apps/mining'],
           location_and_type_restrictions: []
         },
         interval_info: {

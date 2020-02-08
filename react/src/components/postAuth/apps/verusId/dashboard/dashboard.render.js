@@ -420,13 +420,34 @@ export const DashboardRenderTable = function() {
             const { identities, transactions } = this.props
             let isUsed = false
             let loading = false
+            let failed = false
             
             if (identities[chainTicker] && transactions[chainTicker]) {
-              isUsed = !(identities[chainTicker].every(idObj => {
+              if (!(identities[chainTicker].every(idObj => {
                 return idObj.identity.name !== namereservation.name
-              })) || !(transactions[chainTicker].every(tx => {
-                return tx.address !== namereservation.nameid
-              }))
+              }))) {
+                isUsed = true
+              } else {
+                for (let i = 0; i < transactions[chainTicker].length; i++) {
+                  const tx = transactions[chainTicker][i]
+
+                  if (tx.address === namereservation.nameid) {
+                    const { confirmations } = tx
+                    // If confirmation < 0, mark as "ready" to be used again
+                    if (confirmations === 0) {
+                      failed = false
+                      loading = true
+                      break;
+                    } else if (confirmations > 0) {
+                      failed = false
+                      isUsed = true
+                      break;
+                    } else {
+                      failed = true
+                    }
+                  }
+                }
+              }
             } else {
               loading = true
             }
@@ -454,6 +475,8 @@ export const DashboardRenderTable = function() {
                     className={`d-lg-flex align-items-lg-center coin-type ${
                       reservationObj.confirmations == null || isUsed || loading
                         ? "native"
+                        : failed
+                        ? "red"
                         : reservationObj.confirmations > 0
                         ? "green"
                         : "lite"
@@ -472,9 +495,9 @@ export const DashboardRenderTable = function() {
                       ? "Loading..."
                       : isUsed
                       ? "Used"
-                      : reservationObj.confirmations == null
-                      ? "Unknown"
-                      : reservationObj.confirmations > 0
+                      : failed
+                      ? "Failed"
+                      : reservationObj.confirmations != null && reservationObj.confirmations > 0
                       ? "Ready"
                       : "Pending..."}
                   </h3>
@@ -519,9 +542,9 @@ export const DashboardRenderTable = function() {
                         ? "Loading..."
                         : isUsed
                         ? "Untrack name commitment"
-                        : reservationObj.confirmations == null
-                        ? "Data error"
-                        : reservationObj.confirmations > 0
+                        : failed
+                        ? "Try again"
+                        : reservationObj.confirmations != null && reservationObj.confirmations > 0
                         ? "Create Verus ID"
                         : "Waiting for confirmation..."}
                     </a>

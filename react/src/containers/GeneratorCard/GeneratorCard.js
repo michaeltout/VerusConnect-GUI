@@ -61,7 +61,7 @@ function updateGeneratorStats(setEarningStats, setPercentBalanceStaking, setDisp
     } else if (cardType === MINING_CARD) {
       // If mining card, est. blocks per day is (localhp / totalhp) * 1440
       const { localhashps, networkhashps } = miningInfo;
-      const hpFraction = localhashps / networkhashps;
+      const hpFraction = networkhashps === 0 ? 0 : (localhashps / networkhashps);
 
       blocks.day = hpFraction * MINUTES_PER_DAY;
     }

@@ -16,7 +16,14 @@ import { newSnackbar } from '../../../actionCreators'
 export const activateCoin = async (coinObj, mode, dispatch) => {
   let daemonResult
   try {
-    daemonResult = await initCoin(coinObj.id, mode, coinObj.options.startupOptions, coinObj.options.daemon)
+    daemonResult = await initCoin(
+      coinObj.id,
+      mode,
+      coinObj.options.startupOptions,
+      coinObj.options.daemon,
+      coinObj.options.dataDirNames,
+      coinObj.options.confName
+    );
     if (daemonResult.msg === 'error') throw new Error(daemonResult.result)    
 
     dispatch({

@@ -9,7 +9,8 @@ import {
   TX_MESSAGE,
   GENERAL_INFO,
   RAW_TX,
-  TX_HEX
+  TX_HEX,
+  TX_EXPLORER
 } from "../../../util/constants/componentConstants";
 import { decodeMemo } from '../../../util/txUtils/zTxUtils';
 const { shell } = window.require('electron');
@@ -29,7 +30,8 @@ class TxInfo extends React.Component {
   }
 
   setActiveTab(activeTab) {
-    this.setState({ activeTab })
+    if (activeTab === TX_EXPLORER) this.openExplorerWindow()
+    else this.setState({ activeTab })
   }
 
   openExplorerWindow = () => {
@@ -48,7 +50,7 @@ class TxInfo extends React.Component {
 
   // To be called from constructor
   generateTxInfo(props) {
-    const { txObj, info, explorerUrl } = props
+    const { txObj, info } = props
     const {
       txid,
       address,

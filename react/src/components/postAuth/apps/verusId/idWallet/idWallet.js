@@ -14,6 +14,7 @@ import {
   TX_INFO,
   UNCONFIRMED_BALANCE,
   OPERATION_INFO,
+  PRIVATE_ADDRS,
 } from '../../../../../util/constants/componentConstants'
 import { renderAffectedBalance } from '../../../../../util/txUtils/txRenderUtils'
 import { setModalNavigationPath, setModalParams, setMainNavigationPath } from '../../../../../actions/actionCreators'
@@ -211,7 +212,7 @@ class IdWallet extends React.Component {
   calculateBalances() {
     const { props } = this
     const { activeIdentity, fiatPrices, fiatCurrency, coin } = props
-    const { balances } = activeIdentity
+    const { balances, addresses } = activeIdentity
 
     let spendableBalance = {
       crypto: 0,
@@ -245,6 +246,13 @@ class IdWallet extends React.Component {
                 balanceFiat: "-"
               });
             }
+          } else if (balanceAddrType === PRIVATE_ADDRS && addresses.private.length > 0) {
+            walletDisplayBalances.push({
+              balanceAddrType,
+              balanceType,
+              balance: "-",
+              balanceFiat: "-"
+            });
           }
         }
       }
