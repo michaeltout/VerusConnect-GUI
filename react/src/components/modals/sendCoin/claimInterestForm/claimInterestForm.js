@@ -150,13 +150,6 @@ class ClaimInterestForm extends React.Component {
     const { chainTicker, balance } = this.props
     const { sendTo } = this.state
 
-    //DELET
-    console.log({
-      chainTicker,
-      toAddress: sendTo.address,
-      amount: balance.native.public.confirmed
-    })
-
     this.props.setFormData({
       chainTicker,
       toAddress: sendTo.address,

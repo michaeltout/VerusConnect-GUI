@@ -21,7 +21,8 @@ import {
   MID_LENGTH_ALERT,
   PRIVATE_BALANCE,
   API_SUCCESS,
-  API_ABORTED
+  API_ABORTED,
+  ETH
 } from "../../../util/constants/componentConstants";
 import { expireData, newSnackbar } from '../../../actions/actionCreators'
 import { conditionallyUpdateWallet } from '../../../actions/actionDispatchers'
@@ -214,9 +215,9 @@ class ReceiveCoin extends React.Component {
   generateAddressOptions(address) {
     let addressOptions = [GENERATE_QR]
 
+    if (this.props.activeCoin.mode !== ETH && !this.isIdentity)
+      addressOptions.push(COPY_PRIVKEY);
     if (this.props.activeCoin.mode === NATIVE) {
-      if (!this.isIdentity) addressOptions.push(COPY_PRIVKEY)
-
       if (address[0] !== 'z') addressOptions.push(COPY_PUBKEY)
     } 
 
