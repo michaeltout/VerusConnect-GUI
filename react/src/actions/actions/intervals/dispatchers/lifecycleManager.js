@@ -1,5 +1,13 @@
 import { refreshCoinIntervals } from '../../../actionDispatchers'
-import { NATIVE, ETH, ELECTRUM, PRE_DATA, SYNCING, POST_SYNC, API_GET_INFO } from '../../../../util/constants/componentConstants'
+import {
+  NATIVE,
+  ETH,
+  ELECTRUM,
+  PRE_DATA,
+  SYNCING,
+  POST_SYNC,
+  API_GET_INFO
+} from "../../../../util/constants/componentConstants";
 import { setCoinStatus } from '../../../actionCreators'
 
 export const activateChainLifecycle = (mode, chainTicker) => {
