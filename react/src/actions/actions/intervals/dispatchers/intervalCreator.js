@@ -6,9 +6,13 @@ import {
   setUpdateExpiredIntervalId, 
   clearUpdateExpiredIntervalId,
   generateUpdateCoinDataAction,
-  
 } from '../../../actionCreators'
-import { ALWAYS_ACTIVATED, NEVER_ACTIVATED, API_UNSUPPORTED_SYSTEM_CALL, API_ERROR } from '../../../../util/constants/componentConstants'
+import {
+  ALWAYS_ACTIVATED,
+  NEVER_ACTIVATED,
+  API_UNSUPPORTED_SYSTEM_CALL,
+  API_ERROR
+} from "../../../../util/constants/componentConstants";
 import Store from '../../../../store'
 import { generateUpdateSystemDataAction, setSystemUpdateIntervalId } from '../../updateManager'
 import { conditionallyUpdateSystemData } from '../../system/dispatchers/systemDataUpdates'

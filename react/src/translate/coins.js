@@ -5,7 +5,7 @@ const coins = {
     VRSC: 'Verus',
     KMD: 'Komodo',
     BTC: 'Bitcoin',
-    VOTE2019: 'VOTE2019',
+    VOTE2020: 'VOTE2020',
     KSB: 'KSB',
     MORTY: 'Morty',
     RICK: 'Rick',

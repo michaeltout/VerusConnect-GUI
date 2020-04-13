@@ -217,6 +217,7 @@ export const STAKE_TX = 'stake'
 export const IMMATURE_TX = 'immature'
 export const UNKNOWN_TX = 'unknown'
 export const INTEREST_TX = 'interest'
+export const REJECTED_CONFIRMATIONS = -1
 
 // Fallback image 
 export const CHAIN_FALLBACK_IMAGE = 'assets/images/cryptologo/defaultChain.png'

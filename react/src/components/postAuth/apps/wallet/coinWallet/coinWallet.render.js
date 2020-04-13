@@ -19,7 +19,8 @@ import {
   MINTED_TX,
   IMMATURE_TX,
   STAKE_TX,
-  INTEREST_BALANCE
+  INTEREST_BALANCE,
+  REJECTED_CONFIRMATIONS
 } from "../../../../../util/constants/componentConstants";
 import { VirtualizedTable } from '../../../../../containers/VirtualizedTable/VirtualizedTable'
 import { TX_TYPES } from '../../../../../util/txUtils/txRenderUtils'
@@ -255,7 +256,8 @@ export const CoinWalletRender = function() {
                   tx.category !== MINED_TX &&
                   tx.category !== MINTED_TX &&
                   tx.category !== IMMATURE_TX &&
-                  tx.category !== STAKE_TX
+                  tx.category !== STAKE_TX && 
+                  tx.confirmations !== REJECTED_CONFIRMATIONS
                 );
               })
             : []
