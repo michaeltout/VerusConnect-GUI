@@ -28,6 +28,8 @@ class UnlockProfile extends React.Component {
       return coinObj.mode === NATIVE
     }) || currentUser.pinFile == null) {
       this.finishLogin()
+    } else {
+      this.pwdInput.focus()
     }
   }
 

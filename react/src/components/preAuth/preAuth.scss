@@ -1,6 +1,9 @@
 .pre-auth-container {
   height: 100%;
-  background-color: rgba(241,247,252,0);
+  background-image: url("../../src/assets/images/verus-graphics/login-screen-bg.png");
+  background-position: left;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .pre-auth-inner-container {
@@ -8,7 +11,7 @@
 }
 
 .pre-auth-header-container {
-  margin-bottom: 51px;
+  padding-bottom: 80px;
 }
 
 .pre-auth-logo-header {
@@ -17,6 +20,39 @@
 
 .pre-auth-body-container {
   margin-bottom: 74px;
+}
+
+.pre-auth-help-links-container {
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+}
+
+.pre-auth-help-links-inner-container {
+  max-width: 480px;
+  flex: 1;
+  padding: 25px 0 25px 0;
+  display: flex;
+}
+
+.pre-auth-help-links-title {
+  color: white;
+  font-size: 16pt;
+}
+
+.pre-auth-help-link {
+  color: white;
+  font-size: 16pt;
+  font-weight: bold;
+}
+
+.pre-auth-help-link:link, .pre-auth-help-link:visited, .pre-auth-help-link:hover, .pre-auth-help-link:active { 
+  color: white;
+  text-decoration: none;
+}
+
+.pre-auth-help-links {
+  padding-left: 20px;
 }
 
 .pre-auth-input {

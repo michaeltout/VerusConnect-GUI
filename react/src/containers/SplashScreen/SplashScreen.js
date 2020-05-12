@@ -1,5 +1,6 @@
 import React from 'react';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import { Lottie } from '@crello/react-lottie';
+import * as animationData from '../../assets/animations/heartbeat.json'
 
 // This container simply displays the Verus logo, 
 // and a loading bar to indicate that the app is initializing
@@ -12,18 +13,25 @@ class SplashScreen extends React.Component {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          flexDirection: "column"
+          flexDirection: "column",
         }}
       >
         <img
-          src={`assets/images/splash.svg`}
-          width="200px"
-          height="200px"
+          src={`assets/images/verus-graphics/logoslogan_loading.png`}
+          width="325px"
+          height="40px"
           style={{
-            marginBottom: 24
+            marginBottom: 60,
           }}
         />
-        <LinearProgress style={{ width: 200, height: 8 }}/>
+        <Lottie
+          config={{animationData: animationData.default, loop: true}}
+          height="10%"
+          width="50%"
+          style={{
+            marginBottom: 60
+          }}
+        />
       </div>
     );
   }

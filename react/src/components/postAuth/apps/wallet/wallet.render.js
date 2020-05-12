@@ -101,29 +101,17 @@ export const WalletCardRender = function(coinObj) {
 
 export const WalletTabsRender = function() {
   return [
-    <li className="nav-item" role="presentation" key="wallet-dashboard">
-      <a
-        className={`nav-link ${this.props.mainPathArray.includes(
-          DASHBOARD ? "active" : ""
-        )}`}
-        href="#"
-        onClick={() => this.openDashboard()}
-        style={WalletStyles.secondaryTabBarLink}
-      >
-        <i className="fas fa-home" style={WalletStyles.navigationTabIcon} />
-        {"Dashboard"}
-      </a>
-    </li>,
-    <li className="nav-item" role="presentation" key="wallet-addcoin">
-      <a
-        className="nav-link"
-        href={"#"}
-        style={WalletStyles.secondaryTabBarLink}
-        onClick={this.openAddCoinModal}
-      >
-        <i className="fas fa-plus" style={WalletStyles.navigationTabIcon} />
-        {"Add Coin"}
-      </a>
-    </li>
+    {
+      title: "Add Coin",
+      icon: 'fa-plus',
+      onClick: this.openAddCoinModal,
+      isActive: () => false
+    },
+    {
+      title: "Wallet Dashboard",
+      icon: 'fa-home',
+      onClick: () => this.openDashboard(),
+      isActive: () => this.props.mainPathArray.includes(DASHBOARD)
+    }
   ];
 };

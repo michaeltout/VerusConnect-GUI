@@ -44,7 +44,7 @@ export const AppsRender = function() {
                   onClick={currentApp === VERUSID ? () => { return 0 } : () => this.selectApp(VERUSID)}
                   style={AppsStyles.mainNavigationTab}>
                   <i className="fas fa-fingerprint" style={AppsStyles.navigationTabIcon} />
-                  {"Verus Identities"}
+                  {"VerusID"}
                 </a>
               </li>
               <li className={`nav-item ${currentApp === MINING ? 'active-nav-tab-container' : 'nav-tab-container'}`}>
@@ -123,30 +123,7 @@ export const AppsRender = function() {
             </Tooltip>
           </div>
         </div>
-        <div className="row" style={AppsStyles.secondaryTabBarContainer}>
-          <div className="col-xl-12 offset-lg-0" style={AppsStyles.secondaryTabBarInnerContainer}>
-            <nav
-              className="navbar navbar-light navbar-expand-sm navigation-clean-button"
-              style={AppsStyles.secondaryTabBar}>
-              <div className="container-fluid">
-                <button
-                  data-toggle="collapse"
-                  className="navbar-toggler"
-                  data-target="#navcol-1">
-                  <span className="sr-only">Toggle navigation</span>
-                  <span className="navbar-toggler-icon" />
-                </button>
-                <div
-                  className="collapse navbar-collapse"
-                  id="navcol-1"
-                  style={AppsStyles.secondaryTabBarLinksContainer}>
-                  <ul className="nav navbar-nav mr-auto" style={{ height: 40 }}>
-                    {this.state.secondaryTabs}
-                  </ul>
-                </div>
-              </div>
-            </nav>
-          </div>
+        <div className="row" style={AppsStyles.tabUnderline}>
         </div>
         <div
           className="row d-flex flex-fill"
@@ -155,6 +132,36 @@ export const AppsRender = function() {
             className="col d-flex flex-column justify-content-between"
             style={AppsStyles.sideBarInnerContainer}>
             <div style={AppsStyles.sideBarContainerScroller} className="hide-scrollbar">
+              {this.state.secondaryTabs.map((tab, index) => {
+                return (
+                  <button
+                    className="unstyled-button"
+                    onClick={tab.onClick}
+                    key={index}
+                    style={AppsStyles.cardClickableContainer}
+                  >
+                    <div
+                      className="d-flex flex-column align-items-end"
+                      style={AppsStyles.cardContainer}
+                    >
+                      <div
+                        className={`card ${
+                          tab.isActive() ? "active-card" : "border-on-hover"
+                        }`}
+                        style={AppsStyles.cardInnerContainer}
+                      >
+                        <div style={AppsStyles.cardInnerTextContainer}>
+                          <i
+                            className={`fas ${tab.icon}`}
+                            style={{ paddingRight: 6, color: 'black' }}
+                          />
+                          {tab.title}
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
               {this.state.cards}
             </div>
             <footer />

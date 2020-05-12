@@ -82,29 +82,17 @@ export const IdCardRender = function(coinObj) {
 
 export const IdTabsRender = function() {
   return [
-    <li className="nav-item" role="presentation" key="wallet-dashboard">
-      <a
-        className={`nav-link ${this.props.mainPathArray.includes(
-          DASHBOARD ? "active" : ""
-        )}`}
-        href="#"
-        onClick={() => this.openDashboard()}
-        style={VerusIdStyles.secondaryTabBarLink}
-      >
-        <i className="fas fa-home" style={VerusIdStyles.navigationTabIcon} />
-        {"ID Dashboard"}
-      </a>
-    </li>,
-    <li className="nav-item" role="presentation" key="wallet-addcoin">
-      <a
-        className="nav-link"
-        href={"#"}
-        style={VerusIdStyles.secondaryTabBarLink}
-        onClick={this.openAddCoinModal}
-      >
-        <i className="fas fa-plus" style={VerusIdStyles.navigationTabIcon} />
-        {"Add Coin"}
-      </a>
-    </li>
+    {
+      title: "Add Coin",
+      icon: 'fa-plus',
+      onClick: this.openAddCoinModal,
+      isActive: () => false
+    },
+    {
+      title: "VerusID Dashboard",
+      icon: 'fa-home',
+      onClick: () => this.openDashboard(),
+      isActive: () => this.props.mainPathArray.includes(DASHBOARD)
+    }
   ];
 }

@@ -160,7 +160,8 @@ class ProtectedInputForm extends React.Component {
       seedGenerator,
       inlineSubmit,
       headingStyle,
-      headingContainerStyle
+      headingContainerStyle,
+      inputRef
     } = this.props;
 
     const propsError = this.props.error
@@ -220,6 +221,7 @@ class ProtectedInputForm extends React.Component {
             error={error || propsError ? true : false}
             helperText={helperText ? helperText : error}
             multiline={multiline}
+            inputRef={inputRef}
             disabled={inputDisabled || (step === ENTER_PASSWORD && seedGenerator)}
             endAdornment={
               <InputAdornment position="end">
@@ -338,7 +340,8 @@ ProtectedInputForm.propTypes = {
   error: PropTypes.bool,
   helperText: PropTypes.string,
   seedGenerator: PropTypes.bool,
-  inlineSubmit: PropTypes.bool
+  inlineSubmit: PropTypes.bool,
+  inputRef: PropTypes.func
 };
 
 export default ProtectedInputForm
