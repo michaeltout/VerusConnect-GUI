@@ -420,7 +420,7 @@ export const DashboardRenderTable = function() {
             const { identities, transactions } = this.props
             let isUsed = false
             let loading = false
-            let failed = false
+            let failed = reservationObj.confirmations < 0 ? true : false
             
             if (identities[chainTicker] && transactions[chainTicker]) {
               if (!(identities[chainTicker].every(idObj => {
@@ -430,7 +430,7 @@ export const DashboardRenderTable = function() {
               } else {
                 for (let i = 0; i < transactions[chainTicker].length; i++) {
                   const tx = transactions[chainTicker][i]
-
+  
                   if (tx.address === namereservation.nameid) {
                     const { confirmations } = tx
                     // If confirmation < 0, mark as "ready" to be used again
@@ -458,14 +458,14 @@ export const DashboardRenderTable = function() {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "space-between"
+                  justifyContent: "space-between",
                 }}
               >
                 <td
                   style={{
                     color: "rgb(0,0,0)",
                     fontWeight: "bold",
-                    borderTop: 0
+                    borderTop: 0,
                   }}
                 >
                   {`${namereservation.name}@`}
@@ -488,7 +488,7 @@ export const DashboardRenderTable = function() {
                       paddingTop: 1,
                       paddingBottom: 1,
                       borderWidth: 1,
-                      margin: 0
+                      margin: 0,
                     }}
                   >
                     {loading
@@ -497,7 +497,8 @@ export const DashboardRenderTable = function() {
                       ? "Used"
                       : failed
                       ? "Failed"
-                      : reservationObj.confirmations != null && reservationObj.confirmations > 0
+                      : reservationObj.confirmations != null &&
+                        reservationObj.confirmations > 0
                       ? "Ready"
                       : "Pending..."}
                   </h3>
@@ -520,12 +521,17 @@ export const DashboardRenderTable = function() {
                           reservationObj.confirmations == 0 ||
                           loading
                             ? "rgb(0,0,0)"
-                            : "rgb(78,115,223)"
+                            : "rgb(78,115,223)",
                       }}
                       onClick={
-                        reservationObj.confirmations == null ||
-                        reservationObj.confirmations == 0 ||
-                        loading
+                        failed
+                          ? () => this.openCommitNameModal(chainTicker, {
+                              name: namereservation.name,
+                              referralId: namereservation.referral,
+                            })
+                          : reservationObj.confirmations == null ||
+                            reservationObj.confirmations == 0 ||
+                            loading
                           ? () => {
                               return 0;
                             }
@@ -544,7 +550,8 @@ export const DashboardRenderTable = function() {
                         ? "Untrack name commitment"
                         : failed
                         ? "Try again"
-                        : reservationObj.confirmations != null && reservationObj.confirmations > 0
+                        : reservationObj.confirmations != null &&
+                          reservationObj.confirmations > 0
                         ? "Create Verus ID"
                         : "Waiting for confirmation..."}
                     </a>

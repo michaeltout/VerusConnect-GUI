@@ -37,9 +37,15 @@ class CommitNameForm extends React.Component {
     this.generateTxDataDisplay = this.generateTxDataDisplay.bind(this)
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (Object.keys(this.props.txData).length > 0) {
       this.generateTxDataDisplay()
+    }
+
+    if (this.props.commitmentData != null) {
+      const { name, referralId } = this.props.commitmentData
+
+      this.setAndUpdateState({ name, referralId: referralId == null ? '' : referralId })
     }
   }
 

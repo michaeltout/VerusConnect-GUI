@@ -191,8 +191,8 @@ class Dashboard extends React.Component {
     this.props.dispatch(setModalNavigationPath(modal))
   }  
 
-  openCommitNameModal(chainTicker) {
-    this.openModal(CREATE_IDENTITY, { modalType: API_REGISTER_ID_NAME, chainTicker })
+  openCommitNameModal(chainTicker, commitmentData = null) {
+    this.openModal(CREATE_IDENTITY, { modalType: API_REGISTER_ID_NAME, chainTicker, commitmentData })
   }
 
   openRegisterIdentityModal(nameCommitmentObj) {
