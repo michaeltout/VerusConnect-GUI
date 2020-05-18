@@ -40,7 +40,7 @@ class ObjectToTable extends React.Component {
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
     
     return (
-      <Paper style={{ paperStyle }} { ...paperProps }>
+      <Paper style={paperStyle} { ...paperProps }>
         <div style={{ overflow: "auto" }}>
           <Table { ...tableProps }>
             <TableBody>

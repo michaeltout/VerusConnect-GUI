@@ -8,23 +8,7 @@ import { ID_INFO } from "../../../util/constants/componentConstants";
 class IdInfo extends React.Component {
   constructor(props) {
     super(props);
-    const { activeIdentity } = props
-    const { identity } = activeIdentity
-
-    props.setModalHeader(`${identity.name}@ Info`)
-    this.displayObj = {
-      ["Name:"]: `${identity.name}@`,
-      ["ID Address:"]: identity.identityaddress,
-      ["First Primary Address:"]: identity.primaryaddresses[0],
-      ["Minimum Signatures:"]: identity.minimumsignatures,
-      ["Parent:"]: identity.parent,
-      ["Revocation Authority:"]: identity.revocationauthority,
-      ["Recovery Authority:"]: identity.recoveryauthority,
-      ["Status:"]: `${activeIdentity.status} as of block ${activeIdentity.blockheight}.`,
-      ["Transaction ID:"]: activeIdentity.txid,
-      ["Can Spend:"]: activeIdentity.canspendfor ? "Yes" : "No",
-      ["Can Sign:"]: activeIdentity.cansignfor ? "Yes" : "No",
-    }
+    props.setModalHeader(`${props.activeCoin.id} ID`)
   }
 
   render() {
@@ -37,7 +21,8 @@ const mapStateToProps = (state) => {
 
   return {
     activeCoin: state.coins.activatedCoins[chainTicker],
-    activeIdentity: state.modal[ID_INFO].activeIdentity
+    activeIdentity: state.modal[ID_INFO].activeIdentity,
+    openIdentity: state.modal[ID_INFO].openIdentity
   };
 };
 

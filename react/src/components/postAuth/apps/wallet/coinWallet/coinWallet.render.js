@@ -31,6 +31,7 @@ import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import WalletPaper from '../../../../../containers/WalletPaper/WalletPaper'
 import TransactionCard from '../../../../../containers/TransactionCard/TransactionCard'
+import { FormControl, Select, MenuItem } from "@material-ui/core";
 
 export const CoinWalletRender = function() {
   return (
@@ -247,6 +248,7 @@ export const CoinWalletRender = function() {
           </div>
         )}
       </div>
+      {WalletRenderCurrencyFunctions.call(this)}
       {WalletRenderBalances.call(this)}
       <TransactionCard
         transactions={
@@ -571,3 +573,74 @@ export const WalletRenderOperations = function() {
     </div>
   )
 }
+
+export const WalletRenderCurrencyFunctions = function() {
+  return (
+    <WalletPaper
+      style={{
+        marginBottom: 16,
+        padding: 0,
+        border: "none",
+        display: "flex"
+      }}
+    >
+      <WalletPaper
+        style={{
+          display: "flex",
+          alignItems: "center",
+          flex: 1,
+          justifyContent: "space-between"
+        }}
+      >
+      <FormControl variant="outlined" style={{ flex: 1 }}>
+        <Select
+          label="Select Currency"
+          value={""}
+        >
+          <MenuItem value="">
+            <em>VRSC</em>
+          </MenuItem>
+          <MenuItem value={10}>Ten</MenuItem>
+          <MenuItem value={20}>Twenty</MenuItem>
+          <MenuItem value={30}>Thirty</MenuItem>
+        </Select>
+      </FormControl>
+      </WalletPaper>
+      <WalletPaper
+        style={{
+          display: "flex",
+          alignItems: "center",
+          flex: 1,
+          justifyContent: "space-between"
+        }}
+      >
+        {"Search Box"}
+      </WalletPaper>
+      <WalletPaper
+        style={{
+          display: "flex",
+          alignItems: "center",
+          flex: 1,
+          justifyContent: "space-between"
+        }}
+      >
+        <button
+          className="btn btn-primary border rounded"
+          type="button"
+          disabled={false}
+          style={{
+            fontSize: 14,
+            backgroundColor: "rgba(0,178,26,0)",
+            borderWidth: 0,
+            color: "rgb(133,135,150)",
+            borderColor: "rgb(133, 135, 150)",
+            fontWeight: "bold",
+            flex: 1
+          }}
+        >
+          {"Discover Currencies"}
+        </button>
+      </WalletPaper>
+    </WalletPaper>
+  );
+};

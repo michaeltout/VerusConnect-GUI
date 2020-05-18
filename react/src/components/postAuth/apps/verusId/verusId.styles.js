@@ -12,6 +12,10 @@ export default {
     paddingTop: 8,
     paddingBottom: 8
   },
+  searchButtonContainer: {
+    paddingTop: 8,
+    paddingBottom: 8
+  },
   cardInnerContainer: { 
     width: "100%" 
   },
@@ -55,5 +59,12 @@ export default {
   },
   navigationTabIcon: {
     marginRight: 6
+  },
+  cardInnerTextContainer: { 
+    paddingLeft: 24,
+    paddingTop: 8,
+    paddingBottom: 8,
+    fontWeight: 'bold',
+    color: 'rgb(55, 67, 77)'
   },
 }
