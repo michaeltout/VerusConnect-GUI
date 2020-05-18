@@ -248,7 +248,7 @@ export const CoinWalletRender = function() {
           </div>
         )}
       </div>
-      {WalletRenderCurrencyFunctions.call(this)}
+      {/*WalletRenderCurrencyFunctions.call(this)*/}
       {WalletRenderBalances.call(this)}
       <TransactionCard
         transactions={

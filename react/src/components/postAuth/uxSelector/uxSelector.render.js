@@ -13,12 +13,12 @@ export const UxSelectorRender = function() {
           {!this.state.loading &&
             <React.Fragment>
               <div className="text-center pre-auth-header-container">
-                <img src="assets/images/verus-graphics/logoslogan_loading.png" width="325px" height="40px"/>
+                <img src="assets/images/verus-graphics/truthandprivacyforall.png" width="325px" height="40px"/>
               </div>
               <h4 className="text-center under-logo-header">{"Get Started."}</h4>
               <div className="col-lg-8 offset-lg-2 ux-selector-card-container">
                 <button className="unstyled-button" onClick={ () => this.selectUx(`${getPathParent(mainPathArray)}/${APPS}/${WALLET}`) }>
-                  <div className="card shadow ux-selector-card-body blue-hover">
+                  <div className="card shadow ux-selector-card-body border-on-hover">
                     <div className="card-body inherit-color">
                       <div className="d-flex align-items-lg-center inherit-color">
                         <div className="d-flex ux-selector-card-logo-container inherit-color"><i className="fas fa-wallet ux-selector-card-logo inherit-color"></i></div>
@@ -34,7 +34,7 @@ export const UxSelectorRender = function() {
               </div>
               <div className="col-lg-8 offset-lg-2 ux-selector-card-container">
                 <button className="unstyled-button" onClick={ () => this.selectUx(`${getPathParent(mainPathArray)}/${APPS}/${VERUSID}`) }>
-                  <div className="card shadow ux-selector-card-body blue-hover">
+                  <div className="card shadow ux-selector-card-body border-on-hover">
                     <div className="card-body inherit-color">
                       <div className="d-flex align-items-lg-center inherit-color">
                         <div className="d-flex ux-selector-card-logo-container inherit-color"><i className="fas fa-fingerprint ux-selector-card-logo inherit-color"></i></div>
@@ -50,7 +50,7 @@ export const UxSelectorRender = function() {
               </div>
               <div className="col-lg-8 offset-lg-2 ux-selector-card-container">
                 <button className="unstyled-button" onClick={ () => this.selectUx(`${getPathParent(mainPathArray)}/${APPS}/${MINING}`) }>
-                  <div className="card shadow ux-selector-card-body blue-hover">
+                  <div className="card shadow ux-selector-card-body border-on-hover">
                     <div className="card-body inherit-color">
                       <div className="d-flex align-items-lg-center inherit-color">
                         <div className="d-flex ux-selector-card-logo-container inherit-color"><i className="fas fa-tachometer-alt ux-selector-card-logo inherit-color"></i></div>
