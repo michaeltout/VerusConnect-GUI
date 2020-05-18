@@ -232,7 +232,7 @@ class IdentityCard extends React.Component {
                 </div>
                 {isCurrency ? (
                   <IconDropdown
-                    items={[FIND_CURRENCY, COPY]}
+                    items={[/*FIND_CURRENCY, */COPY]}
                     dropdownIconComponent={<MoreVertIcon fontSize="small" />}
                     onSelect={(option) =>
                       this.selectIdOption(identity.revocationauthority, option)
