@@ -47,6 +47,7 @@ export default {
   tabUnderline: {
     marginRight: 0,
     marginLeft: 0,
+    marginTop: -1,
     zIndex: 1,
     minHeight: 20,
     backgroundColor: "rgb(78,115,223)"

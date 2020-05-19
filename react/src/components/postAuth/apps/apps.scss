@@ -2,7 +2,7 @@
   color: rgb(255,255,255);
 
   &:hover {
-    color: rgb(78,115,223);
+    color: white;
   }
 }
 
@@ -11,7 +11,20 @@
 }
 
 .active-nav-tab {
-  background-color: rgb(78,115,223);
+  background-color: rgb(78,115,223) !important;
+  color: white !important;
+}
+
+.inactive-nav-tab {
+  border-width: 1px !important;
+  border-color: #A8A8A8 !important;
+  border-style: solid !important;
+  border-bottom-style: none !important;
+  color: black;
+}
+
+.inactive-nav-tab-icon {
+  color: rgb(78,115,223)
 }
 
 .border-on-hover {
