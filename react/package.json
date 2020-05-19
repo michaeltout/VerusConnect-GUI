@@ -46,6 +46,7 @@
     "agama-wallet-lib": "git+https://github.com/VerusCoin/agama-wallet-lib.git#dev",
     "clsx": "^1.0.4",
     "ethereumjs-util": "^6.2.0",
+    "handlebars": "^4.5.3 ",
     "node-vibrant": "^3.1.4",
     "passwd-strength": "https://github.com/michaeltout/passwd-strength.git",
     "prop-types": "^15.7.2",
@@ -62,6 +63,7 @@
     "redux-logger": "^2.8.2",
     "redux-thunk": "^2.2.0",
     "socket.io-client": "^2.1.1",
+    "static-eval": "^2.0.2",
     "terminal-in-react": "git+https://github.com/VerusCoin/terminal-in-react.git"
   },
   "devDependencies": {
@@ -113,8 +115,6 @@
     "webpack-cli": "^3.3.10",
     "webpack-dashboard": "^2.1.0",
     "webpack-dev-server": "^3.11.0"
-
-
   },
   "resolutions": {
     "lodash": "^4.17.15",
