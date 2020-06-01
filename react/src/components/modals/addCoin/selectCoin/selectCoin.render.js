@@ -13,8 +13,10 @@ import {
   NATIVE_STAKE,
   NATIVE_MINE_THREADS,
   NATIVE_REINDEX,
-  IS_VERUS
+  IS_VERUS,
+  ELECTRUM_NSPV
 } from "../../../../util/constants/componentConstants";
+import { staticVar } from '../../../../util/mainWindow';
 
 export const SelectCoinRender = function() {
   return (
@@ -259,6 +261,38 @@ export const SelectModeForm = function() {
                   style={{ color: "rgb(0,0,0)" }}
                 >
                   {"Rescan wallet"}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {this.state.selectedMode === LITE && staticVar.nspvPorts[this.state.chosenCoin.id] > -1 && (
+        <div
+          className="d-flex d-sm-flex d-md-flex d-lg-flex flex-column align-items-center align-items-sm-center align-items-md-center justify-content-lg-center align-items-lg-center"
+          style={{ paddingTop: 28 }}
+        >
+          <div>
+            <div>
+              <div
+                className="form-check d-flex align-items-center"
+                style={{ padding: 0 }}
+              >
+                <CustomCheckbox
+                  checkboxProps={{
+                    checked: this.state.electrumOptions[ELECTRUM_NSPV],
+                    onChange: this.checkBoxElectrum,
+                    name: ELECTRUM_NSPV
+                  }}
+                  colorChecked="rgb(78,115,223)"
+                  colorUnchecked="rgb(78,115,223)"
+                />
+                <label
+                  className="form-check-label"
+                  htmlFor="formCheck-1"
+                  style={{ color: "rgb(0,0,0)" }}
+                >
+                  {"Use NSPV daemon"}
                 </label>
               </div>
             </div>
