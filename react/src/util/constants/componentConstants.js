@@ -236,6 +236,9 @@ export const ZCPARAMS_ZCASH = 'z.cash'
 export const ZCPARAMS_SOCKET = 'zcparams'
 export const ADDCOIN_DELAY = 500
 
+// Addcoin electrum options
+export const ELECTRUM_NSPV = '-nspv'
+
 // Password and seed entering
 export const PWD_STRENGTH_THRESHOLD = 29
 
