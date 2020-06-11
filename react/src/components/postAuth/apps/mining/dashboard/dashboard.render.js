@@ -10,7 +10,8 @@ import {
   IS_VERUS,
   CPU_TEMP_UNSUPPORTED,
   STAKE_WARNING,
-  STAKE_BALANCE_INFO
+  STAKE_BALANCE_INFO,
+  CHAIN_FALLBACK_IMAGE
 } from "../../../../../util/constants/componentConstants";
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import { secondsToTime } from "../../../../../util/displayUtil/timeUtils";
@@ -286,6 +287,7 @@ export const DashboardRenderMiningCards = function() {
                 src={`assets/images/cryptologo/btc/${chainTicker.toLowerCase()}.png`}
                 width="40px"
                 height="40px"
+                onError={(e) => {e.target.src = CHAIN_FALLBACK_IMAGE}}
               />
               <div style={{ paddingLeft: 10, overflow: "hidden" }}>
                 <h3
@@ -365,7 +367,7 @@ export const DashboardRenderMiningCards = function() {
                 flex: 1
               }}
             >
-              {coinObj.tags.includes(IS_VERUS) && (
+              {coinObj.options.tags.includes(IS_VERUS) && (
                 <Tooltip title={isStaking ? "Stop Staking" : "Start Staking"}>
                   <span>
                     <IconButton

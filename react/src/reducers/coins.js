@@ -2,7 +2,13 @@
   The coin reducer conatains general coin information aggregated
   when a coin is added.
 */
-import { SET_ACTIVATED_COINS, SET_COIN_STATUS, ACTIVATE_COIN, DEACTIVATE_COIN } from '../util/constants/storeType'
+import {
+  SET_ACTIVATED_COINS,
+  SET_COIN_STATUS,
+  ACTIVATE_COIN,
+  DEACTIVATE_COIN,
+  SET_COIN_DISPLAY_CURRENCY,
+} from "../util/constants/storeType";
 
 export const coins = (state = {
   activatedCoins: {}
@@ -34,6 +40,17 @@ export const coins = (state = {
           [action.chainTicker]: {
             ...state.activatedCoins[action.chainTicker],
             status: action.status
+          }
+        }
+      }
+    case SET_COIN_DISPLAY_CURRENCY:
+      return {
+        ...state,
+        activatedCoins: {
+          ...state.activatedCoins,
+          [action.chainTicker]: {
+            ...state.activatedCoins[action.chainTicker],
+            display_currency: action.currencyTicker
           }
         }
       }

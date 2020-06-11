@@ -13,11 +13,12 @@ import { NATIVE, ERROR_SNACK, SUCCESS_SNACK, MID_LENGTH_ALERT } from '../../util
 import { newSnackbar } from '../../actions/actionCreators';
 import IconDropdown from '../IconDropdown/IconDropdown'
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { checkFlag } from '../../util/flagUtils';
+import { IS_CURRENCY_FLAG } from '../../util/constants/flags';
 
 const FIND_ID = "Find ID"
 const COPY = "Copy to clipboard"
 const FIND_CURRENCY = "Find Currency"
-const IS_CURRENCY_FLAG = 0x01
 
 class IdentityCard extends React.Component {
   constructor(props) {
@@ -28,10 +29,9 @@ class IdentityCard extends React.Component {
       loadingIdMap: false,
       loadingCurrency: false
     }
-    
-    this.isCurrency = props.verusId.identity.flags & IS_CURRENCY_FLAG
+  
     this.copyDataToClipboard = this.copyDataToClipboard.bind(this)
-    this.selectIdOption = this.selectIdOption.bind(this)
+    this.selectOption = this.selectOption.bind(this)
     this.fetchSupportingIdData = this.fetchSupportingIdData.bind(this)
   }
 
@@ -61,7 +61,7 @@ class IdentityCard extends React.Component {
           seenAddrs.push(addr)
   
           if (addr === identity.identityaddress) {
-            idMap[addr] = `${identity.name}@`
+            idMap[addr] = this.props.verusId
           } else {
             promiseArr.push(getIdentity(NATIVE, this.props.activeCoin.id, addr))
           }
@@ -76,7 +76,7 @@ class IdentityCard extends React.Component {
           if (promiseRes.msg !== "success") {
             this.props.dispatch(newSnackbar(ERROR_SNACK, `Couldn't fetch information about all related identities.`))
           } else {
-            idMap[promiseRes.result.identity.identityaddress] = `${promiseRes.result.identity.name}@`
+            idMap[promiseRes.result.identity.identityaddress] = promiseRes.result
           }
         })
 
@@ -109,12 +109,12 @@ class IdentityCard extends React.Component {
     this.props.dispatch(newSnackbar(SUCCESS_SNACK, data + " copied to clipboard", MID_LENGTH_ALERT))
   }
 
-  selectIdOption(identity, option) {
-    if (option === COPY) this.copyDataToClipboard(identity)
-    else if (option === FIND_ID){ 
+  selectOption(address, option) {
+    if (option === COPY) this.copyDataToClipboard(address)
+    else if (option === FIND_ID) { 
       this.props.setLock(true)
 
-      getIdentity(NATIVE, this.props.activeCoin.id, identity)
+      getIdentity(NATIVE, this.props.activeCoin.id, address)
       .then(res => {    
         this.props.setLock(false)
 
@@ -128,11 +128,28 @@ class IdentityCard extends React.Component {
         this.props.setLock(false)
         this.props.dispatch(newSnackbar(ERROR_SNACK, err.message))
       })
+    } else if (option === FIND_CURRENCY) {
+      this.props.setLock(true)
+
+      getCurrency(NATIVE, this.props.activeCoin.id, address)
+      .then(res => {    
+        this.props.setLock(false)
+
+        if (res.msg === "success") {
+          this.props.openCurrency(res.result, this.props.activeCoin.id) 
+        } else {
+          this.props.dispatch(newSnackbar(ERROR_SNACK, res.result))
+        }
+      })
+      .catch(err => {
+        this.props.setLock(false)
+        this.props.dispatch(newSnackbar(ERROR_SNACK, err.message))
+      })
     }
   }
 
   render() {
-    const { props, state, isCurrency } = this  
+    const { props, state } = this  
     const { verusId } = props
     const { identity, status } = verusId
     const { idMap, loadingIdMap } = state
@@ -146,6 +163,7 @@ class IdentityCard extends React.Component {
             onClick: () =>
               this.copyDataToClipboard(identity.primaryaddresses[0]),
           };
+    const isCurrency = checkFlag(identity.flags, IS_CURRENCY_FLAG)
 
     return (
       <Card square style={{ height: "100%", width: "110%", marginLeft: "-5%" }}>
@@ -232,10 +250,10 @@ class IdentityCard extends React.Component {
                 </div>
                 {isCurrency ? (
                   <IconDropdown
-                    items={[/*FIND_CURRENCY, */COPY]}
+                    items={[FIND_CURRENCY, COPY]}
                     dropdownIconComponent={<MoreVertIcon fontSize="small" />}
                     onSelect={(option) =>
-                      this.selectIdOption(identity.revocationauthority, option)
+                      this.selectOption(identity.identityaddress, option)
                     }
                   />
                 ) : null}
@@ -281,10 +299,10 @@ class IdentityCard extends React.Component {
                     alignSelf: "center",
                   }}
                 >
-                  {idMap[identity.revocationauthority]
+                  {idMap[identity.revocationauthority] != null
                     ? `${identity.revocationauthority} (${
-                        idMap[identity.revocationauthority]
-                      })`
+                        idMap[identity.revocationauthority].identity.name
+                      }@)`
                     : loadingIdMap
                     ? `${identity.revocationauthority} (fetching name...)`
                     : identity.revocationauthority}
@@ -293,7 +311,7 @@ class IdentityCard extends React.Component {
                   items={[FIND_ID, COPY]}
                   dropdownIconComponent={<MoreVertIcon fontSize="small" />}
                   onSelect={(option) =>
-                    this.selectIdOption(identity.revocationauthority, option)
+                    this.selectOption(identity.revocationauthority, option)
                   }
                 />
               </ExpansionPanelSummary>
@@ -317,8 +335,8 @@ class IdentityCard extends React.Component {
                 >
                   {idMap[identity.recoveryauthority]
                     ? `${identity.recoveryauthority} (${
-                        idMap[identity.recoveryauthority]
-                      })`
+                        idMap[identity.recoveryauthority].identity.name
+                      }@)`
                     : loadingIdMap
                     ? `${identity.recoveryauthority} (fetching name...)`
                     : identity.recoveryauthority}
@@ -327,7 +345,7 @@ class IdentityCard extends React.Component {
                   items={[FIND_ID, COPY]}
                   dropdownIconComponent={<MoreVertIcon fontSize="small" />}
                   onSelect={(option) =>
-                    this.selectIdOption(identity.recoveryauthority, option)
+                    this.selectOption(identity.recoveryauthority, option)
                   }
                 />
               </ExpansionPanelSummary>

@@ -12,6 +12,7 @@ import { snackbar } from './snackbar'
 import { system } from './system'
 import { debug } from './debug'
 import { loading } from './loading'
+import { localCurrencyLists } from './localCurrencyLists'
 
 const appReducer = combineReducers({
   ledger,
@@ -25,6 +26,7 @@ const appReducer = combineReducers({
   snackbar,
   system,
   debug,
+  localCurrencyLists,
   routing: routerReducer,
   loading
 });

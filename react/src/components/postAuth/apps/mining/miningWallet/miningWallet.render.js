@@ -55,7 +55,7 @@ export const MiningWalletRender = function() {
         </div>
       </WalletPaper>
       {MiningWalletFunctions.call(this)}
-      {coinObj.tags.includes(IS_VERUS) && (
+      {coinObj.options.tags.includes(IS_VERUS) && (
         <WalletBooklet
           pages={[
             {
@@ -154,7 +154,7 @@ export const MiningWalletRender = function() {
             : []
         }
         coin={this.props.coin}
-        title={coinObj.tags.includes(IS_VERUS) ? "Mining/Staking Transactions" : "Mining Transactions"}
+        title={coinObj.options.tags.includes(IS_VERUS) ? "Mining/Staking Transactions" : "Mining Transactions"}
       />
     </div>
   );
@@ -343,7 +343,7 @@ export const MiningWalletFunctions = function() {
         display: "flex"
       }}
     >
-      {coinObj.tags.includes(IS_VERUS) && (
+      {coinObj.options.tags.includes(IS_VERUS) && (
         <WalletPaper
           style={{
             display: "flex",

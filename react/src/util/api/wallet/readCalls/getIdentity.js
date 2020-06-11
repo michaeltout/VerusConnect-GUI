@@ -11,10 +11,8 @@ export const getIdentity = async (mode, chainTicker, identity) => {
   let params = {chainTicker, name: identity}
 
   try {
-    identity = await getApiData(mode, API_GET_IDENTITY, params)
+    return await getApiData(mode, API_GET_IDENTITY, params)
   } catch (e) {
     throw e
   }
-  
-  return identity
 }

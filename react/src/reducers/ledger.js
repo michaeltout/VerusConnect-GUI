@@ -15,7 +15,8 @@ import {
   SET_COIN_IDENTITIES,
   SET_COIN_NAME_COMMITMENTS,
   SET_COIN_CURRENTSUPPLY,
-  SET_COIN_BLOCKREWARD
+  SET_COIN_BLOCKREWARD,
+  SET_COIN_ALL_CURRENCIES
 } from '../util/constants/storeType'
 
 export const ledger = (state = {
@@ -28,6 +29,7 @@ export const ledger = (state = {
   definedChains: {},
   fiatPrices: {},
   identities: {},
+  allCurrencies: {},
   nameCommitments: {},
   currentSupply: {},
   blockReward: {}
@@ -46,7 +48,8 @@ export const ledger = (state = {
         identities,
         nameCommitments,
         currentSupply,
-        blockReward
+        blockReward,
+        allCurrencies
       } = state
       let newLedger = {
         balances,
@@ -60,7 +63,8 @@ export const ledger = (state = {
         identities,
         nameCommitments,
         currentSupply,
-        blockReward
+        blockReward,
+        allCurrencies
       }
 
       Object.keys(newLedger).map(infoType => {
@@ -132,6 +136,11 @@ export const ledger = (state = {
       return {
         ...state,
         identities: {...state.identities, [action.chainTicker]: action.identities}
+      }
+    case SET_COIN_ALL_CURRENCIES:
+      return {
+        ...state,
+        allCurrencies: {...state.allCurrencies, [action.chainTicker]: action.currencies}
       }
     case SET_COIN_NAME_COMMITMENTS:
       return {

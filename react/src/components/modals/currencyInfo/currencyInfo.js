@@ -1,0 +1,105 @@
+import React from 'react';
+import { connect } from 'react-redux';
+import { 
+  CurrencyInfoRender
+} from './CurrencyInfo.render';
+import {
+  CURRENCY_INFO,
+  BLACKLISTS,
+  WHITELISTS,
+  ERROR_SNACK,
+} from "../../../util/constants/componentConstants";
+import { updateLocalWhitelists, updateLocalBlacklists, newSnackbar } from '../../../actions/actionCreators';
+
+class CurrencyInfo extends React.Component {
+  constructor(props) {
+    super(props);
+    props.setModalHeader(`${props.activeCoin.id} Currency`)
+    this.addToBlacklist = this.addToBlacklist.bind(this)
+    this.addToWhitelist = this.addToWhitelist.bind(this)
+    this.removeFromBlacklist = this.removeFromBlacklist.bind(this)
+    this.removeFromWhitelist = this.removeFromWhitelist.bind(this)
+  }
+
+  async addToWhitelist() {
+    const { whitelists, activeCoin, dispatch, activeCurrency } = this.props
+    const { name } = activeCurrency
+
+    const currentWhitelist = whitelists[activeCoin.id] || []
+
+    try {
+      dispatch(await updateLocalWhitelists({ ...whitelists, [activeCoin.id]: [...currentWhitelist, name]}))
+    } catch(e) {
+      dispatch(newSnackbar(ERROR_SNACK, e.message))
+    }
+  }
+
+  async addToBlacklist() {
+    const { blacklists, activeCoin, dispatch, activeCurrency } = this.props
+    const { name } = activeCurrency
+
+    const currentBlacklist = blacklists[activeCoin.id] || []
+
+    try {
+      dispatch(await updateLocalBlacklists({ ...blacklists, [activeCoin.id]: [...currentBlacklist, name]}))
+    } catch(e) {
+      dispatch(newSnackbar(ERROR_SNACK, e.message))
+    }
+  }
+
+  async removeFromBlacklist() {
+    const { blacklists, activeCoin, dispatch, activeCurrency } = this.props
+    const { name } = activeCurrency
+
+    let currentBlacklist = blacklists[activeCoin.id] || []
+
+    const index = currentBlacklist.indexOf(name);
+    if (index > -1) {
+      currentBlacklist.splice(index, 1);
+    }
+
+    try {
+      dispatch(await updateLocalBlacklists({ ...blacklists, [activeCoin.id]: currentBlacklist}))
+    } catch(e) {
+      dispatch(newSnackbar(ERROR_SNACK, e.message))
+    }
+  }
+
+  async removeFromWhitelist() {
+    const { whitelists, activeCoin, dispatch, activeCurrency } = this.props
+    const { name } = activeCurrency
+
+    let currentWhitelist = whitelists[activeCoin.id] || []
+
+    const index = currentWhitelist.indexOf(name);
+    if (index > -1) {
+      currentWhitelist.splice(index, 1);
+    }
+
+    try {
+      dispatch(await updateLocalWhitelists({ ...whitelists, [activeCoin.id]: currentWhitelist}))
+    } catch(e) {
+      dispatch(newSnackbar(ERROR_SNACK, e.message))
+    }
+  }
+
+  render() {
+    return CurrencyInfoRender.call(this);
+  }
+}
+
+const mapStateToProps = (state) => {
+  const { chainTicker } = state.modal[CURRENCY_INFO]
+
+  return {
+    activeCoin: state.coins.activatedCoins[chainTicker],
+    activeCurrency: state.modal[CURRENCY_INFO].activeCurrency,
+    openCurrency: state.modal[CURRENCY_INFO].openCurrencyCard,
+    openIdentity: state.modal[CURRENCY_INFO].openIdentityCard,
+    info: state.ledger.info[chainTicker],
+    blacklists: state.localCurrencyLists[BLACKLISTS],
+    whitelists: state.localCurrencyLists[WHITELISTS],
+  };
+};
+
+export default connect(mapStateToProps)(CurrencyInfo);

@@ -26,13 +26,19 @@ import {
   FINDING_LONGEST_CHAIN,
   UNCONFIRMED_BALANCE,
   INTEREST_BALANCE,
+  BLACKLISTS,
+  WHITELISTS,
+  SUCCESS_SNACK,
+  ERROR_SNACK,
+  MID_LENGTH_ALERT,
 } from '../../../../../util/constants/componentConstants'
 import { renderAffectedBalance } from '../../../../../util/txUtils/txRenderUtils'
-import { setModalNavigationPath, setModalParams } from '../../../../../actions/actionCreators'
+import { setModalNavigationPath, setModalParams, newSnackbar } from '../../../../../actions/actionCreators'
 
 //TODO: Use these to update on mount conditionally
-import { conditionallyUpdateWallet } from '../../../../../actions/actionDispatchers'
+import { conditionallyUpdateWallet, openModal, openCurrencyCard } from '../../../../../actions/actionDispatchers'
 import Store from '../../../../../store'
+import { getCurrency } from '../../../../../util/api/wallet/walletCalls';
 
 const CONDITIONAL_UPDATES = [API_GET_BALANCES, API_GET_TRANSACTIONS, API_GET_FIATPRICE, API_GET_INFO]
 
@@ -62,6 +68,8 @@ class CoinWallet extends React.Component {
         percentage: 0
       },
       chevronVisible: false,
+      currencySearchTerm: '',
+      loadingCurrency: false
     }
 
     this.NO_HEIGHT = -1
@@ -71,6 +79,12 @@ class CoinWallet extends React.Component {
     this.openModal = this.openModal.bind(this)
     this.openOpInfo = this.openOpInfo.bind(this)
     this.setInput = this.setInput.bind(this)
+    this.updateCurrencySearchTerm = this.updateCurrencySearchTerm.bind(this)
+    this.onCurrencySearchSubmit = this.onCurrencySearchSubmit.bind(this)
+  }
+
+  updateCurrencySearchTerm(term) {
+    this.setState({ currencySearchTerm: term })
   }
 
   initState() {
@@ -79,10 +93,8 @@ class CoinWallet extends React.Component {
   }
 
   openModal(e, modalParams = {}, modal) {
-    const _modal = modal ? modal : e.target.name
-
-    this.props.dispatch(setModalParams(_modal, { chainTicker: this.props.coin, ...modalParams }))
-    this.props.dispatch(setModalNavigationPath(_modal))
+    const _modal = modal ? modal : e.target.name;
+    openModal(_modal, { chainTicker: this.props.coin, ...modalParams })
   }
 
   openOpInfo(rowData) {
@@ -92,6 +104,26 @@ class CoinWallet extends React.Component {
 
   componentDidMount() {
     this.initState()
+  }
+
+  onCurrencySearchSubmit() {
+    this.setState({loadingCurrency: true}, () => {
+      getCurrency(NATIVE, this.props.coin, this.state.currencySearchTerm)
+      .then(res => {
+        if (res.msg === 'success') {
+          this.props.dispatch(newSnackbar(SUCCESS_SNACK, `${this.state.currencySearchTerm} currency found!`, MID_LENGTH_ALERT))
+          openCurrencyCard(res.result, this.props.coin)
+          this.setState({ loadingCurrency: false, currencySearchTerm: '' })
+        } else {
+          this.props.dispatch(newSnackbar(ERROR_SNACK, res.result))
+          this.setState({ loadingCurrency: false })
+        }
+      })
+      .catch(err => {
+        this.props.dispatch(newSnackbar(ERROR_SNACK, err.message))
+        this.setState({ loadingCurrency: false })
+      })
+    })
   }
 
   componentDidUpdate(lastProps) {
@@ -206,7 +238,7 @@ class CoinWallet extends React.Component {
             const percentage =
               longestchain == null
                 ? this.NO_HEIGHT
-                : longestchain < blocks
+                : (longestchain < blocks || longestchain === 0)
                 ? 0
                 : Number(((blocks / longestchain) * 100).toFixed(2));
             
@@ -276,7 +308,9 @@ const mapStateToProps = (state) => {
     zOperations: state.ledger.zOperations,
     info: state.ledger.info,
     errors: state.errors,
-    addresses: state.ledger.addresses
+    addresses: state.ledger.addresses,
+    blacklists: state.localCurrencyLists[BLACKLISTS],
+    whitelists: state.localCurrencyLists[WHITELISTS],
   };
 };
 

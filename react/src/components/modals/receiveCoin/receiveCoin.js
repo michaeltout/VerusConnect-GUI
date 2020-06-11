@@ -46,11 +46,11 @@ class ReceiveCoin extends React.Component {
     props.setModalHeader("Receive Coin")
     this.supportedTypes = {
       [PUBLIC_ADDRS]:
-        this.isIdentity || !props.activeCoin.tags.includes(Z_ONLY),
+        this.isIdentity || !props.activeCoin.options.tags.includes(Z_ONLY),
       [PRIVATE_ADDRS]:
         (this.isIdentity && this.idZAddrs.length > 0) ||
         (!this.isIdentity && props.activeCoin.mode === NATIVE &&
-          props.activeCoin.tags.includes(IS_ZCASH))
+          props.activeCoin.options.tags.includes(IS_ZCASH))
     };
 
     this.state = {

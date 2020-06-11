@@ -4,7 +4,9 @@ import {
   setMainNavigationPath,
   loginUser,
   initConfig,
-  initStaticSystemData
+  initStaticSystemData,
+  initLocalBlacklists,
+  initLocalWhitelists
 } from '../../actions/actionCreators';
 import { refreshSystemIntervals } from '../../actions/actionDispatchers'
 import mainWindow, { staticVar } from '../../util/mainWindow';
@@ -38,52 +40,78 @@ class Main extends React.Component {
       refreshSystemIntervals()
 
       // Load users and config from file, system data from systeminformation lib
-      Promise.all([initUsers(), initConfig(), initStaticSystemData()])
-      .then(async (actionArray) => {
-        const userAction = actionArray[0]
-        const configActionArr = actionArray[1]
-        const staticSystemDataAction = actionArray[2]
-        
-        // Dispatch users, config, and system info to store
-        dispatch(userAction)
-        dispatch(staticSystemDataAction)
-        configActionArr.map(configAction => {
-          dispatch(configAction)
+      Promise.all([
+        initUsers(),
+        initConfig(),
+        initStaticSystemData(),
+        initLocalWhitelists(),
+        initLocalBlacklists(),
+      ])
+        .then(async (actionArray) => {
+          const userAction = actionArray[0];
+          const configActionArr = actionArray[1];
+          const staticSystemDataAction = actionArray[2];
+          const whitelistAction = actionArray[3];
+          const blacklistAction = actionArray[4];
+
+          // Dispatch currency blacklist and whitelist actions to store
+          dispatch(whitelistAction)
+          dispatch(blacklistAction)
+
+          // Dispatch users, config, and system info to store
+          dispatch(userAction);
+          dispatch(staticSystemDataAction);
+          configActionArr.map((configAction) => {
+            dispatch(configAction);
+          });
+
+          const { loadedUsers, config } = this.props;
+          const { defaultUserId } = config.general.main;
+
+          // Setup initial navigation state
+          if (
+            defaultUserId &&
+            defaultUserId.length > 0 &&
+            loadedUsers[defaultUserId]
+          ) {
+            if (
+              Object.values(loadedUsers[defaultUserId].startCoins).every(
+                (coinObj) => {
+                  return coinObj.mode === NATIVE;
+                }
+              ) ||
+              loadedUsers[defaultUserId].pinFile == null
+            ) {
+              loginUser(loadedUsers[defaultUserId]).map((action) => {
+                dispatch(action);
+              });
+            } else {
+              dispatch(setMainNavigationPath(`${PRE_AUTH}/${UNLOCK_PROFILE}`));
+            }
+          } else if (defaultUserId && defaultUserId.length > 0) {
+            try {
+              dispatch(
+                await setConfigParams(
+                  config,
+                  { defaultUserId: "" },
+                  "general.main"
+                )
+              );
+            } catch (e) {
+              dispatch(newSnackbar(ERROR_SNACK, e.message));
+              console.error(e);
+            }
+          } else if (Object.keys(loadedUsers).length > 0) {
+            dispatch(setMainNavigationPath(`${PRE_AUTH}/${SELECT_PROFILE}`));
+          }
+
+          this.setState({ initializing: false });
         })
-
-        const { loadedUsers, config } = this.props
-        const { defaultUserId } = config.general.main
-
-        // Setup initial navigation state
-        if (defaultUserId && defaultUserId.length > 0 && loadedUsers[defaultUserId]) {
-          if (Object.values(loadedUsers[defaultUserId].startCoins).every((coinObj) => {
-            return coinObj.mode === NATIVE
-          }) || loadedUsers[defaultUserId].pinFile == null) {
-            loginUser(loadedUsers[defaultUserId]).map((action) => {
-              dispatch(action)
-            })
-          } else {
-            dispatch(setMainNavigationPath(`${PRE_AUTH}/${UNLOCK_PROFILE}`))
-          }
-        } else if (defaultUserId && defaultUserId.length > 0) {
-          try {
-            dispatch(await setConfigParams(config, { defaultUserId: '' }, 'general.main'))
-
-          } catch (e) {
-            dispatch(newSnackbar(ERROR_SNACK, e.message))
-            console.error(e)
-          }
-        } else if (Object.keys(loadedUsers).length > 0) {
-          dispatch(setMainNavigationPath(`${PRE_AUTH}/${SELECT_PROFILE}`))
-        }
-
-        this.setState({ initializing: false })
-      })
-      .catch(e => {
-        dispatch(newSnackbar(ERROR_SNACK, e.message, MID_LENGTH_ALERT))
-        console.error(e)
-        this.setState({ initializing: false })
-      })
+        .catch((e) => {
+          dispatch(newSnackbar(ERROR_SNACK, e.message, MID_LENGTH_ALERT));
+          console.error(e);
+          this.setState({ initializing: false });
+        });
     })
 
     if (appVersion) {
@@ -103,9 +131,9 @@ class Main extends React.Component {
     }
 
     // Function for debugging store
-    /*window.printStore = () => {
+    window.printStore = () => {
       console.log(Store.getState())
-    }*/
+    }
   }
 
   render() {

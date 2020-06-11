@@ -27,6 +27,7 @@ import { TX_TYPES } from '../../../../../util/txUtils/txRenderUtils'
 import { timeConverter } from '../../../../../util/displayUtil/timeUtils'
 import { SortDirection } from 'react-virtualized';
 import SearchBar from '../../../../../containers/SearchBar/SearchBar'
+import InputLabel from '@material-ui/core/InputLabel';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import WalletPaper from '../../../../../containers/WalletPaper/WalletPaper'
@@ -248,7 +249,7 @@ export const CoinWalletRender = function() {
           </div>
         )}
       </div>
-      {/*WalletRenderCurrencyFunctions.call(this)*/}
+      {WalletRenderCurrencyFunctions.call(this)}
       {WalletRenderBalances.call(this)}
       <TransactionCard
         transactions={
@@ -575,6 +576,10 @@ export const WalletRenderOperations = function() {
 }
 
 export const WalletRenderCurrencyFunctions = function() {
+  const { whitelists, activatedCoins, coin } = this.props
+  const activeCoin = activatedCoins[coin]
+  const whitelist = whitelists[coin] ? whitelists[coin] : []
+
   return (
     <WalletPaper
       style={{
@@ -593,16 +598,15 @@ export const WalletRenderCurrencyFunctions = function() {
         }}
       >
       <FormControl variant="outlined" style={{ flex: 1 }}>
+        <InputLabel>{"Selected Currency"}</InputLabel>
         <Select
-          label="Select Currency"
-          value={""}
+          value={whitelist.findIndex((value) => value === activeCoin.display_currency)}
+          labelWidth={124}
         >
-          <MenuItem value="">
-            <em>VRSC</em>
-          </MenuItem>
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          <MenuItem value={-1}>{coin}</MenuItem>
+          {whitelist.map((currency, index) => {
+            return <MenuItem value={index}>{currency}</MenuItem>
+          })}
         </Select>
       </FormControl>
       </WalletPaper>
@@ -614,7 +618,20 @@ export const WalletRenderCurrencyFunctions = function() {
           justifyContent: "space-between"
         }}
       >
-        {"Search Box"}
+        <SearchBar 
+          containerStyle={{ width: '100%' }}
+          disabled={this.state.loadingCurrency}
+          label={`Search Currencies`}
+          placeholder={"e.g. VRSC"}
+          variant={"outlined"}
+          clearable={true}
+          onChange={e => this.updateCurrencySearchTerm(e.target.value)}
+          onClear={() => {
+            this.updateCurrencySearchTerm('')
+          }}
+          onSubmit={this.onCurrencySearchSubmit}
+          value={this.state.currencySearchTerm}
+        />
       </WalletPaper>
       <WalletPaper
         style={{
@@ -643,4 +660,13 @@ export const WalletRenderCurrencyFunctions = function() {
       </WalletPaper>
     </WalletPaper>
   );
+};
+
+export const WalletRenderCurrencyOptions = function() {
+  const { whitelists, coin } = this.props
+  const whitelist = whitelists[coin] ? whitelists[coin] : []
+
+  return whitelist.map((currencyTicker, index) => {
+    return <MenuItem value={index}>{currencyTicker}</MenuItem>
+  })
 };

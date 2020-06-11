@@ -16,7 +16,7 @@ import {
   IS_VERUS
 } from "../../../../util/constants/componentConstants";
 
-export const SelectCoinRender = function() {
+export const SelectCoinRender = function() {  
   return (
     <div
       style={{
@@ -39,11 +39,18 @@ export const SelectCoinForm = function() {
           margin: 0,
           paddingBottom: 40,
           fontSize: 20,
-          color: "rgb(0,0,0)"
-        }}>
-        {"Choose coin to add"}
+          color: "rgb(0,0,0)",
+        }}
+      >
+        {this.state.addFromFile
+          ? "Enter a coin file to add (this should be provided to you)"
+          : "Choose coin to add"}
       </h1>
-      {RenderCoinDropdown.call(this)}
+      {this.state.addFromFile ? (
+        <input type="file" id="coin_upload" style={{paddingLeft: '15%'}} onChange={this.setFiles} />
+      ) : (
+        RenderCoinDropdown.call(this)
+      )}
       <button
         className="btn btn-primary"
         type="button"
@@ -57,12 +64,30 @@ export const SelectCoinForm = function() {
           paddingLeft: 20,
           marginTop: 40,
           visibility: this.state.selectedCoin ? "unset" : "hidden",
-          fontWeight: "bold"
-        }}>
+          fontWeight: "bold",
+        }}
+      >
         {"Continue"}
       </button>
+      {this.state.addFromFile && <button
+        className="btn btn-primary"
+        type="button"
+        onClick={this.toggleAddFromFile}
+        style={{
+          fontSize: 14,
+          backgroundColor: "rgb(78,115,223)",
+          borderWidth: 1,
+          borderColor: "rgb(78,115,223)",
+          paddingRight: 20,
+          paddingLeft: 20,
+          marginTop: 40,
+          fontWeight: "bold",
+        }}
+      >
+        {"Cancel"}
+      </button>}
     </React.Fragment>
-  )
+  );
 }
 
 export const SelectModeForm = function() {
@@ -159,7 +184,7 @@ export const SelectModeForm = function() {
           style={{ paddingTop: 28 }}
         >
           <div>
-            {this.state.chosenCoin.tags.includes(IS_VERUS) && (
+            {this.state.chosenCoin.options.tags.includes(IS_VERUS) && (
               <div>
                 <div
                   className="form-check d-flex align-items-center"

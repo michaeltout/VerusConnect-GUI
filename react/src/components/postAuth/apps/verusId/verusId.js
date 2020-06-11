@@ -11,6 +11,7 @@ import { setMainNavigationPath, setModalNavigationPath, newSnackbar, setModalPar
 import { getPathParent } from '../../../../util/navigationUtils'
 import FormDialog from '../../../../containers/FormDialog/FormDialog'
 import { getIdentity } from '../../../../util/api/wallet/walletCalls'
+import { openIdentityCard } from '../../../../actions/actionDispatchers';
 
 const COMPONENT_MAP = {
   [DASHBOARD]: <Dashboard />,
@@ -40,7 +41,6 @@ class VerusId extends React.Component {
     this.closeSearchModal = this.closeSearchModal.bind(this)
     this.openSearchModal = this.openSearchModal.bind(this)
     this.onIdSearchSubmit = this.onIdSearchSubmit.bind(this)
-    this.openModal = this.openModal.bind(this)
     this.setTabs()
   }
 
@@ -61,26 +61,13 @@ class VerusId extends React.Component {
     this.setState({ idSearchOpen: true, searchChain: chain })
   }
 
-  openModal(modalParams = {}, modal) {
-    this.props.dispatch(
-      setModalParams(modal, modalParams)
-    );
-
-    this.props.dispatch(setModalNavigationPath(modal));
-  }
-
   onIdSearchSubmit() {
-    const openIdentity = (activeIdentity, chainTicker) => {
-      this.props.dispatch(setModalNavigationPath(null))
-      this.openModal({ chainTicker, activeIdentity, openIdentity }, ID_INFO)
-    }
-
     this.setState({loading: true}, () => {
       getIdentity(NATIVE, this.state.searchChain, this.state.idSearchTerm)
       .then(res => {
         if (res.msg === 'success') {
           this.props.dispatch(newSnackbar(SUCCESS_SNACK, `${this.state.idSearchTerm} ID found!`, MID_LENGTH_ALERT))
-          openIdentity(res.result, this.state.searchChain)
+          openIdentityCard(res.result, this.state.searchChain)
           this.setState({ loading: false, idSearchOpen: false, idSearchTerm: '' })
         } else {
           this.props.dispatch(newSnackbar(ERROR_SNACK, res.result))
@@ -120,7 +107,7 @@ class VerusId extends React.Component {
     
     const updateCards = () => {
       const verusProtocolCoins = Object.values(activatedCoins).filter((coinObj) => {
-        return coinObj.tags.includes(IS_VERUS)
+        return coinObj.options.tags.includes(IS_VERUS)
       })
   
       setCards(verusProtocolCoins.map((coinObj) => {

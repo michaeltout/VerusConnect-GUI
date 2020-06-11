@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactMinimalPieChart from 'react-minimal-pie-chart';
-import { ETH } from '../../../../../util/constants/componentConstants';
+import { ETH, CHAIN_FALLBACK_IMAGE } from '../../../../../util/constants/componentConstants';
 import WalletPaper from '../../../../../containers/WalletPaper/WalletPaper';
 
 export const DashboardRender = function() {
@@ -163,19 +163,51 @@ export const DashboardRenderTable = function() {
         </thead>
         <tbody>
           {this.state.portfolioBreakdown.map((portfolioItem) => {
-            return(
+            return (
               <tr key={portfolioItem.id}>
-                <td style={{color: portfolioItem.color}}><strong>{`${portfolioItem.value}%`}</strong></td>
-                <td className="d-lg-flex align-items-lg-center" style={{color: 'rgb(0,0,0)'}}>
-                  <img src={`assets/images/cryptologo/${portfolioItem.mode === ETH ? ETH : 'btc'}/${portfolioItem.id.toLowerCase()}.png`} width="20px" height="20px" style={{marginRight: 3}} />
+                <td style={{ color: portfolioItem.color }}>
+                  <strong>{`${portfolioItem.value}%`}</strong>
+                </td>
+                <td
+                  className="d-lg-flex align-items-lg-center"
+                  style={{ color: "rgb(0,0,0)" }}
+                >
+                  <img
+                    src={`assets/images/cryptologo/${
+                      portfolioItem.mode === ETH ? ETH : "btc"
+                    }/${portfolioItem.id.toLowerCase()}.png`}
+                    width="20px"
+                    height="20px"
+                    style={{ marginRight: 3 }}
+                    onError={(e) => {e.target.src = CHAIN_FALLBACK_IMAGE}}
+                  />
                   <strong>{portfolioItem.name}</strong>
                 </td>
-                <td>{`${portfolioItem.balance != null ? portfolioItem.balance : '-'} ${portfolioItem.id}`}</td>
-                <td style={{color: 'rgb(0,0,0)'}}>{`${portfolioItem.balanceFiat != null ? portfolioItem.balanceFiat.toFixed(2) : '-'} ${this.props.fiatCurrency}`}</td>
-                <td style={portfolioItem.priceChange1h ? (portfolioItem.priceChange1h > 0 ? {color: 'rgb(0,178,26)'} : {color: 'rgb(236,43,43)'}) : {} }>
-                  {`${portfolioItem.priceChange1h != null ? portfolioItem.priceChange1h : '-'}%`}
+                <td>{`${
+                  portfolioItem.balance != null ? portfolioItem.balance : "-"
+                } ${portfolioItem.id}`}</td>
+                <td style={{ color: "rgb(0,0,0)" }}>{`${
+                  portfolioItem.balanceFiat != null
+                    ? portfolioItem.balanceFiat.toFixed(2)
+                    : "-"
+                } ${this.props.fiatCurrency}`}</td>
+                <td
+                  style={
+                    portfolioItem.priceChange1h
+                      ? portfolioItem.priceChange1h > 0
+                        ? { color: "rgb(0,178,26)" }
+                        : { color: "rgb(236,43,43)" }
+                      : {}
+                  }
+                >
+                  {`${
+                    portfolioItem.priceChange1h != null
+                      ? portfolioItem.priceChange1h
+                      : "-"
+                  }%`}
                 </td>
-              </tr>)
+              </tr>
+            );
           })}
         </tbody>
       </table>
@@ -204,6 +236,7 @@ export const DashboardRenderSpotPrices = function() {
                   width="20px"
                   height="20px"
                   style={{ marginRight: 3 }}
+                  onError={(e) => {e.target.src = CHAIN_FALLBACK_IMAGE}}
                 />
                 <strong>{portfolioItem.name}</strong>
               </h3>

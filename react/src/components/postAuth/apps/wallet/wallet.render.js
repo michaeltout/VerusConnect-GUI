@@ -1,6 +1,6 @@
 import React from 'react';
 import WalletStyles from './wallet.styles'
-import { NATIVE, DASHBOARD, ETH, CHAIN_POSTFIX } from '../../../../util/constants/componentConstants'
+import { NATIVE, DASHBOARD, ETH, CHAIN_POSTFIX, CHAIN_FALLBACK_IMAGE } from '../../../../util/constants/componentConstants'
 
 export const WalletCardRender = function(coinObj) {
   const {
@@ -56,6 +56,7 @@ export const WalletCardRender = function(coinObj) {
                   }/${coinObj.id.toLowerCase()}.png`}
                   width="25px"
                   height="25px"
+                  onError={(e) => {e.target.src = CHAIN_FALLBACK_IMAGE}}
                 />
                 <h4 style={WalletStyles.cardCoinName}>
                   <strong>{coinObj.name}</strong>

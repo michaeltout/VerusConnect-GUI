@@ -24,6 +24,7 @@ import {
   SET_COIN_IDENTITIES,
   SET_COIN_NAME_COMMITMENTS,
   ERROR_COIN_IDENTITIES,
+  ERROR_COIN_ALL_CURRENCIES,
   ERROR_COIN_NAME_COMMITMENTS,
   SET_CPU_TEMP,
   SET_SYS_TIME,
@@ -34,7 +35,8 @@ import {
   SET_COIN_CURRENTSUPPLY,
   ERROR_COIN_CURRENTSUPPLY,
   ERROR_COIN_BLOCKREWARD,
-  SET_COIN_BLOCKREWARD
+  SET_COIN_BLOCKREWARD,
+  SET_COIN_ALL_CURRENCIES
 } from '../util/constants/storeType'
 import {
   API_GET_ZOPERATIONSTATUSES,
@@ -52,7 +54,8 @@ import {
   API_GET_CPU_TEMP,
   API_GET_CPU_LOAD,
   API_GET_SYS_TIME,
-  API_GET_CURRENTSUPPLY
+  API_GET_CURRENTSUPPLY,
+  API_GET_ALL_CURRENCIES
 } from '../util/constants/componentConstants'
 
 export const errors = (state = {
@@ -67,6 +70,7 @@ export const errors = (state = {
   [API_GET_DEFINEDCHAINS]: {},
   [API_GET_FIATPRICE]: {},
   [API_GET_IDENTITIES]: {},
+  [API_GET_ALL_CURRENCIES]: {},
   [API_GET_NAME_COMMITMENTS]: {},
   [API_GET_CURRENTSUPPLY]: {},
   [API_GET_BLOCKREWARD]: {},
@@ -136,6 +140,11 @@ export const errors = (state = {
       return {
         ...state,
         [API_GET_IDENTITIES]: {...state[API_GET_IDENTITIES], [action.chainTicker]: {error: true, result: action.result}}
+      };
+    case ERROR_COIN_ALL_CURRENCIES:
+      return {
+        ...state,
+        [API_GET_ALL_CURRENCIES]: {...state[API_GET_ALL_CURRENCIES], [action.chainTicker]: {error: true, result: action.result}}
       };
     case ERROR_COIN_NAME_COMMITMENTS:
       return {
@@ -216,6 +225,11 @@ export const errors = (state = {
       return {
         ...state,
         [API_GET_IDENTITIES]: {...state[API_GET_IDENTITIES], [action.chainTicker]: {error: false, result: null}}
+      };
+    case SET_COIN_ALL_CURRENCIES:
+      return {
+        ...state,
+        [API_GET_ALL_CURRENCIES]: {...state[API_GET_ALL_CURRENCIES], [action.chainTicker]: {error: false, result: null}}
       };
     case SET_COIN_NAME_COMMITMENTS:
       return {

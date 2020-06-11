@@ -1,10 +1,11 @@
 import React from "react";
 import AppsStyles from './apps.styles'
-import { WALLET, MINING, VERUSID, SETTINGS } from '../../../util/constants/componentConstants'
+import { WALLET, MINING, VERUSID, SETTINGS, MULTIVERSE } from '../../../util/constants/componentConstants'
 import Mining from './mining/mining'
 import Wallet from './wallet/wallet'
 import Settings from './settings/settings'
 import VerusId from './verusId/verusId'
+import Multiverse from './multiverse/multiverse'
 import fiatList from '../../../util/constants/fiatList'
 import Tooltip from '@material-ui/core/Tooltip';
 
@@ -22,6 +23,9 @@ export const AppsRender = function() {
     [VERUSID]: (
       <VerusId setCards={this.getCards} setTabs={this.getSecondaryTabs} />
     ),
+    [MULTIVERSE]: (
+      <Multiverse setCards={this.getCards} setTabs={this.getSecondaryTabs} />
+    )
   };
 
   const currentApp = this.props.mainPathArray[2] ? this.props.mainPathArray[2] : null
@@ -69,6 +73,18 @@ export const AppsRender = function() {
                     style={AppsStyles.navigationTabIcon}
                   />
                   {"Mining"}
+                </a>
+              </li>
+              <li className={`nav-item ${currentApp === MULTIVERSE ? 'active-nav-tab-container' : 'nav-tab-container'}`}>
+                <a
+                  className={`nav-link text-center ${currentApp === MULTIVERSE ? 'active-nav-tab' : 'inactive-nav-tab'}`}
+                  onClick={currentApp === MULTIVERSE ? () => { return 0 } : () => this.selectApp(MULTIVERSE)}
+                  style={AppsStyles.mainNavigationTab}>
+                  <i
+                    className={`fas fa-rocket ${currentApp === MULTIVERSE ? '' : 'inactive-nav-tab-icon'}`}
+                    style={AppsStyles.navigationTabIcon}
+                  />
+                  {"Multiverse"}
                 </a>
               </li>
             </ul>

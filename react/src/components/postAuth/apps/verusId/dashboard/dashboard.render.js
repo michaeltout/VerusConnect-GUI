@@ -17,7 +17,7 @@ import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore'
 export const DashboardRender = function() {
   //TODO: Move to parent component so this isnt re-calculated at render
   const verusProtocolCoins = Object.values(this.props.activatedCoins).filter((coinObj) => {
-    return coinObj.tags.includes(IS_VERUS) && coinObj.mode === NATIVE
+    return coinObj.options.tags.includes(IS_VERUS) && coinObj.mode === NATIVE
   })
   const identityChains = Object.keys(this.props.identities)
 
@@ -357,7 +357,7 @@ export const DashboardRender = function() {
                   getInfoErrors,
                   activatedCoins
                 } = this.props;
-                if (activatedCoins[chainTicker].tags.includes(IS_VERUS)) {
+                if (activatedCoins[chainTicker].options.tags.includes(IS_VERUS)) {
                   const identityError =
                     identityErrors[chainTicker] != null
                       ? identityErrors[chainTicker].error

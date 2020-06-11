@@ -19,10 +19,7 @@ export const activateCoin = async (coinObj, mode, dispatch) => {
     daemonResult = await initCoin(
       coinObj.id,
       mode,
-      coinObj.options.startupOptions,
-      coinObj.options.daemon,
-      coinObj.options.dataDirNames,
-      coinObj.options.confName
+      coinObj.options
     );
     if (daemonResult.msg === 'error') throw new Error(daemonResult.result)    
 
@@ -66,7 +63,9 @@ export const addCoin = async (coinObj, mode, dispatch, activatedTickers, startup
     if (!coinObj.available_modes[mode]) throw new Error(`${mode} is not supported for ${coinObj.id}.`)
     if (activatedTickers.includes(coinObj.id)) throw new Error(`Error, ${coinObj.id} is already active!`)
 
-    return await activateCoin({...coinObj, themeColor: await getCoinColor(coinObj.id, coinObj.available_modes)}, mode, dispatch)
+    const themeColor = coinObj.themeColor == null ? await getCoinColor(coinObj.id, coinObj.available_modes) : coinObj.themeColor
+
+    return await activateCoin({...coinObj, themeColor }, mode, dispatch)
   } catch (e) {
     throw e
   }

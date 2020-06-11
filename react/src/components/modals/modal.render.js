@@ -17,11 +17,13 @@ import {
   IMMATURE_DETAILS,
   CREATE_IDENTITY,
   SIGN_VERIFY_ID_DATA,
-  SHIELDCOINBASE
+  SHIELDCOINBASE,
+  CURRENCY_INFO
 } from "../../util/constants/componentConstants";
 import AddCoin from "./addCoin/addCoin";
 import ChainInfo from "./chainInfo/chainInfo";
 import IdInfo from "./idInfo/idInfo";
+import CurrencyInfo from "./currencyInfo/currencyInfo";
 import PbaasChainInfo from "./pbaasChainInfo/pbaasChainInfo";
 import ReceiveCoin from "./receiveCoin/receiveCoin";
 import SendCoin from "./sendCoin/sendCoin";
@@ -39,6 +41,7 @@ export const ModalRender = function() {
     setModalLock: this.getModalLock,
     closeModal: this.closeModal,
   }
+  
   const COMPONENT_MAP = {
     [ADD_COIN]: (
       <AddCoin
@@ -52,6 +55,11 @@ export const ModalRender = function() {
     ),
     [ID_INFO]: (
       <IdInfo
+        {...COMPONENT_PROPS}
+      />
+    ),
+    [CURRENCY_INFO]: (
+      <CurrencyInfo
         {...COMPONENT_PROPS}
       />
     ),
