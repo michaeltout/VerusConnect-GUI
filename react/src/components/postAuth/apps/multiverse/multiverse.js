@@ -6,21 +6,17 @@ import {
   ADD_COIN,
   SELECT_COIN,
   IS_VERUS,
-  ID_POSTFIX,
   NATIVE,
   ERROR_SNACK,
   SUCCESS_SNACK,
-  ID_INFO,
   MID_LENGTH_ALERT,
 } from "../../../../util/constants/componentConstants";
 import Dashboard from './dashboard/dashboard'
-import IdWallet from './idWallet/idWallet'
 import {
   MultiverseCardRender,
   MultiverseTabsRender
 } from './multiverse.render'
-import { setMainNavigationPath, setModalNavigationPath, newSnackbar, setModalParams } from '../../../../actions/actionCreators'
-import { getPathParent } from '../../../../util/navigationUtils'
+import { setMainNavigationPath, setModalNavigationPath, newSnackbar } from '../../../../actions/actionCreators'
 import FormDialog from '../../../../containers/FormDialog/FormDialog'
 import { getCurrency } from '../../../../util/api/wallet/walletCalls'
 import { openCurrencyCard } from '../../../../actions/actionDispatchers';
@@ -34,20 +30,11 @@ class Multiverse extends React.Component {
     super(props);
 
     this.state = {
-      activeId: {
-        chainTicker: null,
-        idIndex: null,
-        currencySearchOpen: false,
-        currencySearchTerm: '',
-        loading: false,
-        searchChain: null
-      }
+      currencySearchOpen: false
     }
     
     this.setCards = this.setCards.bind(this)
     this.setTabs = this.setTabs.bind(this)
-    this.openCurrency = this.openCurrency.bind(this)
-    this.openDashboard = this.openDashboard.bind(this)
     this.openAddCoinModal = this.openAddCoinModal.bind(this)
     this.updateSearchTerm = this.updateSearchTerm.bind(this)
     this.closeSearchModal = this.closeSearchModal.bind(this)
@@ -78,8 +65,8 @@ class Multiverse extends React.Component {
       getCurrency(NATIVE, this.state.searchChain, this.state.currencySearchTerm)
       .then(res => {
         if (res.msg === 'success') {
-          this.props.dispatch(newSnackbar(SUCCESS_SNACK, `${this.state.currencySearchTerm} ID found!`, MID_LENGTH_ALERT))
-          openCurrencyCard(res.result, this.state.searchChain)
+          this.props.dispatch(newSnackbar(SUCCESS_SNACK, `${this.state.currencySearchTerm} found!`, MID_LENGTH_ALERT))
+          openCurrencyCard(res.result, this.state.searchChain, this.props.identities[this.state.searchChain])
           this.setState({ loading: false, currencySearchOpen: false, currencySearchTerm: '' })
         } else {
           this.props.dispatch(newSnackbar(ERROR_SNACK, res.result))
@@ -114,8 +101,7 @@ class Multiverse extends React.Component {
    * @param {Object} activatedCoins 
    */
   setCards(activatedCoins) {
-    const { setCards, mainPathArray, identities } = this.props
-    const walletApp = mainPathArray[3] ? mainPathArray[3] : null
+    const { setCards } = this.props
     
     const updateCards = () => {
       const verusProtocolCoins = Object.values(activatedCoins).filter((coinObj) => {
@@ -127,40 +113,11 @@ class Multiverse extends React.Component {
       }))
     }
 
-    if (walletApp) {
-      const pathDestination = walletApp.split('_') 
-      let activeId = {chainTicker: null, idIndex: null}
-
-      if (pathDestination.length > 2 && pathDestination[2] === ID_POSTFIX) {
-        const idIndex = pathDestination[0]
-        const chainTicker = pathDestination[1]
-
-        if (identities[chainTicker] != null && identities[chainTicker][idIndex] != null) {
-          activeId = { chainTicker, idIndex }
-        } 
-      } 
-
-      this.setState({ activeId }, updateCards)
-    } else updateCards()
+    updateCards()
   }
 
   openAddCoinModal() {
     this.props.dispatch(setModalNavigationPath(`${ADD_COIN}/${SELECT_COIN}`))
-  }
-
-  openCurrency(chainTicker, idIndex) {
-    this.props.dispatch(setMainNavigationPath(`${getPathParent(this.props.mainPathArray)}/${idIndex}_${chainTicker}_${ID_POSTFIX}`))
-  }
-
-  openDashboard() {
-    this.setState({
-      activeId: {
-        chainTicker: null,
-        idIndex: null
-      }
-    }, () => {
-      this.props.dispatch(setMainNavigationPath(`${getPathParent(this.props.mainPathArray)}/${DASHBOARD}`))
-    })
   }
 
   setTabs() {
@@ -168,18 +125,10 @@ class Multiverse extends React.Component {
   }
 
   render() {
-    const { activeId } = this.state
     const walletApp = this.props.mainPathArray[3] ? this.props.mainPathArray[3] : null
     let component = null
 
-    if (walletApp) {
-      if (COMPONENT_MAP[walletApp]) component = COMPONENT_MAP[walletApp]
-      else {
-        if (activeId.idIndex != null && activeId.chainTicker != null) {
-          component = <IdWallet idIndex={activeId.idIndex} coin={activeId.chainTicker} />
-        }
-      }
-    }
+    if (walletApp && COMPONENT_MAP[walletApp]) component = COMPONENT_MAP[walletApp]
 
     return (
       <React.Fragment>
@@ -204,9 +153,9 @@ const mapStateToProps = (state) => {
     activatedCoins: state.coins.activatedCoins,
     fiatPrices: state.ledger.fiatPrices,
     fiatCurrency: state.settings.config.general.main.fiatCurrency,
-    identities: state.ledger.identities,
-    nameCommitments: state.ledger.nameCommitments,
-    activeUser: state.users.activeUser
+    activeUser: state.users.activeUser,
+    allCurrencies: state.ledger.allCurrencies,
+    identities: state.ledger.identities
   };
 };
 

@@ -6,8 +6,7 @@ import {
   SET_ACTIVATED_COINS,
   SET_COIN_STATUS,
   ACTIVATE_COIN,
-  DEACTIVATE_COIN,
-  SET_COIN_DISPLAY_CURRENCY,
+  DEACTIVATE_COIN
 } from "../util/constants/storeType";
 
 export const coins = (state = {
@@ -40,17 +39,6 @@ export const coins = (state = {
           [action.chainTicker]: {
             ...state.activatedCoins[action.chainTicker],
             status: action.status
-          }
-        }
-      }
-    case SET_COIN_DISPLAY_CURRENCY:
-      return {
-        ...state,
-        activatedCoins: {
-          ...state.activatedCoins,
-          [action.chainTicker]: {
-            ...state.activatedCoins[action.chainTicker],
-            display_currency: action.currencyTicker
           }
         }
       }

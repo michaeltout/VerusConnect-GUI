@@ -29,7 +29,8 @@ import {
   API_GET_ALL_CURRENCIES,
   API_GET_NAME_COMMITMENTS,
   ALWAYS_ACTIVATED,
-  API_GET_CURRENTSUPPLY
+  API_GET_CURRENTSUPPLY,
+  API_GET_CURRENCY_DATA_MAP
 } from '../../../../util/constants/componentConstants'
 import {
   renewData,
@@ -38,6 +39,7 @@ import {
 } from "../../../actionCreators";
 import { createExpireTimeout } from '../../../actionDispatchers'
 import { logDebugWarning } from '../../debug/creators/debugWarnings'
+import { updateCurrencyDataMap } from './updateCurrencyDataMap'
 
 // Map of update functions to be able to call them through standardized 
 // API call constants. Each function requires the same three parameters: (store, mode, chainTicker)
@@ -54,7 +56,8 @@ export const walletUpdates = {
   [API_GET_NAME_COMMITMENTS]: updateNameCommitments,
   [API_GET_CURRENTSUPPLY]: updateCurrentSupply,
   [API_GET_BLOCKREWARD]: updateBlockReward,
-  [API_GET_ALL_CURRENCIES]: updateAllCurrencies
+  [API_GET_ALL_CURRENCIES]: updateAllCurrencies,
+  [API_GET_CURRENCY_DATA_MAP]: updateCurrencyDataMap
 }
 
 /**

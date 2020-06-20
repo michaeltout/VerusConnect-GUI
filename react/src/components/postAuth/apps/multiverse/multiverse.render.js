@@ -3,14 +3,12 @@ import MultiverseStyles from './multiverse.styles'
 import { DASHBOARD, ID_POSTFIX, CHAIN_FALLBACK_IMAGE } from '../../../../util/constants/componentConstants'
 
 export const MultiverseCardRender = function(coinObj) {
-  const { identities } = this.props
-  const { activeId } = this.state
-  const coinIdentities = identities[coinObj.id] || []
+  const { allCurrencies } = this.props
+  const numCurrencies = allCurrencies[coinObj.id] ? allCurrencies[coinObj.id].length : '-'
 
   return (
     <div
       className="unstyled-button"
-      //onClick={() => this.openCoin(coinObj.id)} key={coinObj.id}
       style={MultiverseStyles.cardClickableContainer}
     >
       <div
@@ -18,11 +16,7 @@ export const MultiverseCardRender = function(coinObj) {
         style={MultiverseStyles.cardContainer}
       >
         <div
-          className={`card ${
-            activeId.chainTicker === coinObj.id
-              ? "active-card"
-              : "border-on-hover"
-          }`}
+          className={'card'}
           style={MultiverseStyles.cardInnerContainer}
         >
           <div
@@ -44,35 +38,6 @@ export const MultiverseCardRender = function(coinObj) {
                   <strong>{coinObj.name}</strong>
                 </h4>
               </div>
-              <select
-                value={
-                  activeId.idIndex != null &&
-                  activeId.chainTicker === coinObj.id
-                    ? JSON.stringify(coinIdentities[activeId.idIndex])
-                    : -1
-                }
-                name="selectedProfileId"
-                className="custom-select custom-select-lg"
-                style={{ marginTop: 10 }}
-                //Selected index is offset by one due to "Select Identity" placeholder
-                onChange={e =>
-                  this.openId(coinObj.id, e.target.selectedIndex - 1)
-                }
-              >
-                <option key={-1} value={-1} disabled={true}>
-                  {"Select identity"}
-                </option>
-                {coinIdentities.map((idObj, index) => {
-                  {
-                    const { identity } = idObj;
-                    return (
-                      <option key={index} value={JSON.stringify(idObj)}>
-                        {`${identity.name}@`}
-                      </option>
-                    );
-                  }
-                })}
-              </select>
               <button
                 className="unstyled-button"
                 onClick={() => this.openSearchModal(coinObj.id)}
@@ -91,7 +56,7 @@ export const MultiverseCardRender = function(coinObj) {
                         className={'fas fa-search'}
                         style={{ paddingRight: 6, color: 'black' }}
                       />
-                      {"Currency Search"}
+                      {`Search ${numCurrencies} ${!isNaN(numCurrencies) && numCurrencies === 1 ? 'Currency' : 'Currencies'}`}
                     </div>
                   </div>
                 </div>
@@ -115,7 +80,7 @@ export const MultiverseTabsRender = function() {
     {
       title: "Multiverse Dashboard",
       icon: 'fa-home',
-      onClick: () => this.openDashboard(),
+      onClick: () => {},
       isActive: () => this.props.mainPathArray.includes(DASHBOARD)
     }
   ];

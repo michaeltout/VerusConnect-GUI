@@ -8,13 +8,14 @@ export const openModal = (modal, modalParams = {}) => {
   Store.dispatch(setModalNavigationPath(modal));
 }
 
-export const openCurrencyCard = (currency, chainTicker, isInDisplayFormat = false) => {
+export const openCurrencyCard = (currency, chainTicker, identities, isInDisplayFormat = false) => {
   Store.dispatch(setModalNavigationPath(null))
   openModal(CURRENCY_INFO, {
     chainTicker,
-    [isInDisplayFormat ? "displayCurrency" : "activeCurrency"]: currency,
+    [isInDisplayFormat ? "currencyInfo" : "activeCurrency"]: currency,
     openIdentityCard,
     openCurrencyCard,
+    identities
   });
 }
 

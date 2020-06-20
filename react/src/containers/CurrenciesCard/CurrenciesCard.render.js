@@ -15,7 +15,7 @@ export const CurrenciesCardRender = (openCurrencyInfo, getDisplayCurrencies, fil
     activeTicker,
     setActiveTicker,
   } = state;
-  const { title, allCurrencies, info } = props
+  const { title, allCurrencies, info, blacklists, identities } = props
   const coins = Object.keys(allCurrencies)
 
   return (
@@ -31,34 +31,61 @@ export const CurrenciesCardRender = (openCurrencyInfo, getDisplayCurrencies, fil
           style={{
             display: "flex",
             justifyContent: "space-between",
-            width: "100%"
+            width: "100%",
+            marginTop: 8,
+            marginBottom: 8,
           }}
         >
           <FormControl variant="outlined">
             <Select
               value={coins.findIndex((value) => value === activeTicker)}
-              onChange={(e) => setActiveTicker(e.target.value === -1 ? null : coins[e.target.value])}
+              onChange={(e) =>
+                setActiveTicker(
+                  e.target.value === -1 ? null : coins[e.target.value]
+                )
+              }
             >
-              <MenuItem value={-1}>{'All Blockchains'}</MenuItem>
+              <MenuItem value={-1}>{"All Blockchains"}</MenuItem>
               {coins.map((coin, index) => {
-                return <MenuItem value={index}>{coin}</MenuItem>
+                return <MenuItem value={index}>{coin}</MenuItem>;
               })}
             </Select>
           </FormControl>
           <SearchBar
-            label={"Currency Search"}
+            label={"Currency Filter"}
+            variant={"outlined"}
             placeholder={"Type and press enter"}
             clearable={true}
             style={{
-              width: 300
+              width: 300,
             }}
-            onChange={e => setCurrencySearchTerm(e.target.value)}
+            onChange={(e) => setCurrencySearchTerm(e.target.value)}
             onClear={() => {
-              setCurrencySearchTerm('')
-              setDisplayCurrencies(getDisplayCurrencies(filterCurrencies(currencies, ''), info))
+              setCurrencySearchTerm("");
+              setDisplayCurrencies(
+                filterCurrencies(
+                  getDisplayCurrencies(
+                    currencies,
+                    info,
+                    blacklists,
+                    identities
+                  ),
+                  ""
+                )
+              );
             }}
             onSubmit={() =>
-              setDisplayCurrencies(getDisplayCurrencies(filterCurrencies(currencies, currencySearchTerm), info))
+              setDisplayCurrencies(
+                filterCurrencies(
+                  getDisplayCurrencies(
+                    currencies,
+                    info,
+                    blacklists,
+                    identities
+                  ),
+                  currencySearchTerm
+                )
+              )
             }
             value={currencySearchTerm}
           />
@@ -80,11 +107,11 @@ export const CurrencyTableRender = (displayCurrencies, openCurrencyInfo, props) 
         rowCount={displayCurrencies.length}
         sortBy="confirmations"
         sortDirection={ SortDirection.ASC }
-        onRowClick={ ({rowData}) => openCurrencyInfo(props, rowData) }
+        onRowClick={ ({rowData}) => openCurrencyInfo(rowData, props.identities) }
         rowGetter={({ index }) => displayCurrencies[index]}
         columns={[
           {
-            width: 200,
+            width: 100,
             cellDataGetter: ({ rowData }) => {
               return (
                 <div
@@ -95,7 +122,7 @@ export const CurrencyTableRender = (displayCurrencies, openCurrencyInfo, props) 
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {rowData.currency.currencyname}
+                  {rowData.currency.name}
                 </div>
               );
             },
@@ -104,7 +131,7 @@ export const CurrencyTableRender = (displayCurrencies, openCurrencyInfo, props) 
             dataKey: 'name'
           },
           {
-            width: 150,
+            width: 100,
             cellDataGetter: ({ rowData }) => {
               return (
                 <div
@@ -116,11 +143,14 @@ export const CurrencyTableRender = (displayCurrencies, openCurrencyInfo, props) 
                       ? "rgb(236,43,43)" /* RED */
                       : "rgb(0,178,26)" /* GREEN */,
                     flex: 1,
-                    textAlign: "right",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    width: "100%",
+                    textOverflow: "ellipsis",
                   }}
                 >
                   {rowData.status === 'pending'
-                    ? 'Pending'
+                    ? `Pending (${rowData.ageString})`
                     : rowData.status === 'failed'
                     ? "Failed"
                     : "Active"}
@@ -132,7 +162,7 @@ export const CurrencyTableRender = (displayCurrencies, openCurrencyInfo, props) 
             dataKey: 'status'
           },
           {
-            width: 200,
+            width: 160,
             cellDataGetter: ({ rowData }) => {
               return (
                 <div
@@ -156,22 +186,79 @@ export const CurrencyTableRender = (displayCurrencies, openCurrencyInfo, props) 
             dataKey: 'type'
           },
           {
-            width: 150,
+            width: 100,
             cellDataGetter: ({ rowData }) => {
-              return <div>{rowData.status === 'pending' ? '-' : rowData.ageString}</div>
+              return (
+                <div
+                  style={{
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    width: "100%",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {rowData.status === "pending" ? "-" : rowData.ageString}
+                </div>
+              );
             },
             flexGrow: 1,
             label: 'Age',
             dataKey: 'age',
           },
           {
-            width: 120,
+            width: 60,
             flexGrow: 1,
             cellDataGetter: ({ rowData }) => {
-              return rowData.convertable ? "Yes" : "No"
+              return rowData.spendableTo ? "Yes" : "No"
             },
-            label: 'Convertable',
-            dataKey: 'convertable',
+            label: 'Spendable',
+            dataKey: 'spendableTo',
+          },
+          {
+            width: 100,
+            flexGrow: 1,
+            cellDataGetter: ({ rowData }) => {
+              return (
+                <div
+                  style={{
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    width: "100%",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {rowData.currency.parent_name}
+                </div>
+              );
+            },
+            label: 'Chain',
+            dataKey: 'chain',
+          },
+          {
+            width: 60,
+            flexGrow: 1,
+            cellDataGetter: ({ rowData }) => {
+              return (
+                <div
+                  style={{
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    width: "100%",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {props.whitelists && props.whitelists[rowData.currency.parent_name]
+                    ? props.whitelists[rowData.currency.parent_name].includes(
+                        rowData.currency.name
+                      ) || Object.keys(props.activatedCoins).includes(rowData.currency.name)
+                      ? "Yes"
+                      : "No"
+                    : "-"}
+                </div>
+              );
+            },
+            label: 'Added',
+            dataKey: 'added',
           },
         ]}
       />

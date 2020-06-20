@@ -22,6 +22,7 @@ import { newSnackbar, setConfigParams } from '../../actions/actionCreators'
 
 import Store from '../../store'
 import { getCurrentSupply } from '../../util/api/wallet/walletCalls';
+import { getCurrencyDataMap } from '../../util/api/wallet/readCalls/getCurrencyDataMap';
 
 class Main extends React.Component {
   constructor(props) {
@@ -55,6 +56,7 @@ class Main extends React.Component {
           const blacklistAction = actionArray[4];
 
           // Dispatch currency blacklist and whitelist actions to store
+          
           dispatch(whitelistAction)
           dispatch(blacklistAction)
 
@@ -131,9 +133,9 @@ class Main extends React.Component {
     }
 
     // Function for debugging store
-    window.printStore = () => {
+    /*window.printStore = () => {
       console.log(Store.getState())
-    }
+    }*/
   }
 
   render() {

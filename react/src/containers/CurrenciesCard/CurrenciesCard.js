@@ -2,18 +2,18 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { CurrenciesCardRender } from './CurrenciesCard.render'
 import { openCurrencyCard } from '../../actions/actionDispatchers';
-import { getDisplayCurrency } from '../../util/multiverse/multiverseCurrencyUtils';
+import { getCurrencyInfo } from '../../util/multiverse/multiverseCurrencyUtils';
 
-function openCurrencyInfo(props, rowData) {
-  openCurrencyCard(rowData, props.coin, true)
+function openCurrencyInfo(rowData, identities) {
+  openCurrencyCard(rowData, rowData.currency.parent_name, identities[rowData.currency.parent_name], true)
 }
 
 function filterCurrencies(currencies, searchTerm) {
   let newCurrencies = []
   const term = searchTerm.toLowerCase()
   
-  currencies.map((displayCurrency) => {
-    const { currency, age, ageString, status } = displayCurrency
+  currencies.map((currencyInfo) => {
+    const { currency, age, ageString, status } = currencyInfo
     const { currencyid, name } = currency
 
     if (searchTerm.length > 0) {
@@ -21,43 +21,53 @@ function filterCurrencies(currencies, searchTerm) {
         (currencyid != null && currencyid.toLowerCase().includes(term)) ||
         term.includes(currencyid.toLowerCase())
       ) {
-        newCurrencies.push(displayCurrency);
+        newCurrencies.push(currencyInfo);
         return;
       }
       if (age != null && age.toString().includes(term)) {
-        newCurrencies.push(displayCurrency);
+        newCurrencies.push(currencyInfo);
         return;
       }
       if (name != null && name.toLowerCase().includes(term) ||
           name.includes(currencyid.toLowerCase())) {
-        newCurrencies.push(displayCurrency);
+        newCurrencies.push(currencyInfo);
         return;
       }
       if (ageString != null && ageString.toLowerCase().includes(term) ||
           term.includes(ageString.toLowerCase())) {
-        newCurrencies.push(displayCurrency);
+        newCurrencies.push(currencyInfo);
         return;
       }
       if (status != null && status.includes(term) ||
           term.includes(status)) {
-        newCurrencies.push(displayCurrency);
+        newCurrencies.push(currencyInfo);
         return;
       }
-    } else newCurrencies.push(displayCurrency)
+    } else newCurrencies.push(currencyInfo)
   })
   
   return newCurrencies
 }
 
-function getDisplayCurrencies(currencies, info) {
-  let currencyComps = currencies.map((currency) =>
-    getDisplayCurrency(
-      currency,
-      info[currency.parent_name]
-        ? info[currency.parent_name].longestchain
-        : -1
-    )
-  );
+function getDisplayCurrencies(currencies, info, blacklists, identities) {
+  let currencyComps = []
+
+  currencies.map((currency) => {
+
+    if (
+      !(blacklists != null &&
+      blacklists[currency.parent_name] != null &&
+      blacklists[currency.parent_name].includes(currency.name))
+    ) {
+      currencyComps.push(getCurrencyInfo(
+        currency,
+        info[currency.parent_name]
+          ? info[currency.parent_name].longestchain
+          : -1,
+        identities[currency.parent_name]
+      ))
+    }
+  });
 
   currencyComps.sort((a, b) => (a.currency.name > b.currency.name) ? 1 : -1)
 
@@ -68,7 +78,7 @@ function CurrenciesCard(props) {
   const [displayCurrencies, setDisplayCurrencies] = useState([])
   const [currencySearchTerm, setCurrencySearchTerm] = useState('')
   const [activeTicker, setActiveTicker] = useState(null)
-  const { allCurrencies, info } = props
+  const { allCurrencies, info, blacklists, activatedCoins, identities } = props
   const currencyArray =
     activeTicker == null
       ? Object.values(allCurrencies).flat()
@@ -77,9 +87,9 @@ function CurrenciesCard(props) {
   useEffect(
     () =>
       setDisplayCurrencies(
-        filterCurrencies(getDisplayCurrencies(currencyArray, info), currencySearchTerm)
+        filterCurrencies(getDisplayCurrencies(currencyArray, info, blacklists, identities), currencySearchTerm)
       ),
-    [allCurrencies, info]
+    [allCurrencies, info, blacklists, activatedCoins, identities]
   );
 
   return CurrenciesCardRender(
@@ -101,7 +111,11 @@ function CurrenciesCard(props) {
 
 CurrenciesCard.propTypes = {
   allCurrencies: PropTypes.object.isRequired,
-  info: PropTypes.object.isRequired
+  info: PropTypes.object.isRequired,
+  whitelists: PropTypes.object.isRequired,
+  blacklists: PropTypes.object.isRequired,
+  activatedCoins: PropTypes.object.isRequired,
+  identities: PropTypes.object.isRequired
 };
 
 export default CurrenciesCard

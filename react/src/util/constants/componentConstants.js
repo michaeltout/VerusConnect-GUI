@@ -27,6 +27,7 @@ export const API_GET_ADDRESSES = 'get_addresses'
 export const API_GET_FIATPRICE = 'get_fiatprice'
 export const API_GET_IDENTITIES = 'get_identities'
 export const API_GET_ALL_CURRENCIES = 'get_all_currencies'
+export const API_GET_CURRENCY_DATA_MAP = 'get_currency_data_map'
 export const API_GET_NAME_COMMITMENTS = 'get_name_commitments'
 
 // Singleton API call names
@@ -327,6 +328,8 @@ export const ERROR_INVALID_ID = 'Invalid identity, identities must start with an
 // Send coin preflight obj keys
 export const TXDATA_TO = 'to'
 export const TXDATA_FROM = 'from'
+export const TXDATA_FROM_CURRENCY = 'fromCurrency'
+export const TXDATA_TO_CURRENCY = 'toCurrency'
 export const TXDATA_VALUE = 'value'
 export const TXDATA_FEE = 'fee'
 export const TXDATA_TOTAL_AMOUNT = 'total'
@@ -337,6 +340,7 @@ export const TXDATA_LAST_PRICE = 'lastPrice'
 export const TXDATA_STATUS = 'status'
 export const TXDATA_ERROR = 'error'
 export const TXDATA_TXID = 'txid'
+export const TXDATA_MESSAGE = 'message'
 
 // Shield coinbase obj keys
 export const TXDATA_OPID = 'opid'

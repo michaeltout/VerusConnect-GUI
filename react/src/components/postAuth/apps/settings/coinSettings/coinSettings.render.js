@@ -38,7 +38,7 @@ export const CoinSettingsOptionsRender = function() {
   const { activeTab, tabs } = state
   const { configSchema, displayConfig, selectedCoinObj } = props
   const configTypes = configSchema[tabs[activeTab]]
-  const { tags, id } = selectedCoinObj
+  const { id } = selectedCoinObj
 
   return (
     <div className="card-body">
@@ -51,7 +51,7 @@ export const CoinSettingsOptionsRender = function() {
           hidden
         } = configTypes[settingKey];
 
-        return (settingKey === STAKE_GUARD && !tags.includes(IS_VERUS)) ||
+        return (settingKey === STAKE_GUARD && !selectedCoinObj.options.tags.includes(IS_VERUS)) ||
           hidden ? null : (
           <React.Fragment key={index}>
             <SimpleSetting

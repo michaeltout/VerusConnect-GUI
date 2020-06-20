@@ -4,7 +4,7 @@ import {
   SendCoinRender
 } from './sendCoin.render';
 import { SEND_COIN, ENTER_DATA, NATIVE, ETH, ELECTRUM, API_SUCCESS, ERROR_SNACK, API_ERROR, SUCCESS_SNACK, CONFIRM_DATA, API_GET_TRANSACTIONS, API_GET_BALANCES, API_GET_ZOPERATIONSTATUSES, Z_SEND, INFO_SNACK, INTEREST_BALANCE } from '../../../util/constants/componentConstants';
-import { sendNative, sendEth, sendElectrum } from '../../../util/api/wallet/walletCalls';
+import { sendNative, sendEth, sendElectrum, getCurrency } from '../../../util/api/wallet/walletCalls';
 import { newSnackbar, expireData } from '../../../actions/actionCreators';
 
 class SendCoin extends React.Component {
@@ -16,16 +16,38 @@ class SendCoin extends React.Component {
         props.modalProps.balanceTag &&
         props.modalProps.balanceTag === INTEREST_BALANCE
         ? "Claim Interest"
+        : props.modalProps.currencyInfo &&
+          props.modalProps.currencyInfo.currency.name !==
+            props.modalProps.chainTicker
+        ? "Send Currency"
+        : props.modalProps.isConversion
+        ? props.modalProps.currencyInfo &&
+          props.modalProps.currencyInfo.preConvert
+          ? "Preconvert Currency"
+          : "Convert Currency"
         : "Send Coin"
     );
+
+    this.isPreconvert = props.modalProps &&
+    props.modalProps.isConversion &&
+    props.modalProps.currencyInfo &&
+    props.modalProps.currencyInfo.preConvert
+
     this.state = {
       formStep: ENTER_DATA,
       txData: {},
       loading: false,
       loadingProgress: 0,
       formData: {},
-      continueDisabled: true
-    }
+      continueDisabled: true,
+      sourceOptions: this.isPreconvert ? props.modalProps.currencyInfo.currency.currencies : [],
+      destinationOptions: this.isPreconvert ? [props.modalProps.currencyInfo.currency.currencyid] : [],
+      selectedSourceIndex: 0,
+      selectedDestinationIndex: 0,
+      currencyMap: {},
+      loadingCurrencyMap: false,
+      prices: this.isPreconvert ? props.modalProps.currencyInfo.currency.conversions : [],
+    };
 
     this.advanceFormStep = this.advanceFormStep.bind(this)
     this.getFormData = this.getFormData.bind(this)
@@ -35,6 +57,43 @@ class SendCoin extends React.Component {
 
   getFormData(formData) {    
     this.setState({ formData })
+  }
+
+  fetchSupportingCurrencyData() {
+    this.props.setModalLock(true)
+
+    this.setState({ loadingCurrencyMap: true }, async () => {
+      const { sourceOptions, destinationOptions, currencyMap } = this.state
+      const { modalProps } = this.props
+      const currencyIds = [...sourceOptions, ...destinationOptions]
+      let newMap = {}
+
+      for (let i = 0; i < currencyIds.length; i++) {
+        let id = currencyIds[i]
+
+        if (currencyMap[id] == null) {
+          if (modalProps.currencyInfo && (modalProps.currencyInfo.currency.currencyid === id)) {
+            newMap[id] = modalProps.currencyInfo.currency.name
+          } else {
+            const fetchedCurrency = await getCurrency(NATIVE, modalProps.chainTicker, id)
+
+            if (fetchedCurrency.msg !== "success") {
+              this.props.dispatch(
+                newSnackbar(
+                  ERROR_SNACK,
+                  `Couldn't fetch information about all related currencies.`
+                )
+              );
+            } else {
+              newMap[id] = fetchedCurrency.result.name
+            }
+          }
+        }
+      }
+
+      this.props.setModalLock(false)
+      this.setState({ currencyMap: {...currencyMap, ...newMap }, loadingCurrencyMap: false })
+    })
   }
 
   getContinueDisabled(continueDisabled) {
@@ -50,7 +109,8 @@ class SendCoin extends React.Component {
   }
 
   advanceFormStep() {
-    const { mode } = this.props.activeCoin
+    const { activeCoin, modalProps } = this.props
+    const { mode } = activeCoin
     const { formStep, formData, loadingProgress, txData } = this.state
     let _txData
 
@@ -70,12 +130,11 @@ class SendCoin extends React.Component {
           fromAddress,
           customFee,
           memo,
-          toChain,
-          toNative,
-          toReserve,
-          preConvert,
-          lastPriceInRoot,
-          btcFee
+          fromCurrencyInfo,
+          toCurrencyInfo,
+          refundAddress,
+          mint,
+          currencyId
         } = formData;
   
         switch (mode) {
@@ -86,14 +145,19 @@ class SendCoin extends React.Component {
               toAddress,
               Number(amount),
               Number(balance),
-              fromAddress,
+              mint ? currencyId : fromAddress,
               Number(customFee),
-              memo,
-              toChain,
-              toNative,
-              toReserve,
-              preConvert,
-              lastPriceInRoot
+              memo != null && memo.length > 0 ? memo : undefined,
+              {
+                convertto:
+                  toCurrencyInfo.currency.name !== fromCurrencyInfo.currency.name
+                    ? toCurrencyInfo.currency.name
+                    : undefined,
+                currency: fromCurrencyInfo.currency.name,
+                refundto: refundAddress,
+                mintnew: mint,
+                preconvert: toCurrencyInfo && toCurrencyInfo.preConvert,
+              }
             );
             break;
           case ETH:  

@@ -15,6 +15,7 @@ export * from './readCalls/getBlockReward'
 export * from './readCalls/getIdentity'
 export * from './readCalls/getCurrency'
 export * from './readCalls/getAllCurrencies'
+export * from './readCalls/getCurrencyDataMap'
 
 export * from './writeCalls/createAddress'
 export * from './writeCalls/sendCoin'

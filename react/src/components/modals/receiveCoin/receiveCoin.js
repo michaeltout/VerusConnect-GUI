@@ -68,7 +68,7 @@ class ReceiveCoin extends React.Component {
           },
       addressSearchTerm: "",
       balanceCurr: props.activeCoin.id,
-      currencyArr: [props.activeCoin.id],
+      currencyArr: [props.activeCoin.id, ...props.whitelist],
       qrAddress: null
     };
 
@@ -129,8 +129,8 @@ class ReceiveCoin extends React.Component {
   }
 
   getAddrCurrencies() {
-    const { balances, activeCoin } = this.props
-    let currencyArr = [activeCoin.id]
+    const { balances, activeCoin, whitelist } = this.props
+    let currencyArr = [activeCoin.id, ...whitelist]
 
     if (balances) {
       Object.keys(balances.reserve).map(chainTicker => {
@@ -290,7 +290,8 @@ const mapStateToProps = (state) => {
     includePrivate: state.settings.config.coin.native.includePrivateAddrs[chainTicker],
     balances: state.ledger.balances[chainTicker],
     modalProps: state.modal[RECEIVE_COIN],
-    config: state.settings.config
+    config: state.settings.config,
+    whitelist: state.localCurrencyLists.whitelists[chainTicker] || []
   };
 };
 

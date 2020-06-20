@@ -138,8 +138,7 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
   coinObj.options.tags = Object.keys(tags)
   return {
     ...coinObj,
-    available_modes,
-    display_currency: coinObj.id,
+    available_modes
   }
 }
 

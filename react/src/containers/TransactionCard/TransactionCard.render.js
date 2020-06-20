@@ -110,7 +110,18 @@ export const TxTableRender = (displayTxs, openTxInfo, props, dispatch) => {
           {
             width: 200,
             cellDataGetter: ({ rowData }) => {
-              return <div style={{overflow: "hidden", whiteSpace: "nowrap", width: "100%", textOverflow: "ellipsis"}}>{rowData.address}</div>
+              return (
+                <div
+                  style={{
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    width: "100%",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {rowData.address}
+                </div>
+              );
             },
             flexGrow: 1,
             label: 'Address',

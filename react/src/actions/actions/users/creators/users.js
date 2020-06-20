@@ -1,7 +1,7 @@
 import { saveUsers, loadUsers } from '../../../../util/api/users/userData'
 import { encryptKey } from '../../../../util/api/users/pinData'
-import { SET_USERS, LOG_IN, LOG_OUT, SET_DEFAULT_USER, SET_AUTHENTICATION, SET_LOGOUT_USER, FINISH_LOGOUT_USER } from '../../../../util/constants/storeType'
-import { ETH, ELECTRUM, PRE_AUTH, UX_SELECTOR, POST_AUTH } from '../../../../util/constants/componentConstants'
+import { SET_USERS, LOG_IN, LOG_OUT, SET_DEFAULT_USER, SET_AUTHENTICATION, SET_LOGOUT_USER, FINISH_LOGOUT_USER, SELECT_CURRENCY_FOR_COIN } from '../../../../util/constants/storeType'
+import { ETH, ELECTRUM, UX_SELECTOR, POST_AUTH } from '../../../../util/constants/componentConstants'
 import { makeId } from '../../../../util/idGenerator'
 import { setMainNavigationPath } from '../../../actionCreators'
 import { authenticateSeed } from '../../../../util/api/users/userData'
@@ -18,6 +18,7 @@ export const createUser = async (loadedUsers, name, password = null, seed = null
   const userObj = {
     startAtLastLocation: true,
     startLocation: 'post_auth/ux_selector',
+    selectedCurrencyMap: {},
     pinFile: seed != null && password != null ? await encryptKey(password, seed) : null,
     name: name,
     id: makeId(),
@@ -135,4 +136,18 @@ export const setLogoutUser = () => {
  */
 export const finishLogoutUser = () => {
   return { type: FINISH_LOGOUT_USER }
+}
+
+/**
+ * Sets a users preffered onchain token for a specific 
+ * blockchain
+ * @param {String} chainTicker The blockchain 
+ * @param {String} currency The on-chain token
+ */
+export const setUserPreferredCurrency = (chainTicker, currency) => {
+  return {
+    type: SELECT_CURRENCY_FOR_COIN,
+    chainTicker,
+    currency
+  }
 }

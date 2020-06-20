@@ -22,8 +22,14 @@ class CurrencyInfo extends React.Component {
   }
 
   async addToWhitelist() {
-    const { whitelists, activeCoin, dispatch, activeCurrency } = this.props
-    const { name } = activeCurrency
+    const {
+      whitelists,
+      activeCoin,
+      dispatch,
+      activeCurrency,
+      currencyInfo,
+    } = this.props;
+    const { name } = activeCurrency || currencyInfo.currency
 
     const currentWhitelist = whitelists[activeCoin.id] || []
 
@@ -35,8 +41,14 @@ class CurrencyInfo extends React.Component {
   }
 
   async addToBlacklist() {
-    const { blacklists, activeCoin, dispatch, activeCurrency } = this.props
-    const { name } = activeCurrency
+    const {
+      blacklists,
+      activeCoin,
+      dispatch,
+      activeCurrency,
+      currencyInfo,
+    } = this.props;
+    const { name } = activeCurrency || currencyInfo.currency
 
     const currentBlacklist = blacklists[activeCoin.id] || []
 
@@ -48,8 +60,14 @@ class CurrencyInfo extends React.Component {
   }
 
   async removeFromBlacklist() {
-    const { blacklists, activeCoin, dispatch, activeCurrency } = this.props
-    const { name } = activeCurrency
+    const {
+      blacklists,
+      activeCoin,
+      dispatch,
+      activeCurrency,
+      currencyInfo,
+    } = this.props;
+    const { name } = activeCurrency || currencyInfo.currency
 
     let currentBlacklist = blacklists[activeCoin.id] || []
 
@@ -66,8 +84,14 @@ class CurrencyInfo extends React.Component {
   }
 
   async removeFromWhitelist() {
-    const { whitelists, activeCoin, dispatch, activeCurrency } = this.props
-    const { name } = activeCurrency
+    const {
+      whitelists,
+      activeCoin,
+      dispatch,
+      activeCurrency,
+      currencyInfo,
+    } = this.props;
+    const { name } = activeCurrency || currencyInfo.currency
 
     let currentWhitelist = whitelists[activeCoin.id] || []
 
@@ -94,6 +118,8 @@ const mapStateToProps = (state) => {
   return {
     activeCoin: state.coins.activatedCoins[chainTicker],
     activeCurrency: state.modal[CURRENCY_INFO].activeCurrency,
+    currencyInfo: state.modal[CURRENCY_INFO].currencyInfo,
+    identities: state.modal[CURRENCY_INFO].identities,
     openCurrency: state.modal[CURRENCY_INFO].openCurrencyCard,
     openIdentity: state.modal[CURRENCY_INFO].openIdentityCard,
     info: state.ledger.info[chainTicker],

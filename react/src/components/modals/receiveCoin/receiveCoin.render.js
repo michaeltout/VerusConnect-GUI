@@ -153,21 +153,7 @@ export const ReceiveCurrencyPickerRender = function() {
         <TextField
           {...params}
           label="Display Currency"
-          variant="outlined"
           fullWidth
-          InputLabelProps={{
-            style:{
-              fontFamily: "inherit",
-              fontSize: 14,
-              disableAnimation: true
-            }
-          }}
-          InputProps={{
-            style: {
-              fontFamily: "inherit",
-              fontSize: 14
-            }
-          }}
         />
       )}
     />

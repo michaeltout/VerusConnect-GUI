@@ -37,7 +37,8 @@ export const IdWalletRender = function() {
           marginBottom: 16,
           display: "flex",
           padding: 0,
-          border: "none"
+          border: "none",
+          overflowX: 'scroll'
         }}
       >
         <WalletPaper

@@ -31,13 +31,15 @@ export const getDecentralizationScore = (preallocation = [], proofprotocol = DEF
  * Parses a currency into a displayable currency by adding some display data
  * @param {Object} currency 
  */
-export const getDisplayCurrency = (currency, currentHeight) => {
+export const getCurrencyInfo = (currency, currentHeight, ownedIdentities = []) => {
   const {
     options,
     minpreconversion,
     bestcurrencystate,
     startblock,
-    conversions
+    conversions,
+    proofprotocol,
+    name
   } = currency;
   const { supply } = bestcurrencystate != null ? bestcurrencystate : {}
   const isToken = checkFlag(options, IS_TOKEN_FLAG)
@@ -50,13 +52,67 @@ export const getDisplayCurrency = (currency, currentHeight) => {
       minpreconversion.length > 0 &&
       minpreconversion.every((n) => n > 0) &&
       supply === 0;
+  const ownedIdentity = ownedIdentities.find(id => id.identity.name === name)
+  const spendableTo = !isFailed && (isReserve || (isPending && conversions != null && conversions.length > 0))
+  const spendableFrom = !isFailed && !isPending
   
   return {
     age,
     ageString: blocksToTime(Math.abs(age)),
     isToken,
     status: isFailed ? 'failed' : (isPending ? 'pending' : 'active'),
-    convertable: !isFailed && (isReserve || (isPending && conversions != null && conversions.length > 0)),
-    currency
+    spendableTo,
+    spendableFrom,
+    preConvert: spendableTo && age < 0,
+    currency,
+    mintable: proofprotocol === 2 && ownedIdentity != null && ownedIdentity.status === 'active',
+    ownedIdentity
   }
+}
+
+/**
+ * Returns an object in the form of {[currency_name]: {to: [{id: i31..., name: 'a', price: 0.3}], from: [{id: i31..., name: 'a', price: 0.2}]}}, 
+ * with one key for every currency given in currency params by calculating what conversions can be made
+ * (to where/from where) between the given currencies.
+ * @param {Object} currencyObjects
+ */
+export const getConversionGraph = (currencyObjects) => {
+  let retObj = {}
+  let names = {}
+
+  for (const key in currencyObjects) {
+    retObj[key] = {
+      to: [],
+      from: []
+    }
+
+    names[currencyObjects[key].currencyid] = currencyObjects[key].name
+  }
+
+  for (const key in currencyObjects) {
+    const {
+      currencies,
+      conversions,
+      currencyid
+    } = currencyObjects[key];
+
+    if (currencies != null && currencies.length > 0) {
+      retObj[key].from = currencies.map((value, index) => {
+        const name = names[value]
+        retObj[name].to.push({
+          id: currencyid,
+          name: key,
+          price: 1/conversions[index]
+        })
+
+        return {
+          id: value,
+          name,
+          price: conversions[index]
+        }
+      })
+    }
+  }
+
+  return retObj
 }

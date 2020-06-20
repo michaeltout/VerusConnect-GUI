@@ -16,7 +16,8 @@ import {
   SET_COIN_NAME_COMMITMENTS,
   SET_COIN_CURRENTSUPPLY,
   SET_COIN_BLOCKREWARD,
-  SET_COIN_ALL_CURRENCIES
+  SET_COIN_ALL_CURRENCIES,
+  SET_COIN_CURRENCY_DATA_MAP
 } from '../util/constants/storeType'
 
 export const ledger = (state = {
@@ -32,7 +33,10 @@ export const ledger = (state = {
   allCurrencies: {},
   nameCommitments: {},
   currentSupply: {},
-  blockReward: {}
+  blockReward: {},
+  currencyDataMap: {},
+  currencyNameMap: {},
+  currencyConversionGraph: {}
 }, action) => {
   switch (action.type) {
     case DEACTIVATE_COIN:
@@ -49,7 +53,10 @@ export const ledger = (state = {
         nameCommitments,
         currentSupply,
         blockReward,
-        allCurrencies
+        allCurrencies,
+        currencyDataMap,
+        currencyNameMap,
+        currencyConversionGraph
       } = state
       let newLedger = {
         balances,
@@ -64,7 +71,10 @@ export const ledger = (state = {
         nameCommitments,
         currentSupply,
         blockReward,
-        allCurrencies
+        allCurrencies,
+        currencyDataMap,
+        currencyNameMap,
+        currencyConversionGraph
       }
 
       Object.keys(newLedger).map(infoType => {
@@ -151,6 +161,13 @@ export const ledger = (state = {
       return {
         ...state,
         currentSupply: {...state.currentSupply, [action.chainTicker]: action.currentSupply}
+      }
+    case SET_COIN_CURRENCY_DATA_MAP:
+      return {
+        ...state,
+        currencyDataMap: {...state.currencyDataMap, [action.chainTicker]: action.dataMap.currencyData},
+        currencyNameMap: {...state.currencyDataMap, [action.chainTicker]: action.dataMap.currencyNames},
+        currencyConversionGraph: {...state.currencyConversionGraph, [action.chainTicker]: action.conversionGraph}
       }
     default:
       return state;
