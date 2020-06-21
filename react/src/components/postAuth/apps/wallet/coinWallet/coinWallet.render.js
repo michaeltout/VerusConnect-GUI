@@ -49,7 +49,7 @@ export const CoinWalletRender = function() {
           display: "flex",
           padding: 0,
           border: "none",
-          overflowX: 'scroll'
+          overflowX: "scroll",
         }}
       >
         <WalletPaper
@@ -57,7 +57,7 @@ export const CoinWalletRender = function() {
             padding: 16,
             display: "flex",
             flexDirection: "column",
-            flex: 1
+            flex: 1,
           }}
         >
           <div className="d-flex flex-row justify-content-between">
@@ -71,7 +71,7 @@ export const CoinWalletRender = function() {
                 style={{
                   color: "rgb(0,0,0)",
                   fontSize: 36,
-                  fontWeight: "bold"
+                  fontWeight: "bold",
                 }}
               >
                 {Number(this.state.spendableBalance.crypto.toFixed(8))}
@@ -83,7 +83,7 @@ export const CoinWalletRender = function() {
                   fontSize: 16,
                   paddingBottom: 5,
                   paddingLeft: 8,
-                  fontWeight: "bold"
+                  fontWeight: "bold",
                 }}
               >
                 {this.props.coin}
@@ -107,7 +107,7 @@ export const CoinWalletRender = function() {
               padding: 16,
               display: "flex",
               flexDirection: "column",
-              flex: 1
+              flex: 1,
             }}
           >
             <div className="d-flex flex-row justify-content-between">
@@ -121,7 +121,7 @@ export const CoinWalletRender = function() {
                   style={{
                     color: "rgb(0,0,0)",
                     fontSize: 36,
-                    fontWeight: "bold"
+                    fontWeight: "bold",
                   }}
                 >
                   {Number(this.state.pendingBalance.crypto.toFixed(8))}
@@ -133,7 +133,7 @@ export const CoinWalletRender = function() {
                     fontSize: 16,
                     paddingBottom: 5,
                     paddingLeft: 8,
-                    fontWeight: "bold"
+                    fontWeight: "bold",
                   }}
                 >
                   {this.props.coin}
@@ -156,7 +156,7 @@ export const CoinWalletRender = function() {
             padding: 16,
             display: "flex",
             flexDirection: "column",
-            flex: 1
+            flex: 1,
           }}
         >
           <div className="d-flex flex-row justify-content-between">
@@ -167,14 +167,14 @@ export const CoinWalletRender = function() {
               className="btn btn-primary border rounded"
               type="button"
               name={CHAIN_INFO}
-              onClick={e => this.openModal(e, null)}
+              onClick={(e) => this.openModal(e, null)}
               style={{
                 fontSize: 14,
                 backgroundColor: "rgba(0,178,26,0)",
                 borderWidth: 0,
                 color: "rgb(133,135,150)",
                 borderColor: "rgb(133, 135, 150)",
-                fontWeight: "bold"
+                fontWeight: "bold",
               }}
             >
               {"Chain Info"}
@@ -185,7 +185,7 @@ export const CoinWalletRender = function() {
             style={{
               display: "flex",
               justifyContent: "start",
-              alignItems: "center"
+              alignItems: "center",
             }}
           >
             {WalletRenderPie.call(this)}
@@ -195,7 +195,7 @@ export const CoinWalletRender = function() {
                 fontSize: 16,
                 color: "rgb(0,0,0)",
                 paddingLeft: 23,
-                overflow: "-webkit-paged-x"
+                overflow: "-webkit-paged-x",
               }}
             >
               {this.state.walletLoadState.error && (
@@ -204,7 +204,7 @@ export const CoinWalletRender = function() {
                   style={{
                     marginRight: 6,
                     color: "rgb(236,124,43)",
-                    fontSize: 18
+                    fontSize: 18,
                   }}
                 />
               )}
@@ -223,7 +223,7 @@ export const CoinWalletRender = function() {
               height: "100%",
               width: "10%",
               right: 0,
-              marginRight: "-2px"
+              marginRight: "-2px",
             }}
           >
             <div
@@ -232,7 +232,7 @@ export const CoinWalletRender = function() {
                 width: "35%",
                 right: 0,
                 backgroundImage:
-                  "linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1))"
+                  "linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1))",
               }}
             />
             <div
@@ -242,7 +242,7 @@ export const CoinWalletRender = function() {
                 width: "65%",
                 right: 0,
                 backgroundColor: "#ffffff",
-                opacity: 1
+                opacity: 1,
               }}
             >
               <i
@@ -253,17 +253,20 @@ export const CoinWalletRender = function() {
           </div>
         )}
       </div>
-      {WalletRenderCurrencyFunctions.call(this)}
+      {/* Change this when currencies get to mainnet */ this.props.coin ===
+      "VRSCTEST"
+        ? WalletRenderCurrencyFunctions.call(this)
+        : null}
       {WalletRenderBalances.call(this)}
       <TransactionCard
         transactions={
           this.props.transactions != null
-            ? this.props.transactions.filter(tx => {
+            ? this.props.transactions.filter((tx) => {
                 return (
                   tx.category !== MINED_TX &&
                   tx.category !== MINTED_TX &&
                   tx.category !== IMMATURE_TX &&
-                  tx.category !== STAKE_TX && 
+                  tx.category !== STAKE_TX &&
                   tx.confirmations !== REJECTED_CONFIRMATIONS
                 );
               })
@@ -271,18 +274,17 @@ export const CoinWalletRender = function() {
         }
         coin={this.props.coin}
       />
-      {this.props.zOperations &&
-        this.props.zOperations.length > 0 && (
-          <WalletPaper>
-            <h6
-              className="card-title"
-              style={{ fontSize: 14, margin: 0, width: "max-content" }}
-            >
-              {"Pending Transaction Log:"}
-            </h6>
-            {WalletRenderOperations.call(this)}
-          </WalletPaper>
-        )}
+      {this.props.zOperations && this.props.zOperations.length > 0 && (
+        <WalletPaper>
+          <h6
+            className="card-title"
+            style={{ fontSize: 14, margin: 0, width: "max-content" }}
+          >
+            {"Pending Transaction Log:"}
+          </h6>
+          {WalletRenderOperations.call(this)}
+        </WalletPaper>
+      )}
     </div>
   );
 };
@@ -722,7 +724,7 @@ export const WalletRenderCurrencyFunctions = function() {
             onChange={(e) =>
               this.setPreferredCurrency(e.target.value == -1 ? coin : whitelist[e.target.value])
             }
-            labelWidth={124}
+            labelWidth={130}
           >
             <MenuItem value={-1}>{coin}</MenuItem>
             {whitelist.map((currency, index) => {

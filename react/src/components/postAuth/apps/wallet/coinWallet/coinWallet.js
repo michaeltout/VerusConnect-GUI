@@ -392,7 +392,7 @@ const mapStateToProps = (state, ownProps) => {
     blacklists: state.localCurrencyLists[BLACKLISTS],
     whitelists: state.localCurrencyLists[WHITELISTS],
     selectedCurrency:
-      state.users.activeUser.selectedCurrencyMap == null
+      state.users.activeUser.selectedCurrencyMap[ownProps.coin] == null
         ? ownProps.coin
         : state.users.activeUser.selectedCurrencyMap[ownProps.coin],
     currencyDataMap: state.ledger.currencyDataMap[ownProps.coin] || {},

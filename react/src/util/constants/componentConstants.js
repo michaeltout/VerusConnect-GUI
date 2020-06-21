@@ -341,6 +341,7 @@ export const TXDATA_STATUS = 'status'
 export const TXDATA_ERROR = 'error'
 export const TXDATA_TXID = 'txid'
 export const TXDATA_MESSAGE = 'message'
+export const TXDATA_PRICE = 'price'
 
 // Shield coinbase obj keys
 export const TXDATA_OPID = 'opid'

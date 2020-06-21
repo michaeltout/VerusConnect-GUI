@@ -20,15 +20,10 @@ class SendCoin extends React.Component {
           props.modalProps.currencyInfo.currency.name !==
             props.modalProps.chainTicker
         ? "Send Currency"
-        : props.modalProps.isConversion
-        ? props.modalProps.currencyInfo &&
-          props.modalProps.currencyInfo.preConvert
-          ? "Preconvert Currency"
-          : "Convert Currency"
         : "Send Coin"
     );
 
-    this.isPreconvert = props.modalProps &&
+    const isPreconvert = props.modalProps &&
     props.modalProps.isConversion &&
     props.modalProps.currencyInfo &&
     props.modalProps.currencyInfo.preConvert
@@ -40,13 +35,13 @@ class SendCoin extends React.Component {
       loadingProgress: 0,
       formData: {},
       continueDisabled: true,
-      sourceOptions: this.isPreconvert ? props.modalProps.currencyInfo.currency.currencies : [],
-      destinationOptions: this.isPreconvert ? [props.modalProps.currencyInfo.currency.currencyid] : [],
+      sourceOptions: isPreconvert ? props.modalProps.currencyInfo.currency.currencies : [],
+      destinationOptions: isPreconvert ? [props.modalProps.currencyInfo.currency.currencyid] : [],
       selectedSourceIndex: 0,
       selectedDestinationIndex: 0,
       currencyMap: {},
       loadingCurrencyMap: false,
-      prices: this.isPreconvert ? props.modalProps.currencyInfo.currency.conversions : [],
+      prices: isPreconvert ? props.modalProps.currencyInfo.currency.conversions : [],
     };
 
     this.advanceFormStep = this.advanceFormStep.bind(this)

@@ -35,7 +35,8 @@ import {
   ENTER_DATA,
   TXDATA_FROM_CURRENCY,
   TXDATA_TO_CURRENCY,
-  TXDATA_MESSAGE
+  TXDATA_MESSAGE,
+  TXDATA_PRICE
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar } from '../../../../actions/actionCreators';
 import { getCurrencyInfo } from '../../../../util/multiverse/multiverseCurrencyUtils';
@@ -235,13 +236,40 @@ class TraditionalSendForm extends React.Component {
       ],
       ["To:"]: txData[TXDATA_TO],
       ["From:"]: txData[TXDATA_FROM],
-      ["Sending Currency:"]: txData[TXDATA_FROM_CURRENCY] != null ? txData[TXDATA_FROM_CURRENCY].name : null,
-      ["Receiving Currency:"]: txData[TXDATA_TO_CURRENCY] != null ? txData[TXDATA_TO_CURRENCY].name : null,
-      ["Amount Entered"]: txData[TXDATA_ERROR] ? null : formData.amount,
+      ["Sending Currency:"]:
+        txData[TXDATA_FROM_CURRENCY] != null
+          ? txData[TXDATA_FROM_CURRENCY].name
+          : null,
+      ["Receiving Currency:"]:
+        txData[TXDATA_TO_CURRENCY] != null
+          ? txData[TXDATA_TO_CURRENCY].name
+          : null,
+      ["Conversion Price:"]:
+        txData[TXDATA_ERROR] ||
+        txData[TXDATA_PRICE] == null ||
+        txData[TXDATA_FROM_CURRENCY] == null ||
+        txData[TXDATA_TO_CURRENCY] == null
+          ? null
+          : `${txData[TXDATA_PRICE]} ${txData[TXDATA_FROM_CURRENCY].name}/${txData[TXDATA_TO_CURRENCY].name}`,
+      ["Est. Amount to Receive"]:
+        txData[TXDATA_ERROR] ||
+        txData[TXDATA_PRICE] == null ||
+        txData[TXDATA_FROM_CURRENCY] == null ||
+        txData[TXDATA_TO_CURRENCY] == null ||
+        txData[TXDATA_VALUE] == null
+          ? null
+          : `${Number((Number(txData[TXDATA_VALUE]) * Number(txData[TXDATA_PRICE])).toFixed(8))} ${
+              txData[TXDATA_TO_CURRENCY].name
+            }`,
+      ["Amount Entered"]:
+        txData[TXDATA_ERROR] ||
+        (!txData[TXDATA_ERROR] &&
+          txData[TXDATA_VALUE] &&
+          Number(txData[TXDATA_VALUE]) === Number(formData.amount))
+          ? null
+          : Number(formData.amount),
       ["Transaction Amount:"]:
-        !txData[TXDATA_VALUE] &&
-        !txData[TXDATA_ERROR] &&
-        Number(txData[TXDATA_VALUE]) === Number(formData.amount)
+        txData[TXDATA_ERROR] || !txData[TXDATA_VALUE]
           ? null
           : txData[TXDATA_VALUE],
       ["Fee:"]: txData[TXDATA_FEE],

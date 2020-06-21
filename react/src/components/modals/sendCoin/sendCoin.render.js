@@ -4,15 +4,15 @@ import MessageSendForm from "./messageSendForm/messageSendForm";
 import ReserveSendForm from "./reserveSendForm/reserveSendForm";
 import TraditionalSendForm from "./traditionalSendForm/traditionalSendForm";
 import ClaimInterestForm from "./claimInterestForm/claimInterestForm";
-import { TRANSPARENT_BALANCE, PRIVATE_BALANCE, RESERVE_BALANCE, CONFIRM_DATA, API_SUCCESS, SEND_RESULT, INTEREST_BALANCE } from '../../../util/constants/componentConstants';
+import { TRANSPARENT_BALANCE, PRIVATE_BALANCE, RESERVE_BALANCE, CONFIRM_DATA, API_SUCCESS, SEND_RESULT, INTEREST_BALANCE, ENTER_DATA } from '../../../util/constants/componentConstants';
 import Button from '@material-ui/core/Button';
 import PieChart from 'react-minimal-pie-chart';
 import SimpleLoader from '../../../containers/SimpleLoader/SimpleLoader'
 
 export const SendCoinRender = function() {
   const { advanceFormStep, state, back, props } = this
-  const { loading, continueDisabled, formStep, txData } = state
-  const { closeModal } = props
+  const { loading, continueDisabled, formStep, txData, formData } = state
+  const { closeModal, modalProps } = props
 
   return (
     <div style={{ width: "100%", paddingLeft: 35, paddingRight: 35 }}>
@@ -24,7 +24,7 @@ export const SendCoinRender = function() {
           style={{
             display: "flex",
             width: "100%",
-            justifyContent: "space-between"
+            justifyContent: "space-between",
           }}
         >
           <Button
@@ -37,19 +37,29 @@ export const SendCoinRender = function() {
                 formStep === CONFIRM_DATA ||
                 (formStep === SEND_RESULT && txData.status !== API_SUCCESS)
                   ? "unset"
-                  : "hidden"
+                  : "hidden",
             }}
           >
             {"Back"}
           </Button>
           <Button
             variant="contained"
-            onClick={ formStep === SEND_RESULT ? closeModal : advanceFormStep }
+            onClick={formStep === SEND_RESULT ? closeModal : advanceFormStep}
             disabled={continueDisabled}
             size="large"
             color="primary"
           >
-            {formStep === SEND_RESULT ? "Done" : "Continue"}
+            {formStep === SEND_RESULT
+              ? "Done"
+              : formStep === ENTER_DATA
+              ? "Continue"
+              : formData && formData.toCurrencyInfo
+              ? formData.toCurrencyInfo.preConvert
+                ? "Preconvert"
+                : modalProps.isConversion
+                ? "Convert"
+                : "Send"
+              : "Send"}
           </Button>
         </div>
       )}
