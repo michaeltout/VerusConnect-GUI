@@ -18,7 +18,6 @@ class Dashboard extends React.Component {
 
     this.calculatePortolio = this.calculatePortolio.bind(this)
     this.openProfileSettings = this.openProfileSettings.bind(this)
-    this.openAddCoinModal = this.openAddCoinModal.bind(this)
   }
 
   componentDidMount() {

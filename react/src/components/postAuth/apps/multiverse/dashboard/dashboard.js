@@ -22,7 +22,6 @@ class Dashboard extends React.Component {
       loadedCurrencyCoins: this.getLoadedCurrencyCoins(props.allCurrencies)
     }
 
-    this.openAddCoinModal = this.openAddCoinModal.bind(this)
     this.updateState = this.updateState.bind(this)
   }
 

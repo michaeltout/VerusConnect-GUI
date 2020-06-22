@@ -23,7 +23,6 @@ class Wallet extends React.Component {
     this.setTabs = this.setTabs.bind(this)
     this.openCoin = this.openCoin.bind(this)
     this.openDashboard = this.openDashboard.bind(this)
-    this.openAddCoinModal = this.openAddCoinModal.bind(this)
     this.deactivate = this.deactivate.bind(this)
     this.setTabs()
   }

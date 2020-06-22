@@ -13,6 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import WalletPaper from '../../../../../containers/WalletPaper/WalletPaper';
 import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
+import { openAddCoinModal } from '../../../../../actions/actionDispatchers';
 
 export const DashboardRender = function() {
   //TODO: Move to parent component so this isnt re-calculated at render
@@ -311,7 +312,7 @@ export const DashboardRender = function() {
                 <a
                   href="#"
                   style={{ color: "rgb(78,115,223)" }}
-                  onClick={this.openAddCoinModal}
+                  onClick={openAddCoinModal}
                 >
                   {
                     "Add a Verus protocol coin (VRSC or VRSCTEST) to start making IDs!"

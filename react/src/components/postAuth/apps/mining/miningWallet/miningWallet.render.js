@@ -20,6 +20,7 @@ import WalletBooklet from "../../../../../containers/WalletBooklet/WalletBooklet
 import TransactionCard from "../../../../../containers/TransactionCard/TransactionCard";
 import GeneratorCard from "../../../../../containers/GeneratorCard/GeneratorCard";
 import { FormControl, Select, MenuItem, Switch } from "@material-ui/core";
+import { openAddCoinModal } from "../../../../../actions/actionDispatchers";
 
 export const MiningWalletRender = function() {
   const {
@@ -280,10 +281,10 @@ export const MiningWalletRenderGenerateOverview = function() {
           href="#"
           style={{
             color: "rgb(78,115,223)",
-            paddingTop: 10,
+            paddingTop: 8,
             display: "block"
           }}
-          onClick={this.openAddCoinModal}
+          onClick={openAddCoinModal}
         >
           {"No coins added yet, click here to add one!"}
         </a>

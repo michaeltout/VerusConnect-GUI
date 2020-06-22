@@ -3,6 +3,7 @@ import MiningStyles from './mining.styles'
 import { DASHBOARD, MINING_POSTFIX, MS_IDLE, INFO_SNACK, MID_LENGTH_ALERT, CHAIN_FALLBACK_IMAGE } from '../../../../util/constants/componentConstants'
 import Tooltip from '@material-ui/core/Tooltip';
 import { newSnackbar } from '../../../../actions/actionCreators';
+import { openAddCoinModal } from '../../../../actions/actionDispatchers';
 
 export const MiningCardRender = function(coinObj) {
   const {
@@ -84,7 +85,7 @@ export const MiningTabsRender = function() {
     {
       title: "Add Coin",
       icon: 'fa-plus',
-      onClick: this.openAddCoinModal,
+      onClick: openAddCoinModal,
       isActive: () => false
     },
     {

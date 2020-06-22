@@ -2,6 +2,7 @@ import React from 'react';
 import ReactMinimalPieChart from 'react-minimal-pie-chart';
 import { ETH, CHAIN_FALLBACK_IMAGE } from '../../../../../util/constants/componentConstants';
 import WalletPaper from '../../../../../containers/WalletPaper/WalletPaper';
+import { openAddCoinModal } from '../../../../../actions/actionDispatchers';
 
 export const DashboardRender = function() {
   const numCoins = Object.keys(this.props.activatedCoins).length
@@ -90,10 +91,10 @@ export const DashboardRender = function() {
             href="#"
             style={{
               color: "rgb(78,115,223)",
-              paddingTop: 10,
+              paddingTop: 8,
               display: "block"
             }}
-            onClick={this.openAddCoinModal}
+            onClick={openAddCoinModal}
           >
             {"No coins added yet, click here to add one!"}
           </a>

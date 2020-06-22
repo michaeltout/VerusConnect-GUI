@@ -5,8 +5,16 @@ import { SortDirection } from 'react-virtualized';
 import WalletPaper from '../WalletPaper/WalletPaper';
 import SearchBar from '../SearchBar/SearchBar';
 import { FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
+import { openAddCoinModal } from '../../actions/actionDispatchers';
 
-export const CurrenciesCardRender = (openCurrencyInfo, getDisplayCurrencies, filterCurrencies, currencies, state, props) => {
+export const CurrenciesCardRender = (
+  openCurrencyInfo,
+  getDisplayCurrencies,
+  filterCurrencies,
+  currencies,
+  state,
+  props
+) => {
   const {
     setCurrencySearchTerm,
     currencySearchTerm,
@@ -14,15 +22,16 @@ export const CurrenciesCardRender = (openCurrencyInfo, getDisplayCurrencies, fil
     setDisplayCurrencies,
     activeTicker,
     setActiveTicker,
+    verusCoins,
   } = state;
-  const { title, allCurrencies, info, blacklists, identities } = props
-  const coins = Object.keys(allCurrencies)
+  const { title, allCurrencies, info, blacklists, identities } = props;
+  const coins = Object.keys(allCurrencies);
 
   return (
     <WalletPaper style={{ marginBottom: 16 }}>
       <h6
         className="card-title"
-        style={{ fontSize: 14, margin: 0, width: "max-content" }}
+        style={{ fontSize: 14, margin: 0, marginBottom: 8, width: "max-content" }}
       >
         {title == null ? "Currencies" : title}
       </h6>
@@ -32,7 +41,6 @@ export const CurrenciesCardRender = (openCurrencyInfo, getDisplayCurrencies, fil
             display: "flex",
             justifyContent: "space-between",
             width: "100%",
-            marginTop: 8,
             marginBottom: 8,
           }}
         >
@@ -93,12 +101,20 @@ export const CurrenciesCardRender = (openCurrencyInfo, getDisplayCurrencies, fil
       )}
       {displayCurrencies.length > 0 ? (
         CurrencyTableRender(displayCurrencies, openCurrencyInfo, props)
+      ) : verusCoins.length == 0 ? (
+        <a
+          href="#"
+          style={{ color: "rgb(78,115,223)" }}
+          onClick={openAddCoinModal}
+        >
+          {"Add VRSCTEST to discover new currencies!"}
+        </a>
       ) : (
-        <div style={{ marginTop: 20 }}>{"No currencies found."}</div>
+        <div>{"No currencies found."}</div>
       )}
     </WalletPaper>
   );
-}
+};
 
 export const CurrencyTableRender = (displayCurrencies, openCurrencyInfo, props) => {
   return (

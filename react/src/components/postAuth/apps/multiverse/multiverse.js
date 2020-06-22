@@ -35,7 +35,6 @@ class Multiverse extends React.Component {
     
     this.setCards = this.setCards.bind(this)
     this.setTabs = this.setTabs.bind(this)
-    this.openAddCoinModal = this.openAddCoinModal.bind(this)
     this.updateSearchTerm = this.updateSearchTerm.bind(this)
     this.closeSearchModal = this.closeSearchModal.bind(this)
     this.openSearchModal = this.openSearchModal.bind(this)

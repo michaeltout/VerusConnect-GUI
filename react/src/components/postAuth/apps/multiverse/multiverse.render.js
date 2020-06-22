@@ -1,6 +1,7 @@
 import React from 'react';
 import MultiverseStyles from './multiverse.styles'
 import { DASHBOARD, ID_POSTFIX, CHAIN_FALLBACK_IMAGE } from '../../../../util/constants/componentConstants'
+import { openAddCoinModal } from '../../../../actions/actionDispatchers';
 
 export const MultiverseCardRender = function(coinObj) {
   const { allCurrencies } = this.props
@@ -74,7 +75,7 @@ export const MultiverseTabsRender = function() {
     {
       title: "Add Coin",
       icon: 'fa-plus',
-      onClick: this.openAddCoinModal,
+      onClick: openAddCoinModal,
       isActive: () => false
     },
     {

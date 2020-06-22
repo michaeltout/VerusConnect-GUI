@@ -26,6 +26,7 @@ import MoneyOffIcon from '@material-ui/icons/MoneyOff';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import IconButton from '@material-ui/core/IconButton';
 import WalletPaper from "../../../../../containers/WalletPaper/WalletPaper";
+import { openAddCoinModal } from "../../../../../actions/actionDispatchers";
 
 export const DashboardRender = function() {
   return (
@@ -150,7 +151,7 @@ export const DashboardRenderMiningCards = function() {
         <a
           href="#"
           style={{ color: "rgb(78,115,223)", marginLeft: "0.516%" }}
-          onClick={this.openAddCoinModal}
+          onClick={openAddCoinModal}
         >
           {"Add a coin in native mode to start mining and/or staking coins!"}
         </a>

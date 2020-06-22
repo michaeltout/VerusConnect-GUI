@@ -1,6 +1,7 @@
 import React from 'react';
 import WalletStyles from './wallet.styles'
 import { NATIVE, DASHBOARD, ETH, CHAIN_POSTFIX, CHAIN_FALLBACK_IMAGE } from '../../../../util/constants/componentConstants'
+import { openAddCoinModal } from '../../../../actions/actionDispatchers';
 
 export const WalletCardRender = function(coinObj) {
   const {
@@ -105,7 +106,7 @@ export const WalletTabsRender = function() {
     {
       title: "Add Coin",
       icon: 'fa-plus',
-      onClick: this.openAddCoinModal,
+      onClick: openAddCoinModal,
       isActive: () => false
     },
     {

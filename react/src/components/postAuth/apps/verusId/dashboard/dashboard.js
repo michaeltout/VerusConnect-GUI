@@ -62,7 +62,6 @@ class Dashboard extends React.Component {
     this.openRevokeDialogue = this.openRevokeDialogue.bind(this)
     this.closeRevokeDialogue = this.closeRevokeDialogue.bind(this)
     this.revokeId = this.revokeId.bind(this)
-    this.openAddCoinModal = this.openAddCoinModal.bind(this)
   }
 
   componentWillMount() {

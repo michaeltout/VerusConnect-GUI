@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { CurrenciesCardRender } from './CurrenciesCard.render'
 import { openCurrencyCard } from '../../actions/actionDispatchers';
 import { getCurrencyInfo } from '../../util/multiverse/multiverseCurrencyUtils';
+import { NATIVE, IS_VERUS } from '../../util/constants/componentConstants';
 
 function openCurrencyInfo(rowData, identities) {
   openCurrencyCard(rowData, rowData.currency.parent_name, identities[rowData.currency.parent_name], true)
@@ -79,6 +80,9 @@ function CurrenciesCard(props) {
   const [currencySearchTerm, setCurrencySearchTerm] = useState('')
   const [activeTicker, setActiveTicker] = useState(null)
   const { allCurrencies, info, blacklists, activatedCoins, identities } = props
+  const [verusCoins, setVerusCoins] = useState(Object.values(activatedCoins).filter((coinObj) => {
+    return coinObj.options.tags.includes(IS_VERUS) && coinObj.mode === NATIVE
+  }))
   const currencyArray =
     activeTicker == null
       ? Object.values(allCurrencies).flat()
@@ -90,6 +94,16 @@ function CurrenciesCard(props) {
         filterCurrencies(getDisplayCurrencies(currencyArray, info, blacklists, identities), currencySearchTerm)
       ),
     [allCurrencies, info, blacklists, activatedCoins, identities]
+  );
+
+  useEffect(
+    () =>
+      setVerusCoins(
+        Object.values(activatedCoins).filter((coinObj) => {
+          return coinObj.options.tags.includes(IS_VERUS) && coinObj.mode === NATIVE
+        })
+      ),
+    [activatedCoins]
   );
 
   return CurrenciesCardRender(
@@ -104,6 +118,7 @@ function CurrenciesCard(props) {
       setCurrencySearchTerm,
       activeTicker,
       setActiveTicker,
+      verusCoins
     },
     props
   );

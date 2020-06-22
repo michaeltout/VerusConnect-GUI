@@ -15,7 +15,6 @@ class MiningWallet extends React.Component {
       coinsStaking: 0,
     }
 
-    this.openAddCoinModal = this.openAddCoinModal.bind(this)
     this.openShieldCoinbaseModal = this.openShieldCoinbaseModal.bind(this)
   }
 

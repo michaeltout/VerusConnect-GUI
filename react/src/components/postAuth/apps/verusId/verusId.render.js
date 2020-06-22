@@ -1,6 +1,7 @@
 import React from 'react';
 import VerusIdStyles from './verusId.styles'
 import { DASHBOARD, ID_POSTFIX, CHAIN_FALLBACK_IMAGE } from '../../../../util/constants/componentConstants'
+import { openAddCoinModal } from '../../../../actions/actionDispatchers';
 
 export const IdCardRender = function(coinObj) {
   const { identities } = this.props
@@ -109,7 +110,7 @@ export const IdTabsRender = function() {
     {
       title: "Add Coin",
       icon: 'fa-plus',
-      onClick: this.openAddCoinModal,
+      onClick: openAddCoinModal,
       isActive: () => false
     },
     {

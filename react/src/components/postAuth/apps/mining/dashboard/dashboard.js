@@ -18,7 +18,6 @@ class Dashboard extends React.Component {
       coinsStaking: 0,
     }
 
-    this.openAddCoinModal = this.openAddCoinModal.bind(this)
     this.updateMineStakeCoins = this.updateMineStakeCoins.bind(this)
   }
 

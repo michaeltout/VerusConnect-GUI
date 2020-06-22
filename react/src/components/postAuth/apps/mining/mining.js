@@ -41,7 +41,6 @@ class Mining extends React.Component {
     this.setTabs = this.setTabs.bind(this)
     this.openDashboard = this.openDashboard.bind(this)
     this.getNativeCoins = this.getNativeCoins.bind(this)
-    this.openAddCoinModal = this.openAddCoinModal.bind(this)
     this.openCoin = this.openCoin.bind(this)
     this.handleThreadChange = this.handleThreadChange.bind(this)
     this.toggleStaking = this.toggleStaking.bind(this)
