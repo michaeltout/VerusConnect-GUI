@@ -398,7 +398,8 @@ const mapStateToProps = (state, ownProps) => {
         ? ownProps.coin
         : state.users.activeUser.selectedCurrencyMap[ownProps.coin],
     currencyDataMap: state.ledger.currencyDataMap[ownProps.coin] || {},
-    currencyConversionGraph: state.ledger.currencyConversionGraph[ownProps.coin] || { }
+    currencyConversionGraph: state.ledger.currencyConversionGraph[ownProps.coin] || {},
+    multiverseNameMap: state.ledger.multiverseNameMap[ownProps.coin]
   };
 };
 

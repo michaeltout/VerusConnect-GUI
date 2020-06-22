@@ -35,7 +35,7 @@ export const ledger = (state = {
   currentSupply: {},
   blockReward: {},
   currencyDataMap: {},
-  currencyNameMap: {},
+  multiverseNameMap: {},
   currencyConversionGraph: {}
 }, action) => {
   switch (action.type) {
@@ -55,7 +55,7 @@ export const ledger = (state = {
         blockReward,
         allCurrencies,
         currencyDataMap,
-        currencyNameMap,
+        multiverseNameMap,
         currencyConversionGraph
       } = state
       let newLedger = {
@@ -73,7 +73,7 @@ export const ledger = (state = {
         blockReward,
         allCurrencies,
         currencyDataMap,
-        currencyNameMap,
+        multiverseNameMap,
         currencyConversionGraph
       }
 
@@ -145,7 +145,14 @@ export const ledger = (state = {
     case SET_COIN_IDENTITIES:
       return {
         ...state,
-        identities: {...state.identities, [action.chainTicker]: action.identities}
+        identities: {...state.identities, [action.chainTicker]: action.identities},
+        multiverseNameMap: {
+          ...state.multiverseNameMap,
+          [action.chainTicker]: {
+            ...state.multiverseNameMap[action.chainTicker],
+            ...action.nameMap,
+          },
+        },
       }
     case SET_COIN_ALL_CURRENCIES:
       return {
@@ -165,10 +172,22 @@ export const ledger = (state = {
     case SET_COIN_CURRENCY_DATA_MAP:
       return {
         ...state,
-        currencyDataMap: {...state.currencyDataMap, [action.chainTicker]: action.dataMap.currencyData},
-        currencyNameMap: {...state.currencyDataMap, [action.chainTicker]: action.dataMap.currencyNames},
-        currencyConversionGraph: {...state.currencyConversionGraph, [action.chainTicker]: action.conversionGraph}
-      }
+        currencyDataMap: {
+          ...state.currencyDataMap,
+          [action.chainTicker]: action.dataMap.currencyData,
+        },
+        multiverseNameMap: {
+          ...state.multiverseNameMap,
+          [action.chainTicker]: {
+            ...state.multiverseNameMap[action.chainTicker],
+            ...action.dataMap.currencyNames,
+          },
+        },
+        currencyConversionGraph: {
+          ...state.currencyConversionGraph,
+          [action.chainTicker]: action.conversionGraph,
+        },
+      };
     default:
       return state;
   }

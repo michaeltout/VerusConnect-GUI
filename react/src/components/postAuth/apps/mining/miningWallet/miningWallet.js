@@ -47,6 +47,7 @@ function mapStateToProps(state, ownProps) {
     transactions: state.ledger.transactions[coin],
     fiatPrice: state.ledger.fiatPrices[coin],
     fiatCurrency: state.settings.config.general.main.fiatCurrency,
+    multiverseNameMap: state.ledger.multiverseNameMap[coin]
   };
 };
 

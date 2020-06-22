@@ -9,7 +9,7 @@ import { TxCardRender } from './TransactionCard.render'
 function openTxInfo(props, rowData, dispatch) {
   const { transactions, coin } = props
 
-  dispatch(setModalParams(TX_INFO, { chainTicker: coin, txObj: transactions[rowData.txIndex] }))
+  dispatch(setModalParams(TX_INFO, { chainTicker: coin, txObj: transactions[rowData.txIndex], displayTx: rowData }))
   dispatch(setModalNavigationPath(TX_INFO))
 }
 
@@ -18,9 +18,7 @@ function filterTxs(transactions, searchTerm) {
   const term = searchTerm.toLowerCase()
   
   // TODO: Make this work for balance types and normal transaction types as they are displayed as well
-  transactions.map((tx, index) => {
-    tx.txIndex = index;
-
+  transactions.map((tx) => {
     if (searchTerm.length > 0) {
       if (
         (tx.type != null && tx.type.includes(term)) ||
@@ -48,7 +46,11 @@ function filterTxs(transactions, searchTerm) {
         newTransactions.push(tx);
         return;
       }
-      if (tx.address != null && tx.address.toLowerCase().includes(term)) {
+      if (
+        (tx.address != null && tx.address.toLowerCase().includes(term)) ||
+        (tx.displayAddress != null &&
+          tx.displayAddress.toLowerCase().includes(term))
+      ) {
         newTransactions.push(tx);
         return;
       }
@@ -58,8 +60,8 @@ function filterTxs(transactions, searchTerm) {
   return newTransactions
 }
 
-function getDisplayTxs(transactions) {
-  let transactionsComps = transactions.map((tx) => {
+function getDisplayTxs(transactions, props) {
+  let transactionsComps = transactions.map((tx, index) => {
     return {
       type: tx.type ? tx.type : tx.category, // "category" is used on native, while "type" is used for electrum & eth/erc20
       amount: Number(tx.amount),
@@ -67,9 +69,13 @@ function getDisplayTxs(transactions) {
       confirmations: Number(tx.confirmations),
       time: Number(tx.blocktime != null ? tx.blocktime : tx.timestamp),
       affectedBalance: renderAffectedBalance(tx),
-      txIndex: tx.txIndex,
+      txIndex: index,
       txid: tx.txid,
-      blockhash: tx.blockhash
+      blockhash: tx.blockhash,
+      displayAddress:
+        tx.address != null && props.multiverseNameMap && props.multiverseNameMap[tx.address]
+          ? `${props.multiverseNameMap[tx.address]}@ (${tx.address})`
+          : tx.address,
     };
   });
 
@@ -84,7 +90,7 @@ function TransactionCard(props) {
   const { transactions } = props
   const dispatch = useDispatch()
   
-  useEffect(() => setDisplayTxs(getDisplayTxs(filterTxs(transactions, txSearchTerm))), [transactions])
+  useEffect(() => setDisplayTxs(filterTxs(getDisplayTxs(transactions, props), txSearchTerm)), [transactions])
 
   return TxCardRender(
     openTxInfo,
@@ -98,7 +104,8 @@ function TransactionCard(props) {
 
 TransactionCard.propTypes = {
   transactions: PropTypes.array.isRequired,
-  coin: PropTypes.string.isRequired
+  coin: PropTypes.string.isRequired,
+  multiverseNameMap: PropTypes.object
 };
 
 export default TransactionCard

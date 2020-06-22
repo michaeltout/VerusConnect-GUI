@@ -311,7 +311,8 @@ const mapStateToProps = (state, ownProps) => {
     transactions: state.ledger.transactions[ownProps.coin],
     zOperations: state.ledger.zOperations[ownProps.coin],
     info: state.ledger.info,
-    mainPathArray: state.navigation.mainPathArray
+    mainPathArray: state.navigation.mainPathArray,
+    multiverseNameMap: state.ledger.multiverseNameMap[ownProps.coin]
   };
 };
 

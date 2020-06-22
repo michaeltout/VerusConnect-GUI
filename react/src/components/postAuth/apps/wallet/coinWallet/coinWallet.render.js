@@ -274,6 +274,7 @@ export const CoinWalletRender = function() {
             : []
         }
         coin={this.props.coin}
+        multiverseNameMap={this.props.multiverseNameMap}
       />
       {this.props.zOperations && this.props.zOperations.length > 0 && (
         <WalletPaper>

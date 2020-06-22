@@ -36,10 +36,10 @@ export const TxCardRender = (openTxInfo, getDisplayTxs, filterTxs, state, props,
             onChange={e => setTxSearchTerm(e.target.value)}
             onClear={() => {
               setTxSearchTerm('')
-              setDisplayTxs(getDisplayTxs(filterTxs(transactions, '')))
+              setDisplayTxs(filterTxs(getDisplayTxs(transactions, props), ''))
             }}
             onSubmit={() =>
-              setDisplayTxs(getDisplayTxs(filterTxs(transactions, txSearchTerm)))
+              setDisplayTxs(filterTxs(getDisplayTxs(transactions, props), txSearchTerm), props)
             }
             value={txSearchTerm}
           />
@@ -119,7 +119,7 @@ export const TxTableRender = (displayTxs, openTxInfo, props, dispatch) => {
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {rowData.address}
+                  {rowData.displayAddress}
                 </div>
               );
             },

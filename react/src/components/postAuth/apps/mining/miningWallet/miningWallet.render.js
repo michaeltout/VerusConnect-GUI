@@ -156,6 +156,7 @@ export const MiningWalletRender = function() {
         }
         coin={this.props.coin}
         title={coinObj.options.tags.includes(IS_VERUS) ? "Mining/Staking Transactions" : "Mining Transactions"}
+        multiverseNameMap={this.props.multiverseNameMap}
       />
     </div>
   );
