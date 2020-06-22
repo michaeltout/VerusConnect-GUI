@@ -233,11 +233,13 @@ class CoinWallet extends React.Component {
               const balance = balanceObj[balanceAddrType][balanceType];
 
               if (balance != null && balanceType !== STAKING_BALANCE) {
-                if (balanceType !== INTEREST_BALANCE)
-                  pendingBalance.crypto += balance;
+                if (currency === chainTicker) {
+                  if (balanceType !== INTEREST_BALANCE)
+                    pendingBalance.crypto += balance;
 
-                if (balanceType === CONFIRMED_BALANCE) {
-                  spendableBalance.crypto += balance;
+                  if (balanceType === CONFIRMED_BALANCE) {
+                    spendableBalance.crypto += balance;
+                  }
                 }
 
                 if (

@@ -102,13 +102,13 @@ export const getConversionGraph = (currencyObjects) => {
         retObj[name].to.push({
           id: currencyid,
           name: key,
-          price: 1/conversions[index]
+          price: conversions[index]
         })
 
         return {
           id: value,
           name,
-          price: conversions[index]
+          price: 1/conversions[index]
         }
       })
     }

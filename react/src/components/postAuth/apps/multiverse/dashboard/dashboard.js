@@ -8,8 +8,11 @@ import {
   ADD_COIN,
   SELECT_COIN,
   IS_VERUS,
-  NATIVE
+  NATIVE,
+  API_GET_ALL_CURRENCIES
 } from "../../../../../util/constants/componentConstants";
+import { conditionallyUpdateWallet } from '../../../../../actions/actionDispatchers';
+import Store from '../../../../../store';
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -27,7 +30,19 @@ class Dashboard extends React.Component {
 
   getVerusProtocolCoins(activatedCoins) {
     return Object.values(activatedCoins).filter((coinObj) => {
-      return coinObj.options.tags.includes(IS_VERUS) && coinObj.mode === NATIVE
+      return /*coinObj.options.tags.includes(IS_VERUS)*/ coinObj.id === 'VRSCTEST' && coinObj.mode === NATIVE
+    })
+  }
+
+  componentDidMount() {
+    this.state.verusProtoCoins.map(coinObj => {
+      conditionallyUpdateWallet(
+        Store.getState(),
+        this.props.dispatch,
+        NATIVE,
+        coinObj.id,
+        API_GET_ALL_CURRENCIES
+      )
     })
   }
 
@@ -50,10 +65,6 @@ class Dashboard extends React.Component {
       verusProtoCoins: this.getVerusProtocolCoins(this.props.activatedCoins),
       loadedCurrencyCoins: this.getLoadedCurrencyCoins(this.props.allCurrencies)
     })
-  }
-
-  componentWillMount() {
-    document.addEventListener('mousedown', this.handleClick, false)
   }
 
   openAddCoinModal() {

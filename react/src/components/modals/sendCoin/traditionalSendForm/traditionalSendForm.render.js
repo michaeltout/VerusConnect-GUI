@@ -94,7 +94,14 @@ export const TraditionalSendFormEnterRender = function() {
         value={sendTo}
         style={{ marginTop: 5, width: "100%" }}
       />
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
         <TextField
           error={formErrors.amount.length > 0}
           helperText={formErrors.amount ? formErrors.amount[0] : null}
@@ -104,7 +111,7 @@ export const TraditionalSendFormEnterRender = function() {
           variant="outlined"
           type="number"
           name="amount"
-          style={{ marginTop: 5, width: "70%" }}
+          style={{ marginTop: 5, minWidth: "57%", flex: 2 }}
           InputProps={{
             endAdornment: (
               <InputAdornment onClick={this.setSendAmountAll} position="end">
@@ -120,15 +127,38 @@ export const TraditionalSendFormEnterRender = function() {
           }}
         />
         {conversion != null && (
-          <Typography style={{ width: "30%", textAlign: 'right', color: 'gray' }}>
-            {`${conversionRounded ? "≈" : "="} ${displayConversion} ${
-              convertingTo
-                ? fromCurrencyConversion.name
-                : convertingFrom
-                ? toCurrencyConversion.name
-                : null
-            }`}
-          </Typography>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              maxWidth: "43%",
+              flex: 1
+            }}
+          >
+            <Typography
+              style={{
+                color: "gray",
+                textAlign: "left",
+                paddingLeft: 8,
+              }}
+            >
+              {fromCurrencyConversion.name}
+            </Typography>
+            <Typography style={{ color: "gray", textAlign: "center", paddingRight: 8, paddingLeft: 8 }}>
+              {conversionRounded ? "≈" : "="}
+            </Typography>
+            <Typography
+              style={{
+                color: "gray",
+                textAlign: "right",
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {`${displayConversion} ${toCurrencyConversion.name}`}
+            </Typography>
+          </div>
         )}
       </div>
       {sendTo && sendTo[0] && sendTo[0] === "z" && (

@@ -34,8 +34,9 @@ import ShuffleIcon from '@material-ui/icons/Shuffle';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import WalletPaper from '../../../../../containers/WalletPaper/WalletPaper'
 import TransactionCard from '../../../../../containers/TransactionCard/TransactionCard'
-import { FormControl, Select, MenuItem, Button } from "@material-ui/core";
+import { FormControl, Select, MenuItem, Button, Tooltip } from "@material-ui/core";
 import CustomButton from "../../../../../containers/CustomButton/CustomButton";
+import HelpIcon from '@material-ui/icons/Help';
 
 export const CoinWalletRender = function() {
   return (
@@ -213,7 +214,7 @@ export const CoinWalletRender = function() {
           </div>
         </WalletPaper>
       </WalletPaper>
-      <div style={{ position: "relative" }}>
+      {/*<div style={{ position: "relative" }}>
         {this.state.chevronVisible && (
           <div
             className="d-flex"
@@ -252,7 +253,7 @@ export const CoinWalletRender = function() {
             </div>
           </div>
         )}
-      </div>
+      </div>*/}
       {/* Change this when currencies get to mainnet */ this.props.coin ===
       "VRSCTEST"
         ? WalletRenderCurrencyFunctions.call(this)
@@ -393,7 +394,9 @@ export const WalletRenderBalances = function() {
           balanceTag === TRANSPARENT_BALANCE &&
           this.props.currencyConversionGraph[currency] != null &&
           (this.props.currencyConversionGraph[currency].to.length > 0 ||
-            this.props.currencyConversionGraph[currency].from.length > 0);
+            this.props.currencyConversionGraph[currency].from.length > 0) &&
+          this.state.currencyInfo != null &&
+          this.state.currencyInfo.spendableTo;
 
         return balanceTag == null ? null : (
           <div
@@ -585,8 +588,13 @@ export const WalletRenderBalances = function() {
                                   isMessage: false,
                                   isConversion: true,
                                   currencyInfo: this.state.currencyInfo,
-                                  conversionGraph: this.props.currencyConversionGraph[currency],
-                                  calculateCurrencyData: (currency) => this.calculateCurrencyData(this.props, currency)
+                                  conversionGraph: this.props
+                                    .currencyConversionGraph[currency],
+                                  calculateCurrencyData: (currency) =>
+                                    this.calculateCurrencyData(
+                                      this.props,
+                                      currency
+                                    ),
                                 },
                                 SEND_COIN
                               )
@@ -724,7 +732,7 @@ export const WalletRenderCurrencyFunctions = function() {
             onChange={(e) =>
               this.setPreferredCurrency(e.target.value == -1 ? coin : whitelist[e.target.value])
             }
-            labelWidth={130}
+            labelWidth={138}
           >
             <MenuItem value={-1}>{coin}</MenuItem>
             {whitelist.map((currency, index) => {
@@ -732,6 +740,9 @@ export const WalletRenderCurrencyFunctions = function() {
             })}
           </Select>
         </FormControl>
+        <Tooltip title={`Here you can select the ${coin} currency you want to view/send/receive. To add currencies to this list, search for them or discover them on the right.`}>
+          <HelpIcon color='primary' style={{ marginLeft: 16 }}/>
+        </Tooltip>
       </WalletPaper>
       <WalletPaper
         style={{
