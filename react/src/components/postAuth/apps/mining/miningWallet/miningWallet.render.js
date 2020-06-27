@@ -36,7 +36,9 @@ export const MiningWalletRender = function() {
     blockReward,
     fiatPrice,
     fiatCurrency,
-    toggleStaking
+    toggleStaking,
+    miningBookletOpen,
+    stakingBookletOpen
   } = this.props;
 
   return (
@@ -58,6 +60,9 @@ export const MiningWalletRender = function() {
       {MiningWalletFunctions.call(this)}
       {coinObj.options.tags.includes(IS_VERUS) && (
         <WalletBooklet
+          expandedPanelIndex={stakingBookletOpen ? 0 : -1}
+          disabled={this.state[this.STAKING_BOOKLET]}
+          handleClick={() => this.toggleBooklet(this.STAKING_BOOKLET)}
           pages={[
             {
               title: `Staking Overview - (Staking: ${
@@ -108,6 +113,9 @@ export const MiningWalletRender = function() {
         />
       )}
       <WalletBooklet
+        expandedPanelIndex={miningBookletOpen ? 0 : -1}
+        disabled={this.state[this.MINING_BOOKLET]}
+        handleClick={() => this.toggleBooklet(this.MINING_BOOKLET)}
         pages={[
           {
             title: `Mining Overview - (Mining: ${

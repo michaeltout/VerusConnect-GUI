@@ -20,11 +20,6 @@ import {
   OCCUPY_SYSTEM_API_CALL,
   FREE_SYSTEM_API_CALL
 } from "../util/constants/storeType";
-import {
-  API_GET_CPU_TEMP,
-  API_GET_SYS_TIME,
-  API_GET_CPU_LOAD
-} from "../util/constants/componentConstants";
 
 export const updates = (state = {
   coinUpdateTracker: {},

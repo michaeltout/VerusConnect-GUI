@@ -22,6 +22,16 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount() {
+    this.props.nativeCoins.map(coinObj => {
+      conditionallyUpdateWallet(
+        Store.getState(),
+        this.props.dispatch,
+        NATIVE,
+        coinObj.id,
+        API_GET_MININGINFO
+      )
+    })
+
     this.updateMineStakeCoins()
   }
 

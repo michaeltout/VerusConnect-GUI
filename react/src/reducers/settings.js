@@ -5,7 +5,6 @@
 
 import { 
   SET_CONFIG,
-  SET_FIATPRICE_CURRENCY,
   SET_CONFIG_SCHEMA
 } from '../util/constants/storeType'
 
@@ -14,7 +13,6 @@ export const settings = (state = {
     native: {},
     electrum: {},
     verus: {},
-    fiatCurrency: 'USD'
   },
   configSchema: {}
 }, action) => {
@@ -28,11 +26,6 @@ export const settings = (state = {
     return {
       ...state,
       configSchema: action.schema
-    };
-  case SET_FIATPRICE_CURRENCY:
-    return {
-      ...state,
-      config: {...state.config, fiatCurrency: action.fiatCurrency}
     };
   default:
     return state;
