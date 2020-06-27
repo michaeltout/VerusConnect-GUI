@@ -63,7 +63,12 @@ class TraditionalSendForm extends React.Component {
     // false to convert to active currency, true to convert from active currency
     const convertingFrom = isConversion && conversionGraph != null && conversionGraph.to.length > 0
     const convertingTo = isConversion && conversionGraph != null && conversionGraph.from.length > 0
-    this.DEFAULT_CURRENCY_CONVERSION = { id: currencyInfo.currency.currencyid, name: currencyName, price: 1 }
+    this.DEFAULT_CURRENCY_CONVERSION = {
+      id:
+        currencyInfo != null ? currencyInfo.currency.currencyid : null,
+      name: currencyName,
+      price: 1,
+    };
 
     const fromCurrencyConversion = convertingFrom
         ? this.DEFAULT_CURRENCY_CONVERSION

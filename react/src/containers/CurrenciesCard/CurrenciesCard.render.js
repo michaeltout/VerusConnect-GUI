@@ -222,12 +222,12 @@ export const CurrencyTableRender = (displayCurrencies, openCurrencyInfo, props) 
             dataKey: 'age',
           },
           {
-            width: 60,
+            width: 100,
             flexGrow: 1,
             cellDataGetter: ({ rowData }) => {
               return rowData.spendableTo ? "Yes" : "No"
             },
-            label: 'Spendable',
+            label: 'Convertable To',
             dataKey: 'spendableTo',
           },
           {
