@@ -7,6 +7,7 @@ import IconDropdown from '../../../containers/IconDropdown/IconDropdown'
 import { VirtualizedTable } from '../../../containers/VirtualizedTable/VirtualizedTable'
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import QRCode from 'qrcode.react';
+import { copyDataToClipboard } from '../../../util/copyToClipboard';
 
 export const ReceiveCoinRender = function() {
   return (
@@ -251,7 +252,7 @@ export const ReceiveAddressOptionsRender = function(address) {
         <button
           className="btn btn-dark text-uppercase"
           type="button"
-          onClick={() => this.copyAddress(address)}
+          onClick={() => copyDataToClipboard(address)}
           style={{
             paddingTop: 2,
             paddingBottom: 3,

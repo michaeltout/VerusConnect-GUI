@@ -3,7 +3,26 @@ import { connect } from 'react-redux';
 import { 
   SendCoinRender
 } from './sendCoin.render';
-import { SEND_COIN, ENTER_DATA, NATIVE, ETH, ELECTRUM, API_SUCCESS, ERROR_SNACK, API_ERROR, SUCCESS_SNACK, CONFIRM_DATA, API_GET_TRANSACTIONS, API_GET_BALANCES, API_GET_ZOPERATIONSTATUSES, Z_SEND, INFO_SNACK, INTEREST_BALANCE } from '../../../util/constants/componentConstants';
+import {
+  SEND_COIN,
+  ENTER_DATA,
+  NATIVE,
+  ETH,
+  ELECTRUM,
+  API_SUCCESS,
+  ERROR_SNACK,
+  API_ERROR,
+  SUCCESS_SNACK,
+  CONFIRM_DATA,
+  API_GET_TRANSACTIONS,
+  API_GET_BALANCES,
+  API_GET_ZOPERATIONSTATUSES,
+  Z_SEND,
+  INFO_SNACK,
+  INTEREST_BALANCE,
+  MID_LENGTH_ALERT,
+  WARNING_SNACK,
+} from "../../../util/constants/componentConstants";
 import { sendNative, sendEth, sendElectrum, getCurrency } from '../../../util/api/wallet/walletCalls';
 import { newSnackbar, expireData } from '../../../actions/actionCreators';
 
@@ -75,8 +94,9 @@ class SendCoin extends React.Component {
             if (fetchedCurrency.msg !== "success") {
               this.props.dispatch(
                 newSnackbar(
-                  ERROR_SNACK,
-                  `Couldn't fetch information about all related currencies.`
+                  WARNING_SNACK,
+                  `Couldn't fetch information about all related currencies.`,
+                  MID_LENGTH_ALERT
                 )
               );
             } else {

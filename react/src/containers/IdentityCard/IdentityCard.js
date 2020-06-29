@@ -9,12 +9,13 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ObjectToTable from '../ObjectToTable/ObjectToTable';
 import { getIdentity, getCurrency } from '../../util/api/wallet/walletCalls'
-import { NATIVE, ERROR_SNACK, SUCCESS_SNACK, MID_LENGTH_ALERT } from '../../util/constants/componentConstants';
+import { NATIVE, ERROR_SNACK, SUCCESS_SNACK, MID_LENGTH_ALERT, WARNING_SNACK } from '../../util/constants/componentConstants';
 import { newSnackbar } from '../../actions/actionCreators';
 import IconDropdown from '../IconDropdown/IconDropdown'
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { checkFlag } from '../../util/flagUtils';
 import { IS_CURRENCY_FLAG } from '../../util/constants/flags';
+import { copyDataToClipboard } from '../../util/copyToClipboard';
 
 const FIND_ID = "Find ID"
 const COPY = "Copy to clipboard"
@@ -30,7 +31,6 @@ class IdentityCard extends React.Component {
       loadingCurrency: false
     }
   
-    this.copyDataToClipboard = this.copyDataToClipboard.bind(this)
     this.selectOption = this.selectOption.bind(this)
     this.fetchSupportingIdData = this.fetchSupportingIdData.bind(this)
   }
@@ -74,7 +74,13 @@ class IdentityCard extends React.Component {
 
         res.map(promiseRes => {
           if (promiseRes.msg !== "success") {
-            this.props.dispatch(newSnackbar(ERROR_SNACK, `Couldn't fetch information about all related identities.`))
+            this.props.dispatch(
+              newSnackbar(
+                WARNING_SNACK,
+                `Couldn't fetch information about all related identities.`,
+                MID_LENGTH_ALERT
+              )
+            );
           } else {
             idMap[promiseRes.result.identity.identityaddress] = promiseRes.result
           }
@@ -91,7 +97,7 @@ class IdentityCard extends React.Component {
           const res = await getCurrency(NATIVE, this.props.activeCoin.id, identity.name)
   
           if (res.msg !== "success") {
-            this.props.dispatch(newSnackbar(ERROR_SNACK, `Couldn't fetch information about all related identities.`))
+            this.props.dispatch(newSnackbar(WARNING_SNACK, `Couldn't fetch information about all related identities.`, MID_LENGTH_ALERT))
           } else {
             this.setState({ loadingCurrency: false, currencyData: res.result })
           }
@@ -104,13 +110,8 @@ class IdentityCard extends React.Component {
     })
   }
 
-  copyDataToClipboard(data) {
-    navigator.clipboard.writeText(data)
-    this.props.dispatch(newSnackbar(SUCCESS_SNACK, data + " copied to clipboard", MID_LENGTH_ALERT))
-  }
-
   selectOption(address, option) {
-    if (option === COPY) this.copyDataToClipboard(address)
+    if (option === COPY) copyDataToClipboard(address)
     else if (option === FIND_ID) { 
       this.props.setLock(true)
 
@@ -161,7 +162,7 @@ class IdentityCard extends React.Component {
         : {
             expanded: false,
             onClick: () =>
-              this.copyDataToClipboard(identity.primaryaddresses[0]),
+              copyDataToClipboard(identity.primaryaddresses[0]),
           };
     const isCurrency = checkFlag(identity.flags, IS_CURRENCY_FLAG)
 
@@ -262,7 +263,7 @@ class IdentityCard extends React.Component {
             <ExpansionPanel
               square
               expanded={false}
-              onClick={() => this.copyDataToClipboard(identity.identityaddress)}
+              onClick={() => copyDataToClipboard(identity.identityaddress)}
             >
               <ExpansionPanelSummary
                 expandIcon={null}
@@ -357,7 +358,7 @@ class IdentityCard extends React.Component {
               onClick={
                 identity.privateaddress == null
                   ? () => {}
-                  : () => this.copyDataToClipboard(identity.privateaddress)
+                  : () => copyDataToClipboard(identity.privateaddress)
               }
             >
               <ExpansionPanelSummary

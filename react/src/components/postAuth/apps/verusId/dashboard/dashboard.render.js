@@ -14,6 +14,7 @@ import DeleteForever from '@material-ui/icons/DeleteForever';
 import WalletPaper from '../../../../../containers/WalletPaper/WalletPaper';
 import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
 import { openAddCoinModal } from '../../../../../actions/actionDispatchers';
+import { copyDataToClipboard } from '../../../../../util/copyToClipboard';
 
 export const DashboardRender = function() {
   //TODO: Move to parent component so this isnt re-calculated at render
@@ -653,19 +654,22 @@ export const DashboardRenderIds = function() {
                 height="50px"
               />
               <div style={{ paddingLeft: 10, overflow: "hidden" }}>
-                <h3
+                <a
                   className="d-lg-flex align-items-lg-center"
                   style={{
                     fontSize: 16,
-                    color: "rgb(0,0,0)",
+                    color: 'rgb(78,115,223)',
                     fontWeight: "bold",
                     textOverflow: "ellipsis",
                     overflow: "hidden",
-                    whiteSpace: "nowrap"
+                    whiteSpace: "nowrap",
+                    textDecoration: "none"
                   }}
+                  href={"#"}
+                  onClick={() => copyDataToClipboard(`${identity.name}@`)}
                 >
                   {`${identity.name}@`}
-                </h3>
+                </a>
                 <h3
                   className={`d-lg-flex align-items-lg-center coin-type ${
                     idObj.status === ID_REVOKED ? "red" : "native"

@@ -9,7 +9,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ObjectToTable from '../ObjectToTable/ObjectToTable';
 import { getIdentity, getCurrency } from '../../util/api/wallet/walletCalls'
-import { NATIVE, ERROR_SNACK, SUCCESS_SNACK, MID_LENGTH_ALERT } from '../../util/constants/componentConstants';
+import { NATIVE, ERROR_SNACK, SUCCESS_SNACK, MID_LENGTH_ALERT, WARNING_SNACK } from '../../util/constants/componentConstants';
 import { newSnackbar } from '../../actions/actionCreators';
 import IconDropdown from '../IconDropdown/IconDropdown'
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -19,6 +19,7 @@ import { blocksToTime } from '../../util/blockMath';
 import CustomButton from '../CustomButton/CustomButton';
 import { VirtualizedTable } from '../VirtualizedTable/VirtualizedTable';
 import { SortDirection } from 'react-virtualized';
+import { copyDataToClipboard } from '../../util/copyToClipboard';
 
 const FIND_ID = "Find ID"
 const COPY = "Copy to clipboard"
@@ -41,7 +42,6 @@ class CurrencyCard extends React.Component {
       convertPanelOpen: false
     };
 
-    this.copyDataToClipboard = this.copyDataToClipboard.bind(this);
     this.selectOption = this.selectOption.bind(this);
     this.fetchSupportingData = this.fetchSupportingData.bind(this);
     this.whitelistCurrency = this.whitelistCurrency.bind(this)
@@ -139,8 +139,9 @@ class CurrencyCard extends React.Component {
             if (promiseRes.msg !== "success") {
               this.props.dispatch(
                 newSnackbar(
-                  ERROR_SNACK,
-                  `Couldn't fetch information about all related identities.`
+                  WARNING_SNACK,
+                  `Couldn't fetch information about all related identities.`,
+                  MID_LENGTH_ALERT
                 )
               );
             } else {
@@ -162,8 +163,9 @@ class CurrencyCard extends React.Component {
             if (promiseRes.msg !== "success") {
               this.props.dispatch(
                 newSnackbar(
-                  ERROR_SNACK,
-                  `Couldn't fetch information about all related currencies.`
+                  WARNING_SNACK,
+                  `Couldn't fetch information about all related currencies.`,
+                  MID_LENGTH_ALERT
                 )
               );
             } else {
@@ -181,19 +183,8 @@ class CurrencyCard extends React.Component {
     );
   }
 
-  copyDataToClipboard(data) {
-    navigator.clipboard.writeText(data);
-    this.props.dispatch(
-      newSnackbar(
-        SUCCESS_SNACK,
-        data + " copied to clipboard",
-        MID_LENGTH_ALERT
-      )
-    );
-  }
-
   selectOption(address, option) {
-    if (option === COPY) this.copyDataToClipboard(address);
+    if (option === COPY) copyDataToClipboard(address);
     else if (option === FIND_ID) {
       this.props.setLock(true);
 

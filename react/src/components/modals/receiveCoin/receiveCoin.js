@@ -76,7 +76,6 @@ class ReceiveCoin extends React.Component {
     this.filterAddresses = this.filterAddresses.bind(this)
     this.setInput = this.setInput.bind(this)
     this.getAddrCurrencies = this.getAddrCurrencies.bind(this)
-    this.copyAddress = this.copyAddress.bind(this)
     this.generateAddressOptions = this.generateAddressOptions.bind(this)
     this.getKey = this.getKey.bind(this)
     this.selectAddressOption = this.selectAddressOption.bind(this)
@@ -173,11 +172,6 @@ class ReceiveCoin extends React.Component {
       addresses: this.props.addresses,
       addressSearchTerm: ''
     })
-  }
-
-  copyAddress(address) {
-    navigator.clipboard.writeText(address)
-    this.props.dispatch(newSnackbar(SUCCESS_SNACK, "Address copied!", MID_LENGTH_ALERT))
   }
 
   getKey(address, keyType) {
