@@ -262,7 +262,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 1200000,
+          expire_timeout: 120000,
           update_expired_interval: 10000,
         }
       },
@@ -278,7 +278,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 1200000,
+          expire_timeout: 120000,
           update_expired_interval: 10000,
         }
       }

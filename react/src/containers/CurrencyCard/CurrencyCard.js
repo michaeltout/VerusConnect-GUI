@@ -378,7 +378,7 @@ class CurrencyCard extends React.Component {
                           : loadingIdMap || loadingCurrencyMap
                           ? "[loading...]"
                           : parent
-                      } block ${endblock}`}
+                      } block ${endblock})`}
                 </div>
               </ExpansionPanelSummary>
             </ExpansionPanel>
