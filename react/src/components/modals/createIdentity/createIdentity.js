@@ -76,7 +76,7 @@ class CreateIdentity extends React.Component {
     this.setState({
       formStep: ENTER_DATA,
       txData: {},
-      formData: {}
+      continueDisabled: true
     })
   }
 

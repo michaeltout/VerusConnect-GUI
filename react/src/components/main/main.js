@@ -111,7 +111,7 @@ class Main extends React.Component {
   render() {
     if (staticVar) {      
       return (
-        <div>
+        <div className="main-container">
           <SnackbarAlert />
           <Modal />
           {this.state.initializing ? <SplashScreen /> : (this.props.mainPathArray[0] === POST_AUTH ? <PostAuth /> : <PreAuth />)}

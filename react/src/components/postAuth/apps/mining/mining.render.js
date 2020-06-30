@@ -80,29 +80,17 @@ export const MiningCardRender = function(coinObj) {
 
 export const MiningTabsRender = function() {
   return [
-    <li className="nav-item" role="presentation" key="wallet-dashboard">
-      <a
-        className={`nav-link ${this.props.mainPathArray.includes(
-          DASHBOARD ? "active" : ""
-        )}`}
-        href="#"
-        onClick={() => this.openDashboard()}
-        style={MiningStyles.secondaryTabBarLink}
-      >
-        <i className="fas fa-home" style={MiningStyles.navigationTabIcon} />
-        {"Mining Dashboard"}
-      </a>
-    </li>,
-    <li className="nav-item" role="presentation" key="wallet-addcoin">
-      <a
-        className="nav-link"
-        href={"#"}
-        style={MiningStyles.secondaryTabBarLink}
-        onClick={this.openAddCoinModal}
-      >
-        <i className="fas fa-plus" style={MiningStyles.navigationTabIcon} />
-        {"Add Coin"}
-      </a>
-    </li>
+    {
+      title: "Add Coin",
+      icon: 'fa-plus',
+      onClick: this.openAddCoinModal,
+      isActive: () => false
+    },
+    {
+      title: "Mining Dashboard",
+      icon: 'fa-home',
+      onClick: () => this.openDashboard(),
+      isActive: () => this.props.mainPathArray.includes(DASHBOARD)
+    }
   ];
 }

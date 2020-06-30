@@ -86,8 +86,11 @@ class CoinSettings extends React.Component {
           
           parsedParam = parsedParam.replace(endChar === "'" ? /'/g : /"/g, '')
 
-          try {         
-            cliCmdsParsed.push(JSON.parse(parsedParam))
+          try {
+            const parsedJson = JSON.parse(parsedParam)
+
+            if (typeof parsedJson === 'number') cliCmdsParsed.push(parsedJson.toString())
+            else cliCmdsParsed.push(parsedJson)
           } catch(e) {
             cliCmdsParsed.push(parsedParam)
           }

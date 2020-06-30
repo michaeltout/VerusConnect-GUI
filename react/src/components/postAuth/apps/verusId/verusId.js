@@ -1,14 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { DASHBOARD, CHAIN_POSTFIX, ADD_COIN, SELECT_COIN, IS_VERUS, ID_POSTFIX } from '../../../../util/constants/componentConstants'
+import { DASHBOARD, CHAIN_POSTFIX, ADD_COIN, SELECT_COIN, IS_VERUS, ID_POSTFIX, NATIVE, ERROR_SNACK, SUCCESS_SNACK, ID_INFO, MID_LENGTH_ALERT } from '../../../../util/constants/componentConstants'
 import Dashboard from './dashboard/dashboard'
 import IdWallet from './idWallet/idWallet'
 import {
   IdCardRender,
   IdTabsRender
 } from './verusId.render'
-import { setMainNavigationPath, setModalNavigationPath } from '../../../../actions/actionCreators'
+import { setMainNavigationPath, setModalNavigationPath, newSnackbar, setModalParams } from '../../../../actions/actionCreators'
 import { getPathParent } from '../../../../util/navigationUtils'
+import FormDialog from '../../../../containers/FormDialog/FormDialog'
+import { getIdentity } from '../../../../util/api/wallet/walletCalls'
 
 const COMPONENT_MAP = {
   [DASHBOARD]: <Dashboard />,
@@ -21,7 +23,11 @@ class VerusId extends React.Component {
     this.state = {
       activeId: {
         chainTicker: null,
-        idIndex: null
+        idIndex: null,
+        idSearchOpen: false,
+        idSearchTerm: '',
+        loading: false,
+        searchChain: null
       }
     }
     
@@ -30,12 +36,62 @@ class VerusId extends React.Component {
     this.openId = this.openId.bind(this)
     this.openDashboard = this.openDashboard.bind(this)
     this.openAddCoinModal = this.openAddCoinModal.bind(this)
+    this.updateSearchTerm = this.updateSearchTerm.bind(this)
+    this.closeSearchModal = this.closeSearchModal.bind(this)
+    this.openSearchModal = this.openSearchModal.bind(this)
+    this.onIdSearchSubmit = this.onIdSearchSubmit.bind(this)
+    this.openModal = this.openModal.bind(this)
     this.setTabs()
   }
 
   componentDidMount() {
     //Set default navigation path to dashboard if wallet is opened without a sub-navigation location
     if (!this.props.mainPathArray[3]) this.props.dispatch(setMainNavigationPath(`${this.props.mainPathArray.join('/')}/${DASHBOARD}`)) 
+  }
+
+  updateSearchTerm(term) {
+    this.setState({ idSearchTerm: term })
+  }
+
+  closeSearchModal() {
+    this.setState({ idSearchOpen: false })
+  }
+
+  openSearchModal(chain) {
+    this.setState({ idSearchOpen: true, searchChain: chain })
+  }
+
+  openModal(modalParams = {}, modal) {
+    this.props.dispatch(
+      setModalParams(modal, modalParams)
+    );
+
+    this.props.dispatch(setModalNavigationPath(modal));
+  }
+
+  onIdSearchSubmit() {
+    const openIdentity = (activeIdentity, chainTicker) => {
+      this.props.dispatch(setModalNavigationPath(null))
+      this.openModal({ chainTicker, activeIdentity, openIdentity }, ID_INFO)
+    }
+
+    this.setState({loading: true}, () => {
+      getIdentity(NATIVE, this.state.searchChain, this.state.idSearchTerm)
+      .then(res => {
+        if (res.msg === 'success') {
+          this.props.dispatch(newSnackbar(SUCCESS_SNACK, `${this.state.idSearchTerm} ID found!`, MID_LENGTH_ALERT))
+          openIdentity(res.result, this.state.searchChain)
+          this.setState({ loading: false, idSearchOpen: false, idSearchTerm: '' })
+        } else {
+          this.props.dispatch(newSnackbar(ERROR_SNACK, res.result))
+          this.setState({ loading: false })
+        }
+      })
+      .catch(err => {
+        this.props.dispatch(newSnackbar(ERROR_SNACK, err.message))
+        this.setState({ loading: false })
+      })
+    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -115,19 +171,31 @@ class VerusId extends React.Component {
   render() {
     const { activeId } = this.state
     const walletApp = this.props.mainPathArray[3] ? this.props.mainPathArray[3] : null
+    let component = null
 
     if (walletApp) {
-      if (COMPONENT_MAP[walletApp]) return COMPONENT_MAP[walletApp]
+      if (COMPONENT_MAP[walletApp]) component = COMPONENT_MAP[walletApp]
       else {
         if (activeId.idIndex != null && activeId.chainTicker != null) {
-          return (
-            <IdWallet idIndex={activeId.idIndex} coin={activeId.chainTicker} />
-          );
+          component = <IdWallet idIndex={activeId.idIndex} coin={activeId.chainTicker} />
         }
       }
     }
 
-    return null
+    return (
+      <React.Fragment>
+        <FormDialog
+          open={this.state.idSearchOpen}
+          title={`Search ${this.state.searchChain} IDs`}
+          value={this.state.idSearchTerm}
+          onChange={this.updateSearchTerm}
+          onCancel={this.closeSearchModal}
+          onSubmit={this.onIdSearchSubmit}
+          disabled={this.state.loading}
+        />
+        { component }
+      </React.Fragment>
+    );
   }
 }
 
@@ -139,7 +207,7 @@ const mapStateToProps = (state) => {
     fiatCurrency: state.settings.config.general.main.fiatCurrency,
     identities: state.ledger.identities,
     nameCommitments: state.ledger.nameCommitments,
-    activeUser: state.users.activeUser,
+    activeUser: state.users.activeUser
   };
 };
 

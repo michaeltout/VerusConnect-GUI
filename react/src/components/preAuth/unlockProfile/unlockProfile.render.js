@@ -16,6 +16,7 @@ export const UnlockProfileRender = function() {
         helperText={this.state.formError ? this.state.formError : ""}
         inputDisabled={this.state.formLock}
         submitDisabled={this.state.formLock}
+        inputRef={(input) => { this.pwdInput = input; }} 
         error={this.state.formError ? true : false}
       />
       <div className="form-group d-flex justify-content-between">

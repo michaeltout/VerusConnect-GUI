@@ -8,7 +8,7 @@ export const IdCardRender = function(coinObj) {
   const coinIdentities = identities[coinObj.id] || []
 
   return (
-    <button
+    <div
       className="unstyled-button"
       //onClick={() => this.openCoin(coinObj.id)} key={coinObj.id}
       style={VerusIdStyles.cardClickableContainer}
@@ -72,39 +72,50 @@ export const IdCardRender = function(coinObj) {
                   }
                 })}
               </select>
+              <button
+                className="unstyled-button"
+                onClick={() => this.openSearchModal(coinObj.id)}
+                style={VerusIdStyles.cardClickableContainer}
+              >
+              <div
+                className="d-flex flex-column align-items-end"
+                style={VerusIdStyles.searchButtonContainer}
+              >
+                <div
+                  className={'card border-on-hover'}
+                  style={VerusIdStyles.cardInnerContainer}
+                >
+                  <div style={VerusIdStyles.cardInnerTextContainer}>
+                    <i
+                      className={'fas fa-search'}
+                      style={{ paddingRight: 6, color: 'black' }}
+                    />
+                    {"ID Search"}
+                  </div>
+                </div>
+              </div>
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </button>
+    </div>
   );
 }
 
 export const IdTabsRender = function() {
   return [
-    <li className="nav-item" role="presentation" key="wallet-dashboard">
-      <a
-        className={`nav-link ${this.props.mainPathArray.includes(
-          DASHBOARD ? "active" : ""
-        )}`}
-        href="#"
-        onClick={() => this.openDashboard()}
-        style={VerusIdStyles.secondaryTabBarLink}
-      >
-        <i className="fas fa-home" style={VerusIdStyles.navigationTabIcon} />
-        {"ID Dashboard"}
-      </a>
-    </li>,
-    <li className="nav-item" role="presentation" key="wallet-addcoin">
-      <a
-        className="nav-link"
-        href={"#"}
-        style={VerusIdStyles.secondaryTabBarLink}
-        onClick={this.openAddCoinModal}
-      >
-        <i className="fas fa-plus" style={VerusIdStyles.navigationTabIcon} />
-        {"Add Coin"}
-      </a>
-    </li>
+    {
+      title: "Add Coin",
+      icon: 'fa-plus',
+      onClick: this.openAddCoinModal,
+      isActive: () => false
+    },
+    {
+      title: "VerusID Dashboard",
+      icon: 'fa-home',
+      onClick: () => this.openDashboard(),
+      isActive: () => this.props.mainPathArray.includes(DASHBOARD)
+    }
   ];
 }

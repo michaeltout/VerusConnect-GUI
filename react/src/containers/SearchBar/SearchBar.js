@@ -38,7 +38,8 @@ class SearchBar extends React.Component {
       onChange,
       name,
       clearable,
-      onClear
+      onClear,
+      autoFocus
     } = this.props;
 
     return (
@@ -53,6 +54,7 @@ class SearchBar extends React.Component {
           { label }
         </InputLabel>
         <Input
+          autoFocus={autoFocus == null ? false : autoFocus}
           id="searchBarInput"
           onKeyDown={this.handleKeyDown}
           id="searchBarInput"
@@ -98,7 +100,8 @@ SearchBar.propTypes = {
   value: PropTypes.string,
   name: PropTypes.string,
   clearable: PropTypes.bool,
-  onClear: PropTypes.func
+  onClear: PropTypes.func,
+  autoFocus: PropTypes.bool
 };
 
 export default SearchBar

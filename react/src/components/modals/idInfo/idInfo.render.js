@@ -1,14 +1,16 @@
 import React from 'react';
-import ObjectToTable from '../../../containers/ObjectToTable/ObjectToTable'
+import IdentityCard from '../../../containers/IdentityCard/IdentityCard'
 
 export const IdInfoRender = function() {
   return (
     <div className="col-xs-12 backround-gray" style={{ width: "90%", marginBottom: 20 }}>
-      <ObjectToTable 
-        dataObj={ this.displayObj }
-        pagination={ false }
-        paperStyle={{ marginBottom: 40 }}
-      /> 
+      <IdentityCard 
+        verusId={this.props.activeIdentity}
+        activeCoin={this.props.activeCoin}
+        dispatch={this.props.dispatch}
+        openIdentity={this.props.openIdentity}
+        setLock={this.props.setModalLock}
+      />
     </div>
   );
 }
