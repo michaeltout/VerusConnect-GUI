@@ -3,7 +3,18 @@ import { connect } from 'react-redux';
 import { 
   ProfileSettingsRender,
 } from './profileSettings.render';
-import { UX_SELECTOR, WALLET, PBAAS, MINING, PLACEHOLDER, POST_AUTH, APPS, ETH, NATIVE, ELECTRUM, IDENTITIES } from '../../../../../util/constants/componentConstants';
+import {
+  UX_SELECTOR,
+  WALLET,
+  MINING,
+  PLACEHOLDER,
+  POST_AUTH,
+  APPS,
+  ETH,
+  NATIVE,
+  ELECTRUM,
+  IDENTITIES,
+} from "../../../../../util/constants/componentConstants";
 import { getSimpleCoinArray, getCoinObj, getCoinColor } from "../../../../../util/coinData";
 
 class ProfileSettings extends React.Component {
@@ -12,7 +23,7 @@ class ProfileSettings extends React.Component {
 
     this.state = {
       selectedStartLocation: PLACEHOLDER,
-      selectedStartCoins: [],
+      selectedStartCoins: props.activeUser.startCoins,
       selectedCoin: PLACEHOLDER,
       selectedCoinObj: {
         available_modes: {
@@ -56,17 +67,18 @@ class ProfileSettings extends React.Component {
 
     const completeCoinObj = { ...selectedCoinObj, mode, themeColor: await getCoinColor(selectedCoinObj.id, selectedCoinObj.available_modes) }
     this.setState(
-      { selectedStartCoins: [...selectedStartCoins, completeCoinObj] },
+      { selectedStartCoins: {...selectedStartCoins, [completeCoinObj.id]: completeCoinObj} },
       () => this.setStartCoins(false)
     );
   }
 
   removeStartCoin(chainTicker) {
+    let newStartCoins = { ...this.state.selectedStartCoins }
+    delete newStartCoins[chainTicker]
+
     this.setState(
       {
-        selectedStartCoins: this.state.selectedStartCoins.filter(value => {
-          return value.id !== chainTicker;
-        })
+        selectedStartCoins: newStartCoins
       },
       () => this.setStartCoins(false)
     );
@@ -115,7 +127,8 @@ class ProfileSettings extends React.Component {
 const mapStateToProps = (state) => {
   return {
     mainPath: state.navigation.mainPath,
-    activatedCoins: state.coins.activatedCoins
+    activatedCoins: state.coins.activatedCoins,
+    activeUser: state.users.activeUser
   };
 };
 

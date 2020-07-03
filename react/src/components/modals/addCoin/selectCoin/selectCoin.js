@@ -91,15 +91,6 @@ class SelectCoin extends React.Component {
       }
     };
     reader.readAsText(event.target.files[0]) 
-
-    /*console.log(event.target.files[0])
-    const data = new FormData() 
-    data.append('file', event.target.files[0])
-    console.log(data)
-
-    this.setState({
-      coinJsonFile: event.target.files[0]
-    })*/
   }
 
   componentWillUnmount() {
@@ -127,7 +118,7 @@ class SelectCoin extends React.Component {
     }, 1000))
     
     const enteredCode = this.keyLog.filter((value) => value !== 'Shift').join('')
-    console.log(enteredCode)
+
     // Filter out shift key
     if (Object.keys(this.SECRET_CODES).includes(enteredCode)) {
       this.props.dispatch(newSnackbar(INFO_SNACK, this.SECRET_CODES[enteredCode].message, MID_LENGTH_ALERT))

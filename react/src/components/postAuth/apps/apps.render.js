@@ -230,6 +230,7 @@ export const AppsRender = function() {
                 {fiatList.map((currency, index) => {
                   return (
                     <a
+                      key={index}
                       className={`dropdown-item ${
                         this.props.fiatCurrency === currency.toUpperCase()
                           ? "disabled"

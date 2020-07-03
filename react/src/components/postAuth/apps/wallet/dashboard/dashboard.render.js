@@ -194,16 +194,16 @@ export const DashboardRenderTable = function() {
                 } ${this.props.fiatCurrency}`}</td>
                 <td
                   style={
-                    portfolioItem.priceChange1h
-                      ? portfolioItem.priceChange1h > 0
+                    portfolioItem.balanceFiat && (portfolioItem.priceChange7d != null)
+                      ? portfolioItem.priceChange7d > 0
                         ? { color: "rgb(0,178,26)" }
                         : { color: "rgb(236,43,43)" }
                       : {}
                   }
                 >
                   {`${
-                    portfolioItem.priceChange1h != null
-                      ? portfolioItem.priceChange1h
+                    portfolioItem.balanceFiat && (portfolioItem.priceChange7d != null)
+                      ? portfolioItem.priceChange7d
                       : "-"
                   }%`}
                 </td>
@@ -248,11 +248,11 @@ export const DashboardRenderSpotPrices = function() {
                   ? `${portfolioItem.spotPrice} ${this.props.fiatCurrency}/${portfolioItem.id}`
                   : `No price data found for ${portfolioItem.id}`}
               </h3>
-              {portfolioItem.priceChange1h && (
+              {portfolioItem.priceChange7d && (
                 <h3
                   style={{
-                    color: portfolioItem.priceChange1h
-                      ? portfolioItem.priceChange1h > 0
+                    color: portfolioItem.priceChange7d
+                      ? portfolioItem.priceChange7d > 0
                         ? "rgb(0,178,26)"
                         : "rgb(236,43,43)"
                       : "rgb(0,0,0)",
@@ -260,7 +260,7 @@ export const DashboardRenderSpotPrices = function() {
                     fontSize: 16
                   }}
                 >
-                  {`${portfolioItem.priceChange1h}%`}
+                  {`${portfolioItem.priceChange7d}%`}
                 </h3>
               )}
             </div>

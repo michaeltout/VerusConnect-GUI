@@ -18,6 +18,7 @@ export const updateFiatPrice = async (state, dispatch, mode, chainTicker) => {
   if (mode === NATIVE || mode === ETH || mode === ELECTRUM) {  
     try {
       const apiResult = await getFiatPrice(mode, chainTicker)
+
       if (apiResult.msg === 'success') {
         fiatpriceAction = {...fiatpriceAction, type: SET_COIN_FIATPRICE, fiatPrice: apiResult.result}
       } else {

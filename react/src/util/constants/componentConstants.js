@@ -66,6 +66,7 @@ export const API_SHIELDCOINBASE_PREFLIGHT = 'shieldcoinbase_preflight'
 // Non-blockchain API call paths
 export const LOAD_USERS = 'users/load'
 export const SAVE_USERS = 'users/save'
+export const BACKUP_USERS = 'users/backup'
 export const RESET_USERS = 'users/reset'
 export const LOAD_CONFIG = 'config/load'
 export const SAVE_CONFIG = 'config/save'
@@ -89,6 +90,9 @@ export const API_LOAD_LOCAL_BLACKLIST = 'load_currency_blacklist'
 export const API_LOAD_LOCAL_WHITELIST = 'load_currency_whitelist'
 export const API_SAVE_LOCAL_BLACKLIST = 'save_currency_blacklist'
 export const API_SAVE_LOCAL_WHITELIST = 'save_currency_whitelist'
+export const API_SAVE_UPDATE_LOG = 'save_update_log'
+export const API_LOAD_UPDATE_LOG = 'load_update_log'
+export const API_BACKUP_APPDATA = 'backup_appdata'
 
 // Local Currency Lists 
 export const BLACKLISTS = 'blacklists'
