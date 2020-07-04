@@ -104,7 +104,7 @@ class Multiverse extends React.Component {
     
     const updateCards = () => {
       const verusProtocolCoins = Object.values(activatedCoins).filter((coinObj) => {
-        return coinObj.options.tags.includes(IS_VERUS)
+        return coinObj.options.tags.includes(IS_VERUS) && coinObj.mode === NATIVE
       })
   
       setCards(verusProtocolCoins.map((coinObj) => {

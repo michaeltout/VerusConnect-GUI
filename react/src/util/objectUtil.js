@@ -161,6 +161,21 @@ export const flattenObjectProps = (obj) => {
   return paths(obj);
 }
 
+const mapNestedValues = (object, currentPath) => {
+  let values = []
+
+  for (let key in object) {
+    if (typeof object[key] == 'object' && object[key] != null && !Array.isArray(object[key])) {
+      values = values.concat(mapNestedValues(object[key], [...currentPath, key]))
+    } else values.push({value: object[key], path: [...currentPath, key]})
+  }
+
+  return values
+}
+
+// Gets the nested values of an object as an array, recursively
+export const mapObjectValues = (object) => mapNestedValues(object, [])
+
 /**
  * Removes the risk of running into an unexpected "cannot get 'x' of undefined" error
  * when trying to access/deal with objects, by giving an object the properties of a 
