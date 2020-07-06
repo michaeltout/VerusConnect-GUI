@@ -264,10 +264,11 @@ export const CoinWalletRender = function() {
           this.props.transactions != null
             ? this.props.transactions.filter((tx) => {
                 return (
-                  tx.category !== MINED_TX &&
-                  tx.category !== MINTED_TX &&
-                  tx.category !== IMMATURE_TX &&
-                  tx.category !== STAKE_TX &&
+                  (!this.props.filterGenerateTransactions ||
+                    (tx.category !== MINED_TX &&
+                      tx.category !== MINTED_TX &&
+                      tx.category !== IMMATURE_TX &&
+                      tx.category !== STAKE_TX)) &&
                   tx.confirmations !== REJECTED_CONFIRMATIONS
                 );
               })
@@ -702,7 +703,6 @@ export const WalletRenderOperations = function() {
 
 export const WalletRenderCurrencyFunctions = function() {
   const { whitelists, activatedCoins, coin, selectedCurrency } = this.props
-  const activeCoin = activatedCoins[coin]
   const whitelist = whitelists[coin] ? whitelists[coin] : []
 
   return (

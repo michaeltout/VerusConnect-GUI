@@ -4,11 +4,7 @@ import {
   CoinWalletRender,
 } from './coinWallet.render';
 import { 
-  NATIVE_BALANCE, 
   CONFIRMED_BALANCE, 
-  PRIVATE_BALANCE, 
-  DARK_CARD, 
-  LIGHT_CARD, 
   IMMATURE_BALANCE, 
   RESERVE_BALANCE,
   STAKING_BALANCE,
@@ -22,7 +18,6 @@ import {
   PUBLIC_BALANCE,
   CONNECTING_TO_PEERS,
   OPERATION_INFO,
-  TX_INFO,
   FINDING_LONGEST_CHAIN,
   UNCONFIRMED_BALANCE,
   INTEREST_BALANCE,
@@ -36,7 +31,6 @@ import {
   MULTIVERSE,
   API_GET_CURRENCY_DATA_MAP
 } from '../../../../../util/constants/componentConstants'
-import { renderAffectedBalance } from '../../../../../util/txUtils/txRenderUtils'
 import { setUserPreferredCurrency, newSnackbar, setMainNavigationPath } from '../../../../../actions/actionCreators'
 
 //TODO: Use these to update on mount conditionally
@@ -93,6 +87,7 @@ class CoinWallet extends React.Component {
     this.onCurrencySearchSubmit = this.onCurrencySearchSubmit.bind(this);
     this.setPreferredCurrency = this.setPreferredCurrency.bind(this);
     this.openMultiverse = this.openMultiverse.bind(this);
+    this.ensureSelectedCurrencyExists = this.ensureSelectedCurrencyExists.bind(this)
   }
 
   updateCurrencySearchTerm(term) {
@@ -100,6 +95,7 @@ class CoinWallet extends React.Component {
   }
 
   initState() {
+    this.ensureSelectedCurrencyExists();
     this.calculateBalances();
     this.calculateLoadState();
   }
@@ -170,6 +166,15 @@ class CoinWallet extends React.Component {
     });
   }
 
+  ensureSelectedCurrencyExists() {
+    const { coin, whitelists, selectedCurrency } = this.props
+    const whitelist = whitelists[coin] || []
+
+    if (selectedCurrency !== coin && !whitelist.includes(selectedCurrency)) {
+      this.setPreferredCurrency(coin)
+    }
+  }
+
   componentDidUpdate(lastProps) {
     if (this.props != lastProps) {
       if (this.props.activatedCoins[this.props.coin]) {
@@ -191,6 +196,10 @@ class CoinWallet extends React.Component {
         }
 
         this.initState();
+      }
+
+      if (this.props.whitelists !== lastProps.whitelists) {
+        this.ensureSelectedCurrencyExists()
       }
 
       if (
@@ -399,7 +408,8 @@ const mapStateToProps = (state, ownProps) => {
         : state.users.activeUser.selectedCurrencyMap[ownProps.coin],
     currencyDataMap: state.ledger.currencyDataMap[ownProps.coin] || {},
     currencyConversionGraph: state.ledger.currencyConversionGraph[ownProps.coin] || {},
-    multiverseNameMap: state.ledger.multiverseNameMap[ownProps.coin]
+    multiverseNameMap: state.ledger.multiverseNameMap[ownProps.coin],
+    filterGenerateTransactions: state.settings.config.general.native.filterGenerateTransactions,
   };
 };
 
