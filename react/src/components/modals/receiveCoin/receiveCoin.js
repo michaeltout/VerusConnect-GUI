@@ -67,15 +67,13 @@ class ReceiveCoin extends React.Component {
             [PRIVATE_ADDRS]: []
           },
       addressSearchTerm: "",
-      balanceCurr: props.activeCoin.id,
-      currencyArr: [props.activeCoin.id, ...props.whitelist],
+      balanceCurr: props.selectedCurrency,
       qrAddress: null
     };
 
     this.setAddrMode = this.setAddrMode.bind(this)
     this.filterAddresses = this.filterAddresses.bind(this)
     this.setInput = this.setInput.bind(this)
-    this.getAddrCurrencies = this.getAddrCurrencies.bind(this)
     this.generateAddressOptions = this.generateAddressOptions.bind(this)
     this.getKey = this.getKey.bind(this)
     this.selectAddressOption = this.selectAddressOption.bind(this)
@@ -106,8 +104,6 @@ class ReceiveCoin extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.getAddrCurrencies()
-
     if (!this.isIdentity) {
       if (nextProps.addresses != this.props.addresses) {
         if (this.state.addressSearchTerm.length > 0) {
@@ -125,19 +121,6 @@ class ReceiveCoin extends React.Component {
 
   toggleAddressQr(address) {
     this.setState({ qrAddress: this.state.qrAddress ? null : address})
-  }
-
-  getAddrCurrencies() {
-    const { balances, activeCoin, whitelist } = this.props
-    let currencyArr = [activeCoin.id, ...whitelist]
-
-    if (balances) {
-      Object.keys(balances.reserve).map(chainTicker => {
-        currencyArr.push(chainTicker)
-      })
-    }
-
-    this.setState({ currencyArr })
   }
 
   filterAddresses(addresses) {
@@ -285,7 +268,8 @@ const mapStateToProps = (state) => {
     balances: state.ledger.balances[chainTicker],
     modalProps: state.modal[RECEIVE_COIN],
     config: state.settings.config,
-    whitelist: state.localCurrencyLists.whitelists[chainTicker] || []
+    whitelist: state.localCurrencyLists.whitelists[chainTicker] || [],
+    selectedCurrency: state.users.activeUser.selectedCurrencyMap[chainTicker] || chainTicker
   };
 };
 

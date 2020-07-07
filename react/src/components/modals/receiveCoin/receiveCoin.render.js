@@ -138,7 +138,8 @@ export const ReceiveCoinMainRender = function() {
 }
 
 export const ReceiveCurrencyPickerRender = function() {
-  const { currencyArr, balanceCurr } = this.state
+  const { balanceCurr } = this.state
+  let currencyArr = [this.props.activeCoin.id, ...this.props.whitelist]
 
   return (
     <Autocomplete
