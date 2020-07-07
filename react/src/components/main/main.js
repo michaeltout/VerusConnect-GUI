@@ -162,7 +162,7 @@ class Main extends React.Component {
       }`;
       const _version = `v${appVersion.version.replace("version=", "")}${_arch}`;
 
-      document.title = `${appVersion.name} (${_version})`;
+      document.title = `${appVersion.name} (${_version})${appVersion.mode === 'usb' ? " - USB Mode" : ''}`;
     }
 
     // prevent drag n drop external files

@@ -50,7 +50,7 @@ class SelectCoin extends React.Component {
     this.updateThreads = this.updateThreads.bind(this)
     this.selectMode = this.selectMode.bind(this)
     this.chooseMode = this.chooseMode.bind(this)
-    this.generateStartupParams = this.generateStartupParams.bind(this)
+    this.generateStartupOptions = this.generateStartupOptions.bind(this)
     this.detectCodes = this.detectCodes.bind(this)
     this.setFiles = this.setFiles.bind(this)
     this.toggleAddFromFile = this.toggleAddFromFile.bind(this)
@@ -138,14 +138,14 @@ class SelectCoin extends React.Component {
 
     if (selectedMode) {
       this.props.setAddCoinParams(
-        {coinObj: chosenCoin, mode, startParams: this.generateStartupParams()},
+        {coinObj: chosenCoin, mode, startParams: this.generateStartupOptions()},
         () => {
           this.props.dispatch(setModalNavigationPath(`${getPathParent(this.props.modalPathArray)}/${CONFIGURE}_${selectedMode}`))
         })      
     }
   }
 
-  generateStartupParams() {
+  generateStartupOptions() {
     let startupOptions = []
     const { nativeOptions } = this.state
     

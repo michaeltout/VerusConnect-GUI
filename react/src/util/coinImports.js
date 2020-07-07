@@ -9,7 +9,7 @@ export const decodeCoinImportFile = (importText) => {
   rawCoinObj.options.dustThreshold = satsToCoins(rawCoinObj.options.dustThreshold)
   rawCoinObj.options.txFee = satsToCoins(rawCoinObj.options.txFee)
 
-  rawCoinObj.options.startupParams = rawCoinObj.options.startupParams.split('|')
+  rawCoinObj.options.startupOptions = rawCoinObj.options.startupOptions.split('|')
   rawCoinObj.options.tags = rawCoinObj.options.tags.split('|')
   rawCoinObj.options.customServers = rawCoinObj.options.customServers.split('|')
 

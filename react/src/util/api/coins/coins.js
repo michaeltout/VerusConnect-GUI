@@ -7,7 +7,7 @@ import { API_ACTIVATE_COIN, API_REMOVE_COIN, POST } from '../../constants/compon
  * @param {String} mode native || electrum || eth
  * 
  * // Native Options
- * @param {String[]} startupParams (Native only) An array of the paramters to be passed to the daemon on chain start, 
+ * @param {String[]} startupOptions (Native only) An array of the paramters to be passed to the daemon on chain start, 
  * e.g. ['-mint', '-pubkey=...']
  * @param {String} daemon (Native only) The name of the chain daemon executable. 
  * @param {Object} dirNames (Native only) The names of the chains data directory on darwin, linux, and windows
