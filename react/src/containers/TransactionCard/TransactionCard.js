@@ -3,14 +3,45 @@ import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types';
 import { renderAffectedBalance } from '../../util/txUtils/txRenderUtils';
 import { setModalParams, setModalNavigationPath } from '../../actions/actionCreators';
-import { TX_INFO } from '../../util/constants/componentConstants';
+import { TX_INFO, CSV_EXPORT } from '../../util/constants/componentConstants';
 import { TxCardRender } from './TransactionCard.render'
+import { timeConverter } from '../../util/displayUtil/timeUtils';
 
 function openTxInfo(props, rowData, dispatch) {
   const { transactions, coin } = props
 
   dispatch(setModalParams(TX_INFO, { chainTicker: coin, txObj: transactions[rowData.txIndex], displayTx: rowData }))
   dispatch(setModalNavigationPath(TX_INFO))
+}
+
+function openCsvExport(props, displayTxs, dispatch) {
+  dispatch(setModalParams(CSV_EXPORT, { transactions: displayTxs.map(txObj => {
+    const fullTx = props.transactions[txObj.txIndex]
+
+    return {
+      type:
+        txObj.type === "sent"
+          ? "send"
+          : txObj.type === "received"
+          ? "receive"
+          : txObj.type,
+      txid: txObj.txid,
+      date: timeConverter(txObj.time, true),
+      confirmations: txObj.confirmations,
+      amount:
+        (txObj.type === "sent" || txObj.type === "send") && !isNaN(txObj.amount) && txObj.amount > 0
+          ? txObj.amount * -1
+          : txObj.amount,
+      address: txObj.address,
+      affected_balance:
+        txObj.affectedBalance != null
+          ? txObj.affectedBalance.props.children
+          : txObj.affectedBalance,
+      coin: props.coin,
+      fee: fullTx.fee != null ? Math.abs(fullTx.fee) : fullTx.fee,
+    };
+  })}))
+  dispatch(setModalNavigationPath(CSV_EXPORT))
 }
 
 function filterTxs(transactions, searchTerm) {
@@ -94,6 +125,7 @@ function TransactionCard(props) {
 
   return TxCardRender(
     openTxInfo,
+    openCsvExport,
     getDisplayTxs,
     filterTxs,
     { displayTxs, setDisplayTxs, txSearchTerm, setTxSearchTerm },

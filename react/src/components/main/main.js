@@ -19,10 +19,7 @@ import Modal from '../modals/modal'
 import SplashScreen from '../../containers/SplashScreen/SplashScreen'
 import SnackbarAlert from '../snackbarAlert/snackbarAlert'
 import { newSnackbar, setConfigParams } from '../../actions/actionCreators'
-
-import Store from '../../store'
 import TextDialog from '../../containers/TextDialog/TextDialog';
-import { backupAppData } from '../../util/api/updates/backups';
 
 class Main extends React.Component {
   constructor(props) {

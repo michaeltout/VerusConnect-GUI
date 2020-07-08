@@ -5,8 +5,9 @@ import { timeConverter } from '../../util/displayUtil/timeUtils'
 import { SortDirection } from 'react-virtualized';
 import WalletPaper from '../WalletPaper/WalletPaper';
 import SearchBar from '../SearchBar/SearchBar';
+import CustomButton from '../CustomButton/CustomButton';
 
-export const TxCardRender = (openTxInfo, getDisplayTxs, filterTxs, state, props, dispatch) => {
+export const TxCardRender = (openTxInfo, openCsvExport, getDisplayTxs, filterTxs, state, props, dispatch) => {
   const { setTxSearchTerm, txSearchTerm, displayTxs, setDisplayTxs } = state
   const { transactions, title } = props
 
@@ -50,6 +51,19 @@ export const TxCardRender = (openTxInfo, getDisplayTxs, filterTxs, state, props,
       ) : (
         <div style={{ marginTop: 20 }}>{"No transactions found."}</div>
       )}
+      {transactions && transactions.length > 0 &&
+        <CustomButton
+          onClick={() => openCsvExport(props, displayTxs, dispatch)}
+          title={"Export to CSV"}
+          backgroundColor={"white"}
+          textColor={"unset"}
+          buttonProps={{
+            color: "default",
+            variant: "outlined",
+            style: { marginTop: 8 }
+          }}
+        />
+      }
     </WalletPaper>
   );
 }
