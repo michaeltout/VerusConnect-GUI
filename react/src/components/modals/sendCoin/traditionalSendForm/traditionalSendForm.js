@@ -263,7 +263,7 @@ class TraditionalSendForm extends React.Component {
         txData[TXDATA_TO_CURRENCY] == null ||
         txData[TXDATA_VALUE] == null
           ? null
-          : `${Number((Number(txData[TXDATA_VALUE]) * Number(txData[TXDATA_PRICE])).toFixed(8))} ${
+          : `${(1/(Number((Number(txData[TXDATA_VALUE]) * Number(txData[TXDATA_PRICE])))).toFixed(8))} ${
               txData[TXDATA_TO_CURRENCY].name
             }`,
       ["Amount Entered"]:

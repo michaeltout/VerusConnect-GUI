@@ -398,7 +398,8 @@ export const WalletRenderBalances = function() {
           (this.props.currencyConversionGraph[currency].to.length > 0 ||
             this.props.currencyConversionGraph[currency].from.length > 0) &&
           this.state.currencyInfo != null &&
-          this.state.currencyInfo.spendableTo;
+          (this.state.currencyInfo.spendableTo ||
+            this.state.currencyInfo.spendableFrom);
 
         return balanceTag == null ? null : (
           <div

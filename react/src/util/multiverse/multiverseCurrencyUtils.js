@@ -90,7 +90,27 @@ export const getConversionGraph = (currencyObjects) => {
   }
 
   for (const key in currencyObjects) {
-    const {
+    const { bestcurrencystate, currencyid } = currencyObjects[key];
+    const { currencies } = bestcurrencystate || {}
+
+    if (currencies != null && Object.keys(currencies).length > 0) {
+      retObj[key].from = Object.keys(currencies).map((value) => {
+        const name = names[value]
+        retObj[name].to.push({
+          id: currencyid,
+          name: key,
+          price: currencies[value].lastconversionprice
+        })
+
+        return {
+          id: value,
+          name,
+          price: 1/currencies[value].lastconversionprice
+        }
+      })
+    }
+
+    /*const {
       currencies,
       conversions,
       currencyid
@@ -111,7 +131,7 @@ export const getConversionGraph = (currencyObjects) => {
           price: 1/conversions[index]
         }
       })
-    }
+    }*/
   }
 
   return retObj
