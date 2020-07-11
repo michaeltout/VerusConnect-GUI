@@ -435,7 +435,7 @@ class CurrencyCard extends React.Component {
                   }}
                 >
                   {spendableTo
-                    ? `From ${currencies.length} currencies`
+                    ? `From ${currencies.length} ${currencies.length === 1 ? 'currency' : 'currencies'}`
                     : "From no currencies"}
                 </div>
               </ExpansionPanelSummary>
@@ -485,7 +485,7 @@ class CurrencyCard extends React.Component {
                           label: "Name",
                           dataKey: "name",
                         },
-                        {
+                        /*{
                           width: 100,
                           cellDataGetter: ({ rowData }) => {
                             return (
@@ -504,7 +504,7 @@ class CurrencyCard extends React.Component {
                           flexGrow: 1,
                           label: "Min. Pre-Conversion",
                           dataKey: "minpreconvert",
-                        },
+                        },*/
                         {
                           width: 100,
                           cellDataGetter: ({ rowData }) => {

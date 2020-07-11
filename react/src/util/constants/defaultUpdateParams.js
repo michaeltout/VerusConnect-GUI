@@ -255,7 +255,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [],
-          location_and_type_restrictions: [['@post_auth/apps/multiverse/dashboard', IS_VERUS]]
+          location_and_type_restrictions: [['@post_auth/apps/multiverse/dashboard', IS_PBAAS_ROOT]]
         },
         interval_info: {
           expire_id: null,
@@ -271,7 +271,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [],
-          location_and_type_restrictions: [['@post_auth/apps/multiverse/dashboard', IS_VERUS]]
+          location_and_type_restrictions: [['@post_auth/apps/multiverse/dashboard', IS_PBAAS_ROOT]]
         },
         interval_info: {
           expire_id: null,
@@ -307,7 +307,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [],
-          location_and_type_restrictions: [[`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`, IS_VERUS]]
+          location_and_type_restrictions: [[`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`, IS_PBAAS_ROOT]]
         },
         interval_info: {
           expire_id: null,
@@ -323,7 +323,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [],
-          location_and_type_restrictions: [[`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`, IS_VERUS]]
+          location_and_type_restrictions: [[`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`, IS_PBAAS_ROOT]]
         },
         interval_info: {
           expire_id: null,

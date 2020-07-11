@@ -165,13 +165,19 @@ class SendCoin extends React.Component {
               memo != null && memo.length > 0 ? memo : undefined,
               {
                 convertto:
-                  toCurrencyInfo.currency.name !== fromCurrencyInfo.currency.name
+                  toCurrencyInfo != null &&
+                  fromCurrencyInfo != null &&
+                  toCurrencyInfo.currency.name !==
+                    fromCurrencyInfo.currency.name
                     ? toCurrencyInfo.currency.name
                     : undefined,
-                currency: fromCurrencyInfo.currency.name,
+                currency:
+                  fromCurrencyInfo != null
+                    ? fromCurrencyInfo.currency.name
+                    : undefined,
                 refundto: refundAddress,
                 mintnew: mint,
-                preconvert: toCurrencyInfo && toCurrencyInfo.preConvert,
+                preconvert: toCurrencyInfo != null && toCurrencyInfo.preConvert,
               }
             );
             break;

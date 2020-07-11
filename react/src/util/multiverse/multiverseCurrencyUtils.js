@@ -75,8 +75,9 @@ export const getCurrencyInfo = (currency, currentHeight, ownedIdentities = []) =
  * with one key for every currency given in currency params by calculating what conversions can be made
  * (to where/from where) between the given currencies.
  * @param {Object} currencyObjects
+ * @param {Number} currentHeight The current blockchain height (used to determine if a currency is a preconvert)
  */
-export const getConversionGraph = (currencyObjects) => {
+export const getConversionGraph = (currencyObjects, currentHeight) => {
   let retObj = {}
   let names = {}
 
@@ -90,8 +91,9 @@ export const getConversionGraph = (currencyObjects) => {
   }
 
   for (const key in currencyObjects) {
-    const { bestcurrencystate, currencyid } = currencyObjects[key];
+    const { bestcurrencystate, currencyid, startblock } = currencyObjects[key];
     const { currencies } = bestcurrencystate || {}
+    const age = currentHeight - startblock
 
     if (currencies != null && Object.keys(currencies).length > 0) {
       retObj[key].from = Object.keys(currencies).map((value) => {
@@ -101,6 +103,14 @@ export const getConversionGraph = (currencyObjects) => {
           name: key,
           price: currencies[value].lastconversionprice
         })
+
+        if (age >= 0) {
+          retObj[key].to.push({
+            id: value,
+            name,
+            price: 1/currencies[value].lastconversionprice
+          })
+        }
 
         return {
           id: value,

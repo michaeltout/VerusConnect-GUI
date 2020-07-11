@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import ObjectToTable from '../../../../containers/ObjectToTable/ObjectToTable'
 import { ENTER_DATA } from '../../../../util/constants/componentConstants';
 import CustomCheckbox from '../../../../containers/CustomCheckbox/CustomCheckbox';
-import { FormControlLabel, Typography } from '@material-ui/core';
+import { FormControlLabel, Typography, IconButton } from '@material-ui/core';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import { normalizeNum } from '../../../../util/displayUtil/numberFormat';
 
@@ -284,11 +284,16 @@ export const ConversionOptionsRender = function() {
         }}*/
       />
       <div>
-        <ArrowForwardIcon
-          fontSize="large"
-          style={{ marginLeft: 40, marginRight: 40 }}
-        />
-        <Typography style={{ color: 'gray', fontSize: 12, textAlign: 'center' }}>
+        <IconButton
+          style={{ marginLeft: 60, marginRight: 60 }}
+          onClick={this.flipConversion}
+          disabled={this.state.toCurrencyInfo.preConvert}
+        >
+          <ArrowForwardIcon fontSize="large" />
+        </IconButton>
+        <Typography
+          style={{ color: "gray", fontSize: 12, textAlign: "center" }}
+        >
           {convertingTo
             ? `* ${fromCurrencyConversion.price} =`
             : convertingFrom

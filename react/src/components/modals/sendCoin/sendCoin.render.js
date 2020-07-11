@@ -69,13 +69,14 @@ export const SendCoinRender = function() {
 
 export const SendCoinFormRender = function() {
   const { state, props, getFormData, getContinueDisabled } = this
-  const { modalProps } = props
+  const { modalProps, closeModal } = props
 
   if (modalProps.fund)
     return (
       <FundForm
         {...modalProps}
         {...state}
+        closeModal={closeModal}
         setFormData={getFormData}
         setContinueDisabled={getContinueDisabled}
       />
@@ -87,6 +88,7 @@ export const SendCoinFormRender = function() {
           <TraditionalSendForm
             {...modalProps}
             {...state}
+            closeModal={closeModal}
             setFormData={getFormData}
             setContinueDisabled={getContinueDisabled}
           />
@@ -96,6 +98,7 @@ export const SendCoinFormRender = function() {
           <ClaimInterestForm
             {...modalProps}
             {...state}
+            closeModal={closeModal}
             setFormData={getFormData}
             setContinueDisabled={getContinueDisabled}
           />
@@ -106,6 +109,7 @@ export const SendCoinFormRender = function() {
             <MessageSendForm
               {...modalProps}
               {...state}
+              closeModal={closeModal}
               setFormData={getFormData}
               setContinueDisabled={getContinueDisabled}
             />
@@ -115,6 +119,7 @@ export const SendCoinFormRender = function() {
             <TraditionalSendForm
               {...modalProps}
               {...state}
+              closeModal={closeModal}
               setFormData={getFormData}
               setContinueDisabled={getContinueDisabled}
             />
@@ -124,6 +129,7 @@ export const SendCoinFormRender = function() {
           <ReserveSendForm
             {...modalProps}
             {...state}
+            closeModal={closeModal}
             setFormData={getFormData}
             setContinueDisabled={getContinueDisabled}
           />

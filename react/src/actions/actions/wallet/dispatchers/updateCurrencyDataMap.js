@@ -2,6 +2,7 @@ import { NATIVE } from '../../../../util/constants/componentConstants'
 import { SET_COIN_CURRENCY_DATA_MAP, ERROR_COIN_CURRENCY_DATA_MAP } from '../../../../util/constants/storeType'
 import { getCurrencyDataMap } from '../../../../util/api/wallet/readCalls/getCurrencyDataMap'
 import { getConversionGraph } from '../../../../util/multiverse/multiverseCurrencyUtils'
+import { getInfo } from '../../../../util/api/wallet/walletCalls'
 
 /**
  * Fetches the appropriate data from the store for a currency data map
@@ -16,21 +17,39 @@ import { getConversionGraph } from '../../../../util/multiverse/multiverseCurren
 export const updateCurrencyDataMap = async (state, dispatch, mode, chainTicker) => {
   let dataMapAction = { chainTicker }
   let wasSuccess = true
-  let currencies = [chainTicker, ...state.localCurrencyLists.whitelists[chainTicker]]
+  let currencies =
+    state.localCurrencyLists.whitelists[chainTicker] != null
+      ? [chainTicker, ...state.localCurrencyLists.whitelists[chainTicker]]
+      : [chainTicker];
 
   if (mode === NATIVE) {
     try {
       const apiResult = await getCurrencyDataMap(mode, chainTicker, currencies)
-      if (apiResult.msg === 'success') {
+      const currentInfoResult = await getInfo(mode, chainTicker)
+
+      if (
+        apiResult.msg === "success" &&
+        currentInfoResult.msg === "success"
+      ) {
         dataMapAction = {
           ...dataMapAction,
           type: SET_COIN_CURRENCY_DATA_MAP,
           dataMap: apiResult.result,
-          conversionGraph: getConversionGraph(apiResult.result.currencyData),
+          conversionGraph: getConversionGraph(
+            apiResult.result.currencyData,
+            currentInfoResult.result.longestchain
+          ),
         };
       } else {
-        dataMapAction = {...dataMapAction, type: ERROR_COIN_CURRENCY_DATA_MAP, result: apiResult.result}
-        wasSuccess = false
+        dataMapAction = {
+          ...dataMapAction,
+          type: ERROR_COIN_CURRENCY_DATA_MAP,
+          result:
+            apiResult.msg !== "success"
+              ? apiResult.result
+              : currentInfoResult.result,
+        };
+        wasSuccess = false;
       }
     } catch (e) {
       throw e

@@ -17,7 +17,7 @@ export const readNavigationUrl = (url) => {
  * element is a member of the path originally seperated by '/'
  * @param {String} path 
  */
-export const readNavigationPath = (path = null) => {
+export const readNavigationPath = (path = null) => {  
   return path ? path.split("/") : []
 }
 
