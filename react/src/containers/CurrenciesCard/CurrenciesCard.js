@@ -4,9 +4,25 @@ import { CurrenciesCardRender } from './CurrenciesCard.render'
 import { openCurrencyCard } from '../../actions/actionDispatchers';
 import { getCurrencyInfo } from '../../util/multiverse/multiverseCurrencyUtils';
 import { NATIVE, IS_VERUS } from '../../util/constants/componentConstants';
+import { getCurrency } from '../../util/api/wallet/walletCalls';
 
-function openCurrencyInfo(rowData, identities) {
-  openCurrencyCard(rowData, rowData.currency.parent_name, identities[rowData.currency.parent_name], true)
+async function openCurrencyInfo(rowData, identities) {
+  const fullCurrency = await getCurrency(
+    NATIVE,
+    rowData.currency.parent_name,
+    rowData.currency.currencyid
+  )
+  
+  openCurrencyCard(
+    {
+      ...rowData,
+      currency:
+        fullCurrency.msg === "success" ? fullCurrency.result : rowData.currency,
+    },
+    rowData.currency.parent_name,
+    identities[rowData.currency.parent_name],
+    true
+  );
 }
 
 function filterCurrencies(currencies, searchTerm) {

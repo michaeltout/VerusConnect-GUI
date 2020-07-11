@@ -21,7 +21,7 @@ class CurrencyInfo extends React.Component {
     this.removeFromWhitelist = this.removeFromWhitelist.bind(this)
   }
 
-  async addToWhitelist() {
+  async addToWhitelist(name = null) {
     const {
       whitelists,
       activeCoin,
@@ -29,7 +29,10 @@ class CurrencyInfo extends React.Component {
       activeCurrency,
       currencyInfo,
     } = this.props;
-    const { name } = activeCurrency || currencyInfo.currency
+
+    if (name === null) {
+      name = activeCurrency != null ? activeCurrency.name : currencyInfo.currency.name
+    }
 
     const currentWhitelist = whitelists[activeCoin.id] || []
 
@@ -40,7 +43,7 @@ class CurrencyInfo extends React.Component {
     }
   }
 
-  async addToBlacklist() {
+  async addToBlacklist(name = null) {
     const {
       blacklists,
       activeCoin,
@@ -48,7 +51,10 @@ class CurrencyInfo extends React.Component {
       activeCurrency,
       currencyInfo,
     } = this.props;
-    const { name } = activeCurrency || currencyInfo.currency
+    
+    if (name === null) {
+      name = activeCurrency != null ? activeCurrency.name : currencyInfo.currency.name
+    }
 
     const currentBlacklist = blacklists[activeCoin.id] || []
 
@@ -59,7 +65,7 @@ class CurrencyInfo extends React.Component {
     }
   }
 
-  async removeFromBlacklist() {
+  async removeFromBlacklist(name = null) {
     const {
       blacklists,
       activeCoin,
@@ -67,7 +73,10 @@ class CurrencyInfo extends React.Component {
       activeCurrency,
       currencyInfo,
     } = this.props;
-    const { name } = activeCurrency || currencyInfo.currency
+    
+    if (name === null) {
+      name = activeCurrency != null ? activeCurrency.name : currencyInfo.currency.name
+    }
 
     let currentBlacklist = blacklists[activeCoin.id] || []
 
@@ -83,7 +92,7 @@ class CurrencyInfo extends React.Component {
     }
   }
 
-  async removeFromWhitelist() {
+  async removeFromWhitelist(name = null) {
     const {
       whitelists,
       activeCoin,
@@ -91,7 +100,10 @@ class CurrencyInfo extends React.Component {
       activeCurrency,
       currencyInfo,
     } = this.props;
-    const { name } = activeCurrency || currencyInfo.currency
+
+    if (name === null) {
+      name = activeCurrency != null ? activeCurrency.name : currencyInfo.currency.name
+    }
 
     let currentWhitelist = whitelists[activeCoin.id] || []
 

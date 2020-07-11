@@ -8,9 +8,18 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ObjectToTable from '../ObjectToTable/ObjectToTable';
-import { getIdentity, getCurrency } from '../../util/api/wallet/walletCalls'
-import { NATIVE, ERROR_SNACK, SUCCESS_SNACK, MID_LENGTH_ALERT, WARNING_SNACK } from '../../util/constants/componentConstants';
-import { newSnackbar } from '../../actions/actionCreators';
+import { getIdentity, getCurrency } from "../../util/api/wallet/walletCalls";
+import {
+  NATIVE,
+  ERROR_SNACK,
+  SUCCESS_SNACK,
+  TRANSPARENT_BALANCE,
+  MID_LENGTH_ALERT,
+  WARNING_SNACK,
+  API_GET_CURRENCY_DATA_MAP,
+  SEND_COIN,
+} from "../../util/constants/componentConstants";
+import { newSnackbar, expireData } from '../../actions/actionCreators';
 import IconDropdown from '../IconDropdown/IconDropdown'
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { checkFlag } from '../../util/flagUtils';
@@ -20,11 +29,14 @@ import CustomButton from '../CustomButton/CustomButton';
 import { VirtualizedTable } from '../VirtualizedTable/VirtualizedTable';
 import { SortDirection } from 'react-virtualized';
 import { copyDataToClipboard } from '../../util/copyToClipboard';
+import { conditionallyUpdateWallet, openModal, udpateWalletData } from '../../actions/actionDispatchers';
+import Store from '../../store';
+import { getCurrencyInfo } from '../../util/multiverse/multiverseCurrencyUtils';
 
 const FIND_ID = "Find ID"
 const COPY = "Copy to clipboard"
 const FIND_CURRENCY = "Find Currency"
-const CONVERT = 'Convert To'
+const CONVERT = 'Convert'
 
 const LOADING_HEIGHT = -1
 
@@ -219,6 +231,82 @@ class CurrencyCard extends React.Component {
           this.props.setLock(false);
           this.props.dispatch(newSnackbar(ERROR_SNACK, err.message));
         });
+    } else if (option === CONVERT) {
+      this.props.setLock(true)
+      const { activeCoin, dispatch, currencyInfo } = this.props
+      const chainTicker = activeCoin.id
+
+      const setupConvert = async () => {
+        const oldState = Store.getState()
+
+        await udpateWalletData(
+          oldState,
+          dispatch,
+          NATIVE,
+          chainTicker,
+          API_GET_CURRENCY_DATA_MAP
+        );
+
+        const newState = Store.getState()
+
+        openModal(SEND_COIN, {
+          chainTicker,
+          balanceTag: TRANSPARENT_BALANCE,
+          fund: false,
+          isMessage: false,
+          isConversion: true,
+          currencyInfo,
+          conversionGraph:
+            newState.ledger.currencyConversionGraph[chainTicker][
+              currencyInfo.currency.name
+            ],
+          calculateCurrencyData: (currency) =>
+            getCurrencyInfo(
+              newState.ledger.currencyDataMap[chainTicker]
+                ? newState.ledger.currencyDataMap[chainTicker][currency]
+                : null,
+              newState.ledger.info[chainTicker] &&
+                newState.ledger.info[chainTicker].longestchain
+                ? newState.ledger.info[chainTicker].longestchain
+                : -1,
+              newState.ledger.identities[chainTicker]
+            ),
+        });
+
+        this.props.setLock(false)
+      }
+
+      try {
+        if (!this.props.whitelist.includes(this.props.currencyInfo.currency.name)) {
+          if (!this.props.whitelist.includes(address)) {
+            this.whitelistCurrency(address, () =>
+              this.whitelistCurrency(
+                this.props.currencyInfo.currency.name,
+                setupConvert
+              )
+            );
+          } else {
+            this.whitelistCurrency(this.props.currencyInfo.currency.name, setupConvert);
+          }
+        } else if (!this.props.whitelist.includes(address)) {
+          if (!this.props.whitelist.includes(this.props.currencyInfo.currency.name)) {
+            this.whitelistCurrency(this.props.currencyInfo.currency.name, () =>
+              this.whitelistCurrency(
+                address,
+                setupConvert
+              )
+            );
+          } else {
+            this.whitelistCurrency(address, setupConvert);
+          }
+        } else {
+          setupConvert()
+        }
+      } catch(e) {
+        console.error(e)
+        this.props.setLock(false)
+        this.props.dispatch(newSnackbar(ERROR_SNACK, "Error opening convert modal."))
+      }
     }
   }
 
@@ -247,15 +335,16 @@ class CurrencyCard extends React.Component {
     })
   }
 
-  whitelistCurrency() {
+  whitelistCurrency(name = null, cb = () => {}) {
     const { addToWhitelist, setLock } = this.props 
 
     setLock(true)
     this.setState({ loadingCurrencyLists: true }, async () => {
-      await addToWhitelist()
+      await addToWhitelist(name)
 
       this.setState({ loadingCurrencyLists: false })
       setLock(false)
+      cb()
     })
   }
 
@@ -290,9 +379,9 @@ class CurrencyCard extends React.Component {
       currencyid,
       endblock,
       parent,
-      currencies,
-      conversions,
-      minpreconversion
+      bestcurrencystate,
+      minpreconversion,
+      currencies
     } = currency;
     const whitelisted = whitelist.includes(name)
     const blacklisted = blacklist.includes(name)
@@ -344,9 +433,8 @@ class CurrencyCard extends React.Component {
                   }}
                 >
                   {status === "pending"
-                    ? `${-1 * age} blocks (~${blocksToTime(
-                        -1 * age
-                      )}) until start`
+                    ? `${preConvert ? "Preconvert" : "Pending"} - ${-1 *
+                        age} blocks (~${blocksToTime(-1 * age)}) until start`
                     : status === "failed"
                     ? "Failed to Launch"
                     : `Active (~${ageString} old)`}
@@ -412,145 +500,169 @@ class CurrencyCard extends React.Component {
                 />
               </ExpansionPanelSummary>
             </ExpansionPanel>
-            <ExpansionPanel
-              square
-              disabled={!spendableTo}
-              expanded={convertPanelOpen}
-            >
-              <ExpansionPanelSummary
-                expandIcon={spendableTo ? <ExpandMoreIcon /> : null}
-                aria-controls="panel2bh-content"
-                id="panel2bh-header"
-                onClick={this.toggleConvertPanel}
+            {spendableTo && (
+              <ExpansionPanel
+                square
+                disabled={!spendableTo}
+                expanded={convertPanelOpen}
               >
-                <div style={{ fontWeight: "bold", alignSelf: "center" }}>
-                  {"Convertable to"}
-                </div>
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    flex: 1,
-                    textAlign: "right",
-                    alignSelf: "center",
-                  }}
+                <ExpansionPanelSummary
+                  expandIcon={spendableTo ? <ExpandMoreIcon /> : null}
+                  aria-controls="panel2bh-content"
+                  id="panel2bh-header"
+                  onClick={this.toggleConvertPanel}
                 >
-                  {spendableTo
-                    ? `From ${currencies.length} ${currencies.length === 1 ? 'currency' : 'currencies'}`
-                    : "From no currencies"}
-                </div>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails
-                style={{ maxHeight: 300, overflow: "scroll" }}
-              >
-                {spendableTo && (
+                  <div style={{ fontWeight: "bold", alignSelf: "center" }}>
+                    {preConvert ? "Pre-Convertable to" : "Convertable to"}
+                  </div>
                   <div
                     style={{
-                      height: 50 * currencies.length + 50,
-                      width: "100%",
+                      fontWeight: "bold",
+                      flex: 1,
+                      textAlign: "right",
+                      alignSelf: "center",
                     }}
                   >
-                    <VirtualizedTable
-                      rowCount={currencies.length}
-                      sortBy="name"
-                      sortDirection={SortDirection.ASC}
-                      rowGetter={({ index }) => {
-                        return {
-                          name: namesMap[currencies[index]]
-                            ? namesMap[currencies[index]]
-                            : currencies[index],
-                          price: conversions[index],
-                          minpreconversion: minpreconversion
-                            ? minpreconversion[index]
-                            : 0,
-                        };
-                      }}
-                      columns={[
-                        {
-                          width: 150,
-                          cellDataGetter: ({ rowData }) => {
-                            return (
-                              <div
-                                style={{
-                                  overflow: "hidden",
-                                  whiteSpace: "nowrap",
-                                  width: "100%",
-                                  textOverflow: "ellipsis",
-                                }}
-                              >
-                                {rowData.name}
-                              </div>
-                            );
-                          },
-                          flexGrow: 1,
-                          label: "Name",
-                          dataKey: "name",
-                        },
-                        /*{
-                          width: 100,
-                          cellDataGetter: ({ rowData }) => {
-                            return (
-                              <div
-                                style={{
-                                  overflow: "hidden",
-                                  whiteSpace: "nowrap",
-                                  width: "100%",
-                                  textOverflow: "ellipsis",
-                                }}
-                              >
-                                {rowData.minpreconversion}
-                              </div>
-                            );
-                          },
-                          flexGrow: 1,
-                          label: "Min. Pre-Conversion",
-                          dataKey: "minpreconvert",
-                        },*/
-                        {
-                          width: 100,
-                          cellDataGetter: ({ rowData }) => {
-                            return (
-                              <div
-                                style={{
-                                  overflow: "hidden",
-                                  whiteSpace: "nowrap",
-                                  width: "100%",
-                                  textOverflow: "ellipsis",
-                                }}
-                              >
-                                {rowData.price}
-                              </div>
-                            );
-                          },
-                          flexGrow: 1,
-                          label: `Price (${name})`,
-                          dataKey: "price",
-                        },
-                        {
-                          width: 50,
-                          cellDataGetter: ({ rowData }) => {
-                            return (
-                              <IconDropdown
-                                items={[FIND_CURRENCY, COPY]}
-                                dropdownIconComponent={
-                                  <MoreVertIcon fontSize="small" />
-                                }
-                                onSelect={(option) => {
-                                  this.setState({ convertPanelOpen: false })
-                                  this.selectOption(rowData.name, option);
-                                }}
-                              />
-                            );
-                          },
-                          flexGrow: 1,
-                          label: `Options`,
-                          dataKey: "options",
-                        },
-                      ]}
-                    />
+                    {spendableTo
+                      ? `From ${currencies.length} ${
+                          currencies.length === 1 ? "currency" : "currencies"
+                        }`
+                      : null}
                   </div>
-                )}
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails
+                  style={{ maxHeight: 300, overflow: "scroll" }}
+                >
+                  {spendableTo && (
+                    <div
+                      style={{
+                        height: 50 * currencies.length + 50,
+                        width: "100%",
+                      }}
+                    >
+                      <VirtualizedTable
+                        rowCount={currencies.length}
+                        sortBy="name"
+                        sortDirection={SortDirection.ASC}
+                        rowGetter={({ index }) => {
+                          return {
+                            name: namesMap[currencies[index]]
+                              ? namesMap[currencies[index]]
+                              : currencies[index],
+                            price:
+                              bestcurrencystate != null
+                                ? bestcurrencystate.currencies[
+                                    currencies[index]
+                                  ].lastconversionprice
+                                : "-",
+                            minpreconversion: minpreconversion
+                              ? minpreconversion[index]
+                              : 0,
+                            index
+                          };
+                        }}
+                        columns={[
+                          {
+                            width: 150,
+                            cellDataGetter: ({ rowData }) => {
+                              return (
+                                <div
+                                  style={{
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                    width: "100%",
+                                    textOverflow: "ellipsis",
+                                  }}
+                                >
+                                  {rowData.name}
+                                </div>
+                              );
+                            },
+                            flexGrow: 1,
+                            label: "Name",
+                            dataKey: "name",
+                          },
+                          {
+                            width: 100,
+                            cellDataGetter: ({ rowData }) => {
+                              return (
+                                <div
+                                  style={{
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                    width: "100%",
+                                    textOverflow: "ellipsis",
+                                  }}
+                                >
+                                  {preConvert
+                                    ? rowData.minpreconversion
+                                    : bestcurrencystate != null &&
+                                      bestcurrencystate.reservecurrencies[
+                                        rowData.index
+                                      ] != null
+                                    ? bestcurrencystate.reservecurrencies[
+                                        rowData.index
+                                      ].reserves
+                                    : "-"}
+                                </div>
+                              );
+                            },
+                            flexGrow: 1,
+                            label: preConvert ? "Min. Pre-Conversion" : "Reserves",
+                            dataKey: "minpreconvert",
+                          },
+                          {
+                            width: 100,
+                            cellDataGetter: ({ rowData }) => {
+                              return (
+                                <div
+                                  style={{
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                    width: "100%",
+                                    textOverflow: "ellipsis",
+                                  }}
+                                >
+                                  {rowData.price}
+                                </div>
+                              );
+                            },
+                            flexGrow: 1,
+                            label: `Last Price (${name})`,
+                            dataKey: "price",
+                          },
+                          {
+                            width: 50,
+                            cellDataGetter: ({ rowData }) => {
+                              return (
+                                <IconDropdown
+                                  items={[FIND_CURRENCY, COPY, CONVERT]}
+                                  dropdownIconComponent={
+                                    <MoreVertIcon fontSize="small" />
+                                  }
+                                  onSelect={(option) => {
+                                    if (option === FIND_CURRENCY) {
+                                      this.setState({
+                                        convertPanelOpen: false,
+                                      });
+                                    }
+
+                                    this.selectOption(rowData.name, option);
+                                  }}
+                                />
+                              );
+                            },
+                            flexGrow: 1,
+                            label: `Options`,
+                            dataKey: "options",
+                          },
+                        ]}
+                      />
+                    </div>
+                  )}
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+            )}
             <ExpansionPanel square expanded={false}>
               <ExpansionPanelSummary
                 expandIcon={null}

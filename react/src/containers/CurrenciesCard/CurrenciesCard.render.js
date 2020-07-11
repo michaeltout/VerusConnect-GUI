@@ -123,7 +123,7 @@ export const CurrencyTableRender = (displayCurrencies, openCurrencyInfo, props) 
         rowCount={displayCurrencies.length}
         sortBy="confirmations"
         sortDirection={ SortDirection.ASC }
-        onRowClick={ ({rowData}) => openCurrencyInfo(rowData, props.identities) }
+        onRowClick={ async ({rowData}) => await openCurrencyInfo(rowData, props.identities) }
         rowGetter={({ index }) => displayCurrencies[index]}
         columns={[
           {

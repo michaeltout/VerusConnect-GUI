@@ -30,7 +30,8 @@ class Multiverse extends React.Component {
     super(props);
 
     this.state = {
-      currencySearchOpen: false
+      currencySearchOpen: false,
+      loading: false
     }
     
     this.setCards = this.setCards.bind(this)
