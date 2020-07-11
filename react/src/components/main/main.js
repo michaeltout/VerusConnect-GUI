@@ -173,9 +173,9 @@ class Main extends React.Component {
     }
 
     // Function for debugging store
-    window.printStore = () => {
+    /*window.printStore = () => {
       console.log(Store.getState());
-    };
+    };*/
   }
 
   render() {
