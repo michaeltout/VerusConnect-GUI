@@ -907,8 +907,8 @@ class CurrencyCard extends React.Component {
                       backgroundColor={"rgb(236,43,43)"}
                       onClick={
                         blacklisted
-                          ? this.unBlacklistCurrency
-                          : this.blacklistCurrency
+                          ? () => this.unBlacklistCurrency()
+                          : () => this.blacklistCurrency()
                       }
                       tooltip={
                         "Blocking this currency will prevent it from showing anywhere in your wallet unless you search for it"
@@ -920,8 +920,8 @@ class CurrencyCard extends React.Component {
                       backgroundColor={"rgb(0,178,26)"}
                       onClick={
                         whitelisted
-                          ? this.unWhitelistCurrency
-                          : this.whitelistCurrency
+                          ? () => this.unWhitelistCurrency()
+                          : () => this.whitelistCurrency()
                       }
                       tooltip={
                         whitelisted
