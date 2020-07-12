@@ -347,8 +347,8 @@ export const DashboardRender = function() {
                   </a>
                 </div>
                 <div style={{ textAlign: "center", marginTop: 5 }}>
-                  {"Commiting a name costs as little as one transaction fee, and simply involves " +
-                    "choosing the name you would like, and comitting it into a transaction that you later refer to when creating an identity."}
+                  {"Committing a name costs as little as one transaction fee, and simply involves " +
+                    "choosing the name you would like, and committing it into a transaction that you later refer to when creating an identity."}
                 </div>
               </React.Fragment>
             )}
