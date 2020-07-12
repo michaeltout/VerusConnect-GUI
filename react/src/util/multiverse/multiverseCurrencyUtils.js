@@ -91,11 +91,12 @@ export const getConversionGraph = (currencyObjects, currentHeight) => {
   }
 
   for (const key in currencyObjects) {
-    const { bestcurrencystate, currencyid, startblock } = currencyObjects[key];
+    const { bestcurrencystate, currencyid, startblock, options } = currencyObjects[key];
+    const isReserve = checkFlag(options, IS_FRACTIONAL)
     const { currencies } = bestcurrencystate || {}
     const age = currentHeight - startblock
 
-    if (currencies != null && Object.keys(currencies).length > 0) {
+    if (currencies != null && Object.keys(currencies).length > 0 && (isReserve || age < 0)) {
       retObj[key].from = Object.keys(currencies).map((value) => {
         const name = names[value]
         retObj[name].to.push({
