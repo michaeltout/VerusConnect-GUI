@@ -195,7 +195,11 @@ class TraditionalSendForm extends React.Component {
   }
 
   componentDidMount() {
-    this.initState()
+    if (this.props.formStep === ENTER_DATA && this.props.inverse) {
+      this.initState(this.flipConversion)
+    } else {
+      this.initState()
+    }
 
     if (Object.keys(this.props.txData).length > 0) {
       this.generateTxDataDisplay()
@@ -299,7 +303,7 @@ class TraditionalSendForm extends React.Component {
         txData[TXDATA_TO_CURRENCY] != null
           ? txData[TXDATA_TO_CURRENCY].name
           : null,
-      ["Conversion Price:"]:
+      ["Last Conversion Price:"]:
         txData[TXDATA_ERROR] ||
         txData[TXDATA_PRICE] == null ||
         txData[TXDATA_FROM_CURRENCY] == null ||

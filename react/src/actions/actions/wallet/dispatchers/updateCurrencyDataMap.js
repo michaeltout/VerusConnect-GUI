@@ -19,7 +19,7 @@ export const updateCurrencyDataMap = async (state, dispatch, mode, chainTicker) 
   let wasSuccess = true
   let currencies =
     state.localCurrencyLists.whitelists[chainTicker] != null
-      ? state.localCurrencyLists.whitelists[chainTicker]
+      ? [chainTicker, ...state.localCurrencyLists.whitelists[chainTicker]]
       : [chainTicker];
 
   if (mode === NATIVE) {

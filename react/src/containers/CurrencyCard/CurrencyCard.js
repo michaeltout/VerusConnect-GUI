@@ -7,29 +7,26 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ObjectToTable from '../ObjectToTable/ObjectToTable';
 import { getIdentity, getCurrency } from "../../util/api/wallet/walletCalls";
 import {
   NATIVE,
   ERROR_SNACK,
-  SUCCESS_SNACK,
   TRANSPARENT_BALANCE,
   MID_LENGTH_ALERT,
   WARNING_SNACK,
   API_GET_CURRENCY_DATA_MAP,
   SEND_COIN,
 } from "../../util/constants/componentConstants";
-import { newSnackbar, expireData } from '../../actions/actionCreators';
+import { newSnackbar } from '../../actions/actionCreators';
 import IconDropdown from '../IconDropdown/IconDropdown'
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { checkFlag } from '../../util/flagUtils';
-import { IS_TOKEN_FLAG, IS_FRACTIONAL } from '../../util/constants/flags';
+import { fromSats } from 'agama-wallet-lib/src/utils'
 import { blocksToTime } from '../../util/blockMath';
 import CustomButton from '../CustomButton/CustomButton';
 import { VirtualizedTable } from '../VirtualizedTable/VirtualizedTable';
 import { SortDirection } from 'react-virtualized';
 import { copyDataToClipboard } from '../../util/copyToClipboard';
-import { conditionallyUpdateWallet, openModal, udpateWalletData } from '../../actions/actionDispatchers';
+import { openModal, udpateWalletData } from '../../actions/actionDispatchers';
 import Store from '../../store';
 import { getCurrencyInfo } from '../../util/multiverse/multiverseCurrencyUtils';
 
@@ -51,7 +48,8 @@ class CurrencyCard extends React.Component {
       loadingIdMap: false,
       loadingCurrencyMap: false,
       loadingCurrencyLists: false,
-      convertPanelOpen: false
+      convertPanelOpen: false,
+      preallocationPanelOpen: false
     };
 
     this.selectOption = this.selectOption.bind(this);
@@ -61,6 +59,7 @@ class CurrencyCard extends React.Component {
     this.blacklistCurrency = this.blacklistCurrency.bind(this)
     this.unBlacklistCurrency = this.unBlacklistCurrency.bind(this)
     this.toggleConvertPanel = this.toggleConvertPanel.bind(this)
+    this.togglePreallocationPanel = this.togglePreallocationPanel.bind(this)
   }
 
   componentDidMount() {
@@ -69,6 +68,10 @@ class CurrencyCard extends React.Component {
 
   toggleConvertPanel() {
     this.setState({ convertPanelOpen: !this.state.convertPanelOpen })
+  }
+
+  togglePreallocationPanel() {
+    this.setState({ preallocationPanelOpen: !this.state.preallocationPanelOpen })
   }
 
   componentDidUpdate(prevProps) {
@@ -256,6 +259,7 @@ class CurrencyCard extends React.Component {
           isMessage: false,
           isConversion: true,
           currencyInfo,
+          inverse: true,
           conversionGraph:
             newState.ledger.currencyConversionGraph[chainTicker][
               currencyInfo.currency.name
@@ -277,8 +281,14 @@ class CurrencyCard extends React.Component {
       }
 
       try {
-        if (!this.props.whitelist.includes(this.props.currencyInfo.currency.name)) {
-          if (!this.props.whitelist.includes(address)) {
+        if (
+          chainTicker !== this.props.currencyInfo.currency.name &&
+          !this.props.whitelist.includes(this.props.currencyInfo.currency.name)
+        ) {
+          if (
+            chainTicker !== address &&
+            !this.props.whitelist.includes(address)
+          ) {
             this.whitelistCurrency(address, () =>
               this.whitelistCurrency(
                 this.props.currencyInfo.currency.name,
@@ -286,21 +296,29 @@ class CurrencyCard extends React.Component {
               )
             );
           } else {
-            this.whitelistCurrency(this.props.currencyInfo.currency.name, setupConvert);
+            this.whitelistCurrency(
+              this.props.currencyInfo.currency.name,
+              setupConvert
+            );
           }
-        } else if (!this.props.whitelist.includes(address)) {
-          if (!this.props.whitelist.includes(this.props.currencyInfo.currency.name)) {
+        } else if (
+          chainTicker !== address &&
+          !this.props.whitelist.includes(address)
+        ) {
+          if (
+            chainTicker !== this.props.currencyInfo.currency.name &&
+            !this.props.whitelist.includes(
+              this.props.currencyInfo.currency.name
+            )
+          ) {
             this.whitelistCurrency(this.props.currencyInfo.currency.name, () =>
-              this.whitelistCurrency(
-                address,
-                setupConvert
-              )
+              this.whitelistCurrency(address, setupConvert)
             );
           } else {
             this.whitelistCurrency(address, setupConvert);
           }
         } else {
-          setupConvert()
+          setupConvert();
         }
       } catch(e) {
         console.error(e)
@@ -372,6 +390,7 @@ class CurrencyCard extends React.Component {
       loadingCurrencyMap,
       loadingCurrencyLists,
       convertPanelOpen,
+      preallocationPanelOpen
     } = this.state;
     const { currency, age, status, isToken, preConvert, ageString, spendableTo } = currencyInfo
     const {
@@ -381,7 +400,9 @@ class CurrencyCard extends React.Component {
       parent,
       bestcurrencystate,
       minpreconversion,
-      currencies
+      currencies,
+      preallocation,
+      idregistrationprice
     } = currency;
     const whitelisted = whitelist.includes(name)
     const blacklisted = blacklist.includes(name)
@@ -470,6 +491,46 @@ class CurrencyCard extends React.Component {
                 </div>
               </ExpansionPanelSummary>
             </ExpansionPanel>
+            {bestcurrencystate && (
+              <ExpansionPanel square expanded={false}>
+                <ExpansionPanelSummary
+                  expandIcon={null}
+                  aria-controls="panel2bh-content"
+                  id="panel2bh-header"
+                >
+                  <div style={{ fontWeight: "bold" }}>{"Supply"}</div>
+                  <div
+                    style={{
+                      fontWeight: "bold",
+                      color: "#878787",
+                      flex: 1,
+                      textAlign: "right",
+                    }}
+                  >
+                    {`${bestcurrencystate.supply} ${name}`}
+                  </div>
+                </ExpansionPanelSummary>
+              </ExpansionPanel>
+            )}
+            {/*<ExpansionPanel square expanded={false}>
+              <ExpansionPanelSummary
+                expandIcon={null}
+                aria-controls="panel2bh-content"
+                id="panel2bh-header"
+              >
+                <div style={{ fontWeight: "bold" }}>{"ID Price"}</div>
+                <div
+                  style={{
+                    fontWeight: "bold",
+                    color: "#878787",
+                    flex: 1,
+                    textAlign: "right",
+                  }}
+                >
+                  {`${fromSats(idregistrationprice)} ${name}`}
+                </div>
+              </ExpansionPanelSummary>
+            </ExpansionPanel>*/}
             <ExpansionPanel square expanded={false}>
               <ExpansionPanelSummary
                 expandIcon={null}
@@ -558,7 +619,7 @@ class CurrencyCard extends React.Component {
                             minpreconversion: minpreconversion
                               ? minpreconversion[index]
                               : 0,
-                            index
+                            index,
                           };
                         }}
                         columns={[
@@ -608,7 +669,9 @@ class CurrencyCard extends React.Component {
                               );
                             },
                             flexGrow: 1,
-                            label: preConvert ? "Min. Pre-Conversion" : "Reserves",
+                            label: preConvert
+                              ? "Min. Pre-Conversion"
+                              : "Reserves",
                             dataKey: "minpreconvert",
                           },
                           {
@@ -648,6 +711,135 @@ class CurrencyCard extends React.Component {
                                     }
 
                                     this.selectOption(rowData.name, option);
+                                  }}
+                                />
+                              );
+                            },
+                            flexGrow: 1,
+                            label: `Options`,
+                            dataKey: "options",
+                          },
+                        ]}
+                      />
+                    </div>
+                  )}
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+            )}
+            {preallocation != null && (
+              <ExpansionPanel
+                square
+                disabled={preallocation.length === 0}
+                expanded={preallocationPanelOpen}
+              >
+                <ExpansionPanelSummary
+                  expandIcon={
+                    preallocation.length !== 0 ? <ExpandMoreIcon /> : null
+                  }
+                  aria-controls="panel2bh-content"
+                  id="panel2bh-header"
+                  onClick={this.togglePreallocationPanel}
+                >
+                  <div style={{ fontWeight: "bold", alignSelf: "center" }}>
+                    {"Preallocation"}
+                  </div>
+                  <div
+                    style={{
+                      fontWeight: "bold",
+                      flex: 1,
+                      textAlign: "right",
+                      alignSelf: "center",
+                    }}
+                  >
+                    {preallocation.length !== 0
+                      ? `To ${preallocation.length} ${
+                          preallocation.length === 1 ? "identity" : "identities"
+                        }`
+                      : "None"}
+                  </div>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails
+                  style={{ maxHeight: 300, overflow: "scroll" }}
+                >
+                  {preallocation.length !== 0 && (
+                    <div
+                      style={{
+                        height: 50 * preallocation.length + 50,
+                        width: "100%",
+                      }}
+                    >
+                      <VirtualizedTable
+                        rowCount={preallocation.length}
+                        sortBy="name"
+                        sortDirection={SortDirection.ASC}
+                        rowGetter={({ index }) => {
+                          const identity_id = Object.keys(preallocation[index])[0];
+
+                          return {
+                            name: namesMap[identity_id]
+                              ? namesMap[identity_id]
+                              : identity_id,
+                            amount: preallocation[index][identity_id],
+                            friendlyName: namesMap[identity_id] != null
+                          };
+                        }}
+                        columns={[
+                          {
+                            width: 150,
+                            cellDataGetter: ({ rowData }) => {
+                              return (
+                                <div
+                                  style={{
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                    width: "100%",
+                                    textOverflow: "ellipsis",
+                                  }}
+                                >
+                                  {rowData.friendlyName ? `${rowData.name}@` : rowData.name}
+                                </div>
+                              );
+                            },
+                            flexGrow: 1,
+                            label: "Name",
+                            dataKey: "name",
+                          },
+                          {
+                            width: 150,
+                            cellDataGetter: ({ rowData }) => {
+                              return (
+                                <div
+                                  style={{
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                    width: "100%",
+                                    textOverflow: "ellipsis",
+                                  }}
+                                >
+                                  {rowData.amount}
+                                </div>
+                              );
+                            },
+                            flexGrow: 1,
+                            label: `Amount (${name})`,
+                            dataKey: "amount",
+                          },
+                          {
+                            width: 50,
+                            cellDataGetter: ({ rowData }) => {
+                              return (
+                                <IconDropdown
+                                  items={[FIND_ID, COPY]}
+                                  dropdownIconComponent={
+                                    <MoreVertIcon fontSize="small" />
+                                  }
+                                  onSelect={(option) => {
+                                    this.selectOption(
+                                      rowData.friendlyName
+                                        ? `${rowData.name}@`
+                                        : rowData.name,
+                                      FIND_ID
+                                    );
                                   }}
                                 />
                               );

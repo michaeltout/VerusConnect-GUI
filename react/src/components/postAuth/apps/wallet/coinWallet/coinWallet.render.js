@@ -494,45 +494,57 @@ export const WalletRenderBalances = function() {
                         maxWidth: isConvertableBalance ? 200 : 150,
                       }}
                     >
-                    <Tooltip title={balanceTag === INTEREST_BALANCE ? "Claim" : "Send"}>
-                      <span>
-                        <button
-                          className="btn btn-primary"
-                          type="button"
-                          onClick={(e) =>
-                            this.openModal(
-                              null,
-                              {
-                                balanceTag,
-                                fund: false,
-                                isMessage: false,
-                                currencyInfo: this.state.currencyInfo,
-                              },
-                              SEND_COIN
-                            )
-                          }
-                          disabled={
-                            balance === 0 ||
-                            balance === "-" ||
-                            !this.props.addresses ||
-                            (this.props.selectedCurrency !== this.props.coin &&
-                              !this.props.identities)
-                          }
-                          style={{
-                            fontSize: 10,
-                            backgroundColor:
-                              balanceTag === INTEREST_BALANCE
-                                ? "rgb(78,115,223)"
-                                : "rgb(236,43,43)",
-                            borderWidth: 1,
-                            borderColor:
-                              balanceTag === INTEREST_BALANCE
-                                ? "rgb(78,115,223)"
-                                : "rgb(236,43,43)",
-                            fontWeight: "bold",
-                            visibility:
-                              sendable != null && !sendable ? "hidden" : "unset",
-                          }}>
+                      <Tooltip
+                        title={
+                          sendable != null && !sendable
+                            ? ""
+                            : balanceTag === INTEREST_BALANCE
+                            ? "Claim"
+                            : "Send"
+                        }
+                      >
+                        <span>
+                          <button
+                            className="btn btn-primary"
+                            type="button"
+                            onClick={(e) =>
+                              this.openModal(
+                                null,
+                                {
+                                  balanceTag,
+                                  fund: false,
+                                  isMessage: false,
+                                  currencyInfo: this.state.currencyInfo,
+                                },
+                                SEND_COIN
+                              )
+                            }
+                            disabled={
+                              balance === 0 ||
+                              balance === "-" ||
+                              !this.props.addresses ||
+                              (this.props.selectedCurrency !==
+                                this.props.coin &&
+                                !this.props.identities)
+                            }
+                            style={{
+                              fontSize: 10,
+                              backgroundColor:
+                                balanceTag === INTEREST_BALANCE
+                                  ? "rgb(78,115,223)"
+                                  : "rgb(236,43,43)",
+                              borderWidth: 1,
+                              borderColor:
+                                balanceTag === INTEREST_BALANCE
+                                  ? "rgb(78,115,223)"
+                                  : "rgb(236,43,43)",
+                              fontWeight: "bold",
+                              visibility:
+                                sendable != null && !sendable
+                                  ? "hidden"
+                                  : "unset",
+                            }}
+                          >
                             {balanceTag === INTEREST_BALANCE ? (
                               <ArrowDownward name={SEND_COIN} />
                             ) : (
@@ -541,7 +553,7 @@ export const WalletRenderBalances = function() {
                           </button>
                         </span>
                       </Tooltip>
-                      <Tooltip title="Receive">
+                      <Tooltip title={receivable != null && !receivable ? "" : "Receive"}>
                         <span>
                           <button
                             className="btn btn-primary"
@@ -585,45 +597,45 @@ export const WalletRenderBalances = function() {
                         </button>
                       )*/}
                       {isConvertableBalance && (
-                          <Tooltip title="Convert">
-                            <span>
-                              <button
-                                className="btn btn-primary"
-                                type="button"
-                                name={SEND_COIN}
-                                onClick={(e) =>
-                                  this.openModal(
-                                    null,
-                                    {
-                                      balanceTag,
-                                      fund: false,
-                                      isMessage: false,
-                                      isConversion: true,
-                                      currencyInfo: this.state.currencyInfo,
-                                      conversionGraph: this.props
-                                        .currencyConversionGraph[currency],
-                                      calculateCurrencyData: (currency) =>
-                                        this.calculateCurrencyData(
-                                          this.props,
-                                          currency
-                                        ),
-                                    },
-                                    SEND_COIN
-                                  )
-                                }
-                                style={{
-                                  fontSize: 10,
-                                  backgroundColor: "rgb(78,115,223)",
-                                  borderWidth: 1,
-                                  borderColor: "rgb(78,115,223)",
-                                  fontWeight: "bold",
-                                }}
-                              >
-                                <ShuffleIcon />
-                              </button>
-                            </span>
-                          </Tooltip>
-                        )}
+                        <Tooltip title="Convert">
+                          <span>
+                            <button
+                              className="btn btn-primary"
+                              type="button"
+                              name={SEND_COIN}
+                              onClick={(e) =>
+                                this.openModal(
+                                  null,
+                                  {
+                                    balanceTag,
+                                    fund: false,
+                                    isMessage: false,
+                                    isConversion: true,
+                                    currencyInfo: this.state.currencyInfo,
+                                    conversionGraph: this.props
+                                      .currencyConversionGraph[currency],
+                                    calculateCurrencyData: (currency) =>
+                                      this.calculateCurrencyData(
+                                        this.props,
+                                        currency
+                                      ),
+                                  },
+                                  SEND_COIN
+                                )
+                              }
+                              style={{
+                                fontSize: 10,
+                                backgroundColor: "rgb(78,115,223)",
+                                borderWidth: 1,
+                                borderColor: "rgb(78,115,223)",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              <ShuffleIcon />
+                            </button>
+                          </span>
+                        </Tooltip>
+                      )}
                     </div>
                   </div>
                 </div>
