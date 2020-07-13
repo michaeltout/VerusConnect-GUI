@@ -34,7 +34,7 @@ import ShuffleIcon from '@material-ui/icons/Shuffle';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import WalletPaper from '../../../../../containers/WalletPaper/WalletPaper'
 import TransactionCard from '../../../../../containers/TransactionCard/TransactionCard'
-import { FormControl, Select, MenuItem, Button, Tooltip } from "@material-ui/core";
+import { FormControl, Select, MenuItem, Tooltip, Typography } from "@material-ui/core";
 import CustomButton from "../../../../../containers/CustomButton/CustomButton";
 import HelpIcon from '@material-ui/icons/Help';
 
@@ -730,90 +730,112 @@ export const WalletRenderCurrencyFunctions = function() {
   const whitelist = whitelists[coin] ? whitelists[coin] : []
 
   return (
-    <WalletPaper
-      style={{
-        marginBottom: 16,
-        padding: 0,
-        border: "none",
-        display: "flex",
-      }}
-    >
+    <React.Fragment>
       <WalletPaper
         style={{
+          marginBottom: 16,
+          padding: 0,
+          border: "none",
           display: "flex",
-          alignItems: "center",
-          flex: 1,
-          justifyContent: "space-between",
         }}
       >
-        <FormControl variant="outlined" style={{ flex: 1 }}>
-          <InputLabel>{"Selected Currency"}</InputLabel>
-          <Select
-            value={
-              selectedCurrency == null
-                ? -1
-                : whitelist.findIndex((value) => value === selectedCurrency)
-            }
-            onChange={(e) =>
-              this.setPreferredCurrency(e.target.value == -1 ? coin : whitelist[e.target.value])
-            }
-            labelWidth={138}
+        <WalletPaper
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flex: 1,
+            justifyContent: "space-between",
+          }}
+        >
+          <FormControl variant="outlined" style={{ flex: 1 }}>
+            <InputLabel>{"Selected Currency"}</InputLabel>
+            <Select
+              value={
+                selectedCurrency == null
+                  ? -1
+                  : whitelist.findIndex((value) => value === selectedCurrency)
+              }
+              onChange={(e) =>
+                this.setPreferredCurrency(
+                  e.target.value == -1 ? coin : whitelist[e.target.value]
+                )
+              }
+              labelWidth={138}
+            >
+              <MenuItem value={-1}>{coin}</MenuItem>
+              {whitelist.map((currency, index) => {
+                return <MenuItem value={index}>{currency}</MenuItem>;
+              })}
+            </Select>
+          </FormControl>
+          <Tooltip
+            title={`Here you can select the ${coin} currency you want to view/send/receive. To add currencies to this list, search for them or discover them on the right.`}
           >
-            <MenuItem value={-1}>{coin}</MenuItem>
-            {whitelist.map((currency, index) => {
-              return <MenuItem value={index}>{currency}</MenuItem>;
-            })}
-          </Select>
-        </FormControl>
-        <Tooltip title={`Here you can select the ${coin} currency you want to view/send/receive. To add currencies to this list, search for them or discover them on the right.`}>
-          <HelpIcon color='primary' style={{ marginLeft: 16 }}/>
-        </Tooltip>
-      </WalletPaper>
-      <WalletPaper
-        style={{
-          display: "flex",
-          alignItems: "center",
-          flex: 1,
-          justifyContent: "space-between",
-        }}
-      >
-        <SearchBar
-          containerStyle={{ width: "100%" }}
-          disabled={this.state.loadingCurrency}
-          label={`Search Currencies`}
-          placeholder={"e.g. VRSC"}
-          variant={"outlined"}
-          clearable={true}
-          onChange={(e) => this.updateCurrencySearchTerm(e.target.value)}
-          onClear={() => {
-            this.updateCurrencySearchTerm("");
+            <HelpIcon color="primary" style={{ marginLeft: 16 }} />
+          </Tooltip>
+        </WalletPaper>
+        <WalletPaper
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flex: 1,
+            justifyContent: "space-between",
           }}
-          onSubmit={this.onCurrencySearchSubmit}
-          value={this.state.currencySearchTerm}
-        />
-      </WalletPaper>
-      <WalletPaper
-        style={{
-          display: "flex",
-          alignItems: "center",
-          flex: 1,
-          justifyContent: "space-between",
-        }}
-      >
-        <CustomButton
-          onClick={this.openMultiverse}
-          title={"Discover Currencies"}
-          backgroundColor={"white"}
-          textColor={"unset"}
-          buttonProps={{
-            size: "large",
-            color: "default",
-            variant: "outlined",
-            style: { width: '100%', height: '100%' }
+        >
+          <SearchBar
+            containerStyle={{ width: "100%" }}
+            disabled={this.state.loadingCurrency}
+            label={`Search Currencies`}
+            placeholder={"e.g. VRSC"}
+            variant={"outlined"}
+            clearable={true}
+            onChange={(e) => this.updateCurrencySearchTerm(e.target.value)}
+            onClear={() => {
+              this.updateCurrencySearchTerm("");
+            }}
+            onSubmit={this.onCurrencySearchSubmit}
+            value={this.state.currencySearchTerm}
+          />
+        </WalletPaper>
+        <WalletPaper
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flex: 1,
+            justifyContent: "space-between",
           }}
-        />
+        >
+          <CustomButton
+            onClick={this.openMultiverse}
+            title={"Discover Currencies"}
+            backgroundColor={"white"}
+            textColor={"unset"}
+            buttonProps={{
+              size: "large",
+              color: "default",
+              variant: "outlined",
+              style: { width: "100%", height: "100%" },
+            }}
+          />
+        </WalletPaper>
       </WalletPaper>
-    </WalletPaper>
+      {coin === "VRSCTEST" && (
+        <WalletPaper
+          style={{
+            marginBottom: 16,
+            padding: 8,
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Typography style={{ fontWeight: "bold", textAlign: 'center' }}>
+            {
+              "Warning: All testnet coins/currencies have no value and will disappear whenever VRSCTEST is reset"
+            }
+          </Typography>
+        </WalletPaper>
+      )}
+    </React.Fragment>
   );
 };
 

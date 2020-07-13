@@ -311,11 +311,10 @@ class TraditionalSendForm extends React.Component {
         txData[TXDATA_TO_CURRENCY] == null
           ? null
           : `${txData[TXDATA_PRICE]} ${txData[TXDATA_FROM_CURRENCY].name}/${txData[TXDATA_TO_CURRENCY].name}`,
-      ["Last Price Based Est. Value:"]:
-        txData[TXDATA_ERROR] ||
-        txData[TXDATA_CONVERSION_VALUE] == null 
+      ["Last Price Based Conversion Value:"]:
+        txData[TXDATA_ERROR] || txData[TXDATA_CONVERSION_VALUE] == null
           ? null
-          : `${txData[TXDATA_CONVERSION_VALUE].toFixed(8)} ${
+          : `${Number(txData[TXDATA_CONVERSION_VALUE].toFixed(8))} ${
               txData[TXDATA_TO_CURRENCY].name
             }`,
       ["Amount Entered"]:
@@ -328,8 +327,8 @@ class TraditionalSendForm extends React.Component {
       ["Transaction Amount:"]:
         txData[TXDATA_ERROR] || !txData[TXDATA_VALUE]
           ? null
-          : txData[TXDATA_VALUE],
-      ["Fee:"]: txData[TXDATA_FEE],
+          : Number(txData[TXDATA_VALUE]),
+      ["Fee:"]: txData[TXDATA_FEE] == null ? null : Number(txData[TXDATA_FEE]),
       [txData.cliCmd === SEND_TO_ADDRESS
         ? formStep === CONFIRM_DATA
           ? "Interest to Claim:"
@@ -337,12 +336,15 @@ class TraditionalSendForm extends React.Component {
         : "Max. Interest Loss"]: txData[TXDATA_INTEREST],
       ["Change in Balance:"]:
         txData[TXDATA_TOTAL_AMOUNT] != null
-          ? `${Number(txData[TXDATA_TOTAL_AMOUNT]) < 0 ? "+" : "-"}${
+          ? `${Number(txData[TXDATA_TOTAL_AMOUNT]) < 0 ? "+" : "-"}${Number(
               txData[TXDATA_TOTAL_AMOUNT]
-            }`
+            )}`
           : null,
-      ["Current Balance:"]: txData[TXDATA_BALANCE],
-      ["Est. Balance After Transaction:"]: txData[TXDATA_REMAINING_BALANCE],
+      ["Current Balance:"]: txData[TXDATA_BALANCE] == null ? null : Number(txData[TXDATA_BALANCE]),
+      ["Est. Balance After Transaction:"]:
+        txData[TXDATA_REMAINING_BALANCE] != null
+          ? Number(txData[TXDATA_REMAINING_BALANCE])
+          : null,
       ["Message:"]:
         txData[TXDATA_MESSAGE] == null || txData[TXDATA_MESSAGE].length === 0
           ? null

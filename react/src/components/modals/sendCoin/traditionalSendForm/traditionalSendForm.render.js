@@ -9,7 +9,7 @@ import CustomCheckbox from '../../../../containers/CustomCheckbox/CustomCheckbox
 import { FormControlLabel, Typography, IconButton, Tooltip } from '@material-ui/core';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import { normalizeNum } from '../../../../util/displayUtil/numberFormat';
-import WarningIcon from '@material-ui/icons/Warning';
+import InfoIcon from '@material-ui/icons/Info';
 
 export const TraditionalSendFormRender = function() {
   const { formStep } = this.props
@@ -133,7 +133,8 @@ export const TraditionalSendFormEnterRender = function() {
               display: "flex",
               justifyContent: "space-between",
               maxWidth: "43%",
-              flex: 1
+              flex: 1,
+              alignItems: "center"
             }}
           >
             <Typography
@@ -159,9 +160,9 @@ export const TraditionalSendFormEnterRender = function() {
             >
               {`${displayConversion} ${toCurrencyConversion.name}`}
             </Typography>
-            <Tooltip title={'All price estimations are based on the latest conversion price. The actual conversion result calculated at the time of conversion and will most likely differ.'}>
-              <span style={{ color: '#fea000', marginLeft: 8 }}>
-                <WarningIcon color='inherit'/>
+            <Tooltip title={'All price estimations are based on the latest conversion price. The actual conversion result calculated at the time of conversion and will likely differ.'}>
+              <span style={{ marginLeft: 8 }}>
+                <InfoIcon color='primary'/>
               </span>
             </Tooltip>
           </div>
@@ -202,7 +203,11 @@ export const TraditionalSendAddressDropdownRender = function() {
   return (
     <Autocomplete
       options={this.state.addressList}
-      getOptionLabel={option => option.label}
+      getOptionLabel={option => {
+        const balance = this.getBalance(option.address, this.state.displayCurrency)
+
+        return (`${option.label} (${balance == null ? '-' : balance} ${this.state.displayCurrency})`);
+      }}
       style={{ marginTop: 5, width: "100%" }}
       value={this.state.sendFrom}
       disableClearable={true}

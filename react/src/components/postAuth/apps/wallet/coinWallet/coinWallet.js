@@ -39,7 +39,13 @@ import Store from '../../../../../store'
 import { getCurrency } from '../../../../../util/api/wallet/walletCalls';
 import { getCurrencyInfo } from '../../../../../util/multiverse/multiverseCurrencyUtils';
 
-const CONDITIONAL_UPDATES = [API_GET_BALANCES, API_GET_TRANSACTIONS, API_GET_FIATPRICE, API_GET_INFO, API_GET_CURRENCY_DATA_MAP]
+const CONDITIONAL_UPDATES = [
+  API_GET_BALANCES,
+  API_GET_TRANSACTIONS,
+  API_GET_FIATPRICE,
+  API_GET_INFO,
+  API_GET_CURRENCY_DATA_MAP,
+];
 
 class CoinWallet extends React.Component {
   constructor(props) {
