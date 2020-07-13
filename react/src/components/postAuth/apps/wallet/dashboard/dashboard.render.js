@@ -260,7 +260,7 @@ export const DashboardRenderSpotPrices = function() {
                     fontSize: 16
                   }}
                 >
-                  {`${portfolioItem.priceChange7d}%`}
+                  {`${portfolioItem.priceChange7d.toFixed(3)}%`}
                 </h3>
               )}
             </div>
