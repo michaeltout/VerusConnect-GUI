@@ -13,7 +13,8 @@ import {
   NATIVE,
   ERROR_INVALID_ADDR,
   ERROR_INVALID_ID,
-  ENTER_DATA
+  ENTER_DATA,
+  LONG_ALERT
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar } from '../../../../actions/actionCreators';
 import { checkAddrValidity } from '../../../../util/addrUtils';
@@ -98,7 +99,7 @@ class RecoverIdentityForm extends React.Component {
   }
 
   generateWarningSnack(warnings) {
-    this.props.dispatch(newSnackbar(WARNING_SNACK, warnings[0].message));
+    this.props.dispatch(newSnackbar(WARNING_SNACK, warnings[0].message, LONG_ALERT));
   }
 
   setRecoverSelf() {

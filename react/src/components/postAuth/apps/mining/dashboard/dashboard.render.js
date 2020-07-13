@@ -10,7 +10,8 @@ import {
   IS_VERUS,
   CPU_TEMP_UNSUPPORTED,
   STAKE_WARNING,
-  STAKE_BALANCE_INFO
+  STAKE_BALANCE_INFO,
+  CHAIN_FALLBACK_IMAGE
 } from "../../../../../util/constants/componentConstants";
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import { secondsToTime } from "../../../../../util/displayUtil/timeUtils";
@@ -25,6 +26,7 @@ import MoneyOffIcon from '@material-ui/icons/MoneyOff';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import IconButton from '@material-ui/core/IconButton';
 import WalletPaper from "../../../../../containers/WalletPaper/WalletPaper";
+import { openAddCoinModal } from "../../../../../actions/actionDispatchers";
 
 export const DashboardRender = function() {
   return (
@@ -149,7 +151,7 @@ export const DashboardRenderMiningCards = function() {
         <a
           href="#"
           style={{ color: "rgb(78,115,223)", marginLeft: "0.516%" }}
-          onClick={this.openAddCoinModal}
+          onClick={openAddCoinModal}
         >
           {"Add a coin in native mode to start mining and/or staking coins!"}
         </a>
@@ -286,6 +288,7 @@ export const DashboardRenderMiningCards = function() {
                 src={`assets/images/cryptologo/btc/${chainTicker.toLowerCase()}.png`}
                 width="40px"
                 height="40px"
+                onError={(e) => {e.target.src = CHAIN_FALLBACK_IMAGE}}
               />
               <div style={{ paddingLeft: 10, overflow: "hidden" }}>
                 <h3
@@ -365,7 +368,7 @@ export const DashboardRenderMiningCards = function() {
                 flex: 1
               }}
             >
-              {coinObj.tags.includes(IS_VERUS) && (
+              {coinObj.options.tags.includes(IS_VERUS) && (
                 <Tooltip title={isStaking ? "Stop Staking" : "Start Staking"}>
                   <span>
                     <IconButton

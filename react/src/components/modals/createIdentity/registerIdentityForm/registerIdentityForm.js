@@ -12,7 +12,8 @@ import {
   ERROR_INVALID_Z_ADDR,
   ENTER_DATA,
   ERROR_INVALID_ID,
-  PRIVATE_ADDRS
+  PRIVATE_ADDRS,
+  LONG_ALERT
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar } from '../../../../actions/actionCreators';
 
@@ -98,7 +99,7 @@ class RegisterIdentityForm extends React.Component {
   }*/
 
   generateWarningSnack(warnings) {    
-    this.props.dispatch(newSnackbar(WARNING_SNACK, warnings[0].message))
+    this.props.dispatch(newSnackbar(WARNING_SNACK, warnings[0].message, LONG_ALERT))
   }
 
   setRecoverSelf() {

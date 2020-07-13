@@ -1,4 +1,7 @@
 //ref: https://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another
+
+import deepmerge from "./deepMerge";
+
 /**
  * Function to reorder an item in an array to another location
  * @param {Array} arr Array to modify
@@ -75,5 +78,152 @@ export const editValueByKeyPath = (o, propList, value) => {
     const newProp = newProps.shift()
     
   	return {...o, [newProp]: editValueByKeyPath(o[newProp], newProps, value)}
+  }
+}
+
+/**
+ * Adds properties object 2 includes that object 1 may be missing into 
+ * object 1 and returns the modified object
+ * @param {Object} obj1 Object 1
+ * @param {Object} obj2 Object 2
+ */
+export const addMerge = (obj1, obj2) => {
+  const flatObj1 = flattenObjectProps(obj1);
+  const flatObj2 = flattenObjectProps(obj2);
+  let resObj = obj1;
+
+  flatObj2.forEach(propertyList => {
+    if (!flatObj1.includes(propertyList)) {
+      const propertyArr = propertyList.split(".");
+      let updateObj = propertyArr.reduce(function(
+        accumulator,
+        currentValue
+      ) {
+        return accumulator[currentValue];
+      },
+      obj2);
+
+      propertyArr
+        .slice()
+        .reverse()
+        .forEach((property, index) => {
+          updateObj = { [property]: updateObj };
+        });
+
+      resObj = deepmerge(updateObj, resObj);
+    }
+  });
+
+  return resObj;
+}
+
+/**
+ * Uses an array of properties (in parent -> child order) 
+ * as a key to search through an object and remove an
+ * element, assuming the property list correctly maps the object.
+ * Returns the modified object.
+ * 
+ * @param {Object} o The object to search through
+ * @param {String[]} propList The property list
+ */
+const removeElementByProperties = (o, propList) => {
+  if (propList.length === 1) {
+		let newO = { ...o }
+    delete newO[propList[0]]
+    return newO
+	} else {
+  	let newProps = propList.slice()
+    const newProp = newProps.shift()
+    
+  	return {...o, [newProp]: removeElementByProperties(o[newProp], newProps)}
+  }
+}
+
+export const flattenObjectProps = (obj) => {
+  const isNonEmptyObject = (val) =>
+    val != null &&
+    typeof val === "object" &&
+    !Array.isArray(val) &&
+    Object.values(val).length > 0;
+
+  const addDelimiter = (a, b) => (a ? `${a}.${b}` : b);
+
+  const paths = (obj = {}, head = "") => {
+    return Object.entries(obj).reduce((product, [key, value]) => {
+      let fullPath = addDelimiter(head, key);
+
+      return isNonEmptyObject(value)
+        ? product.concat([fullPath, ...paths(value, fullPath)])
+        : product.concat(fullPath);
+    }, []);
+  };
+
+  return paths(obj);
+}
+
+const mapNestedValues = (object, currentPath) => {
+  let values = []
+
+  for (let key in object) {
+    if (typeof object[key] == 'object' && object[key] != null && !Array.isArray(object[key])) {
+      values = values.concat(mapNestedValues(object[key], [...currentPath, key]))
+    } else values.push({value: object[key], path: [...currentPath, key]})
+  }
+
+  return values
+}
+
+// Gets the nested values of an object as an array, recursively
+export const mapObjectValues = (object) => mapNestedValues(object, [])
+
+/**
+ * Removes the risk of running into an unexpected "cannot get 'x' of undefined" error
+ * when trying to access/deal with objects, by giving an object the properties of a 
+ * predefiened "frame" object, and removing any unecessary properties.
+ * @param {Object} schema 
+ * @param {Object} obj 
+ * @param {Function} ignore A function, that gets passed a string-key of every perceived 
+ * unecesarry property. If it returns true, that string key will be deemed necesarry, and 
+ * not removed.
+ */
+export const equalizeProperties = (schema, obj = {}, ignore = () => false) => {
+  let objChanged = false
+  let retObj = { ...obj }
+
+  const flatLocal = flattenObjectProps(retObj)
+  const flatDefault = flattenObjectProps(schema)
+  
+  const unecessaryKeys = flatLocal.filter(x => {
+    return !flatDefault.includes(x) && !ignore(x)
+  })
+
+  if (unecessaryKeys.length > 0) {
+    unecessaryKeys.forEach(propertyGroup => {
+      if (useStringAsKey(retObj, propertyGroup) != null) {
+        const propertyArray = propertyGroup.split('.')
+        retObj = removeElementByProperties(retObj, propertyArray)
+      }
+    })
+
+    objChanged = true
+  }
+
+  const missingKeys = flatDefault.filter(x => !flatLocal.includes(x))
+
+  if (missingKeys.length > 0) {
+    missingKeys.forEach(propertyGroup => {
+      if (useStringAsKey(retObj, propertyGroup) == null) {
+        retObj = addMerge(retObj, schema)
+      }
+    })
+
+    objChanged = true
+  }
+  
+  return {
+    result: retObj,
+    changed: objChanged,
+    removed: unecessaryKeys,
+    added: missingKeys
   }
 }

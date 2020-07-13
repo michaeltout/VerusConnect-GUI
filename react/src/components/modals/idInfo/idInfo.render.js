@@ -10,6 +10,7 @@ export const IdInfoRender = function() {
         dispatch={this.props.dispatch}
         openIdentity={this.props.openIdentity}
         setLock={this.props.setModalLock}
+        openCurrency={this.props.openCurrency}
       />
     </div>
   );

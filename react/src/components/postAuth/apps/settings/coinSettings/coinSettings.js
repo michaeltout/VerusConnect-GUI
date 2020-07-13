@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import { 
   CoinSettingsRender,
 } from './coinSettings.render';
-import { NATIVE, RUN_SIGN_HASH } from '../../../../../util/constants/componentConstants';
+import { NATIVE, RUN_SIGN_HASH, ERROR_SNACK } from '../../../../../util/constants/componentConstants';
 import { customRpcCall } from '../../../../../util/api/wallet/walletCalls';
+import { updateLocalBlacklists, newSnackbar, updateLocalWhitelists } from '../../../../../actions/actionCreators';
+import Store from '../../../../../store';
 
 class CoinSettings extends React.Component {
   constructor(props) {
@@ -16,7 +18,9 @@ class CoinSettings extends React.Component {
 
     this.state = {
       activeTab: 0,
-      tabs: this.availableModeArr
+      tabs: this.availableModeArr,
+      disableBlacklist: false,
+      disableWhitelist: false
     }
 
     // Any properties here will prevent the command with their key from being run
@@ -27,6 +31,8 @@ class CoinSettings extends React.Component {
     this.handleTabChange = this.handleTabChange.bind(this)
     this.setConfigValue = this.setConfigValue.bind(this)
     this.callDaemonCmd = this.callDaemonCmd.bind(this)
+    this.removeFromBlacklist = this.removeFromBlacklist.bind(this)
+    this.removeFromWhitelist = this.removeFromWhitelist.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -38,6 +44,56 @@ class CoinSettings extends React.Component {
 
       this.setState({ activeTab: 0, tabs: this.availableModeArr })
     }
+  }
+
+  removeFromBlacklist(value) {
+    this.setState({ disableBlacklist: true }, async () => {
+      const {
+        blacklist,
+        selectedCoinObj,
+        dispatch
+      } = this.props;
+      let currentBlacklist = [...blacklist]
+      const allBlacklists = Store.getState().localCurrencyLists.blacklists
+  
+      const index = currentBlacklist.indexOf(value);
+      if (index > -1) {
+        currentBlacklist.splice(index, 1);
+      }
+  
+      try {
+        dispatch(await updateLocalBlacklists({ ...allBlacklists, [selectedCoinObj.id]: currentBlacklist}))
+        this.setState({ disableBlacklist: false })
+      } catch(e) {
+        dispatch(newSnackbar(ERROR_SNACK, e.message))
+        this.setState({ disableBlacklist: false })
+      }
+    })
+  }
+
+  removeFromWhitelist(value) {
+    this.setState({ disableWhitelist: true }, async () => {
+      const {
+        whitelist,
+        selectedCoinObj,
+        dispatch
+      } = this.props;
+      let currentWhitelist = [...whitelist]
+      const allWhitelists = Store.getState().localCurrencyLists.whitelists
+  
+      const index = currentWhitelist.indexOf(value);
+      if (index > -1) {
+        currentWhitelist.splice(index, 1);
+      }
+  
+      try {
+        dispatch(await updateLocalWhitelists({ ...allWhitelists, [selectedCoinObj.id]: currentWhitelist}))
+        this.setState({ disableWhitelist: false })
+      } catch(e) {
+        dispatch(newSnackbar(ERROR_SNACK, e.message))
+        this.setState({ disableWhitelist: false })
+      }
+    })
   }
 
   callDaemonCmd(args, print) {    
@@ -167,10 +223,12 @@ class CoinSettings extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   return {
     mainPath: state.navigation.mainPath,
-    configSchema: state.settings.configSchema.coin
+    configSchema: state.settings.configSchema.coin,
+    blacklist: state.localCurrencyLists.blacklists[ownProps.selectedCoinObj.id] || [],
+    whitelist: state.localCurrencyLists.whitelists[ownProps.selectedCoinObj.id] || [],
   };
 };
 

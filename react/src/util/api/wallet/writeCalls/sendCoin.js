@@ -12,11 +12,7 @@ import { getNetworkFees } from '../../network/networkFees';
  * @param {String} fromAddress (optional, required if z_transaction) The address to send from, leave blank for all transparent funds
  * @param {Number} customFee (optional) Specify a custom tx fee
  * @param {String} memo (optional, only available on sends to z_addrs) Send a private memo with a private transaction for the receiver
- * @param {String} toChain (optional, forces all pbaas params to be required) The PBaaS chain to send to 
- * @param {Boolean} toNative (optional, forces all pbaas params to be required) auto-convert from Verus reserve to PBaaS currency at market price
- * @param {Boolean} toReserve (optional, forces all pbaas params to be required) auto-convert from PBaaS to Verus reserve currency at market price
- * @param {Boolean} preConvert (optional, forces all pbaas params to be required) auto-convert to PBaaS currency at market price, this only works if the order is mined before block start of the chain
- * @param {Number} lastPriceInRoot (optional) The last price of the chain to send to vs the chain to send from, for display purposes
+ * @param {Object} currencyParams (optional) Parameters for PBaaS sendcurrency API that arent deduced from above, e.g. { currency: "VRSCTEST", convertto: "test", preconvert: true }
  */
 export const sendNative = async (
   preflight = true,
@@ -27,11 +23,7 @@ export const sendNative = async (
   fromAddress,
   customFee,
   memo,
-  toChain,
-  toNative,
-  toReserve,
-  preConvert,
-  lastPriceInRoot
+  currencyParams
 ) => {
   return await getApiData(
     NATIVE,
@@ -44,11 +36,7 @@ export const sendNative = async (
       fromAddress,
       customFee,
       memo,
-      toChain,
-      toNative,
-      toReserve,
-      preConvert,
-      lastPriceInRoot
+      currencyParams
     },
     "post"
   );

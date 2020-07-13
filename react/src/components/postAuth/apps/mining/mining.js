@@ -9,13 +9,10 @@ import {
 } from './mining.render'
 import Store from '../../../../store'
 import { setMainNavigationPath, setModalNavigationPath, expireData, newSnackbar, startLoadingMiningFunctions, finishLoadingMiningFunctions } from '../../../../actions/actionCreators'
-import { getPathParent } from '../../../../util/navigationUtils'
+import { getPathParent, getLastLocation } from '../../../../util/navigationUtils'
 import { stopStaking, startStaking, stopMining, startMining } from '../../../../util/api/wallet/walletCalls';
 import { conditionallyUpdateWallet } from '../../../../actions/actionDispatchers';
-
-const COMPONENT_MAP = {
-  [DASHBOARD]: <Dashboard />,
-}
+import { useStringAsKey } from '../../../../util/objectUtil';
 
 class Mining extends React.Component {
   constructor(props) {
@@ -41,7 +38,6 @@ class Mining extends React.Component {
     this.setTabs = this.setTabs.bind(this)
     this.openDashboard = this.openDashboard.bind(this)
     this.getNativeCoins = this.getNativeCoins.bind(this)
-    this.openAddCoinModal = this.openAddCoinModal.bind(this)
     this.openCoin = this.openCoin.bind(this)
     this.handleThreadChange = this.handleThreadChange.bind(this)
     this.toggleStaking = this.toggleStaking.bind(this)
@@ -49,8 +45,25 @@ class Mining extends React.Component {
   }
 
   componentDidMount() {
-    //Set default navigation path to dashboard if wallet is opened without a sub-navigation location
-    if (!this.props.mainPathArray[3]) this.props.dispatch(setMainNavigationPath(`${this.props.mainPathArray.join('/')}/${DASHBOARD}`)) 
+    if (!this.props.mainPathArray[3]) {
+      this.getNativeCoins(this.props.activatedCoins, () => {
+        const lastLocation = getLastLocation(
+          useStringAsKey(
+            this.props.mainTraversalHistory,
+            this.props.mainPathArray.join(".")
+          )
+        );
+  
+        const lastCoin =
+          lastLocation != null && lastLocation.length > 0 && lastLocation[0].includes("_mining")
+            ? lastLocation[0].split("_")[0]
+            : null;
+  
+        this.props.dispatch(setMainNavigationPath(`${this.props.mainPathArray.join('/')}/${
+          lastCoin != null && this.state.nativeCoins.includes(lastCoin) ? lastLocation[0] : DASHBOARD
+        }`)) 
+      })
+    }
     
     this.calculateMiningStates(this.props.activatedCoins)
   }
@@ -262,7 +275,8 @@ const mapStateToProps = (state) => {
     miningInfo: state.ledger.miningInfo,
     balances: state.ledger.balances,
     miningInfoErrors: state.errors[API_GET_MININGINFO],
-    loading: state.loading[MINING_FUNCTIONS]
+    loading: state.loading[MINING_FUNCTIONS],
+    mainTraversalHistory: state.navigation.mainTraversalHistory
   };
 };
 

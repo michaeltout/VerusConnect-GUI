@@ -7,6 +7,7 @@ import { updateTransactions } from './updateTransactions'
 import { updateZOperations } from './updateZOperationStatuses'
 import { updateFiatPrice } from './updateFiatPrice'
 import { updateIdentities } from './updateIdentities'
+import { updateAllCurrencies } from './updateAllCurrencies'
 import { updateNameCommitments } from './updateNameCommitments'
 import { updateCurrentSupply } from './updateCurrentSupply'
 import { readNavigationUrl } from '../../../../util/navigationUtils'
@@ -24,23 +25,21 @@ import {
   API_ABORTED,
   API_ERROR,
   API_SUCCESS,
-  WARNING_SNACK,
-  MID_LENGTH_ALERT,
   API_GET_IDENTITIES,
+  API_GET_ALL_CURRENCIES,
   API_GET_NAME_COMMITMENTS,
   ALWAYS_ACTIVATED,
-  API_GET_CURRENTSUPPLY
+  API_GET_CURRENTSUPPLY,
+  API_GET_CURRENCY_DATA_MAP
 } from '../../../../util/constants/componentConstants'
 import {
   renewData,
   occupyCoinApiCall,
-  freeCoinApiCall,
-  disableUpdateWarningSnack,
-  enableUpdateWarningSnack,
-  newSnackbar
+  freeCoinApiCall
 } from "../../../actionCreators";
 import { createExpireTimeout } from '../../../actionDispatchers'
 import { logDebugWarning } from '../../debug/creators/debugWarnings'
+import { updateCurrencyDataMap } from './updateCurrencyDataMap'
 
 // Map of update functions to be able to call them through standardized 
 // API call constants. Each function requires the same three parameters: (store, mode, chainTicker)
@@ -56,7 +55,9 @@ export const walletUpdates = {
   [API_GET_IDENTITIES]: updateIdentities,
   [API_GET_NAME_COMMITMENTS]: updateNameCommitments,
   [API_GET_CURRENTSUPPLY]: updateCurrentSupply,
-  [API_GET_BLOCKREWARD]: updateBlockReward
+  [API_GET_BLOCKREWARD]: updateBlockReward,
+  [API_GET_ALL_CURRENCIES]: updateAllCurrencies,
+  [API_GET_CURRENCY_DATA_MAP]: updateCurrencyDataMap
 }
 
 /**
@@ -138,7 +139,7 @@ export const conditionallyUpdateWallet = async (state, dispatch, mode, chainTick
         const location = locationAndTypeRestriction[0]
         const type = locationAndTypeRestriction[1]
         const locationRestrictions = readNavigationUrl(location)
-        const activeCoinTags = state.coins.activatedCoins[chainTicker].tags
+        const activeCoinTags = state.coins.activatedCoins[chainTicker].options.tags
 
         if (!(currentMainPath.includes(locationRestrictions.mainPath) && activeCoinTags.includes(type)) || !(currentMainPath.includes(locationRestrictions.modalPath) && activeCoinTags.includes(type))) {
           return false
@@ -158,8 +159,6 @@ export const conditionallyUpdateWallet = async (state, dispatch, mode, chainTick
     }
     else return API_ERROR
   } else if (updateInfo && updateInfo.needs_update && updateInfo.busy) {
-    const { updateWarningSnackDisabled } = state.updates
-
     dispatch(logDebugWarning(`The ${updateId} call for ${chainTicker} is taking a very long time to complete. This may impact performace.`))
 
     // TODO: Deprecated, delete

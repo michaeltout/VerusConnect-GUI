@@ -1,5 +1,5 @@
 import { apiGet, apiPost, getApiData } from '../callCreator'
-import { LOAD_USERS, RESET_USERS, SAVE_USERS, AUTHENTICATE, ETH, ELECTRUM, POST, LOG_OUT } from '../../constants/componentConstants'
+import { LOAD_USERS, RESET_USERS, SAVE_USERS, AUTHENTICATE, ETH, ELECTRUM, POST, LOG_OUT, BACKUP_USERS } from '../../constants/componentConstants'
 
 /**
  * Loads the users object from the user file, if no file is present,
@@ -23,6 +23,20 @@ export const loadUsers = async () => {
 export const saveUsers = async (userObj) => {
   try {
     const res = await apiPost(SAVE_USERS, {userObj})
+    if (res.msg !== 'success') throw new Error(res.result)
+    else return res.result
+  } catch (e) {
+    console.error(e.message)
+    throw new Error(e.message)
+  }
+}
+
+/**
+ * Backs up the existing user file
+ */
+export const backupUsers = async () => {
+  try {
+    const res = await apiPost(BACKUP_USERS, {})
     if (res.msg !== 'success') throw new Error(res.result)
     else return res.result
   } catch (e) {

@@ -15,6 +15,8 @@ import {
   API_GET_FIATPRICE,
   CHAIN_POSTFIX,
   API_GET_IDENTITIES,
+  API_GET_ALL_CURRENCIES,
+  API_GET_CURRENCY_DATA_MAP,
   IS_VERUS,
   API_GET_NAME_COMMITMENTS,
   API_GET_CPU_TEMP,
@@ -218,6 +220,110 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           busy: false,
           location_restrictions: [],
           location_and_type_restrictions: [['@post_auth', IS_VERUS]]
+        },
+        interval_info: {
+          expire_id: null,
+          update_expired_id: null,
+          expire_oncomplete: null,
+          update_expired_oncomplete: null,
+          expire_timeout: 60000,
+          update_expired_interval: 10000,
+        }
+      }
+    },
+
+    [API_GET_ALL_CURRENCIES]: {
+      restrictions: [], 
+      pre_data: {
+        tracking_info: {
+          needs_update: false,
+          busy: false,
+          location_restrictions: [],
+          location_and_type_restrictions: []
+        },
+        interval_info: {
+          expire_id: null,
+          update_expired_id: null,
+          expire_oncomplete: null,
+          update_expired_oncomplete: null,
+          expire_timeout: NEVER_ACTIVATED,
+          update_expired_interval: NEVER_ACTIVATED
+        }
+      },
+      syncing: {
+        tracking_info: {
+          needs_update: true,
+          busy: false,
+          location_restrictions: [],
+          location_and_type_restrictions: [['@post_auth/apps/multiverse/dashboard', IS_PBAAS_ROOT]]
+        },
+        interval_info: {
+          expire_id: null,
+          update_expired_id: null,
+          expire_oncomplete: null,
+          update_expired_oncomplete: null,
+          expire_timeout: 120000,
+          update_expired_interval: 10000,
+        }
+      },
+      post_sync: {
+        tracking_info: {
+          needs_update: true,
+          busy: false,
+          location_restrictions: [],
+          location_and_type_restrictions: [['@post_auth/apps/multiverse/dashboard', IS_PBAAS_ROOT]]
+        },
+        interval_info: {
+          expire_id: null,
+          update_expired_id: null,
+          expire_oncomplete: null,
+          update_expired_oncomplete: null,
+          expire_timeout: 120000,
+          update_expired_interval: 10000,
+        }
+      }
+    },
+
+    [API_GET_CURRENCY_DATA_MAP]: {
+      restrictions: [], 
+      pre_data: {
+        tracking_info: {
+          needs_update: false,
+          busy: false,
+          location_restrictions: [],
+          location_and_type_restrictions: []
+        },
+        interval_info: {
+          expire_id: null,
+          update_expired_id: null,
+          expire_oncomplete: null,
+          update_expired_oncomplete: null,
+          expire_timeout: NEVER_ACTIVATED,
+          update_expired_interval: NEVER_ACTIVATED
+        }
+      },
+      syncing: {
+        tracking_info: {
+          needs_update: true,
+          busy: false,
+          location_restrictions: [],
+          location_and_type_restrictions: [[`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`, IS_PBAAS_ROOT]]
+        },
+        interval_info: {
+          expire_id: null,
+          update_expired_id: null,
+          expire_oncomplete: null,
+          update_expired_oncomplete: null,
+          expire_timeout: 60000,
+          update_expired_interval: 10000,
+        }
+      },
+      post_sync: {
+        tracking_info: {
+          needs_update: true,
+          busy: false,
+          location_restrictions: [],
+          location_and_type_restrictions: [[`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`, IS_PBAAS_ROOT]]
         },
         interval_info: {
           expire_id: null,

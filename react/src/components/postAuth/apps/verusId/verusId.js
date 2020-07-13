@@ -8,9 +8,11 @@ import {
   IdTabsRender
 } from './verusId.render'
 import { setMainNavigationPath, setModalNavigationPath, newSnackbar, setModalParams } from '../../../../actions/actionCreators'
-import { getPathParent } from '../../../../util/navigationUtils'
+import { getPathParent, getLastLocation } from '../../../../util/navigationUtils'
 import FormDialog from '../../../../containers/FormDialog/FormDialog'
 import { getIdentity } from '../../../../util/api/wallet/walletCalls'
+import { openIdentityCard } from '../../../../actions/actionDispatchers';
+import { useStringAsKey } from '../../../../util/objectUtil';
 
 const COMPONENT_MAP = {
   [DASHBOARD]: <Dashboard />,
@@ -35,18 +37,43 @@ class VerusId extends React.Component {
     this.setTabs = this.setTabs.bind(this)
     this.openId = this.openId.bind(this)
     this.openDashboard = this.openDashboard.bind(this)
-    this.openAddCoinModal = this.openAddCoinModal.bind(this)
     this.updateSearchTerm = this.updateSearchTerm.bind(this)
     this.closeSearchModal = this.closeSearchModal.bind(this)
     this.openSearchModal = this.openSearchModal.bind(this)
     this.onIdSearchSubmit = this.onIdSearchSubmit.bind(this)
-    this.openModal = this.openModal.bind(this)
     this.setTabs()
   }
 
   componentDidMount() {
     //Set default navigation path to dashboard if wallet is opened without a sub-navigation location
-    if (!this.props.mainPathArray[3]) this.props.dispatch(setMainNavigationPath(`${this.props.mainPathArray.join('/')}/${DASHBOARD}`)) 
+    //if (!this.props.mainPathArray[3]) this.props.dispatch(setMainNavigationPath(`${this.props.mainPathArray.join('/')}/${DASHBOARD}`)) 
+
+    if (!this.props.mainPathArray[3]) {
+      const chainTickers = Object.keys(this.props.identities)
+      const lastLocation = getLastLocation(
+        useStringAsKey(
+          this.props.mainTraversalHistory,
+          this.props.mainPathArray.join(".")
+        )
+      );
+
+      if (lastLocation != null && lastLocation.length > 0 && lastLocation[0].includes("_identity")) {
+        const lastLocationData = lastLocation[0].split('_')
+        const coinId = lastLocationData[1]
+        const identityIndex = lastLocationData[0]
+
+        this.props.dispatch(
+          setMainNavigationPath(
+            `${this.props.mainPathArray.join("/")}/${
+              chainTickers.includes(coinId) &&
+              this.props.identities[coinId].length > identityIndex
+                ? lastLocation[0]
+                : DASHBOARD
+            }`
+          )
+        ); 
+      } else this.props.dispatch(setMainNavigationPath(`${this.props.mainPathArray.join('/')}/${DASHBOARD}`))
+    } 
   }
 
   updateSearchTerm(term) {
@@ -61,26 +88,13 @@ class VerusId extends React.Component {
     this.setState({ idSearchOpen: true, searchChain: chain })
   }
 
-  openModal(modalParams = {}, modal) {
-    this.props.dispatch(
-      setModalParams(modal, modalParams)
-    );
-
-    this.props.dispatch(setModalNavigationPath(modal));
-  }
-
   onIdSearchSubmit() {
-    const openIdentity = (activeIdentity, chainTicker) => {
-      this.props.dispatch(setModalNavigationPath(null))
-      this.openModal({ chainTicker, activeIdentity, openIdentity }, ID_INFO)
-    }
-
     this.setState({loading: true}, () => {
       getIdentity(NATIVE, this.state.searchChain, this.state.idSearchTerm)
       .then(res => {
         if (res.msg === 'success') {
           this.props.dispatch(newSnackbar(SUCCESS_SNACK, `${this.state.idSearchTerm} ID found!`, MID_LENGTH_ALERT))
-          openIdentity(res.result, this.state.searchChain)
+          openIdentityCard(res.result, this.state.searchChain)
           this.setState({ loading: false, idSearchOpen: false, idSearchTerm: '' })
         } else {
           this.props.dispatch(newSnackbar(ERROR_SNACK, res.result))
@@ -120,7 +134,7 @@ class VerusId extends React.Component {
     
     const updateCards = () => {
       const verusProtocolCoins = Object.values(activatedCoins).filter((coinObj) => {
-        return coinObj.tags.includes(IS_VERUS)
+        return (coinObj.options.tags.includes(IS_VERUS) && coinObj.mode === NATIVE)
       })
   
       setCards(verusProtocolCoins.map((coinObj) => {
@@ -207,7 +221,8 @@ const mapStateToProps = (state) => {
     fiatCurrency: state.settings.config.general.main.fiatCurrency,
     identities: state.ledger.identities,
     nameCommitments: state.ledger.nameCommitments,
-    activeUser: state.users.activeUser
+    activeUser: state.users.activeUser,
+    mainTraversalHistory: state.navigation.mainTraversalHistory
   };
 };
 

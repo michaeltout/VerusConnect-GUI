@@ -1,4 +1,7 @@
-import { SET_COIN_STATUS, SET_ACTIVATED_COINS } from '../../../../util/constants/storeType'
+import {
+  SET_COIN_STATUS,
+  SET_ACTIVATED_COINS,
+} from "../../../../util/constants/storeType";
 
 
 export const setCoinStatus = (chainTicker, status) => {
