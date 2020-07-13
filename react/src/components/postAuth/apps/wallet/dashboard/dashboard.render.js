@@ -203,7 +203,7 @@ export const DashboardRenderTable = function() {
                 >
                   {`${
                     portfolioItem.balanceFiat && (portfolioItem.priceChange7d != null)
-                      ? portfolioItem.priceChange7d
+                      ? portfolioItem.priceChange7d.toFixed(3)
                       : "-"
                   }%`}
                 </td>
