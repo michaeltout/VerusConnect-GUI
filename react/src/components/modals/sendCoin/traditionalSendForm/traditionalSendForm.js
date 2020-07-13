@@ -38,7 +38,7 @@ import {
   TXDATA_MESSAGE,
   TXDATA_PRICE,
   TXDATA_CONVERSION_VALUE,
-  TRANSPARENT_BALANCE
+  LONG_ALERT
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar, setModalParams } from '../../../../actions/actionCreators';
 import { openModal } from '../../../../actions/actionDispatchers';
@@ -100,7 +100,8 @@ class TraditionalSendForm extends React.Component {
       currencyInfo,
       conversionGraph,
       isConversion,
-      calculateCurrencyData
+      calculateCurrencyData,
+      defaultConversionName
     } = this.props;
     const currencyName = currencyInfo != null ? currencyInfo.currency.name : null
     const addresses = isIdentity ? this.props.identity.addresses : this.props.addresses[chainTicker]
@@ -124,13 +125,13 @@ class TraditionalSendForm extends React.Component {
     const fromCurrencyConversion = convertingFrom
         ? DEFAULT_CURRENCY_CONVERSION
         : convertingTo
-        ? conversionGraph.from[0]
+        ? (conversionGraph.from.find((value) => defaultConversionName === value.name) || conversionGraph.from[0])
         : null
     
     const toCurrencyConversion = convertingTo
       ? DEFAULT_CURRENCY_CONVERSION
       : convertingFrom
-      ? conversionGraph.to[0]
+      ? (conversionGraph.to.find((value) => defaultConversionName === value.name) || conversionGraph.to[0])
       : null
 
     const initAddressMap = () => {
@@ -267,7 +268,7 @@ class TraditionalSendForm extends React.Component {
   }
 
   generateWarningSnack(warnings) {    
-    this.props.dispatch(newSnackbar(WARNING_SNACK, warnings[0].message))
+    this.props.dispatch(newSnackbar(WARNING_SNACK, warnings[0].message, LONG_ALERT))
   }
 
   setSendAmountAll() {
@@ -310,7 +311,7 @@ class TraditionalSendForm extends React.Component {
         txData[TXDATA_TO_CURRENCY] == null
           ? null
           : `${txData[TXDATA_PRICE]} ${txData[TXDATA_FROM_CURRENCY].name}/${txData[TXDATA_TO_CURRENCY].name}`,
-      ["Est. Amount to Receive"]:
+      ["Last Price Based Est. Value:"]:
         txData[TXDATA_ERROR] ||
         txData[TXDATA_CONVERSION_VALUE] == null 
           ? null

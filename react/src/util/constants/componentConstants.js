@@ -280,6 +280,7 @@ export const INFO_SNACK = 'info'
 export const SUCCESS_SNACK = 'success'
 export const WARNING_SNACK = 'warning'
 export const MID_LENGTH_ALERT = 6000
+export const LONG_ALERT = 12000
 
 // Settings screen
 export const PROFILE_SETTINGS = 'profile_settings'

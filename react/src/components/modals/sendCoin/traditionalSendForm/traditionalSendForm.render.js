@@ -6,9 +6,10 @@ import Button from '@material-ui/core/Button';
 import ObjectToTable from '../../../../containers/ObjectToTable/ObjectToTable'
 import { ENTER_DATA } from '../../../../util/constants/componentConstants';
 import CustomCheckbox from '../../../../containers/CustomCheckbox/CustomCheckbox';
-import { FormControlLabel, Typography, IconButton } from '@material-ui/core';
+import { FormControlLabel, Typography, IconButton, Tooltip } from '@material-ui/core';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import { normalizeNum } from '../../../../util/displayUtil/numberFormat';
+import WarningIcon from '@material-ui/icons/Warning';
 
 export const TraditionalSendFormRender = function() {
   const { formStep } = this.props
@@ -158,6 +159,11 @@ export const TraditionalSendFormEnterRender = function() {
             >
               {`${displayConversion} ${toCurrencyConversion.name}`}
             </Typography>
+            <Tooltip title={'All price estimations are based on the latest conversion price. The actual conversion result calculated at the time of conversion and will most likely differ.'}>
+              <span style={{ color: '#fea000', marginLeft: 8 }}>
+                <WarningIcon color='inherit'/>
+              </span>
+            </Tooltip>
           </div>
         )}
       </div>
@@ -255,9 +261,9 @@ export const ConversionOptionsRender = function() {
         value={fromCurrencyConversion}
         disableClearable={true}
         disabled={
-          conversionGraph.from.length == 0 ||
+          (conversionGraph.from.length == 0 ||
           !currencyInfo.spendableTo ||
-          convertingFrom
+          convertingFrom) ? true : false
         }
         onChange={(e, value) => this.updateCurrencyConversion(value, true)}
         renderInput={(params) => (
@@ -287,17 +293,17 @@ export const ConversionOptionsRender = function() {
         <IconButton
           style={{ marginLeft: 60, marginRight: 60 }}
           onClick={this.flipConversion}
-          disabled={this.state.toCurrencyInfo.preConvert}
+          disabled={this.state.toCurrencyInfo.preConvert ? true : false}
         >
           <ArrowForwardIcon fontSize="large" />
         </IconButton>
         <Typography
           style={{ color: "gray", fontSize: 12, textAlign: "center" }}
         >
-          {convertingTo
-            ? `* ${fromCurrencyConversion.price} =`
-            : convertingFrom
-            ? `÷ ${toCurrencyConversion.price} =`
+          {convertingTo && fromCurrencyConversion.price
+            ? `* ${Number(fromCurrencyConversion.price.toFixed(8))} =`
+            : convertingFrom && toCurrencyConversion.price
+            ? `÷ ${Number(toCurrencyConversion.price.toFixed(8))} =`
             : null}
         </Typography>
       </div>
@@ -308,9 +314,9 @@ export const ConversionOptionsRender = function() {
         value={toCurrencyConversion}
         disableClearable={true}
         disabled={
-          conversionGraph.to.length == 0 ||
+          (conversionGraph.to.length == 0 ||
           !currencyInfo.spendableFrom ||
-          convertingTo
+          convertingTo) ? true : false
         }
         onChange={(e, value) => this.updateCurrencyConversion(value, false)}
         renderInput={(params) => (

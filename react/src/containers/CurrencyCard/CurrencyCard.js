@@ -260,6 +260,7 @@ class CurrencyCard extends React.Component {
           isConversion: true,
           currencyInfo,
           inverse: !currencyInfo.preConvert,
+          defaultConversionName: address,
           conversionGraph:
             newState.ledger.currencyConversionGraph[chainTicker][
               currencyInfo.currency.name
@@ -354,11 +355,12 @@ class CurrencyCard extends React.Component {
   }
 
   whitelistCurrency(name = null, cb = () => {}) {
-    const { addToWhitelist, setLock } = this.props 
+    const { addToWhitelist, setLock, removeFromBlacklist } = this.props; 
 
     setLock(true)
     this.setState({ loadingCurrencyLists: true }, async () => {
       await addToWhitelist(name)
+      await removeFromBlacklist(name)
 
       this.setState({ loadingCurrencyLists: false })
       setLock(false)
