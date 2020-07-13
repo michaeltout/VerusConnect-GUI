@@ -259,7 +259,7 @@ class CurrencyCard extends React.Component {
           isMessage: false,
           isConversion: true,
           currencyInfo,
-          inverse: true,
+          inverse: !currencyInfo.preConvert,
           conversionGraph:
             newState.ledger.currencyConversionGraph[chainTicker][
               currencyInfo.currency.name
