@@ -96,53 +96,33 @@ export const getConversionGraph = (currencyObjects, currentHeight) => {
     const { currencies } = bestcurrencystate || {}
     const age = currentHeight - startblock
 
-    if (currencies != null && Object.keys(currencies).length > 0 && (isReserve || age < 0)) {
-      retObj[key].from = Object.keys(currencies).map((value) => {
-        const name = names[value]
-        retObj[name].to.push({
-          id: currencyid,
-          name: key,
-          price: currencies[value].lastconversionprice
-        })
+    if (currencies != null && Object.keys(currencies).length > 0 && (isReserve || age < 0)) {      
+      Object.keys(currencies).map((value) => {
+        if (names[value] != null) {
+          const name = names[value]
 
-        if (age >= 0) {
-          retObj[key].to.push({
+          retObj[name].to.push({
+            id: currencyid,
+            name: key,
+            price: currencies[value].lastconversionprice
+          })
+  
+          if (age >= 0) {
+            retObj[key].to.push({
+              id: value,
+              name,
+              price: 1/currencies[value].lastconversionprice
+            })
+          }
+  
+          retObj[key].from.push({
             id: value,
             name,
             price: 1/currencies[value].lastconversionprice
           })
         }
-
-        return {
-          id: value,
-          name,
-          price: 1/currencies[value].lastconversionprice
-        }
       })
     }
-
-    /*const {
-      currencies,
-      conversions,
-      currencyid
-    } = currencyObjects[key];
-
-    if (currencies != null && currencies.length > 0) {
-      retObj[key].from = currencies.map((value, index) => {
-        const name = names[value]
-        retObj[name].to.push({
-          id: currencyid,
-          name: key,
-          price: conversions[index]
-        })
-
-        return {
-          id: value,
-          name,
-          price: 1/conversions[index]
-        }
-      })
-    }*/
   }
 
   return retObj

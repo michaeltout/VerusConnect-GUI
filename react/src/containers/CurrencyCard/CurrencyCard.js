@@ -926,7 +926,7 @@ class CurrencyCard extends React.Component {
                           : () => this.whitelistCurrency()
                       }
                       tooltip={
-                        whitelisted
+                        !whitelisted
                           ? "Adding this currency will let you select it from your wallet screen"
                           : "Removing this currency removes it from your wallet screen"
                       }
