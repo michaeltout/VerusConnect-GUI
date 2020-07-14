@@ -202,6 +202,7 @@ export const TraditionalSendFormEnterRender = function() {
 export const TraditionalSendAddressDropdownRender = function() {
   return (
     <Autocomplete
+      key={this.state.fromDropdownKey}
       options={this.state.addressList}
       getOptionLabel={option => {
         const balance = this.getBalance(option.address, this.state.displayCurrency)

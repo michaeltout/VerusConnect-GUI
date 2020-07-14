@@ -74,7 +74,9 @@ class TraditionalSendForm extends React.Component {
       },
       txDataDisplay: {},
       fromCurrencyInfo: {},
-      toCurrencyInfo: {}
+      toCurrencyInfo: {},
+      // Force component re-render on autocomplete when it is loaded due to strange autocomplete bug
+      fromDropdownKey: Math.random() 
     }
     
     this.updateFormData = this.updateFormData.bind(this)
@@ -138,13 +140,11 @@ class TraditionalSendForm extends React.Component {
       let addressMap = {}
 
       addresses[balanceTag === PRIVATE_BALANCE ? PRIVATE_ADDRS : PUBLIC_ADDRS].forEach(addressObj => {
-        if (addressObj.balances.native > 0) {
-          addressMap[addressObj.address] = {
-            label: addressObj.address,
-            address: addressObj.address,
-            balances: addressObj.balances
-          };
-        }
+        addressMap[addressObj.address] = {
+          label: addressObj.address,
+          address: addressObj.address,
+          balances: addressObj.balances
+        };
       })
 
       return addressMap
@@ -207,12 +207,16 @@ class TraditionalSendForm extends React.Component {
     }
   }
 
-  componentDidUpdate(lastProps) {
+  componentDidUpdate(lastProps, lastState) {
     const { formStep } = this.props
     
     if (lastProps.formStep !== formStep && formStep === ENTER_DATA) {
       this.updateFormErrors()
       this.updateFormData()
+    }
+
+    if (lastState.addressList.length !== this.state.addressList.length) {
+      this.setState({ fromDropdownKey: Math.random() })
     }
   }
 
