@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { 
   CurrencyInfoRender
-} from './CurrencyInfo.render';
+} from './currencyInfo.render';
 import {
   CURRENCY_INFO,
   BLACKLISTS,
