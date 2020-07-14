@@ -30,6 +30,11 @@ class SendCoin extends React.Component {
   constructor(props) {
     super(props);
 
+    const isPreconvert = props.modalProps &&
+    props.modalProps.isConversion &&
+    props.modalProps.currencyInfo &&
+    props.modalProps.currencyInfo.preConvert
+
     props.setModalHeader(
       props.modalProps &&
         props.modalProps.balanceTag &&
@@ -38,14 +43,9 @@ class SendCoin extends React.Component {
         : props.modalProps.currencyInfo &&
           props.modalProps.currencyInfo.currency.name !==
             props.modalProps.chainTicker
-        ? "Send Currency"
+        ? (isPreconvert ? "Pre-Convert Currency" : "Send Currency")
         : "Send Coin"
     );
-
-    const isPreconvert = props.modalProps &&
-    props.modalProps.isConversion &&
-    props.modalProps.currencyInfo &&
-    props.modalProps.currencyInfo.preConvert
 
     this.state = {
       formStep: ENTER_DATA,
