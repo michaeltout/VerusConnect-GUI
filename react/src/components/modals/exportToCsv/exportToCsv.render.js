@@ -1,5 +1,6 @@
 import React from 'react';
 import CustomButton from '../../../containers/CustomButton/CustomButton';
+import { Typography } from '@material-ui/core';
 
 export const ExportToCsvRender = function() {
   return (
@@ -24,12 +25,18 @@ export const ExportToCsvRender = function() {
         {"Select where to save CSV"}
       </h1>
       <input
-        style={{ paddingLeft: "23%" }}
         directory=""
         webkitdirectory=""
         type="file"
         onChange={this.selectDirectory}
+        id="upload"
+        style={{
+          width: 90,
+        }}
       />
+      {this.state.dirName != null && (
+        <Typography style={{ marginTop: 20 }}>{this.state.dirName}</Typography>
+      )}
       <CustomButton
         onClick={this.exportToCsv}
         title={"Export Transactions"}
@@ -37,7 +44,7 @@ export const ExportToCsvRender = function() {
         textColor={"white"}
         buttonProps={{
           style: {
-            marginTop: 40,
+            marginTop: 20,
             visibility: this.state.dirName ? "unset" : "hidden",
           },
         }}
