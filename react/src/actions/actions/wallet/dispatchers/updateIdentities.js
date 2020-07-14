@@ -16,12 +16,22 @@ import { SET_COIN_IDENTITIES, ERROR_COIN_IDENTITIES } from '../../../../util/con
 export const updateIdentities = async (state, dispatch, mode, chainTicker, includeCanSign, includeWatchOnly) => {
   let identitiesAction = {chainTicker}
   let wasSuccess = true
+  let nameMap = {}
 
   if (mode === NATIVE) {  
     try {
       const apiResult = await getIdentities(mode, chainTicker, includeCanSign, includeWatchOnly)
       if (apiResult.msg === 'success') {
-        identitiesAction = {...identitiesAction, type: SET_COIN_IDENTITIES, identities: apiResult.result}
+        apiResult.result.map(idObj => {
+          nameMap[idObj.identity.identityaddress] = idObj.identity.name
+        })
+
+        identitiesAction = {
+          ...identitiesAction, 
+          type: SET_COIN_IDENTITIES, 
+          identities: apiResult.result,
+          nameMap
+        }
       } else {
         identitiesAction = {...identitiesAction, type: ERROR_COIN_IDENTITIES, result: apiResult.result}
         wasSuccess = false

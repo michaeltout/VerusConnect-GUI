@@ -13,6 +13,10 @@
 .active-nav-tab {
   background-color: rgb(78,115,223) !important;
   color: white !important;
+  border-width: 1px !important;
+  border-color: rgb(78,115,223) !important;
+  border-style: solid !important;
+  border-bottom-style: none !important;
 }
 
 .inactive-nav-tab {

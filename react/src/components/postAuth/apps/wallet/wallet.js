@@ -1,6 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { DASHBOARD, CHAIN_POSTFIX, ADD_COIN, SELECT_COIN, SUCCESS_SNACK, MID_LENGTH_ALERT } from '../../../../util/constants/componentConstants'
+import {
+  DASHBOARD,
+  CHAIN_POSTFIX,
+  ADD_COIN,
+  SELECT_COIN,
+  SUCCESS_SNACK,
+  MID_LENGTH_ALERT,
+} from "../../../../util/constants/componentConstants";
 import Dashboard from './dashboard/dashboard'
 import CoinWallet from './coinWallet/coinWallet'
 import {
@@ -9,7 +16,8 @@ import {
 } from './wallet.render'
 import { setMainNavigationPath, setModalNavigationPath, newSnackbar } from '../../../../actions/actionCreators'
 import { deactivateCoin } from '../../../../actions/actionDispatchers'
-import { getPathParent } from '../../../../util/navigationUtils'
+import { getPathParent, getLastLocation } from '../../../../util/navigationUtils'
+import { useStringAsKey } from '../../../../util/objectUtil';
 
 const COMPONENT_MAP = {
   [DASHBOARD]: <Dashboard />,
@@ -23,20 +31,29 @@ class Wallet extends React.Component {
     this.setTabs = this.setTabs.bind(this)
     this.openCoin = this.openCoin.bind(this)
     this.openDashboard = this.openDashboard.bind(this)
-    this.openAddCoinModal = this.openAddCoinModal.bind(this)
     this.deactivate = this.deactivate.bind(this)
     this.setTabs()
   }
 
   componentDidMount() {
-    //Set default navigation path to dashboard if wallet is opened without a sub-navigation location
     if (!this.props.mainPathArray[3]) {
       const chainTickers = Object.keys(this.props.activatedCoins)
+      const lastLocation = getLastLocation(
+        useStringAsKey(
+          this.props.mainTraversalHistory,
+          this.props.mainPathArray.join(".")
+        )
+      );
+
+      const lastCoin =
+        lastLocation != null && lastLocation.length > 0 && lastLocation[0].includes("_chain")
+          ? lastLocation[0].split("_")[0]
+          : null;
 
       this.props.dispatch(setMainNavigationPath(`${this.props.mainPathArray.join('/')}/${
-        chainTickers.length > 0 ? `${chainTickers[0]}_${CHAIN_POSTFIX}` : DASHBOARD
+        lastCoin != null && chainTickers.includes(lastCoin) ? lastLocation[0] : DASHBOARD
       }`)) 
-    }
+    } 
   }
 
   componentWillReceiveProps(nextProps) {
@@ -110,7 +127,8 @@ const mapStateToProps = (state) => {
     fiatPrices: state.ledger.fiatPrices,
     fiatCurrency: state.settings.config.general.main.fiatCurrency,
     balances: state.ledger.balances,
-    loggingOut: state.users.loggingOut
+    loggingOut: state.users.loggingOut,
+    mainTraversalHistory: state.navigation.mainTraversalHistory
   };
 };
 

@@ -19,6 +19,6 @@ export const normalizeNum = (num, decimals = 2) => {
   return [
     Number(displayNum.toFixed(decimals)),
     (steps + 1) * 3,
-    steps > -1 && steps < numPostfixes.length - 1 ? numPostfixes[steps] : ""
+    steps > -1 && steps < numPostfixes.length ? numPostfixes[steps] : (steps > -1 ? `e${(steps + 1) * 3}` : '')
   ];
 }

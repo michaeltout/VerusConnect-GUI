@@ -120,7 +120,7 @@ export const ProfileSettingsStartScreenRender = function() {
 export const ProfileSettingsStartCoinsRender = function() {
   const { displayUser } = this.props
   const { selectedCoinObj, selectedStartCoins } = this.state
-  const coinIsSelected = selectedStartCoins.filter(coin => coin.id === selectedCoinObj.id).length > 0
+  const coinIsSelected = Object.keys(selectedStartCoins).includes(selectedCoinObj.id)
 
   return (
     <div style={{ display: "flex", justifyContent: "space-between", paddingLeft: 16, paddingRight: 16 }}>
@@ -132,7 +132,9 @@ export const ProfileSettingsStartCoinsRender = function() {
         </h6>
         <div style={{ display: "flex", flexWrap: "wrap" }}>
           { !displayUser.startWithLastCoins &&
-            displayUser.startCoins.map((coinObj, index) => {
+            Object.keys(displayUser.startCoins).map((chainTicker, index) => {
+              const coinObj = displayUser.startCoins[chainTicker]
+
               return (
                 <div style={{ padding: 5, paddingLeft: 0 }} key={index}>
                   <CustomChip

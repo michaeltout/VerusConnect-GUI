@@ -18,11 +18,20 @@ class Dashboard extends React.Component {
       coinsStaking: 0,
     }
 
-    this.openAddCoinModal = this.openAddCoinModal.bind(this)
     this.updateMineStakeCoins = this.updateMineStakeCoins.bind(this)
   }
 
   componentDidMount() {
+    this.props.nativeCoins.map(coinObj => {
+      conditionallyUpdateWallet(
+        Store.getState(),
+        this.props.dispatch,
+        NATIVE,
+        coinObj.id,
+        API_GET_MININGINFO
+      )
+    })
+
     this.updateMineStakeCoins()
   }
 

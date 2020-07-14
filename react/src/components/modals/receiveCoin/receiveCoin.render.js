@@ -7,6 +7,7 @@ import IconDropdown from '../../../containers/IconDropdown/IconDropdown'
 import { VirtualizedTable } from '../../../containers/VirtualizedTable/VirtualizedTable'
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import QRCode from 'qrcode.react';
+import { copyDataToClipboard } from '../../../util/copyToClipboard';
 
 export const ReceiveCoinRender = function() {
   return (
@@ -137,7 +138,8 @@ export const ReceiveCoinMainRender = function() {
 }
 
 export const ReceiveCurrencyPickerRender = function() {
-  const { currencyArr, balanceCurr } = this.state
+  const { balanceCurr } = this.state
+  let currencyArr = [this.props.activeCoin.id, ...this.props.whitelist]
 
   return (
     <Autocomplete
@@ -153,21 +155,7 @@ export const ReceiveCurrencyPickerRender = function() {
         <TextField
           {...params}
           label="Display Currency"
-          variant="outlined"
           fullWidth
-          InputLabelProps={{
-            style:{
-              fontFamily: "inherit",
-              fontSize: 14,
-              disableAnimation: true
-            }
-          }}
-          InputProps={{
-            style: {
-              fontFamily: "inherit",
-              fontSize: 14
-            }
-          }}
         />
       )}
     />
@@ -265,7 +253,7 @@ export const ReceiveAddressOptionsRender = function(address) {
         <button
           className="btn btn-dark text-uppercase"
           type="button"
-          onClick={() => this.copyAddress(address)}
+          onClick={() => copyDataToClipboard(address)}
           style={{
             paddingTop: 2,
             paddingBottom: 3,

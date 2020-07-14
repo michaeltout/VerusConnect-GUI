@@ -18,7 +18,7 @@ export default {
     padding: 0, 
     paddingTop: 0 
   },
-  mainNavigationTab: {
+  mainNavigationTabWithText: {
     fontSize: 16,
     padding: 20,
     paddingTop: 10,
@@ -27,15 +27,26 @@ export default {
     paddingLeft: 0,
     minWidth: 215
   },
+  mainNavigationTabWithoutText: {
+    fontSize: 16,
+    padding: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingRight: 0,
+    paddingLeft: 0,
+    minWidth: 48
+  },
   navigationTabIcon: {
     marginRight: 6
   },
   topBarMenuItem: {
     backgroundColor: "rgba(78,115,223,0)",
     color: "rgb(78,115,223)",
-    marginRight: 20,
     borderWidth: 0,
     height: "100%",
+  },
+  topBarMenuItemContainer: {
+    marginRight: 20,
   },
   topBarMenuItemIcon: { 
     fontSize: 25

@@ -13,11 +13,13 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import WalletPaper from '../../../../../containers/WalletPaper/WalletPaper';
 import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
+import { openAddCoinModal } from '../../../../../actions/actionDispatchers';
+import { copyDataToClipboard } from '../../../../../util/copyToClipboard';
 
 export const DashboardRender = function() {
   //TODO: Move to parent component so this isnt re-calculated at render
   const verusProtocolCoins = Object.values(this.props.activatedCoins).filter((coinObj) => {
-    return coinObj.tags.includes(IS_VERUS) && coinObj.mode === NATIVE
+    return coinObj.options.tags.includes(IS_VERUS) && coinObj.mode === NATIVE
   })
   const identityChains = Object.keys(this.props.identities)
 
@@ -311,7 +313,7 @@ export const DashboardRender = function() {
                 <a
                   href="#"
                   style={{ color: "rgb(78,115,223)" }}
-                  onClick={this.openAddCoinModal}
+                  onClick={openAddCoinModal}
                 >
                   {
                     "Add a Verus protocol coin (VRSC or VRSCTEST) to start making IDs!"
@@ -345,8 +347,8 @@ export const DashboardRender = function() {
                   </a>
                 </div>
                 <div style={{ textAlign: "center", marginTop: 5 }}>
-                  {"Commiting a name costs as little as one transaction fee, and simply involves " +
-                    "choosing the name you would like, and comitting it into a transaction that you later refer to when creating an identity."}
+                  {"Committing a name costs as little as one transaction fee, and simply involves " +
+                    "choosing the name you would like, and committing it into a transaction that you later refer to when creating an identity."}
                 </div>
               </React.Fragment>
             )}
@@ -357,7 +359,7 @@ export const DashboardRender = function() {
                   getInfoErrors,
                   activatedCoins
                 } = this.props;
-                if (activatedCoins[chainTicker].tags.includes(IS_VERUS)) {
+                if (activatedCoins[chainTicker].options.tags.includes(IS_VERUS)) {
                   const identityError =
                     identityErrors[chainTicker] != null
                       ? identityErrors[chainTicker].error
@@ -652,19 +654,22 @@ export const DashboardRenderIds = function() {
                 height="50px"
               />
               <div style={{ paddingLeft: 10, overflow: "hidden" }}>
-                <h3
+                <a
                   className="d-lg-flex align-items-lg-center"
                   style={{
                     fontSize: 16,
-                    color: "rgb(0,0,0)",
+                    color: 'rgb(78,115,223)',
                     fontWeight: "bold",
                     textOverflow: "ellipsis",
                     overflow: "hidden",
-                    whiteSpace: "nowrap"
+                    whiteSpace: "nowrap",
+                    textDecoration: "none"
                   }}
+                  href={"#"}
+                  onClick={() => copyDataToClipboard(`${identity.name}@`)}
                 >
                   {`${identity.name}@`}
-                </h3>
+                </a>
                 <h3
                   className={`d-lg-flex align-items-lg-center coin-type ${
                     idObj.status === ID_REVOKED ? "red" : "native"

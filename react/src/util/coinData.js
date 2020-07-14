@@ -67,7 +67,7 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
         tags = {...tags, [IS_ZCASH]: true, [IS_SAPLING]: true, [Z_ONLY]: true}
       }
 
-      coinObj.options.dataDirNames = coinDataDirectories[chainTickerUc]
+      coinObj.options.dirNames = coinDataDirectories[chainTickerUc]
 
       if (komodoUtils.isKomodoCoin(chainTickerUc) && chainTickerUc !== 'VRSC' && chainTickerUc !== 'VRSCTEST') {
         coinObj.options.daemon = KOMODO_DAEMON  // komodod
@@ -113,11 +113,6 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
     {
       id: 'VRSC',                                // Coin's chain ticker
       name: Verus,                               // Coin name
-      tags: [                                    // Tags for coin to identify properties
-        'is_sapling',
-        'is_zcash',
-        'is_pbaas',
-        'is_pbaas_root'],
       available_modes: {                         // Modes in which this coin can be activated
         'native': true,
         'electrum': true,
@@ -128,16 +123,21 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
         saplingHeight: 10000,                    // (Optional) height at which sapling will be activated for the chain
         dustThreshold: 0.00001,                  // (Optional) Network threshold for dust values
         daemon: 'verusd',                        // (Optional) Specify a custom daemon for native mode
-        startupOptions: ['-mint']                // (Optional) Added in a later step, native options for daemon start
+        startupOptions: ['-mint'],               // (Optional) Added in a later step, native options for daemon start
+        tags: [                                  // Tags for coin to identify properties
+        'is_sapling',
+        'is_zcash',
+        'is_pbaas',
+        'is_pbaas_root'],
       },
       isPbaasChain: false,                       // Boolean to decide whether or not to skip coin compatability check
       themeColor: hexCode                        // Theme color for coin to add, added to coin object in addCoin asynchronously
     }
   */
 
+  coinObj.options.tags = Object.keys(tags)
   return {
     ...coinObj,
-    tags: Object.keys(tags),
     available_modes
   }
 }
