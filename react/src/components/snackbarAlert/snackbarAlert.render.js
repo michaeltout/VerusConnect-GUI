@@ -3,7 +3,6 @@ import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContentWrapper from '../../containers/SnackbarContentWrapper/SnackbarContentWrapper'
 
 export const SnackbarAlertRender = function() {
-  console.log(this.props)
   const { props, handleClose } = this
   const { variant, open, message, autoCloseMs } = props.snackbar
 

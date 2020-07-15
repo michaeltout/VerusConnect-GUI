@@ -18,7 +18,6 @@ class Dashboard extends React.Component {
 
     this.calculatePortolio = this.calculatePortolio.bind(this)
     this.openProfileSettings = this.openProfileSettings.bind(this)
-    this.openAddCoinModal = this.openAddCoinModal.bind(this)
   }
 
   componentDidMount() {
@@ -58,7 +57,7 @@ class Dashboard extends React.Component {
           //These values are for tables and coin cards
           id: chainTicker,
           spotPrice: null,
-          priceChange1h: null,
+          priceChange7d: null,
           balance: balances[chainTicker].native.public.confirmed +
             (balances[chainTicker].native.private.confirmed
               ? balances[chainTicker].native.private.confirmed
@@ -71,7 +70,7 @@ class Dashboard extends React.Component {
           coinPortfolio = {
             ...coinPortfolio,
             spotPrice: Number(fiatPrices[chainTicker][fiatCurrency]).toFixed(2),
-            priceChange1h: fiatPrices[chainTicker].priceChange.data.percent_change_1h,
+            priceChange7d: fiatPrices[chainTicker].priceChange.data.percent_change_7d,
             balanceFiat: coinPortfolio.balance * fiatPrices[chainTicker][fiatCurrency]
           }
 

@@ -22,7 +22,8 @@ const mapStateToProps = (state) => {
   return {
     activeCoin: state.coins.activatedCoins[chainTicker],
     activeIdentity: state.modal[ID_INFO].activeIdentity,
-    openIdentity: state.modal[ID_INFO].openIdentity
+    openIdentity: state.modal[ID_INFO].openIdentityCard,
+    openCurrency: state.modal[ID_INFO].openCurrencyCard
   };
 };
 

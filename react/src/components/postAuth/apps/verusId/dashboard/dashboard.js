@@ -27,7 +27,7 @@ import {
 } from "../../../../../util/constants/componentConstants";
 import { deleteIdName, revokeIdentity } from '../../../../../util/api/wallet/walletCalls';
 import Store from '../../../../../store'
-import { conditionallyUpdateWallet } from '../../../../../actions/actionDispatchers';
+import { conditionallyUpdateWallet, openModal } from '../../../../../actions/actionDispatchers';
 import { getPathParent } from '../../../../../util/navigationUtils';
 
 class Dashboard extends React.Component {
@@ -47,7 +47,6 @@ class Dashboard extends React.Component {
 
     this.compileIds = this.compileIds.bind(this)
     this.compileCommits = this.compileCommits.bind(this)
-    this.openModal = this.openModal.bind(this)
     this.toggleReservationDropdown = this.toggleReservationDropdown.bind(this)
     this.toggleRecoveryDropdown = this.toggleRecoveryDropdown.bind(this)
     this.toggleVerifyDataDropdown = this.toggleVerifyDataDropdown.bind(this)
@@ -63,7 +62,6 @@ class Dashboard extends React.Component {
     this.openRevokeDialogue = this.openRevokeDialogue.bind(this)
     this.closeRevokeDialogue = this.closeRevokeDialogue.bind(this)
     this.revokeId = this.revokeId.bind(this)
-    this.openAddCoinModal = this.openAddCoinModal.bind(this)
   }
 
   componentWillMount() {
@@ -186,29 +184,24 @@ class Dashboard extends React.Component {
     this.setState({ compiledIds })
   }
 
-  openModal(modal, modalParams = {}) {
-    this.props.dispatch(setModalParams(modal, modalParams))
-    this.props.dispatch(setModalNavigationPath(modal))
-  }  
-
   openCommitNameModal(chainTicker, commitmentData = null) {
-    this.openModal(CREATE_IDENTITY, { modalType: API_REGISTER_ID_NAME, chainTicker, commitmentData })
+    openModal(CREATE_IDENTITY, { modalType: API_REGISTER_ID_NAME, chainTicker, commitmentData })
   }
 
   openRegisterIdentityModal(nameCommitmentObj) {
-    this.openModal(CREATE_IDENTITY, { modalType: API_REGISTER_ID, chainTicker: nameCommitmentObj.chainTicker, nameCommitmentObj })
+    openModal(CREATE_IDENTITY, { modalType: API_REGISTER_ID, chainTicker: nameCommitmentObj.chainTicker, nameCommitmentObj })
   }
 
   openRecoverIdModal(chainTicker, formData) {
-    this.openModal(CREATE_IDENTITY, { modalType: API_RECOVER_ID, chainTicker, formData} )
+    openModal(CREATE_IDENTITY, { modalType: API_RECOVER_ID, chainTicker, formData} )
   }
 
   openVerifyIdDataModal(chainTicker) {
-    this.openModal(SIGN_VERIFY_ID_DATA, { modalType: VERIFY_ID_DATA, chainTicker })
+    openModal(SIGN_VERIFY_ID_DATA, { modalType: VERIFY_ID_DATA, chainTicker })
   }
 
   openSignIdDataModal(chainTicker) {
-    this.openModal(SIGN_VERIFY_ID_DATA, { modalType: SIGN_ID_DATA, chainTicker })
+    openModal(SIGN_VERIFY_ID_DATA, { modalType: SIGN_ID_DATA, chainTicker })
   }
 
   async deleteNameCommitment(name, chainTicker) {

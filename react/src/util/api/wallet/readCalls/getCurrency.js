@@ -11,10 +11,8 @@ export const getCurrency = async (mode, chainTicker, name) => {
   let params = {chainTicker, name}
 
   try {
-    identity = await getApiData(mode, API_GET_CURRENCY, params)
+    return await getApiData(mode, API_GET_CURRENCY, params)
   } catch (e) {
     throw e
   }
-  
-  return identity
 }

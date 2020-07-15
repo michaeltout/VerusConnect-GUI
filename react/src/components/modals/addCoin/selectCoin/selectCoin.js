@@ -16,10 +16,15 @@ import {
   CONFIGURE,
   NATIVE_REINDEX,
   ELECTRUM_NSPV
+  MID_LENGTH_ALERT,
+  INFO_SNACK,
+  ERROR_SNACK,
+  WARNING_SNACK
 } from "../../../../util/constants/componentConstants";
 import { getCoinObj } from "../../../../util/coinData";
 import { getPathParent } from "../../../../util/navigationUtils";
-import { setModalNavigationPath } from '../../../../actions/actionCreators'
+import { setModalNavigationPath, newSnackbar } from '../../../../actions/actionCreators'
+import { decodeCoinImportFile } from '../../../../util/coinImports';
 
 class SelectCoin extends React.Component {
   constructor(props) {
@@ -29,6 +34,8 @@ class SelectCoin extends React.Component {
       selectedCoin: null,
       chosenCoin: null,
       selectedMode: null,
+      addFromFile: false,
+      coinJsonFile: null,
       nativeOptions: {
         [NATIVE_MINE]: false,
         [NATIVE_MINE_THREADS]: '',
@@ -41,7 +48,6 @@ class SelectCoin extends React.Component {
     }
 
     this.liteMode = null
-
     this.chooseCoin = this.chooseCoin.bind(this)
     this.checkBox = this.checkBox.bind(this)
     this.checkBoxElectrum = this.checkBoxElectrum.bind(this)
@@ -49,7 +55,80 @@ class SelectCoin extends React.Component {
     this.updateThreads = this.updateThreads.bind(this)
     this.selectMode = this.selectMode.bind(this)
     this.chooseMode = this.chooseMode.bind(this)
-    this.generateStartupParams = this.generateStartupParams.bind(this)
+    this.generateStartupOptions = this.generateStartupOptions.bind(this)
+    this.detectCodes = this.detectCodes.bind(this)
+    this.setFiles = this.setFiles.bind(this)
+    this.toggleAddFromFile = this.toggleAddFromFile.bind(this)
+
+    this.MAX_CODE_CHARS = 50
+    this.keyLog = []
+    this.keyLogClearIntervals = []
+    this.SECRET_CODES = {
+      ["ADDFROMFILE"]: {
+        message: 'Add coin source switched.',
+        event: this.toggleAddFromFile
+      },
+      ["ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightbaEnter"]: {
+        message: '(╯°□°)╯︵ ┻━┻',
+        event: () => {}
+      }
+    }
+  }
+
+  componentDidMount() {
+    document.addEventListener("keydown", this.detectCodes, false);
+  }
+
+  setFiles(event) {   
+    event.preventDefault()
+    const reader = new FileReader()
+
+    this.props.setModalLock(true)
+    reader.onload = async (e) => { 
+      const text = (e.target.result)
+      this.props.setModalLock(false)
+
+      try {
+        this.setState({ selectedCoin: decodeCoinImportFile(text) })
+      } catch(e) {
+        console.log(e)
+        this.props.dispatch(newSnackbar(ERROR_SNACK, "Failed to decode provided file.", MID_LENGTH_ALERT))
+      }
+    };
+    reader.readAsText(event.target.files[0]) 
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.detectCodes, false);
+  }
+
+  toggleAddFromFile() {
+    this.setState({
+      addFromFile: !this.state.addFromFile,
+      selectedCoin: null,
+      chosenCoin: null,
+      coinJsonFile: null
+    });
+  }
+
+  detectCodes(event) {
+    this.keyLogClearIntervals.forEach((handle) => clearTimeout(handle))
+    this.keyLogClearIntervals = []
+
+    if (this.keyLog.length > this.MAX_CODE_CHARS) this.keyLog = [event.key]
+    else this.keyLog.push(event.key)
+
+    this.keyLogClearIntervals.push(setTimeout(() => {
+      this.keyLog = []
+    }, 1000))
+    
+    const enteredCode = this.keyLog.filter((value) => value !== 'Shift').join('')
+
+    // Filter out shift key
+    if (Object.keys(this.SECRET_CODES).includes(enteredCode)) {
+      this.props.dispatch(newSnackbar(INFO_SNACK, this.SECRET_CODES[enteredCode].message, MID_LENGTH_ALERT))
+      this.SECRET_CODES[enteredCode].event()
+    }
   }
 
   switchToDefaultSrc(e) {
@@ -64,14 +143,14 @@ class SelectCoin extends React.Component {
 
     if (selectedMode) {
       this.props.setAddCoinParams(
-        {coinObj: chosenCoin, mode, startParams: this.generateStartupParams()},
+        {coinObj: chosenCoin, mode, startParams: this.generateStartupOptions()},
         () => {
           this.props.dispatch(setModalNavigationPath(`${getPathParent(this.props.modalPathArray)}/${CONFIGURE}_${selectedMode}`))
         })      
     }
   }
 
-  generateStartupParams() {
+  generateStartupOptions() {
     let startupOptions = []
     const { nativeOptions, electrumOptions } = this.state
     
@@ -111,7 +190,18 @@ class SelectCoin extends React.Component {
   }
 
   chooseCoin() {
-    const chosenCoin = getCoinObj(this.state.selectedCoin.id)
+    let chosenCoin
+
+    try {
+      chosenCoin = getCoinObj(this.state.selectedCoin.id)
+
+      if (this.state.addFromFile) {
+        this.props.dispatch(newSnackbar(WARNING_SNACK, "You cannot import a coin with an already defined ticker symbol, selecting the existing coin.", MID_LENGTH_ALERT))
+      }
+    } catch(e) {
+      chosenCoin = this.state.selectedCoin
+    }
+
     const availableModes = chosenCoin.available_modes
 
     let selectedMode

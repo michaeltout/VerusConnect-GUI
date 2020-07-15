@@ -25,8 +25,8 @@ import WalletPaper from "../../../../../containers/WalletPaper/WalletPaper";
 //TODO: Combine this with HOCs from coinWallet.js
 
 export const IdWalletRender = function() {
-  const { coin, activeIdentity, fiatCurrency } = this.props
-  const { identityTransactions, spendableBalance, txSearchTerm } = this.state
+  const { coin, activeIdentity, fiatCurrency, multiverseNameMap } = this.props
+  const { identityTransactions, spendableBalance } = this.state
   return (
     <div
       className="col-md-8 col-lg-9"
@@ -37,7 +37,8 @@ export const IdWalletRender = function() {
           marginBottom: 16,
           display: "flex",
           padding: 0,
-          border: "none"
+          border: "none",
+          overflowX: 'scroll'
         }}
       >
         <WalletPaper
@@ -151,6 +152,7 @@ export const IdWalletRender = function() {
         transactions={identityTransactions != null ? identityTransactions : []}
         coin={coin}
         title={`Transactions for ${activeIdentity.identity.name}@`}
+        multiverseNameMap={multiverseNameMap}
       />
       {this.props.zOperations && this.props.zOperations.length > 0 && (
         <WalletPaper>

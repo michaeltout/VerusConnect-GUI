@@ -1,6 +1,7 @@
 import React from 'react';
 import VerusIdStyles from './verusId.styles'
-import { DASHBOARD, ID_POSTFIX } from '../../../../util/constants/componentConstants'
+import { DASHBOARD, ID_POSTFIX, CHAIN_FALLBACK_IMAGE } from '../../../../util/constants/componentConstants'
+import { openAddCoinModal } from '../../../../actions/actionDispatchers';
 
 export const IdCardRender = function(coinObj) {
   const { identities } = this.props
@@ -38,6 +39,7 @@ export const IdCardRender = function(coinObj) {
                   src={`assets/images/cryptologo/btc/${coinObj.id.toLowerCase()}.png`}
                   width="25px"
                   height="25px"
+                  onError={(e) => {e.target.src = CHAIN_FALLBACK_IMAGE}}
                 />
                 <h4 style={VerusIdStyles.cardCoinName}>
                   <strong>{coinObj.name}</strong>
@@ -108,7 +110,7 @@ export const IdTabsRender = function() {
     {
       title: "Add Coin",
       icon: 'fa-plus',
-      onClick: this.openAddCoinModal,
+      onClick: openAddCoinModal,
       isActive: () => false
     },
     {

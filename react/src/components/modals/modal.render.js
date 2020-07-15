@@ -13,20 +13,24 @@ import {
   RECEIVE_COIN,
   SEND_COIN,
   TX_INFO,
+  CSV_EXPORT,
   OPERATION_INFO,
   IMMATURE_DETAILS,
   CREATE_IDENTITY,
   SIGN_VERIFY_ID_DATA,
-  SHIELDCOINBASE
+  SHIELDCOINBASE,
+  CURRENCY_INFO
 } from "../../util/constants/componentConstants";
 import AddCoin from "./addCoin/addCoin";
 import ChainInfo from "./chainInfo/chainInfo";
 import IdInfo from "./idInfo/idInfo";
+import CurrencyInfo from "./currencyInfo/currencyInfo";
 import PbaasChainInfo from "./pbaasChainInfo/pbaasChainInfo";
 import ReceiveCoin from "./receiveCoin/receiveCoin";
 import SendCoin from "./sendCoin/sendCoin";
 import CreateIdentity from "./createIdentity/createIdentity";
 import TxInfo from "./txInfo/txInfo";
+import ExportToCsv from "./exportToCsv/exportToCsv";
 import OperationInfo from "./operationInfo/operationInfo";
 import ImmatureDetails from "./immatureDetails/immatureDetails";
 import SignVerifyIdData from "./signVerifyIdData/signVerifyIdData";
@@ -39,6 +43,7 @@ export const ModalRender = function() {
     setModalLock: this.getModalLock,
     closeModal: this.closeModal,
   }
+  
   const COMPONENT_MAP = {
     [ADD_COIN]: (
       <AddCoin
@@ -52,6 +57,11 @@ export const ModalRender = function() {
     ),
     [ID_INFO]: (
       <IdInfo
+        {...COMPONENT_PROPS}
+      />
+    ),
+    [CURRENCY_INFO]: (
+      <CurrencyInfo
         {...COMPONENT_PROPS}
       />
     ),
@@ -77,6 +87,11 @@ export const ModalRender = function() {
     ),
     [TX_INFO]: (
       <TxInfo
+        {...COMPONENT_PROPS}
+      />
+    ),
+    [CSV_EXPORT]: (
+      <ExportToCsv
         {...COMPONENT_PROPS}
       />
     ),

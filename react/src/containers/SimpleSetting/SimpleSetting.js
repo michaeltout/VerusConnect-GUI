@@ -5,11 +5,13 @@ import {
   NUMBER_INPUT,
   TEXT_INPUT,
   DROPDOWN,
-  DECIMAL_INPUT
+  DECIMAL_INPUT,
+  CHIPS_DISPLAY
 } from "../../util/constants/componentConstants";
 import CustomCheckbox from '../CustomCheckbox/CustomCheckbox'
 import InfoIcon from '@material-ui/icons/Info';
 import { Tooltip } from '@material-ui/core';
+import CustomChip from '../CustomChip/CustomChip';
 
 class SimpleSetting extends React.Component {
   render() {
@@ -72,6 +74,31 @@ class SimpleSetting extends React.Component {
               placeholder={ placeholder ? placeholder : '' }
             />
           );
+        case CHIPS_DISPLAY:
+          return (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                flexWrap: "wrap",
+                maxWidth: 500,
+              }}
+            >
+              {values.map((label, index) => {
+                return (
+                  <div style={{ padding: 5, paddingLeft: 0 }} key={index}>
+                    <CustomChip
+                      chipProps={{
+                        label,
+                      }}
+                      handleDelete={() => handleChange(label)}
+                      disabled={disabled}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          );
         case DROPDOWN:
           return (
             <select
@@ -130,7 +157,7 @@ class SimpleSetting extends React.Component {
 
 SimpleSetting.propTypes = {
   label: PropTypes.string.isRequired,
-  inputType: PropTypes.oneOf([CHECKBOX, NUMBER_INPUT, TEXT_INPUT, DROPDOWN]).isRequired,
+  inputType: PropTypes.oneOf([CHECKBOX, NUMBER_INPUT, TEXT_INPUT, DROPDOWN, CHIPS_DISPLAY]).isRequired,
   disabled: PropTypes.bool,
   handleChange: PropTypes.func,
   value: PropTypes.any,

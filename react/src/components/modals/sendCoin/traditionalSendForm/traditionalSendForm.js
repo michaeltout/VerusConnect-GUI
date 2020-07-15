@@ -32,62 +32,53 @@ import {
   ERROR_Z_NOT_SUPPORTED,
   TXDATA_INTEREST,
   SEND_TO_ADDRESS,
-  ENTER_DATA
+  ENTER_DATA,
+  TXDATA_FROM_CURRENCY,
+  TXDATA_TO_CURRENCY,
+  TXDATA_MESSAGE,
+  TXDATA_PRICE,
+  TXDATA_CONVERSION_VALUE,
+  LONG_ALERT
 } from "../../../../util/constants/componentConstants";
-import { newSnackbar } from '../../../../actions/actionCreators';
+import { newSnackbar, setModalParams } from '../../../../actions/actionCreators';
+import { openModal } from '../../../../actions/actionDispatchers';
 
 class TraditionalSendForm extends React.Component {
   constructor(props) {
     super(props);
-    this.isIdentity = props.identity != null
-    
-    const { balanceTag, chainTicker, balance, activeCoin } = props
-    const addresses = this.isIdentity ? props.identity.addresses : props.addresses[chainTicker]
-    const { mode } = activeCoin
-    const transparentFundsObj = {
-      label: `${TRANSPARENT_FUNDS} (${balance} ${chainTicker})`,
+
+    this.TRANSPARENT_FUNDS_OBJ = {
+      label: TRANSPARENT_FUNDS,
       address: null,
-      balance
+      balances: props.balances
     }
 
-    const initAddresslist = () => {
-      let addressList = []
-      addresses[balanceTag === PRIVATE_BALANCE ? PRIVATE_ADDRS : PUBLIC_ADDRS].forEach(addressObj => {
-        if (addressObj.balances.native > 0) {
-          addressList.push({
-            label: `${addressObj.address} (${addressObj.balances.native} ${chainTicker})`,
-            address: addressObj.address,
-            balance: addressObj.balances.native
-          })
-        }
-      })
-
-      if (mode === NATIVE && !this.isIdentity && balanceTag !== PRIVATE_BALANCE) {
-        addressList.unshift(transparentFundsObj)
-      }
-
-      return addressList
-    }
-
-    const addressListFormatted = initAddresslist()
-    
     this.state = {
-      sendFrom:
-        mode === NATIVE && !this.isIdentity && balanceTag !== PRIVATE_BALANCE
-          ? transparentFundsObj
-          : addressListFormatted[0],
+      sendFrom: this.TRANSPARENT_FUNDS_OBJ,
       sendTo: "",
       amount: "",
       memo: "",
-      addressList: addressListFormatted,
+      addressList: [],
+      addressMap: {},
+      mint: false,
+      convertingFrom: {},
+      convertingTo: {},
+      fromCurrencyConversion: {},
+      toCurrencyConversion: {},
+      isIdentity: false,
+      displayCurrency: props.chainTicker,
       formErrors: {
         amount: [],
         sendFrom: [],
-        sendTo: []
+        sendTo: [],
       },
-      txDataDisplay: {}
-    };
-
+      txDataDisplay: {},
+      fromCurrencyInfo: {},
+      toCurrencyInfo: {},
+      // Force component re-render on autocomplete when it is loaded due to strange autocomplete bug
+      fromDropdownKey: Math.random() 
+    }
+    
     this.updateFormData = this.updateFormData.bind(this)
     this.updateSendFrom = this.updateSendFrom.bind(this)
     this.setAndUpdateState = this.setAndUpdateState.bind(this)
@@ -95,20 +86,137 @@ class TraditionalSendForm extends React.Component {
     this.updateFormErrors = this.updateFormErrors.bind(this)
     this.generateTxDataDisplay = this.generateTxDataDisplay.bind(this)
     this.setSendAmountAll = this.setSendAmountAll.bind(this)
+    this.updateCurrencyConversion = this.updateCurrencyConversion.bind(this)
+    this.getBalance = this.getBalance.bind(this)
+    this.flipConversion = this.flipConversion.bind(this)
+    this.initState = this.initState.bind(this)
   }
 
-  componentWillMount() {
+  initState(cb = () => {}) {
+    const isIdentity = this.props.identity != null
+    
+    const {
+      balanceTag,
+      chainTicker,
+      activeCoin,
+      currencyInfo,
+      conversionGraph,
+      isConversion,
+      calculateCurrencyData,
+      defaultConversionName
+    } = this.props;
+    const currencyName = currencyInfo != null ? currencyInfo.currency.name : null
+    const addresses = isIdentity ? this.props.identity.addresses : this.props.addresses[chainTicker]
+    const { mode } = activeCoin
+    
+    // false to convert to active currency, true to convert from active currency
+    const convertingFrom = isConversion && conversionGraph != null && conversionGraph.to.length > 0
+    const convertingTo =
+      !convertingFrom &&
+      isConversion &&
+      conversionGraph != null &&
+      conversionGraph.from.length > 0;
+
+    const DEFAULT_CURRENCY_CONVERSION = {
+      id:
+        currencyInfo != null ? currencyInfo.currency.currencyid : null,
+      name: currencyName,
+      price: 1,
+    };
+
+    const fromCurrencyConversion = convertingFrom
+        ? DEFAULT_CURRENCY_CONVERSION
+        : convertingTo
+        ? (conversionGraph.from.find((value) => defaultConversionName === value.name) || conversionGraph.from[0])
+        : null
+    
+    const toCurrencyConversion = convertingTo
+      ? DEFAULT_CURRENCY_CONVERSION
+      : convertingFrom
+      ? (conversionGraph.to.find((value) => defaultConversionName === value.name) || conversionGraph.to[0])
+      : null
+
+    const initAddressMap = () => {
+      let addressMap = {}
+
+      addresses[balanceTag === PRIVATE_BALANCE ? PRIVATE_ADDRS : PUBLIC_ADDRS].forEach(addressObj => {
+        addressMap[addressObj.address] = {
+          label: addressObj.address,
+          address: addressObj.address,
+          balances: addressObj.balances
+        };
+      })
+
+      return addressMap
+    }
+
+    const addressMap = initAddressMap()
+    const addressListFormatted =
+      mode === NATIVE && !isIdentity && balanceTag !== PRIVATE_BALANCE
+        ? [this.TRANSPARENT_FUNDS_OBJ, ...Object.values(addressMap)]
+        : Object.values(addressMap);
+
+    this.setState({
+      sendFrom:
+        mode === NATIVE && !isIdentity && balanceTag !== PRIVATE_BALANCE
+          ? this.TRANSPARENT_FUNDS_OBJ
+          : addressListFormatted[0],
+      sendTo: "",
+      amount: "",
+      memo: "",
+      addressList: addressListFormatted,
+      addressMap,
+      mint: false,
+      convertingFrom,
+      convertingTo,
+      fromCurrencyConversion,
+      toCurrencyConversion,
+      isIdentity,
+      displayCurrency:
+        currencyName == null
+          ? chainTicker
+          : convertingTo
+          ? fromCurrencyConversion
+            ? fromCurrencyConversion.name
+            : null
+          : currencyName,
+      formErrors: {
+        amount: [],
+        sendFrom: [],
+        sendTo: [],
+      },
+      txDataDisplay: {},
+      fromCurrencyInfo: convertingTo
+        ? calculateCurrencyData(fromCurrencyConversion.name)
+        : currencyInfo,
+      toCurrencyInfo: convertingFrom
+      ? calculateCurrencyData(toCurrencyConversion.name)
+      : currencyInfo,
+    }, cb);
+  }
+
+  componentDidMount() {
+    if (this.props.formStep === ENTER_DATA && this.props.inverse) {
+      this.initState(this.flipConversion)
+    } else {
+      this.initState()
+    }
+
     if (Object.keys(this.props.txData).length > 0) {
       this.generateTxDataDisplay()
     }
   }
 
-  componentDidUpdate(lastProps) {
+  componentDidUpdate(lastProps, lastState) {
     const { formStep } = this.props
     
     if (lastProps.formStep !== formStep && formStep === ENTER_DATA) {
       this.updateFormErrors()
       this.updateFormData()
+    }
+
+    if (lastState.addressList.length !== this.state.addressList.length) {
+      this.setState({ fromDropdownKey: Math.random() })
     }
   }
 
@@ -116,12 +224,64 @@ class TraditionalSendForm extends React.Component {
     this.setAndUpdateState({ sendFrom: value })
   }
 
+  getBalance(address, currency) {
+    const { balances, chainTicker } = this.props
+    const { addressMap } = this.state 
+
+    if (currency == null) currency = chainTicker
+
+    if (balances == null) return null
+    else if (address == null) {
+      return currency === chainTicker ? balances.native.public.confirmed : (balances.reserve[currency] ? balances.reserve[currency].public.confirmed : 0)
+    } else {
+      const addr = addressMap[address]
+
+      return currency === chainTicker
+        ? addr.balances.native
+        : addr.balances.reserve[currency]
+        ? addr.balances.reserve[currency]
+        : 0;
+    }
+  }
+
+  updateCurrencyConversion(value, from) {
+    if (from) {
+      this.setAndUpdateState({ 
+        fromCurrencyConversion: value,
+        fromCurrencyInfo: this.props.calculateCurrencyData(value.name),
+        displayCurrency: value.name
+      })
+    } else {
+      this.setAndUpdateState({ 
+        toCurrencyConversion: value,
+        toCurrencyInfo: this.props.calculateCurrencyData(value.name),
+      })
+    }
+  }
+
+  flipConversion() {
+    this.setAndUpdateState({
+      convertingFrom: this.state.convertingTo,
+      convertingTo: this.state.convertingFrom,
+      fromCurrencyConversion: this.state.toCurrencyConversion,
+      toCurrencyConversion: this.state.fromCurrencyConversion,
+      displayCurrency: this.state.toCurrencyConversion.name,
+      fromCurrencyInfo: this.state.toCurrencyInfo,
+      toCurrencyInfo: this.state.fromCurrencyInfo
+    }) 
+  }
+
   generateWarningSnack(warnings) {    
-    this.props.dispatch(newSnackbar(WARNING_SNACK, warnings[0].message))
+    this.props.dispatch(newSnackbar(WARNING_SNACK, warnings[0].message, LONG_ALERT))
   }
 
   setSendAmountAll() {
-    this.setAndUpdateState({ amount: this.state.sendFrom.balance })
+    this.setAndUpdateState({
+      amount: this.getBalance(
+        this.state.sendFrom.address,
+        this.state.displayCurrency
+      ),
+    });
   }
 
   generateTxDataDisplay() {
@@ -140,14 +300,39 @@ class TraditionalSendForm extends React.Component {
       ],
       ["To:"]: txData[TXDATA_TO],
       ["From:"]: txData[TXDATA_FROM],
-      ["Amount Entered"]: txData[TXDATA_ERROR] ? null : formData.amount,
-      ["Transaction Amount:"]:
-        !txData[TXDATA_VALUE] &&
-        !txData[TXDATA_ERROR] &&
-        Number(txData[TXDATA_VALUE]) === Number(formData.amount)
+      ["Sending Currency:"]:
+        txData[TXDATA_FROM_CURRENCY] != null
+          ? txData[TXDATA_FROM_CURRENCY].name
+          : null,
+      ["Receiving Currency:"]:
+        txData[TXDATA_TO_CURRENCY] != null
+          ? txData[TXDATA_TO_CURRENCY].name
+          : null,
+      ["Last Conversion Price:"]:
+        txData[TXDATA_ERROR] ||
+        txData[TXDATA_PRICE] == null ||
+        txData[TXDATA_FROM_CURRENCY] == null ||
+        txData[TXDATA_TO_CURRENCY] == null
           ? null
-          : txData[TXDATA_VALUE],
-      ["Fee:"]: txData[TXDATA_FEE],
+          : `${txData[TXDATA_PRICE]} ${txData[TXDATA_FROM_CURRENCY].name}/${txData[TXDATA_TO_CURRENCY].name}`,
+      ["Last Price Based Conversion Value:"]:
+        txData[TXDATA_ERROR] || txData[TXDATA_CONVERSION_VALUE] == null
+          ? null
+          : `${Number(txData[TXDATA_CONVERSION_VALUE].toFixed(8))} ${
+              txData[TXDATA_TO_CURRENCY].name
+            }`,
+      ["Amount Entered"]:
+        txData[TXDATA_ERROR] ||
+        (!txData[TXDATA_ERROR] &&
+          txData[TXDATA_VALUE] &&
+          Number(txData[TXDATA_VALUE]) === Number(formData.amount))
+          ? null
+          : Number(formData.amount),
+      ["Transaction Amount:"]:
+        txData[TXDATA_ERROR] || !txData[TXDATA_VALUE]
+          ? null
+          : Number(txData[TXDATA_VALUE]),
+      ["Fee:"]: txData[TXDATA_FEE] == null ? null : Number(txData[TXDATA_FEE]),
       [txData.cliCmd === SEND_TO_ADDRESS
         ? formStep === CONFIRM_DATA
           ? "Interest to Claim:"
@@ -155,12 +340,19 @@ class TraditionalSendForm extends React.Component {
         : "Max. Interest Loss"]: txData[TXDATA_INTEREST],
       ["Change in Balance:"]:
         txData[TXDATA_TOTAL_AMOUNT] != null
-          ? `${Number(txData[TXDATA_TOTAL_AMOUNT]) < 0 ? "+" : "-"}${
+          ? `${Number(txData[TXDATA_TOTAL_AMOUNT]) < 0 ? "+" : "-"}${Number(
               txData[TXDATA_TOTAL_AMOUNT]
-            }`
+            )}`
           : null,
-      ["Current Balance:"]: txData[TXDATA_BALANCE],
-      ["Est. Balance After Transaction:"]: txData[TXDATA_REMAINING_BALANCE]
+      ["Current Balance:"]: txData[TXDATA_BALANCE] == null ? null : Number(txData[TXDATA_BALANCE]),
+      ["Est. Balance After Transaction:"]:
+        txData[TXDATA_REMAINING_BALANCE] != null
+          ? Number(txData[TXDATA_REMAINING_BALANCE])
+          : null,
+      ["Message:"]:
+        txData[TXDATA_MESSAGE] == null || txData[TXDATA_MESSAGE].length === 0
+          ? null
+          : txData[TXDATA_MESSAGE],
     };
 
     Object.keys(txDataSchema).forEach(txDataKey => {
@@ -220,16 +412,35 @@ class TraditionalSendForm extends React.Component {
 
   updateFormData() {
     const { chainTicker } = this.props
-    const { sendTo, sendFrom, amount, memo } = this.state
+    const {
+      sendTo,
+      sendFrom,
+      amount,
+      memo,
+      mint,
+      fromCurrencyInfo,
+      toCurrencyInfo,
+      displayCurrency
+    } = this.state;
+    const currencyId =
+      fromCurrencyInfo != null && fromCurrencyInfo.ownedIdentity != null
+        ? `${fromCurrencyInfo.ownedIdentity.identity.name}@`
+        : null;
 
     this.props.setFormData({
       chainTicker,
       toAddress: sendTo,
       amount,
-      balance: sendFrom ? sendFrom.balance : 0,
+      balance: sendFrom
+        ? this.getBalance(sendFrom.address, displayCurrency)
+        : 0,
       fromAddress: sendFrom ? sendFrom.address : null,
       memo,
-    })
+      toCurrencyInfo,
+      fromCurrencyInfo,
+      mint,
+      currencyId,
+    });
   }
 
   render() {
@@ -243,6 +454,7 @@ const mapStateToProps = (state) => {
   return {
     addresses: state.ledger.addresses,
     activeCoin: state.coins.activatedCoins[chainTicker],
+    balances: state.ledger.balances[chainTicker]
   };
 };
 

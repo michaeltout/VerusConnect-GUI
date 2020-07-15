@@ -16,7 +16,8 @@ import {
   ENABLE_START_WITH_LAST_COINS,
   ENABLE_START_AT_LAST_LOCATION,
   SET_LOGOUT_USER,
-  FINISH_LOGOUT_USER
+  FINISH_LOGOUT_USER,
+  SELECT_CURRENCY_FOR_COIN
 } from '../util/constants/storeType'
 import {
   ETH,
@@ -64,6 +65,19 @@ export const users = (state = {
         ...state.activeUser,
         startAtLastLocation: true,
         startLocation: state.activeUser.lastNavigationLocation
+      }
+
+      return {
+        ...state,
+        activeUser: _activeUser,
+        loadedUsers: { ...state.loadedUsers, [_activeUser.id]: _activeUser }
+      }
+    case SELECT_CURRENCY_FOR_COIN:
+      _activeUser = {
+        ...state.activeUser,
+        selectedCurrencyMap: state.activeUser.selectedCurrencyMap == null ? {
+          [action.chainTicker]: action.currency
+        } : { ...state.activeUser.selectedCurrencyMap, [action.chainTicker]: action.currency }
       }
 
       return {
