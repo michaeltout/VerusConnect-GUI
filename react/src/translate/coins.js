@@ -59,7 +59,7 @@ const coins = {
     LABS: 'LABS',
     MTST3: 'MTST3',
     DP: 'DigitalPrice',
-   // VRSCTEST: 'Verus Testnet',
+    VRSCTEST: 'Verus Testnet',
     MTST3: 'MTST3',
     LABS: 'LABS',
     CLF: 'CryptoLeaf',

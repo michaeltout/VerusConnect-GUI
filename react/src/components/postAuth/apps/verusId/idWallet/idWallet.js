@@ -20,7 +20,7 @@ import { renderAffectedBalance } from '../../../../../util/txUtils/txRenderUtils
 import { setModalNavigationPath, setModalParams, setMainNavigationPath } from '../../../../../actions/actionCreators'
 
 //TODO: Use these to update on mount conditionally
-import { conditionallyUpdateWallet } from '../../../../../actions/actionDispatchers'
+import { conditionallyUpdateWallet, openModal } from '../../../../../actions/actionDispatchers'
 import Store from '../../../../../store'
 import { getPathParent } from '../../../../../util/navigationUtils';
 
@@ -137,11 +137,7 @@ class IdWallet extends React.Component {
 
   openModal(e, modalParams = {}, modal) {
     const _modal = modal ? modal : e.target.name;
-
-    this.props.dispatch(
-      setModalParams(_modal, { chainTicker: this.props.coin, ...modalParams })
-    );
-    this.props.dispatch(setModalNavigationPath(_modal));
+    openModal(_modal, { chainTicker: this.props.coin, ...modalParams })
   }
 
   openOpInfo(rowData) {
@@ -315,7 +311,8 @@ const mapStateToProps = (state, ownProps) => {
     transactions: state.ledger.transactions[ownProps.coin],
     zOperations: state.ledger.zOperations[ownProps.coin],
     info: state.ledger.info,
-    mainPathArray: state.navigation.mainPathArray
+    mainPathArray: state.navigation.mainPathArray,
+    multiverseNameMap: state.ledger.multiverseNameMap[ownProps.coin]
   };
 };
 

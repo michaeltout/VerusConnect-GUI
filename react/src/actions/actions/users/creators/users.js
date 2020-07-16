@@ -1,10 +1,28 @@
-import { saveUsers, loadUsers } from '../../../../util/api/users/userData'
+import { saveUsers, loadUsers, backupUsers } from '../../../../util/api/users/userData'
 import { encryptKey } from '../../../../util/api/users/pinData'
-import { SET_USERS, LOG_IN, LOG_OUT, SET_DEFAULT_USER, SET_AUTHENTICATION, SET_LOGOUT_USER, FINISH_LOGOUT_USER } from '../../../../util/constants/storeType'
-import { ETH, ELECTRUM, PRE_AUTH, UX_SELECTOR, POST_AUTH } from '../../../../util/constants/componentConstants'
+import { SET_USERS, LOG_IN, LOG_OUT, SET_DEFAULT_USER, SET_AUTHENTICATION, SET_LOGOUT_USER, FINISH_LOGOUT_USER, SELECT_CURRENCY_FOR_COIN } from '../../../../util/constants/storeType'
+import { ETH, ELECTRUM, UX_SELECTOR, POST_AUTH } from '../../../../util/constants/componentConstants'
 import { makeId } from '../../../../util/idGenerator'
 import { setMainNavigationPath } from '../../../actionCreators'
 import { authenticateSeed } from '../../../../util/api/users/userData'
+
+/**
+ * Creates a new user object with default values
+ */
+export const getNewUser = () => {
+  return {
+    startAtLastLocation: true,
+    startLocation: 'post_auth/ux_selector',
+    selectedCurrencyMap: {},
+    pinFile: null,
+    lastNavigationLocation: null,
+    name: name,
+    id: makeId(),
+    lastCoins: {},
+    startCoins: {},
+    startWithLastCoins: true
+  }
+}
 
 /**
  * Creates a user object based on parameters, saves it to the users file,
@@ -15,16 +33,9 @@ import { authenticateSeed } from '../../../../util/api/users/userData'
  * @param {String} seed (Optional) The litemode seed for a user
  */
 export const createUser = async (loadedUsers, name, password = null, seed = null) => {
-  const userObj = {
-    startAtLastLocation: true,
-    startLocation: 'post_auth/ux_selector',
-    pinFile: seed != null && password != null ? await encryptKey(password, seed) : null,
-    name: name,
-    id: makeId(),
-    lastCoins: {},
-    startCoins: {},
-    startWithLastCoins: true
-  }
+  let userObj = getNewUser()
+  userObj.pinFile = seed != null && password != null ? await encryptKey(password, seed) : null
+  userObj.name = name
   const usersObj = {...loadedUsers, [userObj.id]: userObj}
     
   return await setUsers(usersObj)
@@ -36,7 +47,9 @@ export const createUser = async (loadedUsers, name, password = null, seed = null
  */
 export const initUsers = async () => {
   try {
-    return await setUsers(await loadUsers())
+    let loadedUsers = await loadUsers()
+
+    return await setUsers(loadedUsers)
   } catch (e) {
     throw e
   }
@@ -135,4 +148,18 @@ export const setLogoutUser = () => {
  */
 export const finishLogoutUser = () => {
   return { type: FINISH_LOGOUT_USER }
+}
+
+/**
+ * Sets a users preffered onchain token for a specific 
+ * blockchain
+ * @param {String} chainTicker The blockchain 
+ * @param {String} currency The on-chain token
+ */
+export const setUserPreferredCurrency = (chainTicker, currency) => {
+  return {
+    type: SELECT_CURRENCY_FOR_COIN,
+    chainTicker,
+    currency
+  }
 }

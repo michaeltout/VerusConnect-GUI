@@ -50,7 +50,7 @@ class TxInfo extends React.Component {
 
   // To be called from constructor
   generateTxInfo(props) {
-    const { txObj, info } = props
+    const { txObj, info, displayTx } = props
     const {
       txid,
       address,
@@ -65,11 +65,12 @@ class TxInfo extends React.Component {
       time,
       category
     } = txObj;
+    const { displayAddress } = displayTx
 
     const genInfo = {
       txid,
       type: type ? type : category,
-      address,
+      address: displayAddress,
       amount,
       confirmations,
       blocktime,
@@ -99,7 +100,8 @@ const mapStateToProps = (state) => {
   return {
     txObj: state.modal[TX_INFO].txObj ? state.modal[TX_INFO].txObj : {},
     info: state.ledger.info[chainTicker] ? state.ledger.info[chainTicker] : {},
-    explorerUrl: state.coins.activatedCoins[chainTicker].options.explorer
+    explorerUrl: state.coins.activatedCoins[chainTicker].options.explorer,
+    displayTx: state.modal[TX_INFO].displayTx ? state.modal[TX_INFO].displayTx : {},
   };
 };
 

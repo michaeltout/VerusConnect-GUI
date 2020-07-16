@@ -13,7 +13,8 @@ import {
   CREATE_IDENTITY,
   ERROR_NAME_REQUIRED,
   ERROR_INVALID_ID,
-  ENTER_DATA
+  ENTER_DATA,
+  LONG_ALERT
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar } from '../../../../actions/actionCreators';
 
@@ -59,7 +60,7 @@ class CommitNameForm extends React.Component {
   }
 
   generateWarningSnack(warnings) {    
-    this.props.dispatch(newSnackbar(WARNING_SNACK, warnings[0].message))
+    this.props.dispatch(newSnackbar(WARNING_SNACK, warnings[0].message, LONG_ALERT))
   }
 
   generateTxDataDisplay() {

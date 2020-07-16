@@ -2,7 +2,7 @@ import React from 'react';
 import CustomTabBar from '../../../../../containers/CustomTabBar/CustomTabBar';
 import SimpleSetting from '../../../../../containers/SimpleSetting/SimpleSetting';
 import Divider from '@material-ui/core/Divider';
-import { Z_ONLY, IS_ZCASH, STAKE_GUARD, IS_VERUS, NATIVE } from '../../../../../util/constants/componentConstants';
+import { Z_ONLY, IS_ZCASH, STAKE_GUARD, IS_VERUS, NATIVE, CHIPS_DISPLAY } from '../../../../../util/constants/componentConstants';
 import Terminal from 'terminal-in-react';
 
 export const CoinSettingsRender = function() {
@@ -35,10 +35,16 @@ export const CoinSettingsRender = function() {
 
 export const CoinSettingsOptionsRender = function() {
   const { state, props } = this
-  const { activeTab, tabs } = state
-  const { configSchema, displayConfig, selectedCoinObj } = props
+  const { activeTab, tabs, disableBlacklist, disableWhitelist } = state;
+  const {
+    configSchema,
+    displayConfig,
+    selectedCoinObj,
+    blacklist,
+    whitelist,
+  } = props;
   const configTypes = configSchema[tabs[activeTab]]
-  const { tags, id } = selectedCoinObj
+  const { id } = selectedCoinObj
 
   return (
     <div className="card-body">
@@ -51,7 +57,7 @@ export const CoinSettingsOptionsRender = function() {
           hidden
         } = configTypes[settingKey];
 
-        return (settingKey === STAKE_GUARD && !tags.includes(IS_VERUS)) ||
+        return (settingKey === STAKE_GUARD && !selectedCoinObj.options.tags.includes(IS_VERUS)) ||
           hidden ? null : (
           <React.Fragment key={index}>
             <SimpleSetting
@@ -69,6 +75,36 @@ export const CoinSettingsOptionsRender = function() {
           </React.Fragment>
         );
       })}
+      { whitelist.length > 0 &&
+        <React.Fragment>
+          <SimpleSetting
+            toolTip={"These currencies will be selectable from your wallet page."}
+            label={"Added Currencies"}
+            inputType={CHIPS_DISPLAY}
+            handleChange={this.removeFromWhitelist}
+            values={whitelist}
+            disabled={disableWhitelist}
+          />
+          <div style={{ paddingTop: 16, paddingBottom: 16 }}>
+            <Divider variant="middle" />
+          </div>
+        </React.Fragment>
+      }
+      { blacklist.length > 0 &&
+        <React.Fragment>
+          <SimpleSetting
+            toolTip={"These currencies will not appear anywhere unless explicitly searched for."}
+            label={"Blocked Currencies"}
+            inputType={CHIPS_DISPLAY}
+            handleChange={this.removeFromBlacklist}
+            values={blacklist}
+            disabled={disableBlacklist}
+          />
+          <div style={{ paddingTop: 16, paddingBottom: 16 }}>
+            <Divider variant="middle" />
+          </div>
+        </React.Fragment>
+      }
       {tabs[activeTab] === NATIVE && (
         <div style={{ paddingLeft: 16, paddingRight: 16 }}>
           <Terminal

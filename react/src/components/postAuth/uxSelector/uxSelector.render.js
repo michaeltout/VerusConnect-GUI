@@ -1,5 +1,5 @@
 import React from 'react';
-import { MINING, WALLET, VERUSID, APPS } from '../../../util/constants/componentConstants'
+import { MINING, WALLET, VERUSID, APPS, MULTIVERSE } from '../../../util/constants/componentConstants'
 import { getPathParent } from '../../../util/navigationUtils'
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -57,6 +57,22 @@ export const UxSelectorRender = function() {
                         <div className="ux-selector-content-container inherit-color">
                           <h4 className="ux-selector-card-text inherit-color">Mining Dashboard</h4>
                           <h6 className="mb-2 ux-selector-card-text inherit-color">Help the network, and earn</h6>
+                        </div>
+                        <div className="d-flex align-items-center inherit-color"><i className="fas fa-chevron-right ux-selector-card-text chevron inherit-color"></i></div>
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              </div>
+              <div className="col-lg-6 offset-lg-2 ux-selector-card-container">
+                <button className="unstyled-button" onClick={ () => this.selectUx(`${getPathParent(mainPathArray)}/${APPS}/${MULTIVERSE}`) }>
+                  <div className="card shadow ux-selector-card-body border-on-hover">
+                    <div className="card-body inherit-color">
+                      <div className="d-flex align-items-lg-center inherit-color">
+                        <div className="d-flex ux-selector-card-logo-container inherit-color"><i className="fas fa-rocket ux-selector-card-logo inherit-color"></i></div>
+                        <div className="ux-selector-content-container inherit-color">
+                          <h4 className="ux-selector-card-text inherit-color">Multiverse</h4>
+                          <h6 className="mb-2 ux-selector-card-text inherit-color">Discover Public Blockchains as a Service</h6>
                         </div>
                         <div className="d-flex align-items-center inherit-color"><i className="fas fa-chevron-right ux-selector-card-text chevron inherit-color"></i></div>
                       </div>

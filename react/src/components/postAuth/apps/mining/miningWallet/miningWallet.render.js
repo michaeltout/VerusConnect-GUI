@@ -20,6 +20,7 @@ import WalletBooklet from "../../../../../containers/WalletBooklet/WalletBooklet
 import TransactionCard from "../../../../../containers/TransactionCard/TransactionCard";
 import GeneratorCard from "../../../../../containers/GeneratorCard/GeneratorCard";
 import { FormControl, Select, MenuItem, Switch } from "@material-ui/core";
+import { openAddCoinModal } from "../../../../../actions/actionDispatchers";
 
 export const MiningWalletRender = function() {
   const {
@@ -35,7 +36,9 @@ export const MiningWalletRender = function() {
     blockReward,
     fiatPrice,
     fiatCurrency,
-    toggleStaking
+    toggleStaking,
+    miningBookletOpen,
+    stakingBookletOpen
   } = this.props;
 
   return (
@@ -55,8 +58,11 @@ export const MiningWalletRender = function() {
         </div>
       </WalletPaper>
       {MiningWalletFunctions.call(this)}
-      {coinObj.tags.includes(IS_VERUS) && (
+      {coinObj.options.tags.includes(IS_VERUS) && (
         <WalletBooklet
+          expandedPanelIndex={stakingBookletOpen ? 0 : -1}
+          disabled={this.state[this.STAKING_BOOKLET]}
+          handleClick={() => this.toggleBooklet(this.STAKING_BOOKLET)}
           pages={[
             {
               title: `Staking Overview - (Staking: ${
@@ -107,6 +113,9 @@ export const MiningWalletRender = function() {
         />
       )}
       <WalletBooklet
+        expandedPanelIndex={miningBookletOpen ? 0 : -1}
+        disabled={this.state[this.MINING_BOOKLET]}
+        handleClick={() => this.toggleBooklet(this.MINING_BOOKLET)}
         pages={[
           {
             title: `Mining Overview - (Mining: ${
@@ -154,7 +163,8 @@ export const MiningWalletRender = function() {
             : []
         }
         coin={this.props.coin}
-        title={coinObj.tags.includes(IS_VERUS) ? "Mining/Staking Transactions" : "Mining Transactions"}
+        title={coinObj.options.tags.includes(IS_VERUS) ? "Mining/Staking Transactions" : "Mining Transactions"}
+        multiverseNameMap={this.props.multiverseNameMap}
       />
     </div>
   );
@@ -280,10 +290,10 @@ export const MiningWalletRenderGenerateOverview = function() {
           href="#"
           style={{
             color: "rgb(78,115,223)",
-            paddingTop: 10,
+            paddingTop: 8,
             display: "block"
           }}
-          onClick={this.openAddCoinModal}
+          onClick={openAddCoinModal}
         >
           {"No coins added yet, click here to add one!"}
         </a>
@@ -343,7 +353,7 @@ export const MiningWalletFunctions = function() {
         display: "flex"
       }}
     >
-      {coinObj.tags.includes(IS_VERUS) && (
+      {coinObj.options.tags.includes(IS_VERUS) && (
         <WalletPaper
           style={{
             display: "flex",

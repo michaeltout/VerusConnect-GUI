@@ -55,7 +55,14 @@ const ExpansionPanelDetails = withStyles(theme => ({
 }))(MuiExpansionPanelDetails);
 
 function WalletBooklet(props) {
-  const { containerStyle, pages, defaultPageIndex } = props
+  const {
+    containerStyle,
+    pages,
+    defaultPageIndex,
+    expandedPanelIndex,
+    handleClick,
+    disabled,
+  } = props;
   const [expanded, setExpanded] = React.useState(defaultPageIndex != null ? `panel${defaultPageIndex + 1}` : null);
   const handleChange = panel => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
@@ -64,25 +71,32 @@ function WalletBooklet(props) {
   return (
     <div style={containerStyle}>
       {pages.map((page, index) => {
-        const isExpanded = expanded === `panel${index + 1}`
+        const isExpanded =
+          expandedPanelIndex == null
+            ? expanded === `panel${index + 1}`
+            : expandedPanelIndex === index;
 
         return (
           <ExpansionPanel
             square
             expanded={isExpanded}
-            onChange={handleChange(`panel${index + 1}`)}
+            disabled={disabled}
+            onChange={
+              handleClick != null
+                ? () => handleClick(index)
+                : handleChange(`panel${index + 1}`)
+            }
             key={index}
           >
             <ExpansionPanelSummary
               aria-controls={`panel${index + 1}d-content`}
-              id={`panel${index + 1}d-header`}>
+              id={`panel${index + 1}d-header`}
+            >
               <h6 style={{ margin: 0, fontSize: 14 }}>{page.title}</h6>
               {!isExpanded && <ExpandMoreIcon />}
               {isExpanded && <ExpandLessIcon />}
             </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              {page.content}
-            </ExpansionPanelDetails>
+            <ExpansionPanelDetails>{page.content}</ExpansionPanelDetails>
           </ExpansionPanel>
         );
       })}
@@ -93,7 +107,10 @@ function WalletBooklet(props) {
 WalletBooklet.propTypes = {
   pages: PropTypes.array.isRequired,
   containerStyle: PropTypes.object,
-  defaultPageIndex: PropTypes.number
+  defaultPageIndex: PropTypes.number,
+  handleClick: PropTypes.func,
+  expandedPanelIndex: PropTypes.number,
+  disabled: PropTypes.bool
 };
 
 export default WalletBooklet

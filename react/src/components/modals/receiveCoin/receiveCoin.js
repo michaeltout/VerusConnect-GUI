@@ -46,11 +46,11 @@ class ReceiveCoin extends React.Component {
     props.setModalHeader("Receive Coin")
     this.supportedTypes = {
       [PUBLIC_ADDRS]:
-        this.isIdentity || !props.activeCoin.tags.includes(Z_ONLY),
+        this.isIdentity || !props.activeCoin.options.tags.includes(Z_ONLY),
       [PRIVATE_ADDRS]:
         (this.isIdentity && this.idZAddrs.length > 0) ||
         (!this.isIdentity && props.activeCoin.mode === NATIVE &&
-          props.activeCoin.tags.includes(IS_ZCASH))
+          props.activeCoin.options.tags.includes(IS_ZCASH))
     };
 
     this.state = {
@@ -67,16 +67,13 @@ class ReceiveCoin extends React.Component {
             [PRIVATE_ADDRS]: []
           },
       addressSearchTerm: "",
-      balanceCurr: props.activeCoin.id,
-      currencyArr: [props.activeCoin.id],
+      balanceCurr: props.selectedCurrency,
       qrAddress: null
     };
 
     this.setAddrMode = this.setAddrMode.bind(this)
     this.filterAddresses = this.filterAddresses.bind(this)
     this.setInput = this.setInput.bind(this)
-    this.getAddrCurrencies = this.getAddrCurrencies.bind(this)
-    this.copyAddress = this.copyAddress.bind(this)
     this.generateAddressOptions = this.generateAddressOptions.bind(this)
     this.getKey = this.getKey.bind(this)
     this.selectAddressOption = this.selectAddressOption.bind(this)
@@ -107,8 +104,6 @@ class ReceiveCoin extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.getAddrCurrencies()
-
     if (!this.isIdentity) {
       if (nextProps.addresses != this.props.addresses) {
         if (this.state.addressSearchTerm.length > 0) {
@@ -126,19 +121,6 @@ class ReceiveCoin extends React.Component {
 
   toggleAddressQr(address) {
     this.setState({ qrAddress: this.state.qrAddress ? null : address})
-  }
-
-  getAddrCurrencies() {
-    const { balances, activeCoin } = this.props
-    let currencyArr = [activeCoin.id]
-
-    if (balances) {
-      Object.keys(balances.reserve).map(chainTicker => {
-        currencyArr.push(chainTicker)
-      })
-    }
-
-    this.setState({ currencyArr })
   }
 
   filterAddresses(addresses) {
@@ -173,11 +155,6 @@ class ReceiveCoin extends React.Component {
       addresses: this.props.addresses,
       addressSearchTerm: ''
     })
-  }
-
-  copyAddress(address) {
-    navigator.clipboard.writeText(address)
-    this.props.dispatch(newSnackbar(SUCCESS_SNACK, "Address copied!", MID_LENGTH_ALERT))
   }
 
   getKey(address, keyType) {
@@ -290,7 +267,9 @@ const mapStateToProps = (state) => {
     includePrivate: state.settings.config.coin.native.includePrivateAddrs[chainTicker],
     balances: state.ledger.balances[chainTicker],
     modalProps: state.modal[RECEIVE_COIN],
-    config: state.settings.config
+    config: state.settings.config,
+    whitelist: state.localCurrencyLists.whitelists[chainTicker] || [],
+    selectedCurrency: state.users.activeUser.selectedCurrencyMap[chainTicker] || chainTicker
   };
 };
 

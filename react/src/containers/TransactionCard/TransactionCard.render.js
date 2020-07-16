@@ -5,8 +5,9 @@ import { timeConverter } from '../../util/displayUtil/timeUtils'
 import { SortDirection } from 'react-virtualized';
 import WalletPaper from '../WalletPaper/WalletPaper';
 import SearchBar from '../SearchBar/SearchBar';
+import CustomButton from '../CustomButton/CustomButton';
 
-export const TxCardRender = (openTxInfo, getDisplayTxs, filterTxs, state, props, dispatch) => {
+export const TxCardRender = (openTxInfo, openCsvExport, getDisplayTxs, filterTxs, state, props, dispatch) => {
   const { setTxSearchTerm, txSearchTerm, displayTxs, setDisplayTxs } = state
   const { transactions, title } = props
 
@@ -36,10 +37,10 @@ export const TxCardRender = (openTxInfo, getDisplayTxs, filterTxs, state, props,
             onChange={e => setTxSearchTerm(e.target.value)}
             onClear={() => {
               setTxSearchTerm('')
-              setDisplayTxs(getDisplayTxs(filterTxs(transactions, '')))
+              setDisplayTxs(filterTxs(getDisplayTxs(transactions, props), ''))
             }}
             onSubmit={() =>
-              setDisplayTxs(getDisplayTxs(filterTxs(transactions, txSearchTerm)))
+              setDisplayTxs(filterTxs(getDisplayTxs(transactions, props), txSearchTerm), props)
             }
             value={txSearchTerm}
           />
@@ -50,6 +51,19 @@ export const TxCardRender = (openTxInfo, getDisplayTxs, filterTxs, state, props,
       ) : (
         <div style={{ marginTop: 20 }}>{"No transactions found."}</div>
       )}
+      {transactions && transactions.length > 0 &&
+        <CustomButton
+          onClick={() => openCsvExport(props, displayTxs, dispatch)}
+          title={"Export to CSV"}
+          backgroundColor={"white"}
+          textColor={"unset"}
+          buttonProps={{
+            color: "default",
+            variant: "outlined",
+            style: { marginTop: 8 }
+          }}
+        />
+      }
     </WalletPaper>
   );
 }
@@ -110,7 +124,18 @@ export const TxTableRender = (displayTxs, openTxInfo, props, dispatch) => {
           {
             width: 200,
             cellDataGetter: ({ rowData }) => {
-              return <div style={{overflow: "hidden", whiteSpace: "nowrap", width: "100%", textOverflow: "ellipsis"}}>{rowData.address}</div>
+              return (
+                <div
+                  style={{
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    width: "100%",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {rowData.displayAddress}
+                </div>
+              );
             },
             flexGrow: 1,
             label: 'Address',

@@ -136,7 +136,7 @@ export const refreshCoinIntervals = (mode, chainTicker, onCompletes) => {
   if (!coinObj) throw new Error(`${chainTicker} is not added for current user. Coins must be added to be used.`)
   const chainStatus = coinObj.status
   
-  const updateDataAction = generateUpdateCoinDataAction(mode, chainStatus, chainTicker, coinObj.tags, onCompletes)
+  const updateDataAction = generateUpdateCoinDataAction(mode, chainStatus, chainTicker, coinObj.options.tags, onCompletes)
   const oldUpdateData = state.updates.coinUpdateIntervals[chainTicker]
   const newUpdateData = updateDataAction.updateIntervalData
 

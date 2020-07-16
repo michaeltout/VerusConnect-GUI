@@ -16,3 +16,12 @@ export * from './actions/system/dispatchers/updateSysTime'
 export * from './actions/system/dispatchers/updateCpuLoad'
 export * from './actions/system/dispatchers/updateCpuTemp'
 export * from './actions/system/dispatchers/systemDataUpdates'
+
+// Navigation 
+export * from './actions/navigation/dispatchers/modals'
+
+// Text Dialog
+export * from './actions/textdialog/dispatchers/textdialog'
+
+// AppData Updates
+export * from './actions/updates/dispatchers/updateAppData'

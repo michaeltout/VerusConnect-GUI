@@ -5,7 +5,15 @@ import {
 } from './configureNative.render';
 import io from 'socket.io-client';
 import { checkZcashParamsFormatted, downloadZcashParams } from '../../../../util/api/setup/zcashParams'
-import { ZCPARAMS_SOCKET, ADDCOIN_DELAY, ERROR_SNACK, SUCCESS_SNACK, MID_LENGTH_ALERT, ADD_COIN, SELECT_COIN } from '../../../../util/constants/componentConstants'
+import {
+  ZCPARAMS_SOCKET,
+  ADDCOIN_DELAY,
+  ERROR_SNACK,
+  SUCCESS_SNACK,
+  MID_LENGTH_ALERT,
+  ADD_COIN,
+  SELECT_COIN,
+} from "../../../../util/constants/componentConstants";
 import { addCoin } from '../../../../actions/actionDispatchers'
 import { newSnackbar, setModalNavigationPath } from '../../../../actions/actionCreators'
 
