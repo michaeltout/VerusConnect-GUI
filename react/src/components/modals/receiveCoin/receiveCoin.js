@@ -192,7 +192,7 @@ class ReceiveCoin extends React.Component {
   generateAddressOptions(address) {
     let addressOptions = [GENERATE_QR]
 
-    if (this.props.activeCoin.mode !== ETH && !this.isIdentity)
+    if (!this.isIdentity)
       addressOptions.push(COPY_PRIVKEY);
     if (this.props.activeCoin.mode === NATIVE) {
       if (address[0] !== 'z') addressOptions.push(COPY_PUBKEY)
