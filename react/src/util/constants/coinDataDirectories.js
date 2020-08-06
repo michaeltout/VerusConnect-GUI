@@ -256,7 +256,7 @@ export const coinDataDirectories = {
   },
   ZEC: {
     darwin: "Zcash",
-    linux: "zcash",
+    linux: ".zcash",
     win32: "Zcash"
   },
 };
