@@ -41,7 +41,7 @@ class AddCoin extends React.Component {
   }
 
   getAddCoinParams(addCoinParams, callback) {
-    this.setState({addCoinParams}, () => { if (callback) callback()})
+    this.setState({addCoinParams}, () => {if (callback) callback()})
   }
 
   render() {

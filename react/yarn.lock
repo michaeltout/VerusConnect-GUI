@@ -12294,7 +12294,7 @@ verror@1.10.0:
 
 "verus-zkedid-utils@https://github.com/michaeltout/verus-zkedid-utils":
   version "1.0.0"
-  resolved "https://github.com/michaeltout/verus-zkedid-utils#26cec8d24d8db601f3a88bf11a774de743c9ec17"
+  resolved "https://github.com/michaeltout/verus-zkedid-utils#c779c3c3b739ea121a1c8222c107acf93bad48dc"
 
 vm-browserify@^1.0.1:
   version "1.1.2"
