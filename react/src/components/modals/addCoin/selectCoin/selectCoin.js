@@ -141,7 +141,7 @@ class SelectCoin extends React.Component {
         {coinObj: chosenCoin, mode, startParams: this.generateStartupOptions()},
         () => {
           this.props.dispatch(setModalNavigationPath(`${getPathParent(this.props.modalPathArray)}/${CONFIGURE}_${selectedMode}`))
-        })      
+      })      
     }
   }
 

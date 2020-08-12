@@ -58,7 +58,10 @@ export const activateCoin = async (coinObj, mode, dispatch) => {
  */
 export const addCoin = async (coinObj, mode, dispatch, activatedTickers, startupOptions) => {
   try {
-    coinObj.options.startupOptions = startupOptions
+    coinObj.options.startupOptions =
+      coinObj.options.startupOptions != null
+        ? coinObj.options.startupOptions.concat(startupOptions)
+        : startupOptions;
 
     if (!coinObj.available_modes[mode]) throw new Error(`${mode} is not supported for ${coinObj.id}.`)
     if (activatedTickers.includes(coinObj.id)) throw new Error(`Error, ${coinObj.id} is already active!`)
