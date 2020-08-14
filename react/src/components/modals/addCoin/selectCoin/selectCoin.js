@@ -63,6 +63,10 @@ class SelectCoin extends React.Component {
         message: 'Add coin source switched.',
         event: this.toggleAddFromFile
       },
+      ["AltAltAlt"]: {
+        message: 'Add coin source switched.',
+        event: this.toggleAddFromFile
+      },
       ["ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightbaEnter"]: {
         message: '(╯°□°)╯︵ ┻━┻',
         event: () => {}
