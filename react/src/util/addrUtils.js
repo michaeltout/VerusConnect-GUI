@@ -18,8 +18,16 @@ export const checkAddrValidity = (address, mode, chainTicker) => {
   } else if (mode === ELECTRUM || mode === NATIVE) {
     let addrCheck = addressVersionCheck(networks[chainTicker.toLowerCase()] || networks.kmd, address)
 
-    if (addrCheck === true || (address[0] === 'z' && (address.length === 95 || address.length === 78))) return true
-    else return false
+    if (
+      addrCheck === true ||
+      (address[0] === "z" &&
+        (address.length === 95 || address.length === 78)) ||
+      (chainTicker === "BTC" &&
+        address.length > 3 &&
+        address.substring(0, 3).toLowerCase() === "bc1")
+    )
+      return true;
+    else return false;
   } else if (mode === ETH) {
     return isValidAddress(address)
   }
