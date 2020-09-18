@@ -137,6 +137,7 @@
     "minimist": "^1.2.5",
     "elliptic": "^6.5.3",
     "dot-prop": "^5.2.0",
-    "npm-registry-fetch": "^4.0.5"
+    "npm-registry-fetch": "^4.0.5",
+    "node-fetch": "^2.6.1"
   }
 }
