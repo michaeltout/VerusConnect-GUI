@@ -51,7 +51,6 @@ const coins = {
     PTX: 'PatentTX',
     ZEXO: 'Zaddex',
     SPLTEST: 'Sapling Test Chain',
-    RFOX: 'Redfox Labs',
     LABS: 'LABS',
     MTST3: 'MTST3',
     DP: 'DigitalPrice',
@@ -109,6 +108,7 @@ const coins = {
   },
   ETH: {
     ETH: 'Ethereum',
+    RFOX: 'RedFOX Labs',
     AE: 'Aeternity',
     ANN: 'Agent Not Needed',
     BFT: 'BnkToTheFuture',

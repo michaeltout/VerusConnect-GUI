@@ -25,6 +25,20 @@ body.agamaMode {
   color: black;
 }
 
+body.fetch-bootstrap {
+  width: 100%;
+  height: 100%;
+  color: #FFFFFF;
+  background-color: #3165D4;
+}
+
+div.bootstrap-terminal {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  word-wrap: break-word;
+}
+
 body.loading-window,
 body.agama-default-window-height {
   height: 355px;

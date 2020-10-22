@@ -199,11 +199,6 @@ export const coinDataDirectories = {
     linux: ".komodo/PIZZA",
     win32: "Komodo/PIZZA"
   },
-  RFOX: {
-    darwin: "Komodo/RFOX",
-    linux: ".komodo/RFOX",
-    win32: "Komodo/RFOX"
-  },
   REVS: {
     darwin: "Komodo/REVS",
     linux: ".komodo/REVS",
