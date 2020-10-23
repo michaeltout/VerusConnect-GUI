@@ -488,10 +488,9 @@ export const WalletRenderBalances = function() {
                     </div>
                     <div
                       style={{
-                        paddingTop: 6,
                         display: "flex",
-                        justifyContent: "space-between",
-                        maxWidth: isConvertableBalance ? 200 : 150,
+                        justifyContent: "flex-start",
+                        flexWrap: "wrap"
                       }}
                     >
                       <Tooltip
@@ -503,7 +502,12 @@ export const WalletRenderBalances = function() {
                             : "Send"
                         }
                       >
-                        <span>
+                        <span
+                          style={{
+                            marginTop: 8,
+                            marginRight: 8,
+                          }}
+                        >
                           <button
                             className="btn btn-primary"
                             type="button"
@@ -528,33 +532,58 @@ export const WalletRenderBalances = function() {
                                 !this.props.identities)
                             }
                             style={{
-                              fontSize: 10,
                               backgroundColor:
                                 balanceTag === INTEREST_BALANCE
                                   ? "rgb(78,115,223)"
                                   : "rgb(236,43,43)",
-                              borderWidth: 1,
                               borderColor:
                                 balanceTag === INTEREST_BALANCE
                                   ? "rgb(78,115,223)"
                                   : "rgb(236,43,43)",
-                              fontWeight: "bold",
                               visibility:
                                 sendable != null && !sendable
                                   ? "hidden"
                                   : "unset",
+                              fontSize: 18,
+                              borderWidth: 1,
+                              fontWeight: "bold",
+                              alignItems: "center",
+                              display: "flex",
+                              justifyContent: "flex-start",
+                              paddingLeft: 8,
+                              minWidth: 80,
                             }}
                           >
                             {balanceTag === INTEREST_BALANCE ? (
-                              <ArrowDownward name={SEND_COIN} />
+                              <ArrowDownward
+                                fontSize="inherit"
+                                name={SEND_COIN}
+                              />
                             ) : (
-                              <ArrowUpward name={SEND_COIN} />
+                              <ArrowUpward
+                                fontSize="inherit"
+                                name={SEND_COIN}
+                              />
                             )}
+                            <text style={{ fontSize: 12, marginLeft: 8 }}>
+                              {balanceTag === INTEREST_BALANCE
+                                ? "Claim"
+                                : "Send"}
+                            </text>
                           </button>
                         </span>
                       </Tooltip>
-                      <Tooltip title={receivable != null && !receivable ? "" : "Receive"}>
-                        <span>
+                      <Tooltip
+                        title={
+                          receivable != null && !receivable ? "" : "Receive"
+                        }
+                      >
+                        <span
+                          style={{
+                            marginTop: 8,
+                            marginRight: 8,
+                          }}
+                        >
                           <button
                             className="btn btn-primary"
                             type="button"
@@ -563,42 +592,37 @@ export const WalletRenderBalances = function() {
                               this.openModal(null, { balanceTag }, RECEIVE_COIN)
                             }
                             style={{
-                              fontSize: 10,
                               backgroundColor: "rgb(0,178,26)",
-                              borderWidth: 1,
                               borderColor: "rgb(0,178,26)",
-                              fontWeight: "bold",
                               visibility:
                                 receivable != null && !receivable
                                   ? "hidden"
                                   : "unset",
+                              fontSize: 18,
+                              borderWidth: 1,
+                              fontWeight: "bold",
+                              alignItems: "center",
+                              display: "flex",
+                              justifyContent: "flex-start",
+                              paddingLeft: 8,
+                              minWidth: 80,
                             }}
                           >
-                            <ArrowDownward />
+                            <ArrowDownward fontSize="inherit" />
+                            <text style={{ fontSize: 12, marginLeft: 8 }}>
+                              Receive
+                            </text>
                           </button>
                         </span>
                       </Tooltip>
-                      {/*unusable && (
-                        <button
-                          className="btn btn-primary"
-                          type="button"
-                          name={ IMMATURE_DETAILS }
-                          onClick={ (e) => this.openModal(e, null) }
-                          style={{
-                            fontSize: 14,
-                            backgroundColor: "rgb(98,98,98)",
-                            borderWidth: 1,
-                            borderColor: "rgb(98,98,98)",
-                            paddingRight: 20,
-                            paddingLeft: 20,
-                            fontWeight: "bold"
-                          }}>
-                          {"Details"}
-                        </button>
-                      )*/}
                       {isConvertableBalance && (
                         <Tooltip title="Convert">
-                          <span>
+                          <span
+                            style={{
+                              marginTop: 8,
+                              marginRight: 8,
+                            }}
+                          >
                             <button
                               className="btn btn-primary"
                               type="button"
@@ -624,14 +648,22 @@ export const WalletRenderBalances = function() {
                                 )
                               }
                               style={{
-                                fontSize: 10,
                                 backgroundColor: "rgb(78,115,223)",
-                                borderWidth: 1,
                                 borderColor: "rgb(78,115,223)",
+                                fontSize: 18,
+                                borderWidth: 1,
                                 fontWeight: "bold",
+                                alignItems: "center",
+                                display: "flex",
+                                justifyContent: "flex-start",
+                                paddingLeft: 8,
+                                minWidth: 80,
                               }}
                             >
-                              <ShuffleIcon />
+                              <ShuffleIcon fontSize="inherit" />
+                              <text style={{ fontSize: 12, marginLeft: 8 }}>
+                                Convert
+                              </text>
                             </button>
                           </span>
                         </Tooltip>

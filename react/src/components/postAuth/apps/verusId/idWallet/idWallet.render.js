@@ -3,20 +3,16 @@ import {
   CONFIRMED_BALANCE,
   PRIVATE_BALANCE,
   RECEIVE_COIN,
-  CHAIN_INFO,
   TRANSPARENT_BALANCE,
   SEND_COIN,
   IMMATURE_BALANCE,
-  PRIVATE_ADDRS,
   API_SUCCESS,
   API_FAILED,
   ID_INFO
 } from "../../../../../util/constants/componentConstants";
 import { VirtualizedTable } from '../../../../../containers/VirtualizedTable/VirtualizedTable'
-import { TX_TYPES } from '../../../../../util/txUtils/txRenderUtils'
 import { timeConverter } from '../../../../../util/displayUtil/timeUtils'
 import { SortDirection } from 'react-virtualized';
-import SearchBar from '../../../../../containers/SearchBar/SearchBar'
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import ArrowDownward from '@material-ui/icons/ArrowDownward'
 import TransactionCard from "../../../../../containers/TransactionCard/TransactionCard";
@@ -267,10 +263,9 @@ export const WalletRenderBalances = function() {
                     </div>
                     <div
                       style={{
-                        paddingTop: 6,
                         display: "flex",
-                        justifyContent: "space-between",
-                        maxWidth: 150
+                        justifyContent: "flex-start",
+                        flexWrap: "wrap"
                       }}
                     >
                       <button
@@ -291,15 +286,23 @@ export const WalletRenderBalances = function() {
                         }
                         disabled={balance === 0 || balance === "-"}
                         style={{
-                          fontSize: 10,
                           backgroundColor: "rgb(236,43,43)",
-                          borderWidth: 1,
                           borderColor: "rgb(236,43,43)",
+                          borderWidth: 1,
+                          fontSize: 18,
                           fontWeight: "bold",
-                          visibility: unusable ? "hidden" : "unset"
+                          alignItems: "center",
+                          display: "flex",
+                          justifyContent: "flex-start",
+                          paddingLeft: 8,
+                          marginRight: 8,
+                          minWidth: 80,
+                          marginTop: 8,
+                          visibility: unusable ? "hidden" : "unset",
                         }}
                       >
-                        <ArrowUpward name={SEND_COIN} />
+                        <ArrowUpward fontSize='inherit' name={SEND_COIN} />
+                        <text style={{ fontSize: 12, marginLeft: 8 }}>Send</text>
                       </button>
                       <button
                         className="btn btn-primary"
@@ -313,15 +316,23 @@ export const WalletRenderBalances = function() {
                           )
                         }
                         style={{
-                          fontSize: 10,
                           backgroundColor: "rgb(0,178,26)",
-                          borderWidth: 1,
                           borderColor: "rgb(0,178,26)",
+                          fontSize: 18,
+                          borderWidth: 1,
                           fontWeight: "bold",
-                          visibility: unusable ? "hidden" : "unset"
+                          alignItems: "center",
+                          display: "flex",
+                          justifyContent: "flex-start",
+                          paddingLeft: 8,
+                          marginRight: 8,
+                          visibility: unusable ? "hidden" : "unset",
+                          minWidth: 80,
+                          marginTop: 8
                         }}
                       >
-                        <ArrowDownward />
+                        <ArrowDownward fontSize='inherit' />
+                        <text style={{ fontSize: 12, marginLeft: 8 }}>Receive</text>
                       </button>
                     </div>
                   </div>
