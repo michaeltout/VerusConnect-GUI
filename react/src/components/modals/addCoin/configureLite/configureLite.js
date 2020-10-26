@@ -66,13 +66,16 @@ class ConfigureLite extends React.Component {
           addCoinParams.coinObj,
           addCoinParams.mode,
           this.props.dispatch,
-          Object.keys(activatedCoins)
+          Object.keys(activatedCoins),
+          addCoinParams.startParams && addCoinParams.startParams.indexOf('-nspv') > -1 ? {
+            nspv: true,
+          } : null
         );
   
         if (result.msg === 'error') {
           this._handleError(result.result)
         } else {
-          this.props.dispatch(newSnackbar(SUCCESS_SNACK, `${addCoinParams.coinObj.id} activated in lite mode!`, MID_LENGTH_ALERT))
+          this.props.dispatch(newSnackbar(SUCCESS_SNACK, `${addCoinParams.coinObj.id} activated in lite mode${addCoinParams.startParams && addCoinParams.startParams.indexOf('-nspv') > -1 ? ' (nspv)' : ''}!`, MID_LENGTH_ALERT))
           this.props.closeModal()
         }
       } catch (e) {
