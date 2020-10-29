@@ -292,7 +292,10 @@ export const SelectModeForm = function() {
           </div>
         </div>
       )}
-      {this.state.selectedMode === LITE && staticVar.nspvPorts[this.state.chosenCoin.id] > -1 && (
+      {/* {
+        this.props.enableNspv && 
+        this.state.selectedMode === LITE && 
+        staticVar.nspvPorts[this.state.chosenCoin.id] > -1 && (
         <div
           className="d-flex d-sm-flex d-md-flex d-lg-flex flex-column align-items-center align-items-sm-center align-items-md-center justify-content-lg-center align-items-lg-center"
           style={{ paddingTop: 28 }}
@@ -317,13 +320,13 @@ export const SelectModeForm = function() {
                   htmlFor="formCheck-1"
                   style={{ color: "rgb(0,0,0)" }}
                 >
-                  {"Use NSPV daemon"}
+                  {"Use nSPV daemon"}
                 </label>
               </div>
             </div>
           </div>
         </div>
-      )}
+      )} */}
       <div className="d-flex d-sm-flex justify-content-center justify-content-sm-center">
         <button
           className="btn btn-primary"

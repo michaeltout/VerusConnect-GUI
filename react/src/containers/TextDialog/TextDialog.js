@@ -13,7 +13,7 @@ export default function TextDialog(props) {
       title={props.title}
     >
       {props.description && (
-        <DialogContentText>{props.description}</DialogContentText>
+        <DialogContentText paragraph>{props.description}</DialogContentText>
       )}
     </ContentDialog>
   );
