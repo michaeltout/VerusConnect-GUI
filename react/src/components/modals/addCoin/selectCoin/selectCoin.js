@@ -15,6 +15,7 @@ import {
   NATIVE_MINE_THREADS,
   CONFIGURE,
   NATIVE_REINDEX,
+  ELECTRUM_NSPV,
   MID_LENGTH_ALERT,
   INFO_SNACK,
   ERROR_SNACK,
@@ -40,12 +41,16 @@ class SelectCoin extends React.Component {
         [NATIVE_MINE_THREADS]: '',
         [NATIVE_STAKE]: false,
         [NATIVE_RESCAN]: false
+      },
+      electrumOptions: {
+        [ELECTRUM_NSPV]: false,
       }
     }
 
     this.liteMode = null
     this.chooseCoin = this.chooseCoin.bind(this)
     this.checkBox = this.checkBox.bind(this)
+    this.checkBoxElectrum = this.checkBoxElectrum.bind(this)
     this.clearCoin = this.clearCoin.bind(this)
     this.updateThreads = this.updateThreads.bind(this)
     this.selectMode = this.selectMode.bind(this)
@@ -151,13 +156,21 @@ class SelectCoin extends React.Component {
 
   generateStartupOptions() {
     let startupOptions = []
-    const { nativeOptions } = this.state
+    const { nativeOptions, electrumOptions } = this.state
     
     for (let key in nativeOptions) {
       if (nativeOptions[key] && typeof nativeOptions[key] === "boolean") {
         startupOptions.push(key)
       } else if (typeof nativeOptions[key] === "string" && !isNaN(Number(nativeOptions[key]))) {
         startupOptions.push(`${key}${Number(nativeOptions[key])}`)
+      }
+    }
+
+    for (let key in electrumOptions) {
+      if (electrumOptions[key] && typeof electrumOptions[key] === "boolean") {
+        startupOptions.push(key)
+      } else if (typeof electrumOptions[key] === "string" && !isNaN(Number(electrumOptions[key]))) {
+        startupOptions.push(`${key}${Number(electrumOptions[key])}`)
       }
     }
 
@@ -170,6 +183,10 @@ class SelectCoin extends React.Component {
 
   checkBox(e) {
     this.setState({nativeOptions: {...this.state.nativeOptions, [e.target.name]: e.target.checked}})
+  }
+
+  checkBoxElectrum(e) {
+    this.setState({electrumOptions: {...this.state.electrumOptions, [e.target.name]: e.target.checked}})
   }
 
   updateThreads(e) {
@@ -210,6 +227,9 @@ class SelectCoin extends React.Component {
         [NATIVE_STAKE]: false,
         [NATIVE_RESCAN]: false,
         [NATIVE_REINDEX]: false
+      },
+      electrumOptions: {
+        [ELECTRUM_NSPV]: false,
       }
     });
   }
