@@ -20,7 +20,6 @@ import SplashScreen from '../../containers/SplashScreen/SplashScreen'
 import SnackbarAlert from '../snackbarAlert/snackbarAlert'
 import { newSnackbar, setConfigParams } from '../../actions/actionCreators'
 import TextDialog from '../../containers/TextDialog/TextDialog';
-import Store from '../../store';
 
 class Main extends React.Component {
   constructor(props) {

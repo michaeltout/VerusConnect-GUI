@@ -1,0 +1,30 @@
+.error-container {
+  height: 100%;
+  background-color: #3165D4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.error-text {
+  color: #FFFFFF;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+}
+
+.error-links {
+  color: #FFFFFF;
+  font-size: 24px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 500px;
+}
+
+.error-textarea {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}

@@ -4,8 +4,6 @@ import { render } from 'react-dom';
 import {
   Router,
   Route,
-  IndexRoute,
-  browserHistory,
   hashHistory
 } from 'react-router';
 import { Provider } from 'react-redux';
@@ -13,15 +11,18 @@ import store from './store';
 
 import App from './components/app/app';
 import './styles/index.scss';
+import ErrorBoundary from './components/error/ErrorBoundary';
 
 const router = (
-  <Provider store={ store }>
-    <Router history={ hashHistory }>
-      <Route
-        exact path="/"
-        component={ App } />
-    </Router>
-  </Provider>
+  <ErrorBoundary>
+    <Provider store={ store }>
+      <Router history={ hashHistory }>
+        <Route
+          exact path="/"
+          component={ App } />
+      </Router>
+    </Provider>
+  </ErrorBoundary>
 );
 
 document.addEventListener('DOMContentLoaded', () => {
