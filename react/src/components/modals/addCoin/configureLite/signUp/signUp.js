@@ -22,12 +22,15 @@ class SignUp extends React.Component {
   }
 
   linkUserWithSeed(password) {
+    this.props.setModalLock(true)
+
     this.setState({ formLock: true }, async () => {
       try {
         this.props.dispatch(await setUserAuth(this.props.loadedUsers, this.props.activeUser.id, password, this.props.seed))
         this.props.dispatch(newSnackbar(SUCCESS_SNACK, "User linked with seed!", MID_LENGTH_ALERT))
         this.props.activateCoin()
       } catch (e) {
+        this.props.setModalLock(false)
         console.error(e.message)
         this.setState({ formErrors: e.message, formLock: false })
       }

@@ -16,6 +16,7 @@ export * from './readCalls/getIdentity'
 export * from './readCalls/getCurrency'
 export * from './readCalls/getAllCurrencies'
 export * from './readCalls/getCurrencyDataMap'
+export * from './readCalls/getCurrencyConversionPaths'
 
 export * from './writeCalls/createAddress'
 export * from './writeCalls/sendCoin'

@@ -39,7 +39,7 @@ export const SignUpRender = function() {
 }
 
 export const SignUpRenderChoices = function() {
-  const { loading } = this.state
+  const { formLock } = this.state
 
   return (
     <React.Fragment>
@@ -82,7 +82,7 @@ export const SignUpRenderChoices = function() {
       <button
         className="btn btn-primary"
         type="button"
-        disabled={loading}
+        disabled={formLock}
         style={{
           fontSize: 14,
           backgroundColor: "rgb(78,115,223)",
@@ -95,8 +95,12 @@ export const SignUpRenderChoices = function() {
       </button>
       <a
         className="text-right"
-        disabled={loading}
-        onClick={this.props.activateCoin}
+        disabled={formLock}
+        onClick={formLock ? () => {} : () => {
+          this.setState({
+            formLock: true
+          }, () => this.props.activateCoin())
+        }}
         href="#"
         style={{
           paddingTop: 20,

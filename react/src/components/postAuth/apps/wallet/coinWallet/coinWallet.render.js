@@ -37,6 +37,8 @@ import TransactionCard from '../../../../../containers/TransactionCard/Transacti
 import { FormControl, Select, MenuItem, Tooltip, Typography } from "@material-ui/core";
 import CustomButton from "../../../../../containers/CustomButton/CustomButton";
 import HelpIcon from '@material-ui/icons/Help';
+import MigrationHelper from "../../../../../containers/MigrationHelper/migrationHelper";
+import { closeTextDialog, openTextDialog } from "../../../../../actions/actionDispatchers";
 
 export const CoinWalletRender = function() {
   return (
@@ -254,10 +256,32 @@ export const CoinWalletRender = function() {
           </div>
         )}
       </div>*/}
-      {/* Change this when currencies get to mainnet */ this.props.coin ===
-      "VRSCTEST"
+      {/* TODO: Change this when currencies get to mainnet */ this.props
+        .coin === "VRSCTEST"
         ? WalletRenderCurrencyFunctions.call(this)
         : null}
+      {/* TODO: Add a way to detect if a coin allows migration */ this.props
+        .coin === "RFOX" && (
+        <MigrationHelper
+          coin={this.props.coin}
+          fetchMigrationBalance={() => 0}
+          fetchFee={() => 0.1}
+          feeCurr={"ETH"}
+          migrate={() => {}}
+          onSuccess={() => openTextDialog(
+            closeTextDialog,
+            [{ title: "OK", onClick: closeTextDialog }],
+            `${this.props.coin} claimed! It may take a few minutes to show in your wallet.`,
+            'Success!'
+          )}
+          onError={(e) => openTextDialog(
+            closeTextDialog,
+            [{ title: "OK", onClick: closeTextDialog }],
+            `Error claiming ${this.props.coin}. (${e.message})`,
+            'Error'
+          )}
+        />
+      )}
       {WalletRenderBalances.call(this)}
       <TransactionCard
         transactions={

@@ -18,6 +18,8 @@ class Login extends React.Component {
   }
 
   submitPassword(password) {
+    this.props.setModalLock(true)
+
     this.setState({ formLock: true, formError: false }, async () => {
       try {
         const seed = await decryptKey(password, this.props.activeUser.pinFile)
@@ -26,6 +28,7 @@ class Login extends React.Component {
           this.props.activateCoin()
         })
       } catch (e) {
+        this.props.setModalLock(false)
         console.error(e.message)
         this.setState({ formLock: false, formError: e.message })
       }

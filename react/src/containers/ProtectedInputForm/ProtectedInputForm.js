@@ -246,6 +246,7 @@ class ProtectedInputForm extends React.Component {
                     <Divider orientation="vertical" />
                     <IconButton 
                       color="primary" 
+                      disabled={submitDisabled}
                       onClick={this.onSubmit}>
                       <ArrowForward />
                     </IconButton>

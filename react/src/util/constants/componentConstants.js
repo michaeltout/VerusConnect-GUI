@@ -38,6 +38,7 @@ export const API_GET_CURRENCY = 'get_currency'
 export const API_STOP = 'stop'
 export const API_CALL_DAEMON = 'call_daemon'
 export const API_GET_NETWORK_FEES = 'get_networkfees'
+export const API_GET_CURRENCY_CONVERSION_PATHS = 'get_conversion_paths'
 
 // Write API call names
 export const API_CREATE_ADDRESS = 'get_newaddress'
@@ -74,7 +75,6 @@ export const RESET_CONFIG = 'config/reset'
 export const GET_SCHEMA = 'config/schema'
 export const ENCRYPT_KEY = 'encryptkey'
 export const DECRYPT_KEY = 'decryptkey'
-export const GET_PIN_LIST = 'getpinlist'
 export const MODIFY_PIN = 'modifypin'
 export const API_ACTIVATE_COIN = 'coins/activate'
 export const API_REMOVE_COIN = 'remove_coin'
@@ -403,6 +403,8 @@ export const ID_REVOKED = 'revoked'
 // Sections of the app that can load by being indicated as 'loading' in the
 // loading reducer
 export const MINING_FUNCTIONS = 'mining_functions'
+
+export const MAX_RECURSION_DEPTH_API = 3000
 
 
 

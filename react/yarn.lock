@@ -6166,6 +6166,13 @@ iocane@^1.0.0:
   dependencies:
     pbkdf2 "~3.0.17"
 
+iocane@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/iocane/-/iocane-4.2.0.tgz#4be30488fa684b248915633bcd2f37be29191e95"
+  integrity sha512-VTIyu+xSdHjch9mH41pennL5EMorr4PyRq8VxRmCBwo6DuUnnlxU3+66bZXnRFLjSVPWaYZEDKWByIChKiujtA==
+  dependencies:
+    pbkdf2 "~3.0.17"
+
 ip-regex@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/ip-regex/-/ip-regex-2.1.0.tgz#fa78bf5d2e6913c911ce9f819ee5146bb6d844e9"
