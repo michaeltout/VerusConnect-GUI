@@ -4,31 +4,40 @@ import {
 } from './MigrationHelper.render';
 import PropTypes from 'prop-types';
 import { closeTextDialog, openTextDialog } from '../../actions/actionDispatchers';
+import BigNumber from "bignumber.js";
 
 class MigrationHelper extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      amount: 0,
+      amount: BigNumber(0),
+      displayFee: BigNumber(0),
       disabled: false
     };
 
-    this.updateAmount = this.updateAmount.bind(this);
     this.openClaimDialog = this.openClaimDialog.bind(this)
   }
 
   async componentDidMount() {
-    this.setState({
-      amount: 0//await fetchMigrationBalance()
-    })
+    const balances = await this.props.fetchMigrationBalance()
+    const fee = await this.props.fetchFee()
+    let displayFee = '??'
+
+    if (fee.msg === 'success') displayFee = BigNumber(fee.result._hex).dividedBy("1000000000000000000").toString()
+
+    if (balances.msg === 'success') {
+      this.setState({
+        amount: BigNumber(balances.result[1]._hex).dividedBy("1000000000000000000"),
+        displayFee
+      })
+    }
   }
 
   openClaimDialog() {
     this.setState({
       disabled: true
     }, async function() {
-      const fee = await this.props.fetchFee()
       const ref = this
 
       openTextDialog(
@@ -38,41 +47,49 @@ class MigrationHelper extends React.Component {
             title: "Yes",
             onClick: async function() {
               try {
-                await ref.props.migrate()
-                closeTextDialog()
-                ref.props.onSuccess()
-              } catch(e) {
-                ref.setState({
-                  disabled: false
-                }, () => {
-                  closeTextDialog()
-                  ref.props.onError(e)
-                })
+                const result = await ref.props.migrate();
+
+                closeTextDialog();
+
+                if (result.msg === 'success') ref.props.onSuccess();
+                else throw new Error(result.result)
+                
+              } catch (e) {
+                ref.setState(
+                  {
+                    disabled: false,
+                  },
+                  () => {
+                    closeTextDialog();
+                    ref.props.onError(e);
+                  }
+                );
               }
             },
           },
           {
             title: "No",
             onClick: function() {
-              ref.setState({
-                disabled: false
-              }, () => closeTextDialog())
+              ref.setState(
+                {
+                  disabled: false,
+                },
+                () => closeTextDialog()
+              );
             },
           },
         ],
-        `Would you like to claim your ${this.state.amount} ${this.props.coin}? This will cost you an estimated fee of ${fee} ${this.props.feeCurr}`,
+        `Would you like to claim your ${this.state.amount.toString()} ${
+          this.props.coin
+        }? This will cost you an estimated fee of ${this.state.displayFee} ${this.props.feeCurr}`,
         `Claim ${this.props.coin}?`
       );
     })
     
   }
 
-  updateAmount(amount) {
-    this.setState({ amount });
-  }
-
   render() {
-    return MigrationHelperRender.call(this);
+    return this.state.amount.isZero() || this.state.disabled ? null : MigrationHelperRender.call(this);
   }
 }
 

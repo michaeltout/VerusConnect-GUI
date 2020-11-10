@@ -39,6 +39,7 @@ import CustomButton from "../../../../../containers/CustomButton/CustomButton";
 import HelpIcon from '@material-ui/icons/Help';
 import MigrationHelper from "../../../../../containers/MigrationHelper/migrationHelper";
 import { closeTextDialog, openTextDialog } from "../../../../../actions/actionDispatchers";
+import { claimRfoxMigration, estimateGasRfoxMigration, getRfoxMigrationAccountBalances } from "../../../../../util/api/wallet/walletCalls";
 
 export const CoinWalletRender = function() {
   return (
@@ -264,10 +265,10 @@ export const CoinWalletRender = function() {
         .coin === "RFOX" && (
         <MigrationHelper
           coin={this.props.coin}
-          fetchMigrationBalance={() => 0}
-          fetchFee={() => 0.1}
+          fetchMigrationBalance={getRfoxMigrationAccountBalances}
+          fetchFee={estimateGasRfoxMigration}
           feeCurr={"ETH"}
-          migrate={() => {}}
+          migrate={claimRfoxMigration}
           onSuccess={() => openTextDialog(
             closeTextDialog,
             [{ title: "OK", onClick: closeTextDialog }],

@@ -21,7 +21,7 @@ export const MigrationHelperRender = function() {
         href={"#"}
         onClick={() => this.openClaimDialog()}
       >
-        {`You have ${this.state.amount} ${this.props.coin} available to claim! Click here to claim.`}
+        {`You have ${this.state.amount.toString()} ${this.props.coin} available to claim! Click here to claim.`}
       </a>
     </WalletPaper>
   );
