@@ -48,7 +48,7 @@ export const getApiData = (mode, call, params, reqType, shieldPost = apiEncrypti
  * @param {String} callPath The full location of the specified call, e.g. electrum/get_balances
  * @param {Object} params Parameters to pass to api call
  */
-export const apiGet = (callPath, params, shield = apiEncryption, retry = true) => {
+export const apiGet = (callPath, params, shield = apiEncryption) => {
   const ticket = getGetTicket(Store.dispatch)
   let checkTicks = 0
 
@@ -92,7 +92,7 @@ export const apiGet = (callPath, params, shield = apiEncryption, retry = true) =
     .then(json => {
       const parsedRes = json
 
-      if (parsedRes.msg === 'error' && parsedRes.result === 'Unauthorized Access' && retry) {
+      if (parsedRes.msg === 'error' && parsedRes.result === 'Unauthorized Access') {
         setTimeout(async () => {          
           resolve(await apiGet(callPath, params, false, false))
         }, 100)
@@ -112,7 +112,7 @@ export const apiGet = (callPath, params, shield = apiEncryption, retry = true) =
  * @param {String} callPath The full location of the specified call, e.g. native/get_balances
  * @param {Object} params Parameters to pass to api call
  */
-export const apiPost = async (callPath, params, shield = apiEncryption, retry = true) => {  
+export const apiPost = async (callPath, params, shield = apiEncryption) => {  
   const ticket = !shield ? getPostTicket(Store.dispatch) : null
 
   return new Promise(async (resolve, reject) => {
@@ -165,7 +165,7 @@ export const apiPost = async (callPath, params, shield = apiEncryption, retry = 
         else {
           const parsedRes = JSON.parse(data.payload)
 
-          if (parsedRes.msg === 'error' && parsedRes.result === 'Unauthorized Access' && retry) {
+          if (parsedRes.msg === 'error' && parsedRes.result === 'Unauthorized Access') {
             setTimeout(async () => {              
               resolve(await apiPost(callPath, params, shield = apiEncryption, false))
             }, 100)
