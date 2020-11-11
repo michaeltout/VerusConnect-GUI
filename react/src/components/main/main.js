@@ -26,6 +26,7 @@ class Main extends React.Component {
     super(props);
     this.state = {
       initializing: false,
+      error: null
     };
 
     this.preInitialize = this.preInitialize.bind(this);
@@ -59,7 +60,7 @@ class Main extends React.Component {
         await this.initialize() 
       }
     } catch(e) {
-      console.log(e)
+      throw e
     }
   }
 
@@ -70,85 +71,100 @@ class Main extends React.Component {
     refreshSystemIntervals();
 
     // Load users and config from file, system data from systeminformation lib
-    Promise.all([
-      initUsers(),
-      initConfig(),
-      initStaticSystemData(),
-      initLocalWhitelists(),
-      initLocalBlacklists(),
-    ])
-      .then(async (actionArray) => {
-        const userAction = actionArray[0];
-        const configActionArr = actionArray[1];
-        const staticSystemDataAction = actionArray[2];
-        const whitelistAction = actionArray[3];
-        const blacklistAction = actionArray[4];
-
-        // Dispatch currency blacklist and whitelist actions to store
-        dispatch(whitelistAction);
-        dispatch(blacklistAction);
-
-        // Dispatch users, config, and system info to store
-        dispatch(userAction);
-        dispatch(staticSystemDataAction);
-        configActionArr.map((configAction) => {
-          dispatch(configAction);
-        });
-
-        const { loadedUsers, config } = this.props;
-        const { defaultUserId } = config.general.main;
-
-        // Setup initial navigation state
-        if (
-          defaultUserId &&
-          defaultUserId.length > 0 &&
-          loadedUsers[defaultUserId]
-        ) {
+    return new Promise((resolve, reject) => {
+      Promise.all([
+        initUsers(),
+        initConfig(),
+        initStaticSystemData(),
+        initLocalWhitelists(),
+        initLocalBlacklists(),
+      ])
+        .then(async (actionArray) => {
+          const userAction = actionArray[0];
+          const configActionArr = actionArray[1];
+          const staticSystemDataAction = actionArray[2];
+          const whitelistAction = actionArray[3];
+          const blacklistAction = actionArray[4];
+  
+          // Dispatch currency blacklist and whitelist actions to store
+          dispatch(whitelistAction);
+          dispatch(blacklistAction);
+  
+          // Dispatch users, config, and system info to store
+          dispatch(userAction);
+          dispatch(staticSystemDataAction);
+          configActionArr.map((configAction) => {
+            dispatch(configAction);
+          });
+  
+          const { loadedUsers, config } = this.props;
+          const { defaultUserId } = config.general.main;
+  
+          // Setup initial navigation state
           if (
-            Object.values(loadedUsers[defaultUserId].startCoins).every(
-              (coinObj) => {
-                return coinObj.mode === NATIVE;
-              }
-            ) ||
-            loadedUsers[defaultUserId].pinFile == null
+            defaultUserId &&
+            defaultUserId.length > 0 &&
+            loadedUsers[defaultUserId]
           ) {
-            loginUser(loadedUsers[defaultUserId]).map((action) => {
-              dispatch(action);
-            });
-          } else {
-            dispatch(setMainNavigationPath(`${PRE_AUTH}/${UNLOCK_PROFILE}`));
+            if (
+              Object.values(loadedUsers[defaultUserId].startCoins).every(
+                (coinObj) => {
+                  return coinObj.mode === NATIVE;
+                }
+              ) ||
+              loadedUsers[defaultUserId].pinFile == null
+            ) {
+              loginUser(loadedUsers[defaultUserId]).map((action) => {
+                dispatch(action);
+              });
+            } else {
+              dispatch(setMainNavigationPath(`${PRE_AUTH}/${UNLOCK_PROFILE}`));
+            }
+          } else if (defaultUserId && defaultUserId.length > 0) {
+            try {
+              dispatch(
+                await setConfigParams(
+                  config,
+                  { defaultUserId: "" },
+                  "general.main"
+                )
+              );
+            } catch (e) {
+              dispatch(newSnackbar(ERROR_SNACK, e.message));
+              console.error(e);
+            }
+          } else if (Object.keys(loadedUsers).length > 0) {
+            dispatch(setMainNavigationPath(`${PRE_AUTH}/${SELECT_PROFILE}`));
           }
-        } else if (defaultUserId && defaultUserId.length > 0) {
-          try {
-            dispatch(
-              await setConfigParams(
-                config,
-                { defaultUserId: "" },
-                "general.main"
-              )
-            );
-          } catch (e) {
-            dispatch(newSnackbar(ERROR_SNACK, e.message));
-            console.error(e);
-          }
-        } else if (Object.keys(loadedUsers).length > 0) {
-          dispatch(setMainNavigationPath(`${PRE_AUTH}/${SELECT_PROFILE}`));
-        }
-
-        this.setState({ initializing: false });
-      })
-      .catch((e) => {
-        dispatch(newSnackbar(ERROR_SNACK, e.message, MID_LENGTH_ALERT));
-        console.error(e);
-        this.setState({ initializing: false });
-      });
+  
+          this.setState({ initializing: false }, () => resolve());
+        })
+        .catch((e) => {
+          //dispatch(newSnackbar(ERROR_SNACK, e.message, MID_LENGTH_ALERT));
+          //console.error(e);
+          reject(e)
+          //this.setState({ initializing: false });
+        });
+    })
   }
 
-  componentDidMount() {
+  componentDidUpdate() {
+    if (this.state.error != null) throw this.state.error
+  }
+
+  async componentDidMount() {
     const appVersion = mainWindow.appBasicInfo;
 
-    this.setState({ initializing: true }, this.preInitialize);
+    this.setState({ initializing: true });
 
+    try {
+      await this.preInitialize()
+    } catch(e) {
+      this.setState({
+        error: e
+      })
+    }
+    
     if (appVersion) {
       const _arch = `${
         mainWindow.arch === "x64"

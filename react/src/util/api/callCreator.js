@@ -21,6 +21,8 @@ const session = iocane.createSession().use('gcm')
 const decrypt = session.decrypt.bind(session);
 const encrypt = session.encrypt.bind(session);
 
+const MAX_RETRIES = 10
+
 /**
  * Makes a blockchain call to the API depending on a number of parameters
  * @param {String} mode native || electrum || eth
@@ -48,7 +50,7 @@ export const getApiData = (mode, call, params, reqType, shieldPost = apiEncrypti
  * @param {String} callPath The full location of the specified call, e.g. electrum/get_balances
  * @param {Object} params Parameters to pass to api call
  */
-export const apiGet = (callPath, params, shield = apiEncryption) => {
+export const apiGet = (callPath, params, shield = apiEncryption, retries = 10) => {
   const ticket = getGetTicket(Store.dispatch)
   let checkTicks = 0
 
@@ -92,10 +94,10 @@ export const apiGet = (callPath, params, shield = apiEncryption) => {
     .then(json => {
       const parsedRes = json
 
-      if (parsedRes.msg === 'error' && parsedRes.result === 'Unauthorized Access') {
+      if (parsedRes.msg === 'error' && parsedRes.result === 'Unauthorized Access' && retries > 0) {
         setTimeout(async () => {          
-          resolve(await apiGet(callPath, params, false, false))
-        }, 100)
+          resolve(await apiGet(callPath, params, false, retries - 1))
+        }, ((Math.random() * 100) + 50) * (MAX_RETRIES - (retries - 1)))
       } else resolve(json)
     })
     .catch(e => {
@@ -112,7 +114,7 @@ export const apiGet = (callPath, params, shield = apiEncryption) => {
  * @param {String} callPath The full location of the specified call, e.g. native/get_balances
  * @param {Object} params Parameters to pass to api call
  */
-export const apiPost = async (callPath, params, shield = apiEncryption) => {  
+export const apiPost = async (callPath, params, shield = apiEncryption, retries = 10) => {  
   const ticket = !shield ? getPostTicket(Store.dispatch) : null
 
   return new Promise(async (resolve, reject) => {
@@ -165,10 +167,10 @@ export const apiPost = async (callPath, params, shield = apiEncryption) => {
         else {
           const parsedRes = JSON.parse(data.payload)
 
-          if (parsedRes.msg === 'error' && parsedRes.result === 'Unauthorized Access') {
+          if (parsedRes.msg === 'error' && parsedRes.result === 'Unauthorized Access' && retries > 0) {
             setTimeout(async () => {              
-              resolve(await apiPost(callPath, params, shield = apiEncryption, false))
-            }, 100)
+              resolve(await apiPost(callPath, params, shield = apiEncryption, retries - 1))
+            }, ((Math.random() * 100) + 50) * (MAX_RETRIES - (retries - 1)))
           } else resolve(JSON.parse(data.payload))
         }
       })
