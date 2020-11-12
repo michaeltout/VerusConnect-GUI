@@ -64,87 +64,94 @@ class Main extends React.Component {
     }
   }
 
-  async initialize() {
+  initialize() {
     const { dispatch } = this.props;
 
     // Initialize system data intervals and clear any old ones
     refreshSystemIntervals();
 
-    // Load users and config from file, system data from systeminformation lib
-    return new Promise((resolve, reject) => {
-      Promise.all([
-        initUsers(),
-        initConfig(),
-        initStaticSystemData(),
-        initLocalWhitelists(),
-        initLocalBlacklists(),
-      ])
-        .then(async (actionArray) => {
-          const userAction = actionArray[0];
-          const configActionArr = actionArray[1];
-          const staticSystemDataAction = actionArray[2];
-          const whitelistAction = actionArray[3];
-          const blacklistAction = actionArray[4];
+    return new Promise(async (resolve, reject) => {
+      try {
+        const promises = [
+          initUsers(),
+          initConfig(),
+          initStaticSystemData(),
+          initLocalWhitelists(),
+          initLocalBlacklists(),
+        ]
+        const actionArray = [
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
   
-          // Dispatch currency blacklist and whitelist actions to store
-          dispatch(whitelistAction);
-          dispatch(blacklistAction);
+        for (let i = 0; i < promises.length; i++) {
+          actionArray[i] = await promises[i]
+        }
   
-          // Dispatch users, config, and system info to store
-          dispatch(userAction);
-          dispatch(staticSystemDataAction);
-          configActionArr.map((configAction) => {
-            dispatch(configAction);
-          });
+        const userAction = actionArray[0];
+        const configActionArr = actionArray[1];
+        const staticSystemDataAction = actionArray[2];
+        const whitelistAction = actionArray[3];
+        const blacklistAction = actionArray[4];
   
-          const { loadedUsers, config } = this.props;
-          const { defaultUserId } = config.general.main;
+        // Dispatch currency blacklist and whitelist actions to store
+        dispatch(whitelistAction);
+        dispatch(blacklistAction);
   
-          // Setup initial navigation state
-          if (
-            defaultUserId &&
-            defaultUserId.length > 0 &&
-            loadedUsers[defaultUserId]
-          ) {
-            if (
-              Object.values(loadedUsers[defaultUserId].startCoins).every(
-                (coinObj) => {
-                  return coinObj.mode === NATIVE;
-                }
-              ) ||
-              loadedUsers[defaultUserId].pinFile == null
-            ) {
-              loginUser(loadedUsers[defaultUserId]).map((action) => {
-                dispatch(action);
-              });
-            } else {
-              dispatch(setMainNavigationPath(`${PRE_AUTH}/${UNLOCK_PROFILE}`));
-            }
-          } else if (defaultUserId && defaultUserId.length > 0) {
-            try {
-              dispatch(
-                await setConfigParams(
-                  config,
-                  { defaultUserId: "" },
-                  "general.main"
-                )
-              );
-            } catch (e) {
-              dispatch(newSnackbar(ERROR_SNACK, e.message));
-              console.error(e);
-            }
-          } else if (Object.keys(loadedUsers).length > 0) {
-            dispatch(setMainNavigationPath(`${PRE_AUTH}/${SELECT_PROFILE}`));
-          }
-  
-          this.setState({ initializing: false }, () => resolve());
-        })
-        .catch((e) => {
-          //dispatch(newSnackbar(ERROR_SNACK, e.message, MID_LENGTH_ALERT));
-          //console.error(e);
-          reject(e)
-          //this.setState({ initializing: false });
+        // Dispatch users, config, and system info to store
+        dispatch(userAction);
+        dispatch(staticSystemDataAction);
+        configActionArr.map((configAction) => {
+          dispatch(configAction);
         });
+  
+        const { loadedUsers, config } = this.props;
+        const { defaultUserId } = config.general.main;
+  
+        // Setup initial navigation state
+        if (
+          defaultUserId &&
+          defaultUserId.length > 0 &&
+          loadedUsers[defaultUserId]
+        ) {
+          if (
+            Object.values(loadedUsers[defaultUserId].startCoins).every(
+              (coinObj) => {
+                return coinObj.mode === NATIVE;
+              }
+            ) ||
+            loadedUsers[defaultUserId].pinFile == null
+          ) {
+            loginUser(loadedUsers[defaultUserId]).map((action) => {
+              dispatch(action);
+            });
+          } else {
+            dispatch(setMainNavigationPath(`${PRE_AUTH}/${UNLOCK_PROFILE}`));
+          }
+        } else if (defaultUserId && defaultUserId.length > 0) {
+          try {
+            dispatch(
+              await setConfigParams(
+                config,
+                { defaultUserId: "" },
+                "general.main"
+              )
+            );
+          } catch (e) {
+            dispatch(newSnackbar(ERROR_SNACK, e.message));
+            console.error(e);
+          }
+        } else if (Object.keys(loadedUsers).length > 0) {
+          dispatch(setMainNavigationPath(`${PRE_AUTH}/${SELECT_PROFILE}`));
+        }
+  
+        this.setState({ initializing: false }, () => resolve());
+      } catch(e) {
+        reject(e)
+      }
     })
   }
 
