@@ -71,26 +71,13 @@ class Main extends React.Component {
     refreshSystemIntervals();
 
     return new Promise(async (resolve, reject) => {
-      try {
-        const promises = [
-          initUsers(),
-          initConfig(),
-          initStaticSystemData(),
-          initLocalWhitelists(),
-          initLocalBlacklists(),
-        ]
-        const actionArray = [
-          null,
-          null,
-          null,
-          null,
-          null
-        ]
-  
-        for (let i = 0; i < promises.length; i++) {
-          actionArray[i] = await promises[i]
-        }
-  
+      Promise.all([
+        initUsers(),
+        initConfig(),
+        initStaticSystemData(),
+        initLocalWhitelists(),
+        initLocalBlacklists(),
+      ]).then(async actionArray => {  
         const userAction = actionArray[0];
         const configActionArr = actionArray[1];
         const staticSystemDataAction = actionArray[2];
@@ -149,9 +136,9 @@ class Main extends React.Component {
         }
   
         this.setState({ initializing: false }, () => resolve());
-      } catch(e) {
+      }).catch(e => {
         reject(e)
-      }
+      })
     })
   }
 
