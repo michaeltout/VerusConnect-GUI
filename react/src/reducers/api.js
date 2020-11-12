@@ -12,8 +12,11 @@ export const api = (state = {
 }, action) => {
   switch (action.type) {
     case ADD_CALLED_TIME:
-      let newCalledTimes = [...state.calledTimes, action.time]
-      newCalledTimes = newCalledTimes.filter(x => (x > action.payload.time - 60000 && x < action.payload.time + 60000))
+      let newCalledTimes = [...state.calledTimes, action.payload.time]
+      newCalledTimes = newCalledTimes.filter(
+        (x) =>
+          x > action.payload.time - 60000 && x < action.payload.time + 60000
+      );
 
       return {
         ...state,
