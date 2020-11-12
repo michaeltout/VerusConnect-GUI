@@ -7,7 +7,7 @@ import { LOAD_USERS, RESET_USERS, SAVE_USERS, AUTHENTICATE, ETH, ELECTRUM, POST,
  */
 export const loadUsers = async () => {
   try {
-    const res = await apiGet(LOAD_USERS)
+    const res = await apiGet(LOAD_USERS, true)
     if (res.msg !== 'success') throw new Error(res.result)
     else return res.result
   } catch (e) {
@@ -22,7 +22,7 @@ export const loadUsers = async () => {
  */
 export const saveUsers = async (userObj) => {
   try {
-    const res = await apiPost(SAVE_USERS, {userObj})
+    const res = await apiPost(SAVE_USERS, {userObj}, true)
     if (res.msg !== 'success') throw new Error(res.result)
     else return res.result
   } catch (e) {

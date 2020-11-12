@@ -16,15 +16,8 @@ if (mainWindow) {
 
 export const agamaPort = Config.general.main.agamaPort;
 export const apiEncryption = Config.general.main.encryptApi
-export const getPostToken = () => {
-  return remote.getGlobal('app').appPostSessionHash
-}
-export const getGetToken = () => {
-  return remote.getGlobal('app').appNonPostSessionHash
-}
-export const getShieldKey = () => {
-  return remote.getGlobal('app').apiShieldKey
-}
+export const secretToken = mainWindow.appSecretToken
+export const shieldKey = mainWindow.apiShieldKey
 export const rpc2cli = Config.general.native.rpc2cli;
 
 export default Config;

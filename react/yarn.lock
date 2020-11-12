@@ -2590,6 +2590,14 @@ bitcoinjs-message@^2.1.0:
     blake2b-wasm "https://github.com/BitGo/blake2b-wasm#193cdb71656c1a6c7f89b05d0327bb9b758d071b"
     nanoassert "^1.0.0"
 
+"blake2b@https://github.com/michaeltout/blake2b.git":
+  version "2.1.3"
+  uid "777f844b986173d08fc27fe9547c6f6320a82d62"
+  resolved "https://github.com/michaeltout/blake2b.git#777f844b986173d08fc27fe9547c6f6320a82d62"
+  dependencies:
+    blake2b-wasm "https://github.com/BitGo/blake2b-wasm#193cdb71656c1a6c7f89b05d0327bb9b758d071b"
+    nanoassert "^1.0.0"
+
 blessed@^0.1.81:
   version "0.1.81"
   resolved "https://registry.yarnpkg.com/blessed/-/blessed-0.1.81.tgz#f962d687ec2c369570ae71af843256e6d0ca1129"
@@ -3676,6 +3684,11 @@ crypto-browserify@^3.11.0:
     public-encrypt "^4.0.0"
     randombytes "^2.0.0"
     randomfill "^1.0.3"
+
+crypto-js@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.0.0.tgz#2904ab2677a9d042856a2ea2ef80de92e4a36dcc"
+  integrity sha512-bzHZN8Pn+gS7DQA6n+iUmBfl0hO5DJq++QP3U6uTucDtk/0iGpXd/Gg7CGR0p8tJhofJyaKoWBuJI4eAO00BBg==
 
 crypto-random-string@^1.0.0:
   version "1.0.0"
@@ -6168,13 +6181,6 @@ iocane@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/iocane/-/iocane-1.0.2.tgz#3697b168e699bdcded8d6418f962e0a3237db50e"
   integrity sha512-9sTea4NOODPZAfWOpztzwdPZQ4KUHyVDspE6heKD0FsRwYVOYElDdf+Nzhirj3fOtfX6WmitsX2JovtdbV9PqQ==
-  dependencies:
-    pbkdf2 "~3.0.17"
-
-iocane@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/iocane/-/iocane-4.2.0.tgz#4be30488fa684b248915633bcd2f37be29191e95"
-  integrity sha512-VTIyu+xSdHjch9mH41pennL5EMorr4PyRq8VxRmCBwo6DuUnnlxU3+66bZXnRFLjSVPWaYZEDKWByIChKiujtA==
   dependencies:
     pbkdf2 "~3.0.17"
 

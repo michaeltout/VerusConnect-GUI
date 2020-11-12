@@ -1,27 +1,19 @@
 import {
-  getPostToken,
-  getGetToken,
-  getShieldKey,
+  secretToken,
+  shieldKey,
   agamaPort,
   apiEncryption
 } from '../../config';
 import fetchType from '../fetchType';
 import urlParams from '../url'
-import { NATIVE, ETH, ELECTRUM, POST, GET, MAX_RECURSION_DEPTH_API } from '../constants/componentConstants'
-import Store from '../../store';
+import { NATIVE, ETH, ELECTRUM, POST, GET } from '../constants/componentConstants'
 import {
-  getPostTicket,
-  selectPostWinner,
-  getGetTicket,
-  selectGetWinner,
+  getSecretKey,
 } from "../../actions/actionDispatchers";
-const iocane = require('iocane');
-const session = iocane.createSession().use('gcm')
+const CryptoJS = require("crypto-js");
 
-const decrypt = session.decrypt.bind(session);
-const encrypt = session.encrypt.bind(session);
-
-const MAX_RETRIES = 10
+const decrypt = (data, key) => CryptoJS.AES.decrypt(data, key).toString(CryptoJS.enc.Utf8);
+const encrypt = (data, key) => CryptoJS.AES.encrypt(data, key).toString()
 
 /**
  * Makes a blockchain call to the API depending on a number of parameters
@@ -50,36 +42,17 @@ export const getApiData = (mode, call, params, reqType, shieldPost = apiEncrypti
  * @param {String} callPath The full location of the specified call, e.g. electrum/get_balances
  * @param {Object} params Parameters to pass to api call
  */
-export const apiGet = (callPath, params, shield = apiEncryption, retries = 10) => {
-  const ticket = getGetTicket(Store.dispatch)
-  let checkTicks = 0
-
+export const apiGet = (callPath, params) => {
   return new Promise(async (resolve, reject) => {
-    const checkTurn = () => {
-      checkTicks++
-
-      return new Promise((resolve, reject) => {
-        if (
-          Store.getState().api.getWinner === ticket ||
-          checkTicks > MAX_RECURSION_DEPTH_API
-        )
-          resolve();
-        else {
-          setImmediate(async () => {
-            await checkTurn();
-            resolve();
-          });
-        }
-      })
-    }
-
-    await checkTurn()
-
-    const token = getGetToken()
+    const secret = getSecretKey(callPath)
+    const token = secret.hash 
+    const time = secret.time
 
     let urlParamsObj = {
       ...params,
-      validity_key: token
+      validity_key: token,
+      path: callPath,
+      time
     }
 
     fetch(
@@ -87,22 +60,12 @@ export const apiGet = (callPath, params, shield = apiEncryption, retries = 10) =
       fetchType.get
     )
     .then(response => {
-      selectGetWinner(Store.dispatch)
-
       return response.json()
     })
     .then(json => {
-      const parsedRes = json
-
-      if (parsedRes.msg === 'error' && parsedRes.result === 'Unauthorized Access' && retries > 0) {
-        setTimeout(async () => {          
-          resolve(await apiGet(callPath, params, false, retries - 1))
-        }, ((Math.random() * 100) + 50) * (MAX_RETRIES - (retries - 1)))
-      } else resolve(json)
+      resolve(json)
     })
     .catch(e => {
-      if (Store.getState().api.getWinner === ticket) selectGetWinner(Store.dispatch)
-
       reject(e)
     })
   })
@@ -114,70 +77,40 @@ export const apiGet = (callPath, params, shield = apiEncryption, retries = 10) =
  * @param {String} callPath The full location of the specified call, e.g. native/get_balances
  * @param {Object} params Parameters to pass to api call
  */
-export const apiPost = async (callPath, params, shield = apiEncryption, retries = 10) => {  
-  const ticket = !shield ? getPostTicket(Store.dispatch) : null
-
+export const apiPost = async (callPath, params, shield = apiEncryption) => {  
   return new Promise(async (resolve, reject) => {
-    if (!shield) {
-      let checkTicks = 0
+    let time
+    let hash
+    const secret = getSecretKey(callPath)
 
-      const checkTurn = () => {
-        checkTicks ++
-        
-        return new Promise((resolve, reject) => {
-          if (
-            Store.getState().api.postWinner === ticket ||
-            checkTicks > MAX_RECURSION_DEPTH_API
-          )
-            resolve();
-          else {
-            setImmediate(async () => {
-              await checkTurn();
-              resolve();
-            });
-          }
-        })
-      }
+    time = secret.time
+    hash = secret.hash
 
-      await checkTurn()
-    }
-
-    const token = shield ? getShieldKey() : getPostToken()
+    const token = hash
 
     fetch(
       `http://127.0.0.1:${agamaPort}/api/${callPath}`,
       fetchType(
         JSON.stringify({
           validity_key: token,
+          path: callPath,
           encrypted: shield,
+          time: time,
           payload:
             params == null
-              ? !shield ? {} : await encrypt(JSON.stringify({}), token)
-              : !shield ? params : await encrypt(JSON.stringify(params), token),
+              ? !shield ? {} : encrypt(JSON.stringify({}), shieldKey)
+              : !shield ? params : encrypt(JSON.stringify(params), shieldKey),
         })
       ).post
     )
       .then((response) => {
-        selectPostWinner(Store.dispatch)
-
         return response.json();
       })
       .then(async (data) => { 
-        if (shield) resolve(JSON.parse(await decrypt(data.payload, token)));
-        else {
-          const parsedRes = JSON.parse(data.payload)
-
-          if (parsedRes.msg === 'error' && parsedRes.result === 'Unauthorized Access' && retries > 0) {
-            setTimeout(async () => {              
-              resolve(await apiPost(callPath, params, shield = apiEncryption, retries - 1))
-            }, ((Math.random() * 100) + 50) * (MAX_RETRIES - (retries - 1)))
-          } else resolve(JSON.parse(data.payload))
-        }
+        if (shield) resolve(JSON.parse(decrypt(data.payload, shieldKey)));
+        else resolve(JSON.parse(data.payload))
       })
       .catch((e) => {
-        if (!shield && Store.getState().api.postWinner === ticket)
-          selectPostWinner(Store.dispatch);
-
         console.error(e)
         reject(e)
       });

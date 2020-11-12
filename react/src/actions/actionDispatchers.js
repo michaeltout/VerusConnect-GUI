@@ -27,5 +27,4 @@ export * from './actions/textdialog/dispatchers/textdialog'
 export * from './actions/updates/dispatchers/updateAppData'
 
 // API 
-export * from './actions/api/dispatchers/post'
-export * from './actions/api/dispatchers/get'
+export * from './actions/api/dispatchers/secretKey'
