@@ -12,28 +12,10 @@ export const isPrivate = (tx) => {
   }
 }
 
-export const decodeMemo = (memoEncoded) => {
-  var j;
-  var hexes = memoEncoded.match(/.{1,4}/g) || [];
-  var memoDecoded = "";
-  for(j = 0; j<hexes.length; j++) {
-    const charCode = parseInt(hexes[j], 16)
-
-    if (charCode) memoDecoded += String.fromCharCode(charCode)
+export const decodeMemo = (memoEncoded) => { 
+  try {
+    return decodeURIComponent(memoEncoded.replace(/\s+/g, '').replace(/[0-9a-f]{2}/g, '%$&'));;
+  } catch(e) {
+    return "??"
   }
-
-  return memoDecoded;
-}
-
-export const encodeMemo = (memo) => {
-  var hex;
-  var i;
-
-  var result = "";
-  for (i = 0; i < memo.length; i++) {
-    hex = memo.charCodeAt(i).toString(16);
-    result += ("000"+hex).slice(-4);
-  }
-
-  return result;
 }

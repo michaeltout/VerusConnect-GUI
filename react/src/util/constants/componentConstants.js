@@ -38,6 +38,9 @@ export const API_GET_CURRENCY = 'get_currency'
 export const API_STOP = 'stop'
 export const API_CALL_DAEMON = 'call_daemon'
 export const API_GET_NETWORK_FEES = 'get_networkfees'
+export const API_GET_CURRENCY_CONVERSION_PATHS = 'get_conversion_paths'
+export const API_GET_RFOX_ESTIMATE_GAS_CLAIM_ACCOUNT_BALANCES = 'rfox/estimate_gas_claim_account_balances'
+export const API_GET_RFOX_GET_ACCOUNT_BALANCES = 'rfox/get_account_balances'
 
 // Write API call names
 export const API_CREATE_ADDRESS = 'get_newaddress'
@@ -62,6 +65,7 @@ export const API_START_STAKING = 'start_staking'
 export const API_STOP_STAKING = 'stop_staking'
 export const API_SHIELDCOINBASE = 'shieldcoinbase'
 export const API_SHIELDCOINBASE_PREFLIGHT = 'shieldcoinbase_preflight'
+export const API_RFOX_CLAIM_BALANCES = 'rfox/claim_account_balances'
 
 // Non-blockchain API call paths
 export const LOAD_USERS = 'users/load'
@@ -74,7 +78,6 @@ export const RESET_CONFIG = 'config/reset'
 export const GET_SCHEMA = 'config/schema'
 export const ENCRYPT_KEY = 'encryptkey'
 export const DECRYPT_KEY = 'decryptkey'
-export const GET_PIN_LIST = 'getpinlist'
 export const MODIFY_PIN = 'modifypin'
 export const API_ACTIVATE_COIN = 'coins/activate'
 export const API_REMOVE_COIN = 'remove_coin'
@@ -255,6 +258,9 @@ export const ZCPARAMS_ZCASH = 'z.cash'
 export const ZCPARAMS_SOCKET = 'zcparams'
 export const ADDCOIN_DELAY = 500
 
+// Addcoin electrum options
+export const ELECTRUM_NSPV = '-nspv'
+
 // Password and seed entering
 export const PWD_STRENGTH_THRESHOLD = 29
 
@@ -400,6 +406,8 @@ export const ID_REVOKED = 'revoked'
 // Sections of the app that can load by being indicated as 'loading' in the
 // loading reducer
 export const MINING_FUNCTIONS = 'mining_functions'
+
+export const MAX_RECURSION_DEPTH_API = 3000
 
 
 

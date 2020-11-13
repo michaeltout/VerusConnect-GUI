@@ -37,6 +37,9 @@ import TransactionCard from '../../../../../containers/TransactionCard/Transacti
 import { FormControl, Select, MenuItem, Tooltip, Typography } from "@material-ui/core";
 import CustomButton from "../../../../../containers/CustomButton/CustomButton";
 import HelpIcon from '@material-ui/icons/Help';
+import MigrationHelper from "../../../../../containers/MigrationHelper/MigrationHelper";
+import { closeTextDialog, openTextDialog } from "../../../../../actions/actionDispatchers";
+import { claimRfoxMigration, estimateGasRfoxMigration, getRfoxMigrationAccountBalances } from "../../../../../util/api/wallet/walletCalls";
 
 export const CoinWalletRender = function() {
   return (
@@ -254,10 +257,32 @@ export const CoinWalletRender = function() {
           </div>
         )}
       </div>*/}
-      {/* Change this when currencies get to mainnet */ this.props.coin ===
-      "VRSCTEST"
+      {/* TODO: Change this when currencies get to mainnet */ this.props
+        .coin === "VRSCTEST"
         ? WalletRenderCurrencyFunctions.call(this)
         : null}
+      {/* TODO: Add a way to detect if a coin allows migration */ this.props
+        .coin === "RFOX" && (
+        <MigrationHelper
+          coin={this.props.coin}
+          fetchMigrationBalance={getRfoxMigrationAccountBalances}
+          fetchFee={estimateGasRfoxMigration}
+          feeCurr={"ETH"}
+          migrate={claimRfoxMigration}
+          onSuccess={() => openTextDialog(
+            closeTextDialog,
+            [{ title: "OK", onClick: closeTextDialog }],
+            `${this.props.coin} claimed! It may take a few minutes to show in your wallet.`,
+            'Success!'
+          )}
+          onError={(e) => openTextDialog(
+            closeTextDialog,
+            [{ title: "OK", onClick: closeTextDialog }],
+            `Error claiming ${this.props.coin}. (${e.message})`,
+            'Error'
+          )}
+        />
+      )}
       {WalletRenderBalances.call(this)}
       <TransactionCard
         transactions={
@@ -321,7 +346,6 @@ export const WalletRenderPie = function() {
       }}
       style={{
         maxHeight: 60,
-        maxWidth: 60,
         minWidth: 60,
         maxWidth: 60
       }}
@@ -691,7 +715,7 @@ export const WalletRenderOperations = function() {
       message: operation.error ? operation.error.message : '-'
     };
   });
-  
+
   return (
     <div style={{ height: ((50 * zOperations.length) + 50), width: '100%' }}>
       <VirtualizedTable

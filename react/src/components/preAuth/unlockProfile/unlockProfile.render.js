@@ -8,19 +8,25 @@ export const UnlockProfileRender = function() {
       <ProtectedInputForm
         heading={`Some coins you have chosen to add on startup require a password.`}
         headingContainerStyle={{
-          maxWidth: "100%"
+          maxWidth: "100%",
         }}
         submitBtnText="Add Coin"
-        onSubmit={ this.handleSubmit }
+        onSubmit={this.handleSubmit}
         inlineSubmit={true}
         helperText={this.state.formError ? this.state.formError : ""}
         inputDisabled={this.state.formLock}
         submitDisabled={this.state.formLock}
-        inputRef={(input) => { this.pwdInput = input; }} 
+        inputRef={(input) => {
+          this.pwdInput = input;
+        }}
         error={this.state.formError ? true : false}
       />
       <div className="form-group d-flex justify-content-between">
-        <button className="btn btn-primary pre-auth-button" onClick={ this.finishLogin }>
+        <button
+          className="btn btn-primary pre-auth-button"
+          onClick={this.finishLogin}
+          disabled={this.state.formLock}
+        >
           skip for now
         </button>
       </div>

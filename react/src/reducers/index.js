@@ -14,6 +14,7 @@ import { debug } from './debug'
 import { loading } from './loading'
 import { localCurrencyLists } from './localCurrencyLists'
 import { textdialog } from './textdialog'
+import { api } from './api'
 
 const appReducer = combineReducers({
   ledger,
@@ -30,11 +31,10 @@ const appReducer = combineReducers({
   localCurrencyLists,
   routing: routerReducer,
   loading,
-  textdialog
+  textdialog,
+  api
 });
 
-// reset app state on logout
-const initialState = appReducer({}, {});
 const rootReducer = (state, action) => {
   return appReducer(state, action);
 }

@@ -7,7 +7,7 @@ import { LOAD_USERS, RESET_USERS, SAVE_USERS, AUTHENTICATE, ETH, ELECTRUM, POST,
  */
 export const loadUsers = async () => {
   try {
-    const res = await apiGet(LOAD_USERS)
+    const res = await apiGet(LOAD_USERS, true)
     if (res.msg !== 'success') throw new Error(res.result)
     else return res.result
   } catch (e) {
@@ -22,11 +22,11 @@ export const loadUsers = async () => {
  */
 export const saveUsers = async (userObj) => {
   try {
-    const res = await apiPost(SAVE_USERS, {userObj})
+    const res = await apiPost(SAVE_USERS, {userObj}, true)
     if (res.msg !== 'success') throw new Error(res.result)
     else return res.result
   } catch (e) {
-    console.error(e.message)
+    console.error(e)
     throw new Error(e.message)
   }
 }
@@ -66,8 +66,8 @@ export const resetUsers = async () => {
  */
 export const authenticateSeed = async (seed) => {
   try {
-    const electrumAuthResult = await getApiData(ELECTRUM, AUTHENTICATE, {seed}, POST)
-    const ethAuthResult = await getApiData(ETH, AUTHENTICATE, {seed}, POST)
+    const electrumAuthResult = await getApiData(ELECTRUM, AUTHENTICATE, {seed}, POST, true)
+    const ethAuthResult = await getApiData(ETH, AUTHENTICATE, {seed}, POST, true)
 
     if (electrumAuthResult.msg === 'error') throw new Error("Electrum authentication failed.")
     else if (ethAuthResult.msg === 'error') throw new Error("Eth authentication failed.")

@@ -55,27 +55,47 @@ class ConfigureLite extends React.Component {
   }
 
   activateCoin() {
+    this.props.setModalLock(true)
+
     this.setState({ loading: true }, async () => {
       const { addCoinParams, activatedCoins } = this.props
       const { seed } = this.state
 
       try {
-        if (!this.props.authenticated[this.props.addCoinParams.mode]) this.props.dispatch(await authenticateActiveUser(seed))
+        if (!this.props.authenticated[this.props.addCoinParams.mode])
+          this.props.dispatch(await authenticateActiveUser(seed));
   
         const result = await addCoin(
           addCoinParams.coinObj,
           addCoinParams.mode,
           this.props.dispatch,
-          Object.keys(activatedCoins)
+          Object.keys(activatedCoins),
+          addCoinParams.startParams && addCoinParams.startParams.indexOf('-nspv') > -1 ? {
+            nspv: true,
+          } : null
         );
+
+        this.props.setModalLock(false)
   
         if (result.msg === 'error') {
           this._handleError(result.result)
         } else {
-          this.props.dispatch(newSnackbar(SUCCESS_SNACK, `${addCoinParams.coinObj.id} activated in lite mode!`, MID_LENGTH_ALERT))
+          this.props.dispatch(
+            newSnackbar(
+              SUCCESS_SNACK,
+              `${addCoinParams.coinObj.id} activated in lite mode${
+                addCoinParams.startParams &&
+                addCoinParams.startParams.indexOf("-nspv") > -1
+                  ? " (nspv)"
+                  : ""
+              }!`,
+              MID_LENGTH_ALERT
+            )
+          );
           this.props.closeModal()
         }
       } catch (e) {
+        this.props.setModalLock(false)
         this._handleError(e.message)
       }
     })

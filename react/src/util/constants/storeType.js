@@ -115,3 +115,9 @@ export const FINISH_LOADING_MINING_FUNCTIONS = 'DISABLE_LOADING_MINING_FUNCTIONS
 export const OPEN_TEXT_DIALOG = 'OPEN_TEXT_DIALOG'
 export const CLOSE_TEXT_DIALOG = 'CLOSE_TEXT_DIALOG'
 
+// API Related Calls, for managing requests to local server api
+export const ADD_CALLED_TIME = 'ADD_CALLED_TIME'
+export const GET_POST_TICKET = 'GET_POST_TICKET'
+export const SELECT_GET_WINNER = 'SELECT_GET_WINNER'
+export const GET_GET_TICKET = 'GET_GET_TICKET'
+
