@@ -37,7 +37,7 @@ export const AddCoinRender = function() {
   };
 
   return (
-    this.props.modalPathArray[1] ? COMPONENT_MAP[this.props.modalPathArray[1]] : null
+    this.props.modalPathArray[2] ? COMPONENT_MAP[this.props.modalPathArray[2]] : null
   );
 }
 

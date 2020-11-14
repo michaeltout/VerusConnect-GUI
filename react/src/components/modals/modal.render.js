@@ -1,10 +1,4 @@
 import React from "react";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import CloseIcon from "@material-ui/icons/Close";
-import IconButton from "@material-ui/core/IconButton";
 import {
   ADD_COIN,
   CHAIN_INFO,
@@ -19,7 +13,9 @@ import {
   CREATE_IDENTITY,
   SIGN_VERIFY_ID_DATA,
   SHIELDCOINBASE,
-  CURRENCY_INFO
+  CURRENCY_INFO,
+  BASIC_MODAL,
+  SPLIT_MODAL
 } from "../../util/constants/componentConstants";
 import AddCoin from "./addCoin/addCoin";
 import ChainInfo from "./chainInfo/chainInfo";
@@ -35,6 +31,8 @@ import OperationInfo from "./operationInfo/operationInfo";
 import ImmatureDetails from "./immatureDetails/immatureDetails";
 import SignVerifyIdData from "./signVerifyIdData/signVerifyIdData";
 import ShieldCoinbase from "./shieldCoinbase/shieldCoinbase";
+import { BasicModalRender } from "./modalTypes/basicModal.render";
+import { SplitModalRender } from "./modalTypes/splitModal.render";
 
 export const ModalRender = function() {
   const COMPONENT_PROPS = {
@@ -42,6 +40,11 @@ export const ModalRender = function() {
     modalPathArray: this.state.modalPath,
     setModalLock: this.getModalLock,
     closeModal: this.closeModal,
+  }
+
+  const MODAL_MAP = {
+    [BASIC_MODAL]: BasicModalRender,
+    [SPLIT_MODAL]: SplitModalRender
   }
   
   const COMPONENT_MAP = {
@@ -117,46 +120,12 @@ export const ModalRender = function() {
     )
   };
 
-  return (
-    <Dialog
-      open={this.props.modalPathArray.length > 0}
-      onClose={this.closeModal}
-      fullWidth={true}
-      disableBackdropClick={this.state.modalLock}
-      disableEscapeKeyDown={this.state.modalLock}
-      maxWidth="md"
-      aria-labelledby="form-dialog-title"
-    >
-      <DialogTitle
-        id="form-dialog-title"
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center"
-        }}
-        disableTypography={true}
-      >
-        <h4>{this.state.modalHeader}</h4>
-        <IconButton
-          aria-label="Close Modal"
-          onClick={this.closeModal}
-          style={{ visibility: this.state.modalLock ? "hidden" : "unset" }}
-        >
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-      <DialogContent
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "stretch",
-          minHeight: 600
-        }}
-      >
-        {COMPONENT_MAP[this.state.modalPath[0]]}
-      </DialogContent>
-    </Dialog>
-  );
+  return MODAL_MAP[this.state.modalPath[0]] != null
+    ? MODAL_MAP[this.state.modalPath[0]].call(
+        this,
+        COMPONENT_MAP[this.state.modalPath[1]]
+      )
+    : null;
 }
 
 

@@ -19,6 +19,12 @@ class OperationInfo extends React.Component {
   // To be called from constructor
   generateOperationInfo(props) {
     const { opObj } = props
+    const params =
+      opObj.params != null
+        ? Array.isArray(opObj.params)
+          ? opObj.params[0]
+          : opObj.params
+        : {};
     
     let opDataSchema = {
       ["Status"]: opObj.status,
@@ -27,10 +33,24 @@ class OperationInfo extends React.Component {
       ["Creation Time"]: timeConverter(opObj.creation_time),
       ["Completion time (seconds)"]: opObj.execution_secs,
       ["Operation ID"]: opObj.id,
-      ["From"]: opObj.params.from,
-      ["Amount"]: opObj.params.amounts[0].amount,
-      ["Fee"]: opObj.params.fee,
-      ["Result"]: opObj.error ? opObj.error.message : null
+      ["From"]: params.from,
+      ["To"]: params.address,
+      ["Minted?"]:
+        params.minted != null
+          ? params.minted
+            ? "Yes"
+            : "No"
+          : null,
+      ["Amount"]:
+        params.amount != null
+          ? params.amount
+          : params.amounts && Array.isArray(obObj.params.amounts)
+          ? params.amounts[0].amount
+          : null,
+      ["Fee"]: params.fee,
+      ["From Currency"]: params.currency,
+      ["To Currency"]: params.convertto,
+      ["Result"]: opObj.error ? opObj.error.message : null,
     };
 
     Object.keys(opDataSchema).forEach(opDataKey => {
