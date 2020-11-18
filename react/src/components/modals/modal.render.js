@@ -125,7 +125,10 @@ export const ModalRender = function() {
         this,
         COMPONENT_MAP[this.state.modalPath[1]]
       )
-    : null;
+    : BasicModalRender.call(
+      this,
+      COMPONENT_MAP[this.state.modalPath[0]]
+    );
 }
 
 
