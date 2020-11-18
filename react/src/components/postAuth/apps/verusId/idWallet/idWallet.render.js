@@ -302,7 +302,7 @@ export const WalletRenderBalances = function() {
                         }}
                       >
                         <ArrowUpward fontSize='inherit' name={SEND_COIN} />
-                        <text style={{ fontSize: 12, marginLeft: 8 }}>Send</text>
+                        <div style={{ fontSize: 12, marginLeft: 8 }}>Send</div>
                       </button>
                       <button
                         className="btn btn-primary"
@@ -332,7 +332,7 @@ export const WalletRenderBalances = function() {
                         }}
                       >
                         <ArrowDownward fontSize='inherit' />
-                        <text style={{ fontSize: 12, marginLeft: 8 }}>Receive</text>
+                        <div style={{ fontSize: 12, marginLeft: 8 }}>Receive</div>
                       </button>
                     </div>
                   </div>
