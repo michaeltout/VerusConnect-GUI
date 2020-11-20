@@ -22,6 +22,7 @@ import {
   INTEREST_BALANCE,
   MID_LENGTH_ALERT,
   WARNING_SNACK,
+  SEND_CURRENCY,
 } from "../../../util/constants/componentConstants";
 import { sendNative, sendEth, sendElectrum, getCurrency } from '../../../util/api/wallet/walletCalls';
 import { newSnackbar, expireData } from '../../../actions/actionCreators';
@@ -201,7 +202,7 @@ class SendCoin extends React.Component {
         if (_txData.msg === API_SUCCESS) {
           this.setState({ loadingProgress: 100 }, () => {
             if (formStep === CONFIRM_DATA) {
-              if (_txData.result.cliCmd === Z_SEND) {
+              if (_txData.result.cliCmd === Z_SEND || _txData.result.cliCmd === SEND_CURRENCY) {
                 this.props.dispatch(newSnackbar(INFO_SNACK, "Transaction posted! Track its status in the pending transaction log of your wallet."))
               } else {
                 this.props.dispatch(newSnackbar(SUCCESS_SNACK, "Transaction sent successfully!"))

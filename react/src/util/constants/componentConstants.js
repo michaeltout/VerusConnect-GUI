@@ -176,6 +176,9 @@ export const SETUP = 'setup'
 export const SIGN_UP = 'sign_up'
 
 // Modal navigation
+export const BASIC_MODAL = 'basic_modal'
+export const SPLIT_MODAL = 'split_modal'
+
 export const ADD_COIN = 'add_coin'
 export const CHAIN_INFO = 'chain_info'
 export const PBAAS_CHAIN_INFO = 'pbaas_chain_info'
@@ -368,6 +371,7 @@ export const TXDATA_TOADDR = 'toAddress'
 // Send command types
 export const Z_SEND = 'z_sendmany'
 export const SEND_TO_ADDRESS = 'sendtoaddress'
+export const SEND_CURRENCY = 'sendcurrency'
 
 // Create Identity form errors
 export const ERROR_NAME_REQUIRED = 'A name is required'

@@ -589,11 +589,11 @@ export const WalletRenderBalances = function() {
                                 name={SEND_COIN}
                               />
                             )}
-                            <text style={{ fontSize: 12, marginLeft: 8 }}>
+                            <div style={{ fontSize: 12, marginLeft: 8 }}>
                               {balanceTag === INTEREST_BALANCE
                                 ? "Claim"
                                 : "Send"}
-                            </text>
+                            </div>
                           </button>
                         </span>
                       </Tooltip>
@@ -633,9 +633,9 @@ export const WalletRenderBalances = function() {
                             }}
                           >
                             <ArrowDownward fontSize="inherit" />
-                            <text style={{ fontSize: 12, marginLeft: 8 }}>
+                            <div style={{ fontSize: 12, marginLeft: 8 }}>
                               Receive
-                            </text>
+                            </div>
                           </button>
                         </span>
                       </Tooltip>
@@ -685,9 +685,9 @@ export const WalletRenderBalances = function() {
                               }}
                             >
                               <ShuffleIcon fontSize="inherit" />
-                              <text style={{ fontSize: 12, marginLeft: 8 }}>
+                              <div style={{ fontSize: 12, marginLeft: 8 }}>
                                 Convert
-                              </text>
+                              </div>
                             </button>
                           </span>
                         </Tooltip>

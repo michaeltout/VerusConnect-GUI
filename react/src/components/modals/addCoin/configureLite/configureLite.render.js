@@ -44,7 +44,7 @@ export const ConfigureLiteRender = function() {
   };
 
   return (
-    this.props.modalPathArray[2] ? COMPONENT_MAP[this.props.modalPathArray[2]] : null
+    this.props.modalPathArray[3] ? COMPONENT_MAP[this.props.modalPathArray[3]] : null
   );
 }
 
