@@ -1836,7 +1836,7 @@ after@0.8.2:
 
 "agama-wallet-lib@git+https://github.com/VerusCoin/agama-wallet-lib.git#dev":
   version "0.3.4"
-  resolved "git+https://github.com/VerusCoin/agama-wallet-lib.git#b855d8297d448a8197ad0e9e4b6157a2f0944058"
+  resolved "git+https://github.com/VerusCoin/agama-wallet-lib.git#faaa52a23961cad24b6b239e8f33c21e02d53206"
   dependencies:
     bigi "^1.4.2"
     bip32 "^1.0.2"
@@ -2592,7 +2592,6 @@ bitcoinjs-message@^2.1.0:
 
 "blake2b@https://github.com/michaeltout/blake2b.git":
   version "2.1.3"
-  uid "777f844b986173d08fc27fe9547c6f6320a82d62"
   resolved "https://github.com/michaeltout/blake2b.git#777f844b986173d08fc27fe9547c6f6320a82d62"
   dependencies:
     blake2b-wasm "https://github.com/BitGo/blake2b-wasm#193cdb71656c1a6c7f89b05d0327bb9b758d071b"
