@@ -16,7 +16,7 @@ export const CoinSettingsRender = function() {
           <div className="card border rounded-0">
             <CustomTabBar 
               tabs={tabs}
-              color="rgb(78,115,223)"
+              color="rgb(49, 101, 212)"
               activeTab={activeTab}
               handleTabChange={handleTabChange}
               tabProps={{
@@ -122,7 +122,7 @@ export const CoinSettingsOptionsRender = function() {
               border: "solid",
               maxWidth: "100%",
               maxHeight: 600,
-              borderColor: "rgb(78,115,223)",
+              borderColor: "rgb(49, 101, 212)",
               borderWidth: 1,
               overflow: "scroll"
             }}

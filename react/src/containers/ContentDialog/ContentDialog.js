@@ -10,7 +10,7 @@ import { DialogTitle } from '@material-ui/core';
 export default function ContentDialog(props) {
   return (
     <Dialog
-      open={props.open}
+      open={props.open == null ? false : props.open}
       onClose={props.onCancel}
       aria-labelledby="form-dialog-title"
     >

@@ -29,7 +29,8 @@ import {
   POST_AUTH,
   APPS,
   MULTIVERSE,
-  API_GET_CURRENCY_DATA_MAP
+  API_GET_CURRENCY_DATA_MAP,
+  BASIC_MODAL
 } from '../../../../../util/constants/componentConstants'
 import { setUserPreferredCurrency, newSnackbar, setMainNavigationPath } from '../../../../../actions/actionCreators'
 
@@ -118,9 +119,9 @@ class CoinWallet extends React.Component {
       : null;
   }
 
-  openModal(e, modalParams = {}, modal) {
+  openModal(e, modalParams = {}, modal, modalType = BASIC_MODAL) {
     const _modal = modal ? modal : e.target.name;
-    openModal(_modal, { chainTicker: this.props.coin, ...modalParams });
+    openModal(_modal, { chainTicker: this.props.coin, ...modalParams }, modalType);
   }
 
   openMultiverse() {

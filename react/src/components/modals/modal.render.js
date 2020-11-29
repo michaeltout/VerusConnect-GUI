@@ -37,6 +37,9 @@ import { SplitModalRender } from "./modalTypes/splitModal.render";
 export const ModalRender = function() {
   const COMPONENT_PROPS = {
     setModalHeader: this.getModalHeader,
+    setModalLinks: this.getModalLinks,
+    setModalIcon: this.getModalIcon,
+    setModalButtons: this.getModalButtons,
     modalPathArray: this.state.modalPath,
     setModalLock: this.getModalLock,
     closeModal: this.closeModal,

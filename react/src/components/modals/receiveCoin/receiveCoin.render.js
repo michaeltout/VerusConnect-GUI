@@ -8,6 +8,8 @@ import { VirtualizedTable } from '../../../containers/VirtualizedTable/Virtualiz
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import QRCode from 'qrcode.react';
 import { copyDataToClipboard } from '../../../util/copyToClipboard';
+import { IconButton } from '@material-ui/core';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
 
 export const ReceiveCoinRender = function() {
   return (
@@ -19,70 +21,19 @@ export const ReceiveCoinRender = function() {
 
 export const ReceiveCoinMainRender = function() {
   const { activeCoin, modalProps } = this.props
-  const { selectedMode, newAddrDropdownOpen, addresses } = this.state
-  const { balanceTag } = modalProps
+  const { selectedMode, addresses } = this.state
 
   return (
-    <div>
-      <div className="d-lg-flex justify-content-start justify-content-lg-start">
-        {this.supportedTypes[PUBLIC_ADDRS] && (
-          <button
-            className="btn btn-primary d-lg-flex justify-content-lg-center"
-            type="button"
-            name={PUBLIC_ADDRS}
-            onClick={this.setAddrMode}
-            style={{
-              color: "rgb(0,0,0)",
-              backgroundColor: "rgba(78,115,223,0)",
-              borderColor:
-                selectedMode === PUBLIC_ADDRS ? "rgb(0, 0, 0)" : "transparent",
-              borderWidth: 1,
-              borderRadius: 0,
-              padding: 18,
-              paddingRight: 40,
-              paddingLeft: 40,
-              paddingTop: 10,
-              paddingBottom: 10,
-              width: 160,
-              marginRight: 0,
-              boxShadow: "none"
-            }}
-          >
-            {"Transparent"}
-          </button>
-        )}
-        {this.supportedTypes[PRIVATE_ADDRS] && (
-          <button
-            className="btn btn-primary d-lg-flex justify-content-lg-center"
-            type="button"
-            name={PRIVATE_ADDRS}
-            onClick={this.setAddrMode}
-            style={{
-              color: "rgb(0,0,0)",
-              backgroundColor: "rgba(78,115,223,0)",
-              borderColor:
-                selectedMode === PRIVATE_ADDRS ? "rgb(0, 0, 0)" : "transparent",
-              borderWidth: 1,
-              borderRadius: 0,
-              padding: 18,
-              paddingRight: 40,
-              paddingLeft: 40,
-              paddingTop: 10,
-              paddingBottom: 10,
-              width: 160,
-              marginRight: 0,
-              boxShadow: "none"
-            }}
-          >
-            {"Private"}
-          </button>
-        )}
-      </div>
+    <div
+      style={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
+    >
       {activeCoin.mode === NATIVE && !this.isIdentity && (
-        <div
-          className="d-flex justify-content-between"
-          style={{ paddingTop: 49 }}
-        >
+        <div className="d-flex justify-content-between">
           {ReceiveCurrencyPickerRender.call(this)}
           <SearchBar
             label={"Address Search"}
@@ -90,7 +41,7 @@ export const ReceiveCoinMainRender = function() {
             name="addressSearchTerm"
             clearable={true}
             style={{
-              width: 300
+              width: 300,
             }}
             onChange={this.setInput}
             onClear={this.clearAddrSearch}
@@ -99,12 +50,12 @@ export const ReceiveCoinMainRender = function() {
           />
         </div>
       )}
-      <div style={{ paddingTop: 10 }}>
+      <div style={{ marginTop: 10, flex: 1, border: "1px solid #E0E0E0" }}>
         {ReceiveAddressTableRender.call(this)}
       </div>
       {activeCoin.mode === NATIVE && !this.isIdentity && (
-        <div style={{ paddingTop: 50 }}>
-          <div style={{ width: "max-content" }}>
+        <div style={{ paddingTop: 8 }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <button
               className="btn btn-primary"
               type="button"
@@ -121,11 +72,11 @@ export const ReceiveCoinMainRender = function() {
               }
               style={{
                 fontSize: 14,
-                backgroundColor: "rgb(78,115,223)",
+                backgroundColor: "rgb(49, 101, 212)",
                 borderWidth: 1,
-                borderColor: "rgb(78,115,223)",
+                borderColor: "rgb(49, 101, 212)",
                 display: "flex",
-                alignItems: "center"
+                alignItems: "center",
               }}
             >
               {`Create new ${selectedMode} address`}
@@ -168,14 +119,18 @@ export const ReceiveAddressTableRender = function() {
   const displayAddresses = addresses[selectedMode]
 
   return (
-    <div style={{ height: 300, width: '100%' }}>
+    <div style={{ height: '100%', width: '100%' }}>
       <VirtualizedTable
+        shadeEvens
+        style={{
+
+        }}
         rowCount={displayAddresses.length}
         tableRef={ el => { this.table = el; } }
         rowGetter={({ index }) => displayAddresses[index]}
         columns={[
           {
-            width: 250,
+            width: 175,
             flexGrow: 2,
             cellDataGetter: ({ rowData }) => {
               return (
@@ -195,7 +150,7 @@ export const ReceiveAddressTableRender = function() {
             dataKey: 'address',
           },
           {
-            width: 150,
+            width: 100,
             cellDataGetter: ({ rowData }) => {
               const { balances } = rowData
               const displayBalance =
@@ -206,11 +161,11 @@ export const ReceiveAddressTableRender = function() {
               return displayBalance == null ? '-' : displayBalance
             },
             flexGrow: 1,
-            label: `Amount\u00A0(${balanceCurr})`,
+            label: 'Amount',
             dataKey: 'amount',
           },
           {
-            width: 75,
+            width: 50,
             flexGrow: 1,
             cellDataGetter: ({ rowData }) => {
               return (
@@ -250,38 +205,16 @@ export const ReceiveAddressOptionsRender = function(address) {
   return (
     <div>
       <div className="d-flex align-items-center">
-        <button
-          className="btn btn-dark text-uppercase"
-          type="button"
+        <IconButton
+          aria-label="Close Modal"
+          size="small"
           onClick={() => copyDataToClipboard(address)}
-          style={{
-            paddingTop: 2,
-            paddingBottom: 3,
-            paddingRight: 10,
-            paddingLeft: 10,
-            fontSize: 12,
-            marginRight: 6
-          }}
         >
-          <strong>{"copy"}</strong>
-        </button>
-        {//TODO: Finish invoice creation
-          /*<button
-            className="btn btn-success text-uppercase"
-            type="button"
-            style={{
-              paddingTop: 2,
-              paddingBottom: 3,
-              paddingRight: 10,
-              paddingLeft: 10,
-              fontSize: 12,
-              marginRight: 6
-            }}
-          >
-            <strong>{"create invoice"}</strong>
-          </button>*/}
+          <FileCopyIcon />
+        </IconButton>
         <IconDropdown 
           items={ addressOptions }
+          size="small"
           dropdownIconComponent={ <MoreVertIcon /> }
           onSelect={ (option) => this.selectAddressOption(address, option) }
         />
@@ -308,9 +241,9 @@ export const ReceiveAddressQrRender = function() {
         onClick={this.toggleAddressQr}
         style={{
           fontSize: 14,
-          backgroundColor: "rgb(78,115,223)",
+          backgroundColor: "rgb(49, 101, 212)",
           borderWidth: 1,
-          borderColor: "rgb(78,115,223)",
+          borderColor: "rgb(49, 101, 212)",
           paddingRight: 20,
           paddingLeft: 20,
           marginTop: 40,

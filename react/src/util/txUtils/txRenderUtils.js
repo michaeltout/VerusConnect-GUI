@@ -91,7 +91,7 @@ export const TX_TYPES = {
     <div style={{ minWidth: "max-content" }}>
       <h3
         className="text-uppercase"
-        style={{ marginBottom: 0, fontSize: 16, fontWeight: "bold", color: "rgb(78,115,223)"  }}>
+        style={{ marginBottom: 0, fontSize: 16, fontWeight: "bold", color: "rgb(49, 101, 212)"  }}>
         <i className="fas fa-caret-down" style={{ paddingRight: 3 }} />
         self
       </h3>
@@ -102,7 +102,7 @@ export const TX_TYPES = {
     <div style={{ minWidth: "max-content" }}>
       <h3
         className="text-uppercase d-lg-flex align-items-lg-center"
-        style={{ marginBottom: 0, fontSize: 16, fontWeight: "bold", color: "rgb(78,115,223)"  }}>
+        style={{ marginBottom: 0, fontSize: 16, fontWeight: "bold", color: "rgb(49, 101, 212)"  }}>
         <i
           className="fas fa-circle"
           style={{ paddingRight: 3, fontSize: 7, paddingBottom: 1 }}
@@ -130,7 +130,7 @@ export const TX_TYPES = {
     <div style={{ minWidth: "max-content" }}>
       <h3
         className="text-uppercase"
-        style={{ marginBottom: 0, fontSize: 16, fontWeight: "bold", color: "rgb(78,115,223)"  }}>
+        style={{ marginBottom: 0, fontSize: 16, fontWeight: "bold", color: "rgb(49, 101, 212)"  }}>
         <i className="fas fa-caret-right" style={{ paddingRight: 3 }} />
         locked
       </h3>
@@ -170,7 +170,7 @@ export const renderAffectedBalance = (txObj) => {
   return (
     <h3
       className="text-capitalize"
-      style={{ marginBottom: 0, fontSize: 16, color: "rgb(78,115,223)" }}>
+      style={{ marginBottom: 0, fontSize: 16, color: "rgb(49, 101, 212)" }}>
       {balanceType ? (balanceType === PUBLIC_BALANCE ? 'transparent' : balanceType) : UNKNOWN_BALANCE}
     </h3>
   );

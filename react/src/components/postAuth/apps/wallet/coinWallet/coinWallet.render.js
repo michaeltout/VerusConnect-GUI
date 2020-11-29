@@ -21,7 +21,8 @@ import {
   STAKE_TX,
   INTEREST_BALANCE,
   REJECTED_CONFIRMATIONS,
-  PUBLIC_BALANCE
+  PUBLIC_BALANCE,
+  SPLIT_MODAL
 } from "../../../../../util/constants/componentConstants";
 import { VirtualizedTable } from '../../../../../containers/VirtualizedTable/VirtualizedTable'
 import { TX_TYPES } from '../../../../../util/txUtils/txRenderUtils'
@@ -323,7 +324,7 @@ export const WalletRenderPie = function() {
   const noHeight = percentage === NO_HEIGHT
 
   return error ? (
-    <div style={{ color: `rgb(78,115,223)` }}>
+    <div style={{ color: `rgb(49, 101, 212)` }}>
       <CircularProgress
         variant={"indeterminate"}
         thickness={4.5}
@@ -333,7 +334,7 @@ export const WalletRenderPie = function() {
     </div>
   ) : (
     <PieChart
-      data={[{ value: 1, key: 1, color: `rgb(78,115,223)` }]}
+      data={[{ value: 1, key: 1, color: `rgb(49, 101, 212)` }]}
       reveal={noHeight ? 100 : percentage}
       lineWidth={20}
       animate
@@ -386,7 +387,7 @@ export const WalletRenderBalances = function() {
         display: "flex",
       }}
     >
-      {walletDisplayBalances.map((balanceObj) => {
+      {walletDisplayBalances.map((balanceObj, index) => {
         const {
           balanceType,
           balanceAddrType,
@@ -428,7 +429,7 @@ export const WalletRenderBalances = function() {
         return balanceTag == null ? null : (
           <div
             className="flex-grow-1"
-            key={Math.random()}
+            key={index}
             style={{
               paddingRight: 8,
               paddingLeft: 8,
@@ -558,11 +559,11 @@ export const WalletRenderBalances = function() {
                             style={{
                               backgroundColor:
                                 balanceTag === INTEREST_BALANCE
-                                  ? "rgb(78,115,223)"
+                                  ? "rgb(49, 101, 212)"
                                   : "rgb(236,43,43)",
                               borderColor:
                                 balanceTag === INTEREST_BALANCE
-                                  ? "rgb(78,115,223)"
+                                  ? "rgb(49, 101, 212)"
                                   : "rgb(236,43,43)",
                               visibility:
                                 sendable != null && !sendable
@@ -613,7 +614,7 @@ export const WalletRenderBalances = function() {
                             type="button"
                             name={RECEIVE_COIN}
                             onClick={(e) =>
-                              this.openModal(null, { balanceTag }, RECEIVE_COIN)
+                              this.openModal(null, { balanceTag }, RECEIVE_COIN, SPLIT_MODAL)
                             }
                             style={{
                               backgroundColor: "rgb(0,178,26)",
@@ -672,8 +673,8 @@ export const WalletRenderBalances = function() {
                                 )
                               }
                               style={{
-                                backgroundColor: "rgb(78,115,223)",
-                                borderColor: "rgb(78,115,223)",
+                                backgroundColor: "rgb(49, 101, 212)",
+                                borderColor: "rgb(49, 101, 212)",
                                 fontSize: 18,
                                 borderWidth: 1,
                                 fontWeight: "bold",
@@ -820,7 +821,7 @@ export const WalletRenderCurrencyFunctions = function() {
             >
               <MenuItem value={-1}>{coin}</MenuItem>
               {whitelist.map((currency, index) => {
-                return <MenuItem value={index}>{currency}</MenuItem>;
+                return <MenuItem key={index} value={index}>{currency}</MenuItem>;
               })}
             </Select>
           </FormControl>
@@ -900,6 +901,6 @@ export const WalletRenderCurrencyOptions = function() {
   const whitelist = whitelists[coin] ? whitelists[coin] : []
 
   return whitelist.map((currencyTicker, index) => {
-    return <MenuItem value={index}>{currencyTicker}</MenuItem>
+    return <MenuItem key={index} value={index}>{currencyTicker}</MenuItem>
   })
 };

@@ -59,9 +59,9 @@ export const SelectCoinForm = function() {
         onClick={this.chooseCoin}
         style={{
           fontSize: 14,
-          backgroundColor: "rgb(78,115,223)",
+          backgroundColor: "rgb(49, 101, 212)",
           borderWidth: 1,
-          borderColor: "rgb(78,115,223)",
+          borderColor: "rgb(49, 101, 212)",
           paddingRight: 20,
           paddingLeft: 20,
           marginTop: 40,
@@ -77,9 +77,9 @@ export const SelectCoinForm = function() {
         onClick={this.toggleAddFromFile}
         style={{
           fontSize: 14,
-          backgroundColor: "rgb(78,115,223)",
+          backgroundColor: "rgb(49, 101, 212)",
           borderWidth: 1,
-          borderColor: "rgb(78,115,223)",
+          borderColor: "rgb(49, 101, 212)",
           paddingRight: 20,
           paddingLeft: 20,
           marginTop: 40,
@@ -198,8 +198,8 @@ export const SelectModeForm = function() {
                       onChange: this.checkBox,
                       name: NATIVE_STAKE
                     }}
-                    colorChecked="rgb(78,115,223)"
-                    colorUnchecked="rgb(78,115,223)"
+                    colorChecked="rgb(49, 101, 212)"
+                    colorUnchecked="rgb(49, 101, 212)"
                   />
                   <label
                     className="form-check-label"
@@ -222,8 +222,8 @@ export const SelectModeForm = function() {
                     onChange: this.checkBox,
                     name: NATIVE_MINE
                   }}
-                  colorChecked="rgb(78,115,223)"
-                  colorUnchecked="rgb(78,115,223)"
+                  colorChecked="rgb(49, 101, 212)"
+                  colorUnchecked="rgb(49, 101, 212)"
                 />
                 <label
                   className="form-check-label"
@@ -254,8 +254,8 @@ export const SelectModeForm = function() {
                     onChange: this.checkBox,
                     name: NATIVE_REINDEX
                   }}
-                  colorChecked="rgb(78,115,223)"
-                  colorUnchecked="rgb(78,115,223)"
+                  colorChecked="rgb(49, 101, 212)"
+                  colorUnchecked="rgb(49, 101, 212)"
                 />
                 <label
                   className="form-check-label"
@@ -277,8 +277,8 @@ export const SelectModeForm = function() {
                     onChange: this.checkBox,
                     name: NATIVE_RESCAN
                   }}
-                  colorChecked="rgb(78,115,223)"
-                  colorUnchecked="rgb(78,115,223)"
+                  colorChecked="rgb(49, 101, 212)"
+                  colorUnchecked="rgb(49, 101, 212)"
                 />
                 <label
                   className="form-check-label"
@@ -312,8 +312,8 @@ export const SelectModeForm = function() {
                     onChange: this.checkBoxElectrum,
                     name: ELECTRUM_NSPV
                   }}
-                  colorChecked="rgb(78,115,223)"
-                  colorUnchecked="rgb(78,115,223)"
+                  colorChecked="rgb(49, 101, 212)"
+                  colorUnchecked="rgb(49, 101, 212)"
                 />
                 <label
                   className="form-check-label"
@@ -334,9 +334,9 @@ export const SelectModeForm = function() {
           onClick={this.chooseMode}
           style={{
             fontSize: 14,
-            backgroundColor: "rgb(78,115,223)",
+            backgroundColor: "rgb(49, 101, 212)",
             borderWidth: 1,
-            borderColor: "rgb(78,115,223)",
+            borderColor: "rgb(49, 101, 212)",
             paddingRight: 20,
             paddingLeft: 20,
             marginTop: 30,

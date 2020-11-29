@@ -420,7 +420,7 @@ class CurrencyCard extends React.Component {
                     textAlign: "left",
                     fontSize: 24,
                     padding: 15,
-                    backgroundColor: "rgb(78,115,223)",
+                    backgroundColor: "rgb(49, 101, 212)",
                     color: "white",
                     display: "flex",
                     justifyContent: "space-between",

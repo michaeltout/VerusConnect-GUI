@@ -44,7 +44,7 @@ class OperationInfo extends React.Component {
       ["Amount"]:
         params.amount != null
           ? params.amount
-          : params.amounts && Array.isArray(obObj.params.amounts)
+          : params.amounts && Array.isArray(opObj.params.amounts)
           ? params.amounts[0].amount
           : null,
       ["Fee"]: params.fee,

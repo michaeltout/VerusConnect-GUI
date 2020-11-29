@@ -104,7 +104,7 @@ export const CurrenciesCardRender = (
       ) : verusCoins.length == 0 ? (
         <a
           href="#"
-          style={{ color: "rgb(78,115,223)" }}
+          style={{ color: "rgb(49, 101, 212)" }}
           onClick={openAddCoinModal}
         >
           {"Add VRSCTEST to discover new currencies!"}

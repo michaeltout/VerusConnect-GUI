@@ -41,7 +41,7 @@ export default {
   },
   topBarMenuItem: {
     backgroundColor: "rgba(78,115,223,0)",
-    color: "rgb(78,115,223)",
+    color: "rgb(49, 101, 212)",
     borderWidth: 0,
     height: "100%",
   },
@@ -61,7 +61,7 @@ export default {
     marginTop: -1,
     zIndex: 1,
     minHeight: 20,
-    backgroundColor: "rgb(78,115,223)"
+    backgroundColor: "rgb(49, 101, 212)"
   },
   secondaryTabBarInnerContainer: {
     padding: 0
@@ -69,7 +69,7 @@ export default {
   secondaryTabBar: {
     padding: 0,
     paddingRight: 0,
-    backgroundColor: "rgb(78,115,223)",
+    backgroundColor: "rgb(49, 101, 212)",
     marginTop: "-1px"
   },
   secondaryTabBarLinksContainer: { 

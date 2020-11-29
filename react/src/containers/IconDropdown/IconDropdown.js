@@ -4,7 +4,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
-
 class IconDropdown extends React.Component {
   constructor(props) {
     super(props);
@@ -34,7 +33,7 @@ class IconDropdown extends React.Component {
 
   render() {
     const { handleClose, handleClick, props, state, handleMenuItemClick } = this
-    const { items, getItem, dropdownIconComponent } = props
+    const { items, getItem, dropdownIconComponent, size } = props
     const { anchorEl } = state
     
     return (
@@ -43,6 +42,7 @@ class IconDropdown extends React.Component {
           aria-label="more"
           aria-haspopup="true"
           onClick={handleClick}
+          size={size ? size : "medium"}
         >
           { dropdownIconComponent }
         </IconButton>
@@ -70,7 +70,8 @@ IconDropdown.propTypes = {
   items: PropTypes.array,
   getItem: PropTypes.func,
   dropdownIconComponent: PropTypes.element.isRequired,
-  onSelect: PropTypes.func.isRequired
+  onSelect: PropTypes.func.isRequired,
+  size: PropTypes.string
 };
 
 export default IconDropdown

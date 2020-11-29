@@ -72,7 +72,7 @@ export const DashboardRender = function() {
           <a
             className="card-link text-right"
             href="#"
-            style={{ fontSize: 14, color: "rgb(78,115,223)" }}
+            style={{ fontSize: 14, color: "rgb(49, 101, 212)" }}
             onClick={this.openProfileSettings}
           >
             {"Profile Settings"}
@@ -90,7 +90,7 @@ export const DashboardRender = function() {
           <a
             href="#"
             style={{
-              color: "rgb(78,115,223)",
+              color: "rgb(49, 101, 212)",
               paddingTop: 8,
               display: "block"
             }}

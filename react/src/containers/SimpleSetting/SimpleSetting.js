@@ -38,8 +38,8 @@ class SimpleSetting extends React.Component {
                 onChange: (e) => handleChange(name, e.target.checked),
                 disabled
               }}
-              colorChecked="rgb(78,115,223)"
-              colorUnchecked="rgb(78,115,223)"
+              colorChecked="rgb(49, 101, 212)"
+              colorUnchecked="rgb(49, 101, 212)"
             />
           );
         case NUMBER_INPUT:

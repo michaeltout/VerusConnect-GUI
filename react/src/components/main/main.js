@@ -20,6 +20,10 @@ import SplashScreen from '../../containers/SplashScreen/SplashScreen'
 import SnackbarAlert from '../snackbarAlert/snackbarAlert'
 import { newSnackbar, setConfigParams } from '../../actions/actionCreators'
 import TextDialog from '../../containers/TextDialog/TextDialog';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { ThemeProvider } from '@material-ui/core';
+import MainTheme from '../../styles/themes/main'
+//import { getCurrencyConversionPaths } from '../../util/api/wallet/walletCalls';
 
 class Main extends React.Component {
   constructor(props) {
@@ -185,25 +189,32 @@ class Main extends React.Component {
     /*window.printStore = () => {
       console.log(Store.getState());
     };*/
+
+    // window.getConversions = async (src, dest) => {
+    //   return await getCurrencyConversionPaths('native', 'VRSCTEST', src, dest)
+    // }
   }
 
   render() {
     if (staticVar) {
       return (
-        <div className="main-container">
-          <SnackbarAlert />
-          {this.props.textdialog.open && (
-            <TextDialog {...this.props.textdialog} />
-          )}
-          <Modal />
-          {this.state.initializing ? (
-            <SplashScreen />
-          ) : this.props.mainPathArray[0] === POST_AUTH ? (
-            <PostAuth />
-          ) : (
-            <PreAuth />
-          )}
-        </div>
+        <ThemeProvider theme={MainTheme}>
+          <CssBaseline />
+          <div className="main-container">
+            <SnackbarAlert />
+            {this.props.textdialog.open && (
+              <TextDialog {...this.props.textdialog} />
+            )}
+            <Modal />
+            {this.state.initializing ? (
+              <SplashScreen />
+            ) : this.props.mainPathArray[0] === POST_AUTH ? (
+              <PostAuth />
+            ) : (
+              <PreAuth />
+            )}
+          </div>
+        </ThemeProvider>
       );
     } else {
       return null;

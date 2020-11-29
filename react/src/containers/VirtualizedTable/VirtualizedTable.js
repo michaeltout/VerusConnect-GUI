@@ -27,6 +27,10 @@ const styles = theme => ({
       backgroundColor: theme.palette.grey[200],
     },
   },
+  shadedTableRow: {
+    backgroundColor: theme.palette.grey[300],
+    border: 'none'
+  },
   tableCell: {
     flex: 1,
   },
@@ -42,10 +46,11 @@ class MuiVirtualizedTable extends React.PureComponent {
   };
 
   getRowClassName = ({ index }) => {
-    const { classes, onRowClick } = this.props;
+    const { classes, onRowClick, shadeEvens } = this.props;
 
     return clsx(classes.tableRow, classes.flexContainer, {
       [classes.tableRowHover]: index !== -1 && onRowClick != null,
+      [classes.shadedTableRow]: shadeEvens && index % 2 == 0
     });
   };
 
@@ -134,7 +139,8 @@ MuiVirtualizedTable.propTypes = {
   headerHeight: PropTypes.number,
   onRowClick: PropTypes.func,
   rowHeight: PropTypes.number,
-  tableRef: PropTypes.func
+  tableRef: PropTypes.func,
+  shadeEvens: PropTypes.bool
 };
 
 export const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);

@@ -14,7 +14,7 @@ export const GeneralSettingsRender = function() {
           <div className="card border rounded-0">
             <CustomTabBar 
               tabs={tabs}
-              color="rgb(78,115,223)"
+              color="rgb(49, 101, 212)"
               activeTab={activeTab}
               handleTabChange={handleTabChange}
               tabProps={{

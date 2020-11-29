@@ -70,9 +70,9 @@ export const SetupRenderChoices = function() {
         type="button"
         style={{
           fontSize: 14,
-          backgroundColor: "rgb(78,115,223)",
+          backgroundColor: "rgb(49, 101, 212)",
           borderWidth: 1,
-          borderColor: "rgb(78,115,223)"
+          borderColor: "rgb(49, 101, 212)"
         }}
         onClick={ this.toggleSeedGenerator }
       >
