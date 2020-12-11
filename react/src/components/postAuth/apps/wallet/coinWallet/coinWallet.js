@@ -30,7 +30,8 @@ import {
   APPS,
   MULTIVERSE,
   API_GET_CURRENCY_DATA_MAP,
-  BASIC_MODAL
+  BASIC_MODAL,
+  API_GET_RESERVE_TRANSFERS
 } from '../../../../../util/constants/componentConstants'
 import { setUserPreferredCurrency, newSnackbar, setMainNavigationPath } from '../../../../../actions/actionCreators'
 
@@ -46,6 +47,7 @@ const CONDITIONAL_UPDATES = [
   API_GET_FIATPRICE,
   API_GET_INFO,
   API_GET_CURRENCY_DATA_MAP,
+  API_GET_RESERVE_TRANSFERS
 ];
 
 class CoinWallet extends React.Component {

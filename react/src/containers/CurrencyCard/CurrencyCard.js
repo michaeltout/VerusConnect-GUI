@@ -449,8 +449,8 @@ class CurrencyCard extends React.Component {
                       status === "pending"
                         ? "#878787" /* GRAY */
                         : status === "failed"
-                        ? "rgb(236,43,43)" /* RED */
-                        : "rgb(0,178,26)" /* GREEN */,
+                        ? "rgb(212, 49, 62)" /* RED */
+                        : "rgb(74, 166, 88)" /* GREEN */,
                     flex: 1,
                     textAlign: "right",
                   }}
@@ -906,7 +906,7 @@ class CurrencyCard extends React.Component {
                         blacklisted ? "Unblock Currency" : "Block Currency"
                       }
                       disabled={loadingCurrencyLists}
-                      backgroundColor={"rgb(236,43,43)"}
+                      backgroundColor={"rgb(212, 49, 62)"}
                       onClick={
                         blacklisted
                           ? () => this.unBlacklistCurrency()
@@ -919,7 +919,7 @@ class CurrencyCard extends React.Component {
                     <CustomButton
                       title={whitelisted ? "Remove Currency" : "Add Currency"}
                       disabled={blacklisted || loadingCurrencyLists}
-                      backgroundColor={"rgb(0,178,26)"}
+                      backgroundColor={"rgb(74, 166, 88)"}
                       onClick={
                         whitelisted
                           ? () => this.unWhitelistCurrency()

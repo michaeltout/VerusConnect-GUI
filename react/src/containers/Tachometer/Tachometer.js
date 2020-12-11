@@ -31,10 +31,10 @@ function Tachometer(props) {
       injectSvg={() => (
         <defs>
           <linearGradient id="gradient1">
-            <stop offset="0%" stopColor="rgb(0,178,26)" />
+            <stop offset="0%" stopColor="rgb(74, 166, 88)" />
             <stop offset="45%" stopColor="#ffb961" />
             <stop offset="55%" stopColor="#ffb961" />
-            <stop offset="100%" stopColor="rgb(236,43,43)" />
+            <stop offset="100%" stopColor="rgb(212, 49, 62)" />
           </linearGradient>
         </defs>
       )}

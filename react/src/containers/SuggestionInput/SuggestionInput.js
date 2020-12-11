@@ -19,7 +19,11 @@ class SuggestionInput extends React.Component {
       helperText,
       inputProps,
       renderOption,
-      getOptionLabel
+      getOptionLabel,
+      size,
+      disabled,
+      freeSolo,
+      grouped
     } = this.props;
 
     //TODO: Solve warning/error in console where if option for getOptionLabel
@@ -27,14 +31,15 @@ class SuggestionInput extends React.Component {
 
     return (
       <Autocomplete
-        freeSolo
+        freeSolo={freeSolo == null ? true : freeSolo}
         style={containerStyle}
         options={items}
-        groupBy={() => "Suggestions:"}
+        groupBy={grouped == null || grouped == true ? () => "Suggestions:" : null}
         onChange={(event, value) => onChange({target: {name, value: value == null ? '' : value}})}
         renderOption={renderOption}
         getOptionLabel={getOptionLabel == null ? option => option : getOptionLabel}
         value = { this.props.value }
+        disabled={disabled}
         renderInput={params => (
           <TextField
             {...params}
@@ -42,9 +47,16 @@ class SuggestionInput extends React.Component {
             helperText={helperText}
             label={label}
             variant="outlined"
-            onChange={(event) => onChange({target: {name, value: event.target.value}})}
+            onChange={
+              freeSolo == null || freeSolo
+                ? (event) =>
+                    onChange({ target: { name, value: event.target.value } })
+                : () => {}
+            }
             style={{ width: "100%" }}
             InputProps={inputProps}
+            disabled={disabled}
+            size={size}
           />
         )}
       />
@@ -63,7 +75,9 @@ SuggestionInput.propTypes = {
   helperText: PropTypes.string,
   inputProps: PropTypes.object,
   renderOption: PropTypes.func,
-  getOptionLabel: PropTypes.func
+  getOptionLabel: PropTypes.func,
+  size: PropTypes.string,
+  grouped: PropTypes.bool
 };
 
 export default SuggestionInput

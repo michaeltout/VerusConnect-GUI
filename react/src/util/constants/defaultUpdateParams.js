@@ -22,7 +22,8 @@ import {
   API_GET_CPU_TEMP,
   API_GET_CPU_LOAD,
   API_GET_SYS_TIME,
-  API_GET_CURRENTSUPPLY
+  API_GET_CURRENTSUPPLY,
+  API_GET_RESERVE_TRANSFERS
 } from './componentConstants'
 
 /**
@@ -168,6 +169,58 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           busy: false,
           location_restrictions: [`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`],
           location_and_type_restrictions: [/*['@post_auth/apps/mining/dashboard', IS_PBAAS], */['@post_auth/apps/', IS_VERUS]]
+        },
+        interval_info: {
+          expire_id: null,
+          update_expired_id: null,
+          expire_oncomplete: null,
+          update_expired_oncomplete: null,
+          expire_timeout: 60000,
+          update_expired_interval: 10000,
+        }
+      }
+    },
+
+    [API_GET_RESERVE_TRANSFERS]: {
+      restrictions: [], 
+      pre_data: {
+        tracking_info: {
+          needs_update: false,
+          busy: false,
+          location_restrictions: [],
+          location_and_type_restrictions: []
+        },
+        interval_info: {
+          expire_id: null,
+          update_expired_id: null,
+          expire_oncomplete: null,
+          update_expired_oncomplete: null,
+          expire_timeout: NEVER_ACTIVATED,
+          update_expired_interval: NEVER_ACTIVATED
+        }
+      },
+      syncing: {
+        tracking_info: {
+          needs_update: true,
+          busy: false,
+          location_restrictions: [],
+          location_and_type_restrictions: [[`@post_auth`, IS_PBAAS_ROOT]]
+        },
+        interval_info: {
+          expire_id: null,
+          update_expired_id: null,
+          expire_oncomplete: null,
+          update_expired_oncomplete: null,
+          expire_timeout: 60000,
+          update_expired_interval: 10000,
+        }
+      },
+      post_sync: {
+        tracking_info: {
+          needs_update: true,
+          busy: false,
+          location_restrictions: [],
+          location_and_type_restrictions: [[`@post_auth`, IS_PBAAS_ROOT]]
         },
         interval_info: {
           expire_id: null,

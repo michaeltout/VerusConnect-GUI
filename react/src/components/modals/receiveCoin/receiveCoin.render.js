@@ -122,9 +122,6 @@ export const ReceiveAddressTableRender = function() {
     <div style={{ height: '100%', width: '100%' }}>
       <VirtualizedTable
         shadeEvens
-        style={{
-
-        }}
         rowCount={displayAddresses.length}
         tableRef={ el => { this.table = el; } }
         rowGetter={({ index }) => displayAddresses[index]}

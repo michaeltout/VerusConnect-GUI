@@ -147,7 +147,7 @@ export const SplitModalRender = function(content) {
                     <a
                       key={index}
                       href="#"
-                      onClick={() => shell.openExternal(x.url)}
+                      onClick={() => x.onClick()}
                       style={{
                         color: "white",
                         fontWeight: 400,
@@ -188,7 +188,7 @@ export const SplitModalRender = function(content) {
                 alignItems: "center",
               }}
             >
-              <div style={{ fontSize: 16, paddingBottom: 2, marginRight: 2 }}>
+              <div style={{ fontSize: 16, paddingBottom: 2, marginRight: 2, zIndex: 100 }}>
                 {"Close"}
               </div>
               <CloseIcon />

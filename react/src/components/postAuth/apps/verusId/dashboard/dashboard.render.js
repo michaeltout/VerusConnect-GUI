@@ -725,9 +725,9 @@ export const DashboardRenderIds = function() {
                         onClick={() => this.openRevokeDialogue(idObj)}
                         style={{
                           fontSize: 10,
-                          backgroundColor: "rgb(236,43,43)",
+                          backgroundColor: "rgb(212, 49, 62)",
                           borderWidth: 1,
-                          borderColor: "rgb(236,43,43)",
+                          borderColor: "rgb(212, 49, 62)",
                           fontWeight: "bold"
                         }}
                       >
@@ -751,9 +751,9 @@ export const DashboardRenderIds = function() {
                       }
                       style={{
                         fontSize: 10,
-                        backgroundColor: "rgb(0,178,26)",
+                        backgroundColor: "rgb(74, 166, 88)",
                         borderWidth: 1,
-                        borderColor: "rgb(0,178,26)",
+                        borderColor: "rgb(74, 166, 88)",
                         fontWeight: "bold"
                       }}
                     >

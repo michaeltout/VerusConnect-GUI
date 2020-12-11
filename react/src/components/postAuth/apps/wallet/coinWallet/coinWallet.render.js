@@ -22,7 +22,9 @@ import {
   INTEREST_BALANCE,
   REJECTED_CONFIRMATIONS,
   PUBLIC_BALANCE,
-  SPLIT_MODAL
+  SPLIT_MODAL,
+  CONVERT_CURRENCY,
+  SIMPLE_CONVERSION
 } from "../../../../../util/constants/componentConstants";
 import { VirtualizedTable } from '../../../../../containers/VirtualizedTable/VirtualizedTable'
 import { TX_TYPES } from '../../../../../util/txUtils/txRenderUtils'
@@ -515,7 +517,7 @@ export const WalletRenderBalances = function() {
                       style={{
                         display: "flex",
                         justifyContent: "flex-start",
-                        flexWrap: "wrap"
+                        flexWrap: "wrap",
                       }}
                     >
                       <Tooltip
@@ -560,11 +562,11 @@ export const WalletRenderBalances = function() {
                               backgroundColor:
                                 balanceTag === INTEREST_BALANCE
                                   ? "rgb(49, 101, 212)"
-                                  : "rgb(236,43,43)",
+                                  : "rgb(212, 49, 62)",
                               borderColor:
                                 balanceTag === INTEREST_BALANCE
                                   ? "rgb(49, 101, 212)"
-                                  : "rgb(236,43,43)",
+                                  : "rgb(212, 49, 62)",
                               visibility:
                                 sendable != null && !sendable
                                   ? "hidden"
@@ -614,11 +616,16 @@ export const WalletRenderBalances = function() {
                             type="button"
                             name={RECEIVE_COIN}
                             onClick={(e) =>
-                              this.openModal(null, { balanceTag }, RECEIVE_COIN, SPLIT_MODAL)
+                              this.openModal(
+                                null,
+                                { balanceTag },
+                                RECEIVE_COIN,
+                                SPLIT_MODAL
+                              )
                             }
                             style={{
-                              backgroundColor: "rgb(0,178,26)",
-                              borderColor: "rgb(0,178,26)",
+                              backgroundColor: "rgb(74, 166, 88)",
+                              borderColor: "rgb(74, 166, 88)",
                               visibility:
                                 receivable != null && !receivable
                                   ? "hidden"
@@ -655,21 +662,9 @@ export const WalletRenderBalances = function() {
                               onClick={(e) =>
                                 this.openModal(
                                   null,
-                                  {
-                                    balanceTag,
-                                    fund: false,
-                                    isMessage: false,
-                                    isConversion: true,
-                                    currencyInfo: this.state.currencyInfo,
-                                    conversionGraph: this.props
-                                      .currencyConversionGraph[currency],
-                                    calculateCurrencyData: (currency) =>
-                                      this.calculateCurrencyData(
-                                        this.props,
-                                        currency
-                                      ),
-                                  },
-                                  SEND_COIN
+                                  { selectedMode: SIMPLE_CONVERSION },
+                                  CONVERT_CURRENCY,
+                                  SPLIT_MODAL
                                 )
                               }
                               style={{
@@ -739,9 +734,9 @@ export const WalletRenderOperations = function() {
                       fontWeight: "bold",
                       color:
                         rowData.status === API_SUCCESS
-                          ? "rgb(0,178,26)"
+                          ? "rgb(74, 166, 88)"
                           : rowData.status === API_FAILED
-                          ? "rgb(236,43,43)"
+                          ? "rgb(212, 49, 62)"
                           : "#f8bb86"
                     }}
                   >

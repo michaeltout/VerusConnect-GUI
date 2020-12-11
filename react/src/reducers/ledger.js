@@ -17,12 +17,14 @@ import {
   SET_COIN_CURRENTSUPPLY,
   SET_COIN_BLOCKREWARD,
   SET_COIN_ALL_CURRENCIES,
-  SET_COIN_CURRENCY_DATA_MAP
+  SET_COIN_CURRENCY_DATA_MAP,
+  SET_COIN_RESERVE_TRANSFERS
 } from '../util/constants/storeType'
 
 export const ledger = (state = {
   balances: {},
   transactions: {},
+  reserveTransfers: {},
   info: {},
   addresses: {},
   miningInfo: {},
@@ -94,6 +96,11 @@ export const ledger = (state = {
       return {
         ...state,
         transactions: {...state.transactions, [action.chainTicker]: action.transactions}
+      };
+    case SET_COIN_RESERVE_TRANSFERS:
+      return {
+        ...state,
+        reserveTransfers: {...state.reserveTransfers, [action.chainTicker]: action.transfers}
       };
     case SET_COIN_INFO:
       return {

@@ -196,8 +196,8 @@ export const DashboardRenderTable = function() {
                   style={
                     portfolioItem.balanceFiat && (portfolioItem.priceChange7d != null)
                       ? portfolioItem.priceChange7d > 0
-                        ? { color: "rgb(0,178,26)" }
-                        : { color: "rgb(236,43,43)" }
+                        ? { color: "rgb(74, 166, 88)" }
+                        : { color: "rgb(212, 49, 62)" }
                       : {}
                   }
                 >
@@ -253,8 +253,8 @@ export const DashboardRenderSpotPrices = function() {
                   style={{
                     color: portfolioItem.priceChange7d
                       ? portfolioItem.priceChange7d > 0
-                        ? "rgb(0,178,26)"
-                        : "rgb(236,43,43)"
+                        ? "rgb(74, 166, 88)"
+                        : "rgb(212, 49, 62)"
                       : "rgb(0,0,0)",
                     marginLeft: 34,
                     fontSize: 16
