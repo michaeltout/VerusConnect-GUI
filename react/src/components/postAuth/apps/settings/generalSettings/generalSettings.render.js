@@ -41,9 +41,9 @@ export const GeneralSettingsOptionsRender = function() {
     <div className="card-body">
       {Object.keys(configTypes).map(settingKey => {
         //TODO: Use info as tooltip
-        const { type, displayName, options, info } = configTypes[settingKey]
+        const { type, displayName, options, info, hidden } = configTypes[settingKey]
 
-        return (
+        return hidden ? null : (
           <React.Fragment>
             <SimpleSetting
               name={ settingKey }

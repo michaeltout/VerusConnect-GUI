@@ -14,7 +14,7 @@ export const ConversionOverviewRender = function() {
 }
 
 export const ConversionOverviewMainRender = function() {
-  const { reserveTransfers } = this.props
+  const { reserveTransfers, activeCoin } = this.props
 
   return (
     <div
@@ -40,8 +40,17 @@ export const ConversionOverviewMainRender = function() {
           value={this.state.transferSearchTerm}
         />
       </div>
-      <div style={{ marginTop: 10, flex: 1, border: "1px solid #E0E0E0" }}>
-        {ConversionTableRender.call(this)}
+      <div style={{ marginTop: 10, flex: 1, height: "100%", border: "1px solid #E0E0E0" }}>
+        {reserveTransfers.length > 0 ? (
+          ConversionTableRender.call(this)
+        ) : (
+          <div>
+            {`No currency conversions found.`}
+            <div
+              style={{ marginTop: 16 }}
+            >{`Any conversions you have made since starting ${activeCoin.id} will show here. If you just made one, it may take a few minutes to appear.`}</div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -53,7 +62,7 @@ export const ConversionTableRender = function() {
   const ref = this
 
   return (
-    <div style={{ height: ((50 * displayTransfers.length) + 50), width: '100%' }}>
+    <div style={{ height: 470, width: '100%' }}>
       <VirtualizedTable
         rowCount={displayTransfers.length}
         tableRef={ el => { this.table = el; } }
@@ -141,23 +150,15 @@ export const ConversionTableRender = function() {
             dataKey: 'status',
           },
           {
-            width: 175,
+            width: 125,
             cellDataGetter: ({ rowData }) => {
-              return (
-                <div
-                  style={{
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    width: "100%",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {rowData.tx && rowData.tx.confirmations > 0
+              const time = rowData.tx && rowData.tx.confirmations > 0
                     ? timeConverter(rowData.tx.blocktime)
-                    : "-"}
-                </div>
-              );
+                    : null
+
+              return time ? time : '-'
             },
+            flexGrow: 1,
             label: 'Time',
             dataKey: 'time',
           },

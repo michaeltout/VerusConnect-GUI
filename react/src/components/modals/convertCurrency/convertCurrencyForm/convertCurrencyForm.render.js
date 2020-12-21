@@ -628,8 +628,7 @@ export const ConvertCurrencyFormAdvancedRender = function() {
                 <h5
                   style={{
                     fontWeight: "bold",
-                    fontSize: 18,
-                    marginBottom: 2
+                    fontSize: 18
                   }}
                 >
                   {`Output ${index + 1}`}
