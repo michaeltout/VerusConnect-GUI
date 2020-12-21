@@ -1,4 +1,4 @@
-const { shell } = window.require('electron');
+const { shell } = window.electron
 import React from 'react';
 import { SELECT_PROFILE, CREATE_PROFILE, UNLOCK_PROFILE } from '../../util/constants/componentConstants';
 import CreateProfile from './createProfile/createProfile'

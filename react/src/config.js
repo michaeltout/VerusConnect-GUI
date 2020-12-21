@@ -1,7 +1,7 @@
 import {
   testConfig
 } from './util/testutil/testConfig'
-const { remote } = window.require('electron')
+const { remote } = window.electron
 
 const mainWindow = remote.getGlobal('app');
 

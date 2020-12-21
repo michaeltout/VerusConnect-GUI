@@ -11,7 +11,7 @@ import {
   SIMPLE_CONVERSION,
   TEST_CHAINS,
 } from "../../../util/constants/componentConstants";
-const { shell } = window.require('electron');
+const { shell } = window.electron
 
 class ConvertCurrency extends React.Component {
   constructor(props) {

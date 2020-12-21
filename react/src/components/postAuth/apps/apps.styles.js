@@ -78,13 +78,16 @@ export default {
   sideBarContainer: { 
     marginLeft: 0, 
     width: "100%",
-    flexWrap: "nowrap"
+    flexWrap: "nowrap",
+    height: "94%"
   },
   sideBarInnerContainer: { 
     backgroundColor: "#ffffff", 
     padding: 0, 
     paddingTop: 8,
-    position: "initial"
+    paddingBottom: 24,
+    position: "initial",
+    height: '100%'
   },
   sideBarContainerScroller: { 
     overflowY: "scroll" 
