@@ -41,6 +41,10 @@ class ConvertCurrency extends React.Component {
 
   }
 
+  componentWillUnmount() {
+    this.props.setModalLinks([])
+  }
+
   setLoading(status, text) {
     this.setState({
       loadingText: status ? text : null,

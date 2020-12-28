@@ -115,6 +115,10 @@ class ReceiveCoin extends React.Component {
       this.updateModalButtons(this.props);
   }
 
+  componentWillUnmount() {
+    this.props.setModalIcon(null)
+  }
+
   updateModalButtons(props) {
     let modalButtons = []
 
