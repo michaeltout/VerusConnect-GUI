@@ -143,6 +143,11 @@ export const LINEAR_DECAY = 100000000
 export const MIN_BILLING_PERIOD = 480
 export const FORM_TITLES = ['NAME', 'LAUNCH_OPTIONS', 'REWARD_STRUCTURE', 'BILLING', 'NODES', 'CONFIRM']
 
+// Currency Conversion Overview
+export const COPY_TRANSFER_TXID = 'Copy Transaction ID'
+export const MORE_INFO = "More Info"
+export const VIEW_TRANSFER_ON_EXPLORER = 'View on Explorer'
+
 // Add coin and login modal and screen
 export const SEED_TRIM_TIMEOUT = 5000
 export const DEFAULT_CHAIN = "defaultChain.png"

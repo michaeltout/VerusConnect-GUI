@@ -37,8 +37,7 @@ export const ledger = (state = {
   currentSupply: {},
   blockReward: {},
   currencyDataMap: {},
-  multiverseNameMap: {},
-  currencyConversionGraph: {}
+  multiverseNameMap: {}
 }, action) => {
   switch (action.type) {
     case DEACTIVATE_COIN:
@@ -57,8 +56,7 @@ export const ledger = (state = {
         blockReward,
         allCurrencies,
         currencyDataMap,
-        multiverseNameMap,
-        currencyConversionGraph
+        multiverseNameMap
       } = state
       let newLedger = {
         balances,
@@ -75,8 +73,7 @@ export const ledger = (state = {
         blockReward,
         allCurrencies,
         currencyDataMap,
-        multiverseNameMap,
-        currencyConversionGraph
+        multiverseNameMap
       }
 
       Object.keys(newLedger).map(infoType => {
@@ -189,11 +186,7 @@ export const ledger = (state = {
             ...state.multiverseNameMap[action.chainTicker],
             ...action.dataMap.currencyNames,
           },
-        },
-        currencyConversionGraph: {
-          ...state.currencyConversionGraph,
-          [action.chainTicker]: action.conversionGraph,
-        },
+        }
       };
     default:
       return state;

@@ -396,17 +396,8 @@ export const WalletRenderBalances = function() {
           balance,
           balanceFiat,
           sendable,
-          receivable,
-          currency
+          receivable
         } = balanceObj;
-
-        /*const balanceTag = balanceChain === RESERVE_BALANCE
-        ? RESERVE_BALANCE
-        : balanceAddrType === PRIVATE_BALANCE
-        ? PRIVATE_BALANCE
-        : balanceType === CONFIRMED_BALANCE
-        ? TRANSPARENT_BALANCE
-        : balanceType*/
 
         const balanceTag =
           balanceAddrType === PRIVATE_BALANCE
@@ -418,15 +409,6 @@ export const WalletRenderBalances = function() {
             : balanceType === INTEREST_BALANCE
             ? INTEREST_BALANCE
             : null;
-
-        const isConvertableBalance =
-          balanceTag === TRANSPARENT_BALANCE &&
-          this.props.currencyConversionGraph[currency] != null &&
-          (this.props.currencyConversionGraph[currency].to.length > 0 ||
-            this.props.currencyConversionGraph[currency].from.length > 0) &&
-          this.state.currencyInfo != null &&
-          (this.state.currencyInfo.spendableTo ||
-            this.state.currencyInfo.spendableFrom);
 
         return balanceTag == null ? null : (
           <div
@@ -647,47 +629,6 @@ export const WalletRenderBalances = function() {
                           </button>
                         </span>
                       </Tooltip>
-                      {isConvertableBalance && (
-                        <Tooltip title="Convert">
-                          <span
-                            style={{
-                              marginTop: 8,
-                              marginRight: 8,
-                            }}
-                          >
-                            <button
-                              className="btn btn-primary"
-                              type="button"
-                              name={SEND_COIN}
-                              onClick={(e) =>
-                                this.openModal(
-                                  null,
-                                  { selectedMode: SIMPLE_CONVERSION },
-                                  CONVERT_CURRENCY,
-                                  SPLIT_MODAL
-                                )
-                              }
-                              style={{
-                                backgroundColor: "rgb(49, 101, 212)",
-                                borderColor: "rgb(49, 101, 212)",
-                                fontSize: 18,
-                                borderWidth: 1,
-                                fontWeight: "bold",
-                                alignItems: "center",
-                                display: "flex",
-                                justifyContent: "flex-start",
-                                paddingLeft: 8,
-                                minWidth: 80,
-                              }}
-                            >
-                              <ShuffleIcon fontSize="inherit" />
-                              <div style={{ fontSize: 12, marginLeft: 8 }}>
-                                Convert
-                              </div>
-                            </button>
-                          </span>
-                        </Tooltip>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -816,7 +757,11 @@ export const WalletRenderCurrencyFunctions = function() {
             >
               <MenuItem value={-1}>{coin}</MenuItem>
               {whitelist.map((currency, index) => {
-                return <MenuItem key={index} value={index}>{currency}</MenuItem>;
+                return (
+                  <MenuItem key={index} value={index}>
+                    {currency}
+                  </MenuItem>
+                );
               })}
             </Select>
           </FormControl>
@@ -825,6 +770,37 @@ export const WalletRenderCurrencyFunctions = function() {
           >
             <HelpIcon color="primary" style={{ marginLeft: 16 }} />
           </Tooltip>
+        </WalletPaper>
+        <WalletPaper
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flex: 1,
+            justifyContent: "space-between",
+          }}
+        >
+          <CustomButton
+            onClick={(e) =>
+              this.openModal(
+                null,
+                {
+                  selectedMode: SIMPLE_CONVERSION,
+                  selectedCurrency,
+                },
+                CONVERT_CURRENCY,
+                SPLIT_MODAL
+              )
+            }
+            title={"Convert Currencies"}
+            backgroundColor={"#3165D4"}
+            textColor={"white"}
+            buttonProps={{
+              size: "large",
+              color: "default",
+              variant: "outlined",
+              style: { width: "100%", height: "100%" },
+            }}
+          />
         </WalletPaper>
         <WalletPaper
           style={{
@@ -849,27 +825,6 @@ export const WalletRenderCurrencyFunctions = function() {
             value={this.state.currencySearchTerm}
           />
         </WalletPaper>
-        <WalletPaper
-          style={{
-            display: "flex",
-            alignItems: "center",
-            flex: 1,
-            justifyContent: "space-between",
-          }}
-        >
-          <CustomButton
-            onClick={this.openMultiverse}
-            title={"Discover Currencies"}
-            backgroundColor={"white"}
-            textColor={"unset"}
-            buttonProps={{
-              size: "large",
-              color: "default",
-              variant: "outlined",
-              style: { width: "100%", height: "100%" },
-            }}
-          />
-        </WalletPaper>
       </WalletPaper>
       {coin === "VRSCTEST" && (
         <WalletPaper
@@ -880,7 +835,7 @@ export const WalletRenderCurrencyFunctions = function() {
             justifyContent: "center",
           }}
         >
-          <Typography style={{ fontWeight: "bold", textAlign: 'center' }}>
+          <Typography style={{ fontWeight: "bold", textAlign: "center" }}>
             {
               "Warning: All testnet coins/currencies have no value and will disappear whenever VRSCTEST is reset"
             }

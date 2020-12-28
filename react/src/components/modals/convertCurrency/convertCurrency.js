@@ -11,7 +11,7 @@ import {
   SIMPLE_CONVERSION,
   TEST_CHAINS,
 } from "../../../util/constants/componentConstants";
-const { shell } = window.electron
+const { shell } = window.bridge
 
 class ConvertCurrency extends React.Component {
   constructor(props) {
@@ -19,12 +19,14 @@ class ConvertCurrency extends React.Component {
     this.updateModalButtons = this.updateModalButtons.bind(this)
     this.setSelectedMode = this.setSelectedMode.bind(this)
     this.setLoading = this.setLoading.bind(this)
+    this.clearInitCurrency = this.clearInitCurrency.bind(this)
 
     this.state = {
       selectedMode: props.modalProps.mode || SIMPLE_CONVERSION,
       formStep: ENTER_DATA,
       loading: false,
-      loadingText: null
+      loadingText: null,
+      initCleared: false
     };
 
     props.setModalHeader("Convert currencies")
@@ -43,6 +45,12 @@ class ConvertCurrency extends React.Component {
     this.setState({
       loadingText: status ? text : null,
       loading: status ? true : false
+    })
+  }
+
+  clearInitCurrency() {
+    this.setState({
+      initCleared: true
     })
   }
 

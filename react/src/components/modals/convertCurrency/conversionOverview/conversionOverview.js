@@ -4,12 +4,17 @@ import {
   ConversionOverviewRender
 } from './conversionOverview.render';
 import {
-  COPY_PRIVKEY,
-  COPY_PUBKEY,
-  GENERATE_QR,
   CONVERT_CURRENCY,
+  COPY_TRANSFER_TXID,
+  SUCCESS_SNACK,
+  MID_LENGTH_ALERT,
+  VIEW_TRANSFER_ON_EXPLORER,
+  MORE_INFO,
 } from "../../../../util/constants/componentConstants";
 import { timeConverter } from '../../../../util/displayUtil/timeUtils';
+import { copyDataToClipboard } from '../../../../util/copyToClipboard';
+import { newSnackbar } from '../../../../actions/actionCreators';
+const { shell } = window.bridge
 
 class ConversionOverview extends React.Component {
   constructor(props) {
@@ -20,28 +25,24 @@ class ConversionOverview extends React.Component {
     this.selectTransferOption = this.selectTransferOption.bind(this);
     this.clearTransferSearch = this.clearTransferSearch.bind(this);
     this.getStatusString = this.getStatusString.bind(this);
+    this.processTransfers = this.processTransfers.bind(this);
+    this.openExplorerWindow = this.openExplorerWindow.bind(this);
 
     this.state = {
-      reserveTransfers: props.reserveTransfers,
+      reserveTransfers: this.processTransfers(props.reserveTransfers),
       transferSearchTerm: "",
-      transferIndices: {},
+      viewingTransfer: null
     };
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.reserveTransfers != this.props.reserveTransfers) {
       if (this.state.transferSearchTerm.length > 0) {
-        this.filterTransfers(nextProps.reserveTransfers);
+        this.filterTransfers(this.processTransfers(nextProps.reserveTransfers));
       } else {
-        this.setState({ reserveTransfers: nextProps.reserveTransfers });
+        this.setState({ reserveTransfers: this.processTransfers(nextProps.reserveTransfers) });
       }
     }
-  }
-
-  changeTransferIndex(opid, newIndex) {
-    this.setState({
-      transferIndices: { ...this.state.transferIndices, [opid]: newIndex },
-    });
   }
 
   filterTransfers(reserveTransfers) {
@@ -57,14 +58,10 @@ class ConversionOverview extends React.Component {
 
     this.setState({
       reserveTransfers: reserveTransfers.filter((transfer) => {
-        const currentIndex =
-          this.state.transferIndices[transfer.operation.id] == null
-            ? 0
-            : this.state.transferIndices[transfer.operation.id];
-        const to = transfer.to[currentIndex];
-        const from = transfer.from[currentIndex];
-        const via = transfer.via[currentIndex];
-        const params = transfer.operation.params[currentIndex];
+        const to = transfer.to;
+        const from = transfer.from;
+        const via = transfer.via;
+        const params = transfer.operation.params[transfer.index];
 
         if (checkTerm(this.getStatusString(transfer.tx))) return true;
 
@@ -102,23 +99,62 @@ class ConversionOverview extends React.Component {
 
   clearTransferSearch() {
     this.setState({
-      reserveTransfers: this.props.reserveTransfers,
+      reserveTransfers: this.processTransfers(this.props.reserveTransfers),
       transferSearchTerm: "",
     });
   }
 
-  generateTransferOptions(address) {
-    let addressOptions = [GENERATE_QR];
+  generateTransferOptions(transfer) {
+    let options = this.props.activeCoin.options.explorer && transfer.tx != null
+      ? [MORE_INFO, COPY_TRANSFER_TXID, VIEW_TRANSFER_ON_EXPLORER]
+      : transfer.tx != null ? [MORE_INFO, COPY_TRANSFER_TXID] : [MORE_INFO];
 
-    return addressOptions;
+    return options;
   }
 
-  selectTransferOption(address, addrOption) {
-    if (addrOption === COPY_PUBKEY || addrOption === COPY_PRIVKEY) {
-      //this.getKey(address, addrOption)
-    } else if (addrOption === GENERATE_QR) {
-      //this.toggleAddressQr(address)
+  selectTransferOption(transfer, option) {
+    if (option === COPY_TRANSFER_TXID) {
+      copyDataToClipboard(transfer.tx.txid)
+      this.props.dispatch(newSnackbar(SUCCESS_SNACK, `${transfer.tx.txid} copied to clipboard!`, MID_LENGTH_ALERT))
+    } else if (option === VIEW_TRANSFER_ON_EXPLORER) {
+      this.openExplorerWindow(transfer.tx.txid)
+    } else if (option === MORE_INFO) {
+      this.setState({
+        viewingTransfer: transfer
+      })
     }
+  }
+
+  openExplorerWindow = (txid) => {
+    const { explorer } = this.props.activeCoin.options
+    let url;
+
+    if (explorer.includes('/tx/') || explorer.split('/').length - 1 > 2) {
+      url = `${explorer}${txid}`;
+    } else {
+      url = `${explorer}/tx/${txid}`;
+    }
+
+    shell.openExternal(url);
+  }
+
+  processTransfers(transfers) {
+    let newTransfers = []
+
+    transfers.forEach(element => {
+      element.from.forEach((inputCurrency, index) => {
+        newTransfers.push({
+          from: inputCurrency,
+          operation: element.operation,
+          to: element.to[index],
+          via: element.via[index],
+          tx: element.tx,
+          index
+        })
+      })
+    });
+
+    return newTransfers
   }
 
   setInput(e) {

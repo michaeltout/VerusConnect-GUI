@@ -4,14 +4,18 @@ import {
   ConvertCurrencyFormRender
 } from './convertCurrencyForm.render';
 import {
+  ADVANCED_CONVERSION,
   API_GET_RESERVE_TRANSFERS,
   API_SUCCESS,
   CONVERT_CURRENCY,
   ENTER_DATA,
   ERROR_SNACK,
+  INFO_SNACK,
+  MID_LENGTH_ALERT,
   NATIVE,
   SEND_RESULT,
   SIMPLE_CONVERSION,
+  WHITELISTS,
 } from "../../../../util/constants/componentConstants";
 import { getCurrencyConversionPaths, getIdentity, sendCurrency } from '../../../../util/api/wallet/walletCalls';
 import { expireData, newSnackbar } from '../../../../actions/actionCreators';
@@ -22,14 +26,14 @@ class ConvertCurrencyForm extends React.Component {
     this.state = {
       fromAddress: '*',
       outputs: [{
-        currency: null,
+        currency: "",
         amount: 0,
-        convertto: null,
-        via: null,
+        convertto: "",
+        via: "",
         address: "",
-        refundto: null,
-        memo: null,
-        preconvert: null
+        refundto: "",
+        memo: "",
+        preconvert: ""
       }],
       estArrivals: [],
       conversionPaths: {},
@@ -49,24 +53,35 @@ class ConvertCurrencyForm extends React.Component {
     this.confirmSend = this.confirmSend.bind(this)
     this.addOutput = this.addOutput.bind(this)
     this.removeOutput = this.removeOutput.bind(this)
+    this.scrollToOutputBottom = this.scrollToOutputBottom.bind(this)
+
+    this.outputsEnd = null;
   }
 
   async componentDidMount() {
+    if (this.props.initCurrency != null && this.props.mode === SIMPLE_CONVERSION) {
+      this.selectSimpleSourceCurrency(this.props.initCurrency)
+    }
+
     await this.processAddresses()
+  }
+
+  scrollToOutputBottom() {
+    this.outputsEnd.scrollIntoView({ behavior: "smooth" });
   }
 
   resetState() {
     this.setState({
       fromAddress: '*',
       outputs: [{
-        currency: null,
+        currency: "",
         amount: 0,
-        convertto: null,
-        via: null,
+        convertto: "",
+        via: "",
         address: "",
-        refundto: null,
-        memo: null,
-        preconvert: null
+        refundto: "",
+        memo: "",
+        preconvert: ""
       }],
       estArrivals: [],
       conversionPaths: {},
@@ -125,6 +140,12 @@ class ConvertCurrencyForm extends React.Component {
         estArrivals: arrivals,
       });
     }
+
+    if (this.props.mode === ADVANCED_CONVERSION && lastState.outputs.length < this.state.outputs.length) {
+      setTimeout(() => {
+        this.scrollToOutputBottom()
+      }, 0);
+    }
   }
 
   async confirmSend() {
@@ -155,14 +176,14 @@ class ConvertCurrencyForm extends React.Component {
   addOutput() {
     this.setState({
       outputs: [...this.state.outputs, {
-        currency: null,
+        currency: "",
         amount: 0,
-        convertto: null,
-        via: null,
+        convertto: "",
+        via: "",
         address: "",
-        refundto: null,
-        memo: null,
-        preconvert: null
+        refundto: "",
+        memo: "",
+        preconvert: ""
       }]
     })
   }
@@ -194,25 +215,27 @@ class ConvertCurrencyForm extends React.Component {
   async processAddresses() {
     let addrList = []
 
-    for (const x of Object.values(this.props.addresses)) {
-      for (const value of x) {
-        if (value.tag === 'identity' && !value.address.includes("@")) {
-          try {
-            const id = await getIdentity(
-              NATIVE,
-              this.props.modalProps.chainTicker,
-              value.address
-            );
-
-            if (id.msg !== "success")
-              throw new Error("Error processing id for " + value.address);
-
-            addrList.push(id.result.identity.name + "@");
-          } catch (e) {
-            console.error(e)
-            addrList.push(value.address);
-          }
-        } else addrList.push(value.address);
+    if (this.props.addresses) {
+      for (const x of Object.values(this.props.addresses)) {
+        for (const value of x) {
+          if (value.tag === 'identity' && !value.address.includes("@")) {
+            try {
+              const id = await getIdentity(
+                NATIVE,
+                this.props.modalProps.chainTicker,
+                value.address
+              );
+  
+              if (id.msg !== "success")
+                throw new Error("Error processing id for " + value.address);
+  
+              addrList.push(id.result.identity.name + "@");
+            } catch (e) {
+              console.error(e)
+              addrList.push(value.address);
+            }
+          } else addrList.push(value.address);
+        }
       }
     }
 
@@ -225,10 +248,11 @@ class ConvertCurrencyForm extends React.Component {
     this.setState({
       conversionPaths: {},
       selectedConversionPath: null
-    }, () => {
+    }, async () => {
       this.updateOutput("convertto", null)
       this.updateOutput("currency", source)
-      this.fetchConversionPaths(source)
+      await this.fetchConversionPaths(source)
+      this.props.clearInitCurrency()
     })
   }
 
@@ -237,14 +261,18 @@ class ConvertCurrencyForm extends React.Component {
     const response = await getCurrencyConversionPaths(NATIVE, this.props.modalProps.chainTicker, from)
 
     if (response.msg === API_SUCCESS) {
-      let nameMap = {}
-      Object.values(response.result).map(x => {
-        nameMap[x.destination.name] = x.destination.currencyid
-      })
+      if (Object.keys(response.result).length === 0) {
+        this.props.dispatch(newSnackbar(INFO_SNACK, `No possible conversions found from "${from}".`, MID_LENGTH_ALERT))
+      } else {
+        let nameMap = {}
+        Object.values(response.result).map(x => {
+          nameMap[x.destination.name] = x.destination.currencyid
+        })
 
-      this.setState({ conversionPaths: response.result, nameMap })
+        this.setState({ conversionPaths: response.result, nameMap })
+      }
     } else {
-      this.props.dispatch(newSnackbar(ERROR_SNACK, "Error fetching potential conversions!"))
+      this.props.dispatch(newSnackbar(ERROR_SNACK, `Error fetching potential conversions for ${from}!`, MID_LENGTH_ALERT))
     }
 
     this.props.setLoading(false)
@@ -258,9 +286,14 @@ class ConvertCurrencyForm extends React.Component {
 const mapStateToProps = (state) => {
   return {
     modalProps: state.modal[CONVERT_CURRENCY],
-    addresses: state.ledger.addresses[state.modal[CONVERT_CURRENCY].chainTicker],
+    addresses:
+      state.ledger.addresses[state.modal[CONVERT_CURRENCY].chainTicker],
     info: state.ledger.info[state.modal[CONVERT_CURRENCY].chainTicker],
     balances: state.ledger.balances[state.modal[CONVERT_CURRENCY].chainTicker],
+    whitelist:
+      state.localCurrencyLists[WHITELISTS][
+        state.modal[CONVERT_CURRENCY].chainTicker
+      ] || [],
   };
 };
 

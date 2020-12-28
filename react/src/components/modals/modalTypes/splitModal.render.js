@@ -5,7 +5,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 import WalletStyles from "../../postAuth/apps/wallet/wallet.styles";
-const { shell } = window.electron
+const { shell } = window.bridge
 
 export const SplitModalRender = function(content) {
   return (

@@ -16,6 +16,8 @@ import {
   WARNING_SNACK,
   API_GET_CURRENCY_DATA_MAP,
   SEND_COIN,
+  CONVERT_CURRENCY,
+  SPLIT_MODAL,
 } from "../../util/constants/componentConstants";
 import { newSnackbar } from '../../actions/actionCreators';
 import IconDropdown from '../IconDropdown/IconDropdown'
@@ -252,31 +254,14 @@ class CurrencyCard extends React.Component {
 
         const newState = Store.getState()
 
-        openModal(SEND_COIN, {
-          chainTicker,
-          balanceTag: TRANSPARENT_BALANCE,
-          fund: false,
-          isMessage: false,
-          isConversion: true,
-          currencyInfo,
-          inverse: !currencyInfo.preConvert,
-          defaultConversionName: address,
-          conversionGraph:
-            newState.ledger.currencyConversionGraph[chainTicker][
-              currencyInfo.currency.name
-            ],
-          calculateCurrencyData: (currency) =>
-            getCurrencyInfo(
-              newState.ledger.currencyDataMap[chainTicker]
-                ? newState.ledger.currencyDataMap[chainTicker][currency]
-                : null,
-              newState.ledger.info[chainTicker] &&
-                newState.ledger.info[chainTicker].longestchain
-                ? newState.ledger.info[chainTicker].longestchain
-                : -1,
-              newState.ledger.identities[chainTicker]
-            ),
-        });
+        openModal(
+          CONVERT_CURRENCY,
+          {
+            selectedMode: SIMPLE_CONVERSION,
+            selectedCurrency: currencyInfo.currency.name,
+          },
+          SPLIT_MODAL
+        )
 
         this.props.setLock(false)
       }

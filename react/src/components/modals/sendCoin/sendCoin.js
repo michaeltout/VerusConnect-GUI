@@ -31,11 +31,6 @@ class SendCoin extends React.Component {
   constructor(props) {
     super(props);
 
-    const isPreconvert = props.modalProps &&
-    props.modalProps.isConversion &&
-    props.modalProps.currencyInfo &&
-    props.modalProps.currencyInfo.preConvert
-
     props.setModalHeader(
       props.modalProps &&
         props.modalProps.balanceTag &&
@@ -44,7 +39,7 @@ class SendCoin extends React.Component {
         : props.modalProps.currencyInfo &&
           props.modalProps.currencyInfo.currency.name !==
             props.modalProps.chainTicker
-        ? (isPreconvert ? "Pre-Convert Currency" : "Send Currency")
+        ? "Send Currency"
         : "Send Coin"
     );
 
@@ -55,13 +50,10 @@ class SendCoin extends React.Component {
       loadingProgress: 0,
       formData: {},
       continueDisabled: true,
-      sourceOptions: isPreconvert ? props.modalProps.currencyInfo.currency.currencies : [],
-      destinationOptions: isPreconvert ? [props.modalProps.currencyInfo.currency.currencyid] : [],
       selectedSourceIndex: 0,
       selectedDestinationIndex: 0,
       currencyMap: {},
-      loadingCurrencyMap: false,
-      prices: isPreconvert ? props.modalProps.currencyInfo.currency.conversions : [],
+      loadingCurrencyMap: false
     };
 
     this.advanceFormStep = this.advanceFormStep.bind(this)
@@ -72,44 +64,6 @@ class SendCoin extends React.Component {
 
   getFormData(formData) {    
     this.setState({ formData })
-  }
-
-  fetchSupportingCurrencyData() {
-    this.props.setModalLock(true)
-
-    this.setState({ loadingCurrencyMap: true }, async () => {
-      const { sourceOptions, destinationOptions, currencyMap } = this.state
-      const { modalProps } = this.props
-      const currencyIds = [...sourceOptions, ...destinationOptions]
-      let newMap = {}
-
-      for (let i = 0; i < currencyIds.length; i++) {
-        let id = currencyIds[i]
-
-        if (currencyMap[id] == null) {
-          if (modalProps.currencyInfo && (modalProps.currencyInfo.currency.currencyid === id)) {
-            newMap[id] = modalProps.currencyInfo.currency.name
-          } else {
-            const fetchedCurrency = await getCurrency(NATIVE, modalProps.chainTicker, id)
-
-            if (fetchedCurrency.msg !== "success") {
-              this.props.dispatch(
-                newSnackbar(
-                  WARNING_SNACK,
-                  `Couldn't fetch information about all related currencies.`,
-                  MID_LENGTH_ALERT
-                )
-              );
-            } else {
-              newMap[id] = fetchedCurrency.result.name
-            }
-          }
-        }
-      }
-
-      this.props.setModalLock(false)
-      this.setState({ currencyMap: {...currencyMap, ...newMap }, loadingCurrencyMap: false })
-    })
   }
 
   getContinueDisabled(continueDisabled) {
@@ -147,8 +101,6 @@ class SendCoin extends React.Component {
           customFee,
           memo,
           fromCurrencyInfo,
-          toCurrencyInfo,
-          refundAddress,
           mint,
           currencyId
         } = formData;
@@ -165,20 +117,11 @@ class SendCoin extends React.Component {
               Number(customFee),
               memo != null && memo.length > 0 ? memo : undefined,
               {
-                convertto:
-                  toCurrencyInfo != null &&
-                  fromCurrencyInfo != null &&
-                  toCurrencyInfo.currency.name !==
-                    fromCurrencyInfo.currency.name
-                    ? toCurrencyInfo.currency.name
-                    : undefined,
                 currency:
                   fromCurrencyInfo != null
                     ? fromCurrencyInfo.currency.name
                     : undefined,
-                refundto: refundAddress,
-                mintnew: mint,
-                preconvert: toCurrencyInfo != null && toCurrencyInfo.preConvert,
+                mintnew: mint
               }
             );
             break;

@@ -1,5 +1,4 @@
 import {
-  secretToken,
   shieldKey,
   agamaPort,
   apiEncryption

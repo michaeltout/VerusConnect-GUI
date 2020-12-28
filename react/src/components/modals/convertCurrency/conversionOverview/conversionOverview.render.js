@@ -4,11 +4,37 @@ import { VirtualizedTable } from '../../../../containers/VirtualizedTable/Virtua
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import SearchBar from '../../../../containers/SearchBar/SearchBar';
 import { timeConverter } from '../../../../util/displayUtil/timeUtils';
+import OperationInfo from '../../operationInfo/operationInfo';
+import CustomButton from '../../../../containers/CustomButton/CustomButton';
 
 export const ConversionOverviewRender = function() {
   return (
     <div style={{ width: "100%" }}>
-      { ConversionOverviewMainRender.call(this) }
+      {this.state.viewingTransfer != null
+        ? ViewingTransferRender.call(this)
+        : ConversionOverviewMainRender.call(this)}
+    </div>
+  );
+}
+
+export const ViewingTransferRender = function() {
+  return (
+    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <OperationInfo inline operation={this.state.viewingTransfer.operation} />
+      <CustomButton
+        title={"Back"}
+        backgroundColor={"rgb(212, 49, 62)"}
+        textColor={"white"}
+        buttonProps={{
+          size: "large",
+          color: "default",
+          style: { width: 160, marginTop: 8 },
+          flex: 1,
+        }}
+        onClick={() => this.setState({
+          viewingTransfer: null
+        })}
+      />
     </div>
   );
 }
@@ -25,22 +51,31 @@ export const ConversionOverviewMainRender = function() {
         justifyContent: "space-between",
       }}
     >
-      <div className="d-flex justify-content-between">
-        <SearchBar
-          label={"Transfer Search"}
-          placeholder={"Type and press enter"}
-          name="transferSearchTerm"
-          clearable={true}
-          style={{
-            width: 300,
-          }}
-          onChange={this.setInput}
-          onClear={this.clearTransferSearch}
-          onSubmit={() => this.filterTransfers(reserveTransfers)}
-          value={this.state.transferSearchTerm}
-        />
-      </div>
-      <div style={{ marginTop: 10, flex: 1, height: "100%", border: "1px solid #E0E0E0" }}>
+      {reserveTransfers.length > 0 && (
+        <div className="d-flex justify-content-between">
+          <SearchBar
+            label={"Transfer Search"}
+            placeholder={"Type and press enter"}
+            name="transferSearchTerm"
+            clearable={true}
+            style={{
+              width: 300,
+            }}
+            onChange={this.setInput}
+            onClear={this.clearTransferSearch}
+            onSubmit={() => this.filterTransfers(this.processTransfers(reserveTransfers))}
+            value={this.state.transferSearchTerm}
+          />
+        </div>
+      )}
+      <div
+        style={{
+          marginTop: 10,
+          flex: 1,
+          height: "100%",
+          border: reserveTransfers.length > 0 ? "1px solid #E0E0E0" : "none",
+        }}
+      >
         {reserveTransfers.length > 0 ? (
           ConversionTableRender.call(this)
         ) : (
@@ -59,7 +94,6 @@ export const ConversionOverviewMainRender = function() {
 export const ConversionTableRender = function() {
   const { reserveTransfers } = this.state
   const displayTransfers = reserveTransfers
-  const ref = this
 
   return (
     <div style={{ height: 470, width: '100%' }}>
@@ -68,19 +102,15 @@ export const ConversionTableRender = function() {
         tableRef={ el => { this.table = el; } }
         rowGetter={({ index }) => {
           const transfer = displayTransfers[index]
-          const transferIndex =
-            transfer.tx && ref.state.transferIndices[transfer.tx.txid] != null
-              ? ref.state.transferIndices[transfer.tx.txid]
-              : 0;
         
           return {
-            from: transfer.from[transferIndex],
-            to: transfer.to[transferIndex],
-            via: transfer.via[transferIndex],
+            from: transfer.from,
+            to: transfer.to,
+            via: transfer.via,
             tx: transfer.tx,
             operation: {
               ...transfer.operation,
-              params: transfer.operation.params[transferIndex]
+              params: transfer.operation.params[transfer.index]
             }
           }
         }}
@@ -185,7 +215,7 @@ export const ConversionTableRender = function() {
             width: 50,
             flexGrow: 1,
             cellDataGetter: ({ rowData }) => {
-              return ConversionOptionsRender.call(this, rowData.address)
+              return ConversionOptionsRender.call(this, rowData)
             },
             label: 'Options',
             dataKey: 'options',

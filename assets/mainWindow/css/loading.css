@@ -25,6 +25,14 @@ body.agamaMode {
   color: black;
 }
 
+body.instanceErrorWarning {
+  background-color: white;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 body.fetch-bootstrap {
   width: 100%;
   height: 100%;

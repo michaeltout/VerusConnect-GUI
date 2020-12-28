@@ -3,7 +3,7 @@ import React from 'react';
 import CustomButton from '../../../../containers/CustomButton/CustomButton';
 import SuggestionInput from '../../../../containers/SuggestionInput/SuggestionInput';
 import WalletPaper from '../../../../containers/WalletPaper/WalletPaper';
-import { CONFIRM_DATA, CONVERSION_OVERVIEW, ENTER_DATA, SEND_RESULT, SIMPLE_CONVERSION } from '../../../../util/constants/componentConstants';
+import { ADVANCED_CONVERSION, CONFIRM_DATA, CONVERSION_OVERVIEW, ENTER_DATA, SEND_RESULT, SIMPLE_CONVERSION } from '../../../../util/constants/componentConstants';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import { secondsToTime } from '../../../../util/displayUtil/timeUtils';
 import HelpIcon from '@material-ui/icons/Help';
@@ -29,7 +29,9 @@ export const ConvertCurrencyFormRender = function() {
         ? this.props.mode === SIMPLE_CONVERSION
           ? ConvertCurrencyFormSimpleRender.call(this)
           : ConvertCurrencyFormAdvancedRender.call(this)
-        : ConvertCurrencyConfirmRender.call(this)}
+        : this.props.mode === ADVANCED_CONVERSION
+        ? ConvertCurrencyFormAdvancedRender.call(this)
+        : ConvertCurrencyConfirmSimpleRender.call(this)}
     </div>
   );
 }
@@ -98,7 +100,7 @@ export const ConvertCurrencySuccessRender = function() {
   );
 }
 
-export const ConvertCurrencyConfirmRender = function() {
+export const ConvertCurrencyConfirmSimpleRender = function() {
   const output = this.state.outputs[this.state.confirmOutputIndex]
   const price = this.state.conversionPaths[this.state.selectedConversionPath]
     ? this.state.conversionPaths[this.state.selectedConversionPath].price
@@ -304,6 +306,12 @@ export const ConvertCurrencyFormSimpleRender = function() {
   ]
     ? this.state.conversionPaths[this.state.selectedConversionPath].destination
     : this.state.selectedConversionPath;
+  
+  const sources = this.props.whitelist.includes(
+    this.props.modalProps.chainTicker
+  )
+    ? this.props.whitelist
+    : [this.props.modalProps.chainTicker, ...this.props.whitelist];
 
   return (
     <div
@@ -313,6 +321,7 @@ export const ConvertCurrencyFormSimpleRender = function() {
         alignItems: "stretch",
         justifyContent: "space-between",
         height: "100%",
+        marginBottom: 8
       }}
     >
       <div
@@ -341,7 +350,7 @@ export const ConvertCurrencyFormSimpleRender = function() {
             {"Send"}
           </h5>
           <div>{`My Balance: ${
-            currency != null
+            currency != null && this.props.balances != null
               ? currency == this.props.modalProps.chainTicker
                 ? this.props.balances.native.public.confirmed
                 : this.props.balances.reserve[currency]
@@ -366,12 +375,16 @@ export const ConvertCurrencyFormSimpleRender = function() {
             <SuggestionInput
               value={currency}
               name="SendingCurrency"
-              items={["VRSCTEST", "Test2"]}
+              items={sources}
               label="Currency"
               size="small"
               grouped={false}
               freeSolo={false}
-              onChange={(e) => this.selectSimpleSourceCurrency(e.target.value)}
+              onChange={(e) => {
+                if (e.target.value != null && e.target.value.length > 0) {
+                  this.selectSimpleSourceCurrency(e.target.value)
+                }
+              }}
               containerStyle={{ flex: 2 }}
             />
           </div>
@@ -395,7 +408,7 @@ export const ConvertCurrencyFormSimpleRender = function() {
             {"Receive (estimated)"}
           </h5>
           <div>{`My Balance: ${
-            destination != null
+            destination != null && this.props.balances != null
               ? destination.name == this.props.chainTicker
                 ? this.props.balances.native.public.confirmed
                 : this.props.balances.reserve[destination.name]
@@ -574,6 +587,8 @@ export const ConvertCurrencyFormSimpleRender = function() {
 };
 
 export const ConvertCurrencyFormAdvancedRender = function() {
+  const isConfirmStep = this.state.formStep === CONFIRM_DATA
+
   return (
     <div
       style={{
@@ -591,7 +606,7 @@ export const ConvertCurrencyFormAdvancedRender = function() {
           alignItems: "stretch",
           justifyContent: "space-between",
           maxHeight: 400,
-          overflow: "scroll"
+          overflow: "scroll",
         }}
       >
         {this.state.outputs.map((output, index) => {
@@ -628,12 +643,12 @@ export const ConvertCurrencyFormAdvancedRender = function() {
                 <h5
                   style={{
                     fontWeight: "bold",
-                    fontSize: 18
+                    fontSize: 18,
                   }}
                 >
                   {`Output ${index + 1}`}
                 </h5>
-                {this.state.outputs.length > 1 && (
+                {this.state.outputs.length > 1 && !isConfirmStep && (
                   <IconButton
                     aria-label={`Remove Output ${index + 1}`}
                     onClick={() => this.removeOutput(index)}
@@ -662,6 +677,7 @@ export const ConvertCurrencyFormAdvancedRender = function() {
                   }
                   value={amount}
                   style={{ flex: 1, marginRight: 4 }}
+                  disabled={isConfirmStep}
                 />
                 <TextField
                   label="From Currency"
@@ -672,6 +688,7 @@ export const ConvertCurrencyFormAdvancedRender = function() {
                   }
                   value={currency}
                   style={{ flex: 1, marginRight: 4 }}
+                  disabled={isConfirmStep}
                 />
                 <TextField
                   label="To Currency"
@@ -682,6 +699,7 @@ export const ConvertCurrencyFormAdvancedRender = function() {
                   }
                   value={convertto}
                   style={{ flex: 1 }}
+                  disabled={isConfirmStep}
                 />
               </div>
               <div style={{ display: "flex", marginTop: 8 }}>
@@ -694,6 +712,7 @@ export const ConvertCurrencyFormAdvancedRender = function() {
                   }
                   value={via}
                   style={{ flex: 1 }}
+                  disabled={isConfirmStep}
                 />
               </div>
               <div style={{ display: "flex", marginTop: 8 }}>
@@ -706,6 +725,7 @@ export const ConvertCurrencyFormAdvancedRender = function() {
                   }
                   value={address}
                   style={{ flex: 1 }}
+                  disabled={isConfirmStep}
                 />
               </div>
               <div style={{ display: "flex", marginTop: 8 }}>
@@ -717,6 +737,7 @@ export const ConvertCurrencyFormAdvancedRender = function() {
                     colorChecked={"#3165D4"}
                     colorUnchecked={"#3165D4"}
                     checkboxProps={{
+                      disabled: isConfirmStep,
                       checked: preconvert,
                       onChange: (e) => {
                         this.updateOutput(
@@ -747,6 +768,7 @@ export const ConvertCurrencyFormAdvancedRender = function() {
                     }
                     value={refundto}
                     style={{ flex: 1 }}
+                    disabled={isConfirmStep}
                   />
                 </div>
               )}
@@ -760,37 +782,60 @@ export const ConvertCurrencyFormAdvancedRender = function() {
                   }
                   value={memo}
                   style={{ flex: 1 }}
+                  disabled={isConfirmStep}
                 />
               </div>
             </WalletPaper>
           );
         })}
+        <div ref={(el) => { this.outputsEnd = el; }} />
       </div>
       <div style={{ display: "flex" }}>
+        {!isConfirmStep && (
+          <CustomButton
+            title={"Add output"}
+            backgroundColor={"rgb(49, 101, 212)"}
+            textColor={"white"}
+            style={{
+              marginRight: 8,
+            }}
+            buttonProps={{
+              size: "large",
+              color: "default",
+              style: { width: "100%", height: 58 },
+            }}
+            onClick={this.addOutput}
+          />
+        )}
+        {isConfirmStep && (
+          <CustomButton
+            title={"Back"}
+            backgroundColor={"rgb(212, 49, 62)"}
+            textColor={"white"}
+            style={{
+              marginRight: 8,
+            }}
+            buttonProps={{
+              size: "large",
+              color: "default",
+              style: { width: "100%", height: 58 },
+            }}
+            onClick={() => this.setFormStep(ENTER_DATA)}
+          />
+        )}
         <CustomButton
-          title={"Add output"}
+          title={isConfirmStep ? "Confirm" : "Convert currencies"}
           backgroundColor={"rgb(49, 101, 212)"}
           textColor={"white"}
-          style={{
-            marginRight: 8
-          }}
           buttonProps={{
             size: "large",
             color: "default",
             style: { width: "100%", height: 58 },
           }}
-          onClick={this.addOutput}
-        />
-        <CustomButton
-          title={"Convert currencies"}
-          backgroundColor={"rgb(49, 101, 212)"}
-          textColor={"white"}
-          buttonProps={{
-            size: "large",
-            color: "default",
-            style: { width: "100%", height: 58 },
+          onClick={() => {
+            if (isConfirmStep) this.confirmSend()
+            else this.setFormStep(CONFIRM_DATA)
           }}
-          onClick={() => this.setFormStep(CONFIRM_DATA)}
         />
       </div>
     </div>

@@ -13,10 +13,8 @@ import {
   NATIVE_STAKE,
   NATIVE_MINE_THREADS,
   NATIVE_REINDEX,
-  IS_VERUS,
-  ELECTRUM_NSPV
+  IS_VERUS
 } from "../../../../util/constants/componentConstants";
-import { staticVar } from '../../../../util/mainWindow';
 
 export const SelectCoinRender = function() {  
   return (
@@ -295,7 +293,7 @@ export const SelectModeForm = function() {
       {/* {
         this.props.enableNspv && 
         this.state.selectedMode === LITE && 
-        staticVar.nspvPorts[this.state.chosenCoin.id] > -1 && (
+        window.bridge.nspvPorts[this.state.chosenCoin.id] > -1 && (
         <div
           className="d-flex d-sm-flex d-md-flex d-lg-flex flex-column align-items-center align-items-sm-center align-items-md-center justify-content-lg-center align-items-lg-center"
           style={{ paddingTop: 28 }}

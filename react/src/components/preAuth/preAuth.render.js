@@ -1,4 +1,4 @@
-const { shell } = window.electron
+const { shell } = window.bridge
 import React from 'react';
 import { SELECT_PROFILE, CREATE_PROFILE, UNLOCK_PROFILE } from '../../util/constants/componentConstants';
 import CreateProfile from './createProfile/createProfile'

@@ -24,15 +24,15 @@ export const ConvertCurrencyRender = function() {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            color: 'white'
+            color: "white",
           }}
         >
           <Lottie
-            config={{animationData: animationData.default, loop: true}}
+            config={{ animationData: animationData.default, loop: true }}
             height="40%"
             style={{
               marginBottom: -56,
-              marginTop: -56
+              marginTop: -56,
             }}
           />
           {this.state.loadingText}
@@ -41,7 +41,13 @@ export const ConvertCurrencyRender = function() {
       {this.state.selectedMode === CONVERSION_OVERVIEW ? (
         <ConversionOverview />
       ) : (
-        <ConvertCurrencyForm mode={this.state.selectedMode} setLoading={this.setLoading} setSelectedMode={this.setSelectedMode}/>
+        <ConvertCurrencyForm
+          mode={this.state.selectedMode}
+          setLoading={this.setLoading}
+          initCurrency={this.state.initCleared ? null : this.props.modalProps.selectedCurrency}
+          setSelectedMode={this.setSelectedMode}
+          clearInitCurrency={this.clearInitCurrency}
+        />
       )}
     </div>
   );
