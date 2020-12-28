@@ -53,12 +53,6 @@ export const SendCoinRender = function() {
               ? "Done"
               : formStep === ENTER_DATA
               ? "Continue"
-              : formData && formData.toCurrencyInfo
-              ? formData.toCurrencyInfo.preConvert
-                ? "Preconvert"
-                : modalProps.isConversion
-                ? "Convert"
-                : "Send"
               : "Send"}
           </Button>
         </div>

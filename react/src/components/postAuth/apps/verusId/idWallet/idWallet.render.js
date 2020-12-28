@@ -8,7 +8,8 @@ import {
   IMMATURE_BALANCE,
   API_SUCCESS,
   API_FAILED,
-  ID_INFO
+  ID_INFO,
+  SPLIT_MODAL
 } from "../../../../../util/constants/componentConstants";
 import { VirtualizedTable } from '../../../../../containers/VirtualizedTable/VirtualizedTable'
 import { timeConverter } from '../../../../../util/displayUtil/timeUtils'
@@ -286,8 +287,8 @@ export const WalletRenderBalances = function() {
                         }
                         disabled={balance === 0 || balance === "-"}
                         style={{
-                          backgroundColor: "rgb(236,43,43)",
-                          borderColor: "rgb(236,43,43)",
+                          backgroundColor: "rgb(212, 49, 62)",
+                          borderColor: "rgb(212, 49, 62)",
                           borderWidth: 1,
                           fontSize: 18,
                           fontWeight: "bold",
@@ -312,12 +313,13 @@ export const WalletRenderBalances = function() {
                           this.openModal(
                             null,
                             { identity: activeIdentity, balanceTag },
-                            RECEIVE_COIN
+                            RECEIVE_COIN,
+                            SPLIT_MODAL
                           )
                         }
                         style={{
-                          backgroundColor: "rgb(0,178,26)",
-                          borderColor: "rgb(0,178,26)",
+                          backgroundColor: "rgb(74, 166, 88)",
+                          borderColor: "rgb(74, 166, 88)",
                           fontSize: 18,
                           borderWidth: 1,
                           fontWeight: "bold",
@@ -380,9 +382,9 @@ export const WalletRenderOperations = function() {
                       fontWeight: "bold",
                       color:
                         rowData.status === API_SUCCESS
-                          ? "rgb(0,178,26)"
+                          ? "rgb(74, 166, 88)"
                           : rowData.status === API_FAILED
-                          ? "rgb(236,43,43)"
+                          ? "rgb(212, 49, 62)"
                           : "#f8bb86"
                     }}
                   >

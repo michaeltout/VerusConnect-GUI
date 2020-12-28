@@ -24,9 +24,9 @@ class CustomButton extends React.Component {
         textTransform: 'none',
         fontSize: 16,
         fontWeight: 'bold',
-        backgroundColor: backgroundColor || "rgb(78,115,223)",
+        backgroundColor: backgroundColor || "rgb(49, 101, 212)",
         '&:hover': {
-          backgroundColor: backgroundColor || "rgb(78,115,223)",
+          backgroundColor: backgroundColor || "rgb(49, 101, 212)",
         },
         ...style
       },

@@ -21,7 +21,7 @@ function TabSandwich(props) {
         tabs={topTabs}
         tabStyle={{ width: `${100 / topTabs.length}%`, minWidth: `${100 / topTabs.length}%` }}
         tabsProps={{variant: 'fullWidth'}}
-        color="rgb(78,115,223)"
+        color="rgb(49, 101, 212)"
         activeTab={activeTopTab}
         handleTabChange={handleTopTabChange}
         tabProps={{
@@ -35,7 +35,7 @@ function TabSandwich(props) {
         tabs={bottomTabs}
         tabStyle={{ width: `${100 / bottomTabs.length}%`, minWidth: `${100 / bottomTabs.length}%` }}
         tabsProps={{variant: 'fullWidth'}}
-        color="rgb(78,115,223)"
+        color="rgb(49, 101, 212)"
         activeTab={activeBottomTab}
         handleTabChange={handleBottomTabChange}
         bottom={true}

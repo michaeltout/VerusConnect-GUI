@@ -207,7 +207,7 @@ export const DashboardRenderTable = function() {
                           reservationObj.confirmations == 0 ||
                           loading
                             ? "rgb(0,0,0)"
-                            : "rgb(78,115,223)",
+                            : "rgb(49, 101, 212)",
                       }}
                       onClick={
                         failed

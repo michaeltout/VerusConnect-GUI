@@ -38,7 +38,9 @@ import {
   SET_COIN_BLOCKREWARD,
   SET_COIN_ALL_CURRENCIES,
   SET_COIN_CURRENCY_DATA_MAP,
-  ERROR_COIN_CURRENCY_DATA_MAP
+  ERROR_COIN_CURRENCY_DATA_MAP,
+  ERROR_COIN_RESERVE_TRANSFERS,
+  SET_COIN_RESERVE_TRANSFERS
 } from '../util/constants/storeType'
 import {
   API_GET_ZOPERATIONSTATUSES,
@@ -58,7 +60,8 @@ import {
   API_GET_SYS_TIME,
   API_GET_CURRENTSUPPLY,
   API_GET_ALL_CURRENCIES,
-  API_GET_CURRENCY_DATA_MAP
+  API_GET_CURRENCY_DATA_MAP,
+  API_GET_RESERVE_TRANSFERS
 } from '../util/constants/componentConstants'
 
 export const errors = (state = {
@@ -66,6 +69,7 @@ export const errors = (state = {
   [API_ACTIVATE_COIN]: {},
   [API_GET_BALANCES]: {},
   [API_GET_TRANSACTIONS]: {},
+  [API_GET_RESERVE_TRANSFERS]: {},
   [API_GET_INFO]: {},
   [API_GET_ADDRESSES]: {},
   [API_GET_MININGINFO]: {},
@@ -129,6 +133,11 @@ export const errors = (state = {
       return {
         ...state,
         [API_GET_TRANSACTIONS]: {...state[API_GET_TRANSACTIONS], [action.chainTicker]: {error: true, result: action.result}}
+      };
+    case ERROR_COIN_RESERVE_TRANSFERS:
+      return {
+        ...state,
+        [API_GET_RESERVE_TRANSFERS]: {...state[API_GET_RESERVE_TRANSFERS], [action.chainTicker]: {error: true, result: action.result}}
       };
     case ERROR_COIN_ZOPERATIONS:
       return {
@@ -219,6 +228,11 @@ export const errors = (state = {
       return {
         ...state,
         [API_GET_TRANSACTIONS]: {...state[API_GET_TRANSACTIONS], [action.chainTicker]: {error: false, result: null}}
+      };
+    case SET_COIN_RESERVE_TRANSFERS:
+      return {
+        ...state,
+        [API_GET_RESERVE_TRANSFERS]: {...state[API_GET_RESERVE_TRANSFERS], [action.chainTicker]: {error: false, result: null}}
       };
     case SET_COIN_ZOPERATIONS:
       return {

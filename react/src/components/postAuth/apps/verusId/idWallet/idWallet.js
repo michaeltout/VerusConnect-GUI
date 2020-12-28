@@ -15,6 +15,7 @@ import {
   UNCONFIRMED_BALANCE,
   OPERATION_INFO,
   PRIVATE_ADDRS,
+  BASIC_MODAL,
 } from '../../../../../util/constants/componentConstants'
 import { renderAffectedBalance } from '../../../../../util/txUtils/txRenderUtils'
 import { setModalNavigationPath, setModalParams, setMainNavigationPath } from '../../../../../actions/actionCreators'
@@ -135,9 +136,9 @@ class IdWallet extends React.Component {
     this.setState({ displayTransactions: newTransactions });
   }
 
-  openModal(e, modalParams = {}, modal) {
+  openModal(e, modalParams = {}, modal, modalType = BASIC_MODAL) {
     const _modal = modal ? modal : e.target.name;
-    openModal(_modal, { chainTicker: this.props.coin, ...modalParams })
+    openModal(_modal, { chainTicker: this.props.coin, ...modalParams }, modalType)
   }
 
   openOpInfo(rowData) {

@@ -1,7 +1,6 @@
 import { NATIVE } from '../../../../util/constants/componentConstants'
 import { SET_COIN_CURRENCY_DATA_MAP, ERROR_COIN_CURRENCY_DATA_MAP } from '../../../../util/constants/storeType'
 import { getCurrencyDataMap } from '../../../../util/api/wallet/readCalls/getCurrencyDataMap'
-import { getConversionGraph } from '../../../../util/multiverse/multiverseCurrencyUtils'
 import { getInfo } from '../../../../util/api/wallet/walletCalls'
 
 /**
@@ -35,10 +34,6 @@ export const updateCurrencyDataMap = async (state, dispatch, mode, chainTicker) 
           ...dataMapAction,
           type: SET_COIN_CURRENCY_DATA_MAP,
           dataMap: apiResult.result,
-          conversionGraph: getConversionGraph(
-            apiResult.result.currencyData,
-            currentInfoResult.result.longestchain
-          ),
         };
       } else {
         dataMapAction = {

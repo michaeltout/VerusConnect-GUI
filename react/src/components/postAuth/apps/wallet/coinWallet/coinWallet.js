@@ -29,7 +29,9 @@ import {
   POST_AUTH,
   APPS,
   MULTIVERSE,
-  API_GET_CURRENCY_DATA_MAP
+  API_GET_CURRENCY_DATA_MAP,
+  BASIC_MODAL,
+  API_GET_RESERVE_TRANSFERS
 } from '../../../../../util/constants/componentConstants'
 import { setUserPreferredCurrency, newSnackbar, setMainNavigationPath } from '../../../../../actions/actionCreators'
 
@@ -45,6 +47,7 @@ const CONDITIONAL_UPDATES = [
   API_GET_FIATPRICE,
   API_GET_INFO,
   API_GET_CURRENCY_DATA_MAP,
+  API_GET_RESERVE_TRANSFERS
 ];
 
 class CoinWallet extends React.Component {
@@ -118,9 +121,9 @@ class CoinWallet extends React.Component {
       : null;
   }
 
-  openModal(e, modalParams = {}, modal) {
+  openModal(e, modalParams = {}, modal, modalType = BASIC_MODAL) {
     const _modal = modal ? modal : e.target.name;
-    openModal(_modal, { chainTicker: this.props.coin, ...modalParams });
+    openModal(_modal, { chainTicker: this.props.coin, ...modalParams }, modalType);
   }
 
   openMultiverse() {
@@ -413,7 +416,6 @@ const mapStateToProps = (state, ownProps) => {
         ? ownProps.coin
         : state.users.activeUser.selectedCurrencyMap[ownProps.coin],
     currencyDataMap: state.ledger.currencyDataMap[ownProps.coin] || {},
-    currencyConversionGraph: state.ledger.currencyConversionGraph[ownProps.coin] || {},
     multiverseNameMap: state.ledger.multiverseNameMap[ownProps.coin],
     filterGenerateTransactions: state.settings.config.general.native.filterGenerateTransactions,
   };

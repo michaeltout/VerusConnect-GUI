@@ -69,9 +69,9 @@ export const DashboardRender = function() {
                 disabled={identityChains.length === 0}
                 style={{
                   fontSize: 14,
-                  backgroundColor: "rgb(78,115,223)",
+                  backgroundColor: "rgb(49, 101, 212)",
                   borderWidth: 1,
-                  borderColor: "rgb(78,115,223)",
+                  borderColor: "rgb(49, 101, 212)",
                   paddingRight: 20,
                   paddingLeft: 20,
                   width: "100%"
@@ -131,9 +131,9 @@ export const DashboardRender = function() {
                 disabled={identityChains.length === 0}
                 style={{
                   fontSize: 14,
-                  backgroundColor: "rgb(78,115,223)",
+                  backgroundColor: "rgb(49, 101, 212)",
                   borderWidth: 1,
-                  borderColor: "rgb(78,115,223)",
+                  borderColor: "rgb(49, 101, 212)",
                   paddingRight: 20,
                   paddingLeft: 20,
                   width: "100%"
@@ -193,9 +193,9 @@ export const DashboardRender = function() {
                 disabled={identityChains.length === 0}
                 style={{
                   fontSize: 14,
-                  backgroundColor: "rgb(78,115,223)",
+                  backgroundColor: "rgb(49, 101, 212)",
                   borderWidth: 1,
-                  borderColor: "rgb(78,115,223)",
+                  borderColor: "rgb(49, 101, 212)",
                   paddingRight: 20,
                   paddingLeft: 20,
                   width: "100%",
@@ -256,9 +256,9 @@ export const DashboardRender = function() {
                 disabled={identityChains.length === 0}
                 style={{
                   fontSize: 14,
-                  backgroundColor: "rgb(78,115,223)",
+                  backgroundColor: "rgb(49, 101, 212)",
                   borderWidth: 1,
-                  borderColor: "rgb(78,115,223)",
+                  borderColor: "rgb(49, 101, 212)",
                   paddingRight: 20,
                   paddingLeft: 20,
                   width: "100%"
@@ -312,7 +312,7 @@ export const DashboardRender = function() {
               <div style={{ textAlign: "center" }}>
                 <a
                   href="#"
-                  style={{ color: "rgb(78,115,223)" }}
+                  style={{ color: "rgb(49, 101, 212)" }}
                   onClick={openAddCoinModal}
                 >
                   {
@@ -331,7 +331,7 @@ export const DashboardRender = function() {
                       color:
                         identityChains.length === 0
                           ? "black"
-                          : "rgb(78,115,223)"
+                          : "rgb(49, 101, 212)"
                     }}
                     onClick={
                       identityChains.length === 0
@@ -523,7 +523,7 @@ export const DashboardRenderTable = function() {
                           reservationObj.confirmations == 0 ||
                           loading
                             ? "rgb(0,0,0)"
-                            : "rgb(78,115,223)",
+                            : "rgb(49, 101, 212)",
                       }}
                       onClick={
                         failed
@@ -589,7 +589,7 @@ export const DashboardRevokeDialogue = function() {
   const { identity, chainTicker } = revokeId
 
   return (<Dialog
-    open={revokeDialogueOpen}
+    open={revokeDialogueOpen == null ? false : revokeDialogueOpen}
     onClose={this.closeRevokeDialogue}
     aria-labelledby="alert-dialog-title"
     aria-describedby="alert-dialog-description"
@@ -658,7 +658,7 @@ export const DashboardRenderIds = function() {
                   className="d-lg-flex align-items-lg-center"
                   style={{
                     fontSize: 16,
-                    color: 'rgb(78,115,223)',
+                    color: 'rgb(49, 101, 212)',
                     fontWeight: "bold",
                     textOverflow: "ellipsis",
                     overflow: "hidden",
@@ -725,9 +725,9 @@ export const DashboardRenderIds = function() {
                         onClick={() => this.openRevokeDialogue(idObj)}
                         style={{
                           fontSize: 10,
-                          backgroundColor: "rgb(236,43,43)",
+                          backgroundColor: "rgb(212, 49, 62)",
                           borderWidth: 1,
-                          borderColor: "rgb(236,43,43)",
+                          borderColor: "rgb(212, 49, 62)",
                           fontWeight: "bold"
                         }}
                       >
@@ -751,9 +751,9 @@ export const DashboardRenderIds = function() {
                       }
                       style={{
                         fontSize: 10,
-                        backgroundColor: "rgb(0,178,26)",
+                        backgroundColor: "rgb(74, 166, 88)",
                         borderWidth: 1,
-                        borderColor: "rgb(0,178,26)",
+                        borderColor: "rgb(74, 166, 88)",
                         fontWeight: "bold"
                       }}
                     >

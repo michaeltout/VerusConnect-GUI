@@ -9,7 +9,6 @@ import {
   initLocalWhitelists
 } from '../../actions/actionCreators';
 import { refreshSystemIntervals, openTextDialog, closeTextDialog, getAppDataUpdateStatus, makeAppDataChanges } from '../../actions/actionDispatchers'
-import mainWindow, { staticVar } from '../../util/mainWindow';
 import { POST_AUTH, PRE_AUTH, SELECT_PROFILE, ERROR_SNACK, MID_LENGTH_ALERT, NATIVE, UNLOCK_PROFILE } from '../../util/constants/componentConstants';
 import Config from '../../config';
 import { connect } from 'react-redux';
@@ -17,9 +16,13 @@ import PostAuth from '../postAuth/postAuth'
 import PreAuth from '../preAuth/preAuth'
 import Modal from '../modals/modal'
 import SplashScreen from '../../containers/SplashScreen/SplashScreen'
+import LogoutScreen from '../../containers/LogoutScreen/LogoutScreen'
 import SnackbarAlert from '../snackbarAlert/snackbarAlert'
 import { newSnackbar, setConfigParams } from '../../actions/actionCreators'
 import TextDialog from '../../containers/TextDialog/TextDialog';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { ThemeProvider } from '@material-ui/core';
+import MainTheme from '../../styles/themes/main'
 
 class Main extends React.Component {
   constructor(props) {
@@ -147,7 +150,7 @@ class Main extends React.Component {
   }
 
   async componentDidMount() {
-    const appVersion = mainWindow.appBasicInfo;
+    const appVersion = window.bridge.appBasicInfo;
 
     this.setState({ initializing: true });
 
@@ -161,9 +164,9 @@ class Main extends React.Component {
     
     if (appVersion) {
       const _arch = `${
-        mainWindow.arch === "x64"
+        window.bridge.arch === "x64"
           ? ""
-          : mainWindow.arch === "spv-only"
+          : window.bridge.arch === "spv-only"
           ? "-spv-only"
           : "-32bit"
       }`;
@@ -180,16 +183,12 @@ class Main extends React.Component {
     if (Config.darkmode) {
       document.body.setAttribute("darkmode", true);
     }
-
-    // Function for debugging store
-    /*window.printStore = () => {
-      console.log(Store.getState());
-    };*/
   }
 
   render() {
-    if (staticVar) {
-      return (
+    return (
+      <ThemeProvider theme={MainTheme}>
+        <CssBaseline />
         <div className="main-container">
           <SnackbarAlert />
           {this.props.textdialog.open && (
@@ -198,16 +197,16 @@ class Main extends React.Component {
           <Modal />
           {this.state.initializing ? (
             <SplashScreen />
+          ) : this.props.loggingOut ? (
+            <LogoutScreen />
           ) : this.props.mainPathArray[0] === POST_AUTH ? (
             <PostAuth />
           ) : (
             <PreAuth />
           )}
         </div>
-      );
-    } else {
-      return null;
-    }
+      </ThemeProvider>
+    );
   }
 }
 
@@ -216,7 +215,8 @@ const mapStateToProps = (state) => {
     mainPathArray: state.navigation.mainPathArray,
     loadedUsers: state.users.loadedUsers,
     config: state.settings.config,
-    textdialog: state.textdialog
+    textdialog: state.textdialog,
+    loggingOut: state.users.loggingOut
   };
 };
 

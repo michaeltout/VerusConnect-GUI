@@ -16,7 +16,7 @@ export const MigrationHelperRender = function() {
           fontWeight: "bold",
           textAlign: "center",
           fontSize: 16,
-          color: "rgb(78,115,223)",
+          color: "rgb(49, 101, 212)",
         }}
         href={"#"}
         onClick={() => this.openClaimDialog()}

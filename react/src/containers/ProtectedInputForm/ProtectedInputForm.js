@@ -266,8 +266,8 @@ class ProtectedInputForm extends React.Component {
                     onChange: this.checkBox,
                     name: "risksAcknowledged"
                   }}
-                  colorChecked="rgb(78,115,223)"
-                  colorUnchecked={error ? "red" : "rgb(78,115,223)"}
+                  colorChecked="rgb(49, 101, 212)"
+                  colorUnchecked={error ? "red" : "rgb(49, 101, 212)"}
                 />
                 <label
                   className="form-check-label"
@@ -291,11 +291,11 @@ class ProtectedInputForm extends React.Component {
                 type="button"
                 style={{
                   fontSize: 14,
-                  backgroundColor: "rgb(78,115,223)",
+                  backgroundColor: "rgb(49, 101, 212)",
                   marginRight: 15,
                   marginTop: 50,
                   borderWidth: 1,
-                  borderColor: "rgb(78,115,223)"
+                  borderColor: "rgb(49, 101, 212)"
                 }}
                 onClick={this.goBack}
               >
@@ -308,11 +308,11 @@ class ProtectedInputForm extends React.Component {
               disabled={submitDisabled}
               style={{
                 fontSize: 14,
-                backgroundColor: "rgb(78,115,223)",
+                backgroundColor: "rgb(49, 101, 212)",
                 marginLeft: step === CONFIRM_PASSWORD ? 15 : 0,
                 marginTop: step === CONFIRM_PASSWORD ? 50 : 10,
                 borderWidth: 1,
-                borderColor: "rgb(78,115,223)"
+                borderColor: "rgb(49, 101, 212)"
               }}
               onClick={this.onSubmit}
             >

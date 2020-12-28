@@ -16,6 +16,8 @@ import {
   WARNING_SNACK,
   API_GET_CURRENCY_DATA_MAP,
   SEND_COIN,
+  CONVERT_CURRENCY,
+  SPLIT_MODAL,
 } from "../../util/constants/componentConstants";
 import { newSnackbar } from '../../actions/actionCreators';
 import IconDropdown from '../IconDropdown/IconDropdown'
@@ -252,31 +254,14 @@ class CurrencyCard extends React.Component {
 
         const newState = Store.getState()
 
-        openModal(SEND_COIN, {
-          chainTicker,
-          balanceTag: TRANSPARENT_BALANCE,
-          fund: false,
-          isMessage: false,
-          isConversion: true,
-          currencyInfo,
-          inverse: !currencyInfo.preConvert,
-          defaultConversionName: address,
-          conversionGraph:
-            newState.ledger.currencyConversionGraph[chainTicker][
-              currencyInfo.currency.name
-            ],
-          calculateCurrencyData: (currency) =>
-            getCurrencyInfo(
-              newState.ledger.currencyDataMap[chainTicker]
-                ? newState.ledger.currencyDataMap[chainTicker][currency]
-                : null,
-              newState.ledger.info[chainTicker] &&
-                newState.ledger.info[chainTicker].longestchain
-                ? newState.ledger.info[chainTicker].longestchain
-                : -1,
-              newState.ledger.identities[chainTicker]
-            ),
-        });
+        openModal(
+          CONVERT_CURRENCY,
+          {
+            selectedMode: SIMPLE_CONVERSION,
+            selectedCurrency: currencyInfo.currency.name,
+          },
+          SPLIT_MODAL
+        )
 
         this.props.setLock(false)
       }
@@ -420,7 +405,7 @@ class CurrencyCard extends React.Component {
                     textAlign: "left",
                     fontSize: 24,
                     padding: 15,
-                    backgroundColor: "rgb(78,115,223)",
+                    backgroundColor: "rgb(49, 101, 212)",
                     color: "white",
                     display: "flex",
                     justifyContent: "space-between",
@@ -449,8 +434,8 @@ class CurrencyCard extends React.Component {
                       status === "pending"
                         ? "#878787" /* GRAY */
                         : status === "failed"
-                        ? "rgb(236,43,43)" /* RED */
-                        : "rgb(0,178,26)" /* GREEN */,
+                        ? "rgb(212, 49, 62)" /* RED */
+                        : "rgb(74, 166, 88)" /* GREEN */,
                     flex: 1,
                     textAlign: "right",
                   }}
@@ -906,7 +891,7 @@ class CurrencyCard extends React.Component {
                         blacklisted ? "Unblock Currency" : "Block Currency"
                       }
                       disabled={loadingCurrencyLists}
-                      backgroundColor={"rgb(236,43,43)"}
+                      backgroundColor={"rgb(212, 49, 62)"}
                       onClick={
                         blacklisted
                           ? () => this.unBlacklistCurrency()
@@ -919,7 +904,7 @@ class CurrencyCard extends React.Component {
                     <CustomButton
                       title={whitelisted ? "Remove Currency" : "Add Currency"}
                       disabled={blacklisted || loadingCurrencyLists}
-                      backgroundColor={"rgb(0,178,26)"}
+                      backgroundColor={"rgb(74, 166, 88)"}
                       onClick={
                         whitelisted
                           ? () => this.unWhitelistCurrency()

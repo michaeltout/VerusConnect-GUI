@@ -43,8 +43,7 @@ export const TraditionalSendTxDataRender = function() {
 }
 
 export const TraditionalSendFormEnterRender = function() {
-  const { state, updateInput, props } = this
-  const { isConversion, conversionGraph } = props
+  const { state, updateInput } = this
   const {
     sendTo,
     amount,
@@ -52,38 +51,10 @@ export const TraditionalSendFormEnterRender = function() {
     mint,
     formErrors,
     fromCurrencyInfo,
-    convertingTo,
-    convertingFrom,
-    fromCurrencyConversion,
-    toCurrencyConversion
   } = state;
-  let conversionRounded = false
-
-  let conversion =
-    isConversion && amount != null && !isNaN(Number(amount))
-      ? convertingTo
-        ? fromCurrencyConversion.price * Number(amount)
-        : convertingFrom
-        ? Number(amount) / toCurrencyConversion.price
-        : null
-      : null;
-  
-  let displayConversion = conversion
-  
-  if (conversion != null) {
-    const priceNormalized = normalizeNum(conversion, 8)
-
-    if (conversion !== priceNormalized[0]) {
-      displayConversion = `${priceNormalized[0]}${priceNormalized[2]}`
-      conversionRounded = true
-    }
-  }
 
   return (
     <React.Fragment>
-      {isConversion && conversionGraph != null
-        ? ConversionOptionsRender.call(this)
-        : null}
       {!mint ? TraditionalSendAddressDropdownRender.call(this) : null}
       <TextField
         error={formErrors.sendTo.length > 0}
@@ -127,46 +98,6 @@ export const TraditionalSendFormEnterRender = function() {
             ),
           }}
         />
-        {conversion != null && (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              maxWidth: "43%",
-              flex: 1,
-              alignItems: "center"
-            }}
-          >
-            <Typography
-              style={{
-                color: "gray",
-                textAlign: "left",
-                paddingLeft: 8,
-              }}
-            >
-              {fromCurrencyConversion.name}
-            </Typography>
-            <Typography style={{ color: "gray", textAlign: "center", paddingRight: 8, paddingLeft: 8 }}>
-              {conversionRounded ? "≈" : "="}
-            </Typography>
-            <Typography
-              style={{
-                color: "gray",
-                textAlign: "right",
-                overflow: "hidden",
-                whiteSpace: "nowrap",
-                textOverflow: "ellipsis",
-              }}
-            >
-              {`${displayConversion} ${toCurrencyConversion.name}`}
-            </Typography>
-            <Tooltip title={'All price estimations are based on the latest conversion price. The actual conversion result calculated at the time of conversion and will likely differ.'}>
-              <span style={{ marginLeft: 8 }}>
-                <InfoIcon color='primary'/>
-              </span>
-            </Tooltip>
-          </div>
-        )}
       </div>
       {sendTo && sendTo[0] && sendTo[0] === "z" && (
         <TextField
@@ -178,7 +109,7 @@ export const TraditionalSendFormEnterRender = function() {
           style={{ marginTop: 5, width: "100%" }}
         />
       )}
-      {fromCurrencyInfo != null && fromCurrencyInfo.mintable && !isConversion && (
+      {fromCurrencyInfo != null && fromCurrencyInfo.mintable && (
         <FormControlLabel
           control={
             <CustomCheckbox
@@ -188,8 +119,8 @@ export const TraditionalSendFormEnterRender = function() {
                   this.setAndUpdateState({ mint: !this.state.mint });
                 },
               }}
-              colorChecked="rgb(78,115,223)"
-              colorUnchecked="rgb(78,115,223)"
+              colorChecked="rgb(49, 101, 212)"
+              colorUnchecked="rgb(49, 101, 212)"
             />
           }
           label="Fund this transaction by minting new coins."
@@ -236,120 +167,6 @@ export const TraditionalSendAddressDropdownRender = function() {
       }}
     />
   )
-}
-
-export const ConversionOptionsRender = function() {
-  const { conversionGraph, currencyInfo } = this.props
-  const {
-    fromCurrencyConversion,
-    toCurrencyConversion,
-    convertingFrom,
-    convertingTo
-  } = this.state;  
-
-  const toBalance = this.getBalance(null, toCurrencyConversion.name)
-  const fromBalance = this.getBalance(null, fromCurrencyConversion.name)
-  
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        width: "100%",
-        alignItems: "center",
-      }}
-    >
-      <Autocomplete
-        options={conversionGraph.from}
-        getOptionLabel={(option) => option.name}
-        style={{ marginTop: 5, width: "100%" }}
-        value={fromCurrencyConversion}
-        disableClearable={true}
-        disabled={
-          (conversionGraph.from.length == 0 ||
-          !currencyInfo.spendableTo ||
-          convertingFrom) ? true : false
-        }
-        onChange={(e, value) => this.updateCurrencyConversion(value, true)}
-        renderInput={(params) => (
-          <TextField
-            //error={this.state.formErrors.sendFrom.length > 0}
-            helperText={`Balance - ${fromBalance == null ? "-" : fromBalance} ${
-              fromCurrencyConversion.name
-            }`}
-            {...params}
-            label="Source"
-            variant="outlined"
-            fullWidth
-          />
-        )}
-        /*renderOption={(option) => {
-          return (
-            <h1
-              className="d-lg-flex align-items-lg-center"
-              style={{ marginBottom: 0, fontSize: 16 }}
-            >
-              {option.label}
-            </h1>
-          );
-        }}*/
-      />
-      <div>
-        <IconButton
-          style={{ marginLeft: 60, marginRight: 60 }}
-          onClick={this.flipConversion}
-          disabled={this.state.toCurrencyInfo.preConvert ? true : false}
-        >
-          <ArrowForwardIcon fontSize="large" />
-        </IconButton>
-        <Typography
-          style={{ color: "gray", fontSize: 12, textAlign: "center" }}
-        >
-          {convertingTo && fromCurrencyConversion.price
-            ? `* ${Number(fromCurrencyConversion.price.toFixed(8))} =`
-            : convertingFrom && toCurrencyConversion.price
-            ? `÷ ${Number(toCurrencyConversion.price.toFixed(8))} =`
-            : null}
-        </Typography>
-      </div>
-      <Autocomplete
-        options={conversionGraph.to}
-        getOptionLabel={(option) => option.name}
-        style={{ marginTop: 5, width: "100%" }}
-        value={toCurrencyConversion}
-        disableClearable={true}
-        disabled={
-          (conversionGraph.to.length == 0 ||
-          !currencyInfo.spendableFrom ||
-          convertingTo) ? true : false
-        }
-        onChange={(e, value) => this.updateCurrencyConversion(value, false)}
-        renderInput={(params) => (
-          <TextField
-            //error={this.state.formErrors.sendFrom.length > 0}
-            helperText={`Balance - ${toBalance == null ? "-" : toBalance} ${
-              toCurrencyConversion.name
-            }`}
-            {...params}
-            label="Destination"
-            variant="outlined"
-            fullWidth
-          />
-        )}
-        /*renderOption={(option) => {
-          return (
-            <h1
-              className="d-lg-flex align-items-lg-center"
-              style={{ marginBottom: 0, fontSize: 16 }}
-            >
-              {option.label}
-            </h1>
-          );
-        }}*/
-      />
-    </div>
-  );
 }
 
 

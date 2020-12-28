@@ -289,7 +289,7 @@ export const MiningWalletRenderGenerateOverview = function() {
         <a
           href="#"
           style={{
-            color: "rgb(78,115,223)",
+            color: "rgb(49, 101, 212)",
             paddingTop: 8,
             display: "block"
           }}
@@ -368,7 +368,7 @@ export const MiningWalletFunctions = function() {
           >
             {"Staking"}
           </h6>
-          <div style={{ color: `rgb(78,115,223)` }}>
+          <div style={{ color: `rgb(49, 101, 212)` }}>
             <Switch
               checked={miningState.includes(MS_STAKING)}
               onChange={() => toggleStaking(coin)}

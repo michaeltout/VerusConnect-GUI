@@ -1,6 +1,6 @@
 import React from 'react';
 import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
-const { shell } = window.require('electron');
+const { shell } = window.bridge
 
 class Error extends React.Component {
   constructor(props) {
