@@ -10,6 +10,7 @@ import QRCode from 'qrcode.react';
 import { copyDataToClipboard } from '../../../util/copyToClipboard';
 import { IconButton } from '@material-ui/core';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
+import Config from '../../../config';
 
 export const ReceiveCoinRender = function() {
   return (
@@ -150,12 +151,16 @@ export const ReceiveAddressTableRender = function() {
             width: 100,
             cellDataGetter: ({ rowData }) => {
               const { balances } = rowData
-              const displayBalance =
-                balanceCurr === activeCoin.id
-                  ? balances.native
-                  : balances.reserve[balanceCurr];
+              let displayBalance;
 
-              return displayBalance == null ? '-' : displayBalance
+              if (balanceCurr === activeCoin.id) displayBalance = balances.native
+              else {
+                if (balances.reserve[balanceCurr] == null) {
+                  displayBalance = Config.general.native.showAddressCurrencyBalances ? 0 : '-'
+                } else displayBalance = balances.reserve[balanceCurr]
+              }
+
+              return displayBalance
             },
             flexGrow: 1,
             label: 'Amount',

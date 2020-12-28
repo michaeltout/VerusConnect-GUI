@@ -8,7 +8,8 @@ import {
   IMMATURE_BALANCE,
   API_SUCCESS,
   API_FAILED,
-  ID_INFO
+  ID_INFO,
+  SPLIT_MODAL
 } from "../../../../../util/constants/componentConstants";
 import { VirtualizedTable } from '../../../../../containers/VirtualizedTable/VirtualizedTable'
 import { timeConverter } from '../../../../../util/displayUtil/timeUtils'
@@ -312,7 +313,8 @@ export const WalletRenderBalances = function() {
                           this.openModal(
                             null,
                             { identity: activeIdentity, balanceTag },
-                            RECEIVE_COIN
+                            RECEIVE_COIN,
+                            SPLIT_MODAL
                           )
                         }
                         style={{

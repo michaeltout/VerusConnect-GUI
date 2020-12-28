@@ -46,6 +46,15 @@ class ReceiveCoin extends React.Component {
 
     this.isIdentity = props.modalProps.identity != null
 
+    if (this.isIdentity) {
+      this.idZAddrs = props.modalProps.identity.addresses[PRIVATE_ADDRS]
+      this.idIAddrs = props.modalProps.identity.addresses[PUBLIC_ADDRS]
+      this.idAddrs = {
+        [PUBLIC_ADDRS]: this.idIAddrs,
+        [PRIVATE_ADDRS]: this.idZAddrs
+      }
+    }
+
     this.state = {
       selectedMode:
         props.modalProps.balanceTag === PRIVATE_BALANCE
@@ -63,15 +72,6 @@ class ReceiveCoin extends React.Component {
       balanceCurr: props.selectedCurrency,
       qrAddress: null
     };
-
-    if (this.isIdentity) {
-      this.idZAddrs = props.modalProps.identity.addresses[PRIVATE_ADDRS]
-      this.idIAddrs = props.modalProps.identity.addresses[PUBLIC_ADDRS]
-      this.idAddrs = {
-        [PUBLIC_ADDRS]: this.idIAddrs,
-        [PRIVATE_ADDRS]: this.idZAddrs
-      }
-    }
 
     this.supportedTypes = {
       [PUBLIC_ADDRS]:
@@ -246,7 +246,9 @@ class ReceiveCoin extends React.Component {
   }
 
   setAddrMode(mode) {
-    this.setState({ selectedMode: mode, balanceCurr: mode === PRIVATE_ADDRS ? this.props.activeCoin.id : this.state.balanceCurr })
+    this.setState({
+      selectedMode: mode
+    });
   }
 
   setInput(e) {
