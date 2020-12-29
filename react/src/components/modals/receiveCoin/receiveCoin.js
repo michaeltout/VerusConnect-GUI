@@ -66,11 +66,15 @@ class ReceiveCoin extends React.Component {
         ? props.addresses
         : {
             [PUBLIC_ADDRS]: [],
-            [PRIVATE_ADDRS]: []
+            [PRIVATE_ADDRS]: [],
           },
       addressSearchTerm: "",
       balanceCurr: props.selectedCurrency,
-      qrAddress: null
+      qrAddress: null,
+      showZeroBalances:
+        props.activeCoin.mode !== NATIVE ||
+        this.isIdentity ||
+        props.config.general.native.defaultShowEmptyAddrs,
     };
 
     this.supportedTypes = {
@@ -232,8 +236,15 @@ class ReceiveCoin extends React.Component {
   generateAddressOptions(address) {
     let addressOptions = [GENERATE_QR]
 
-    if (!this.isIdentity)
-      addressOptions.push(COPY_PRIVKEY);
+    if (
+      (address[0] === "i" || address.includes("@")) &&
+      this.props.activeCoin.mode === NATIVE
+    ) {
+      return addressOptions;
+    }
+      
+    addressOptions.push(COPY_PRIVKEY);
+      
     if (this.props.activeCoin.mode === NATIVE) {
       if (address[0] !== 'z') addressOptions.push(COPY_PUBKEY)
     } 

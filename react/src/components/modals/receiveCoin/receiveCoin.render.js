@@ -21,8 +21,8 @@ export const ReceiveCoinRender = function() {
 }
 
 export const ReceiveCoinMainRender = function() {
-  const { activeCoin, modalProps } = this.props
-  const { selectedMode, addresses } = this.state
+  const { activeCoin } = this.props
+  const { selectedMode, addresses, showZeroBalances } = this.state
 
   return (
     <div
@@ -56,7 +56,26 @@ export const ReceiveCoinMainRender = function() {
       </div>
       {activeCoin.mode === NATIVE && !this.isIdentity && (
         <div style={{ paddingTop: 8 }}>
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <button
+              className="btn btn-primary"
+              type="button"
+              onClick={() =>
+                this.setState({
+                  showZeroBalances: !showZeroBalances
+                })
+              }
+              style={{
+                fontSize: 14,
+                backgroundColor: "rgb(49, 101, 212)",
+                borderWidth: 1,
+                borderColor: "rgb(49, 101, 212)",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              {`${showZeroBalances ? "Hide" : "Show"} zero balance addresses`}
+            </button>
             <button
               className="btn btn-primary"
               type="button"
@@ -116,8 +135,31 @@ export const ReceiveCurrencyPickerRender = function() {
 
 export const ReceiveAddressTableRender = function() {
   const { activeCoin } = this.props
-  const { balanceCurr, addresses, selectedMode } = this.state
-  const displayAddresses = addresses[selectedMode]
+  const { balanceCurr, addresses, selectedMode, showZeroBalances } = this.state
+  let displayBalances = {}
+
+  const getDisplayBalance = (rowData) => {
+    const { balances } = rowData
+    let displayBalance;
+
+    if (balanceCurr === activeCoin.id) displayBalance = balances.native
+    else {
+      if (balances.reserve[balanceCurr] == null) {
+        displayBalance = Config.general.native.showAddressCurrencyBalances ? 0 : '-'
+      } else displayBalance = balances.reserve[balanceCurr]
+    }
+
+    return displayBalance
+  }
+
+  const displayAddresses = showZeroBalances
+    ? addresses[selectedMode]
+    : addresses[selectedMode].filter((rowData) => {
+        const displayBalance = getDisplayBalance(rowData);
+        displayBalances[rowData.address] = displayBalance;
+
+        return displayBalance !== 0 && displayBalance !== "-";
+      });
 
   return (
     <div style={{ height: '100%', width: '100%' }}>
@@ -150,17 +192,9 @@ export const ReceiveAddressTableRender = function() {
           {
             width: 100,
             cellDataGetter: ({ rowData }) => {
-              const { balances } = rowData
-              let displayBalance;
-
-              if (balanceCurr === activeCoin.id) displayBalance = balances.native
-              else {
-                if (balances.reserve[balanceCurr] == null) {
-                  displayBalance = Config.general.native.showAddressCurrencyBalances ? 0 : '-'
-                } else displayBalance = balances.reserve[balanceCurr]
-              }
-
-              return displayBalance
+              return displayBalances[rowData.address]
+                ? displayBalances[rowData.address]
+                : getDisplayBalance(rowData);
             },
             flexGrow: 1,
             label: 'Amount',
