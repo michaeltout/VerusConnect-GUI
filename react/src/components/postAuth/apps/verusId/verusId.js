@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { DASHBOARD, CHAIN_POSTFIX, ADD_COIN, SELECT_COIN, IS_VERUS, ID_POSTFIX, NATIVE, ERROR_SNACK, SUCCESS_SNACK, ID_INFO, MID_LENGTH_ALERT } from '../../../../util/constants/componentConstants'
 import Dashboard from './dashboard/dashboard'
-import IdWallet from './idWallet/idWallet'
 import {
   IdCardRender,
   IdTabsRender
@@ -13,6 +12,7 @@ import FormDialog from '../../../../containers/FormDialog/FormDialog'
 import { getIdentity } from '../../../../util/api/wallet/walletCalls'
 import { openIdentityCard } from '../../../../actions/actionDispatchers';
 import { useStringAsKey } from '../../../../util/objectUtil';
+import CoinWallet from '../wallet/coinWallet/coinWallet';
 
 const COMPONENT_MAP = {
   [DASHBOARD]: <Dashboard />,
@@ -41,6 +41,7 @@ class VerusId extends React.Component {
     this.closeSearchModal = this.closeSearchModal.bind(this)
     this.openSearchModal = this.openSearchModal.bind(this)
     this.onIdSearchSubmit = this.onIdSearchSubmit.bind(this)
+    this.getIdentityTransactions = this.getIdentityTransactions.bind(this)
     this.setTabs()
   }
 
@@ -182,6 +183,21 @@ class VerusId extends React.Component {
     this.props.setTabs(IdTabsRender.call(this))
   }
 
+  getIdentityTransactions(transactions, identity) {
+    if (!identity || !transactions) return [];
+    let txIndexes = []
+
+    const pubAddrs = identity.addresses.public.map(addrObj => addrObj.address);
+    const privAddrs = identity.addresses.private.map(addrObj => addrObj.address);
+
+    return transactions.filter((tx, index) => {
+      if (tx.address != null && (pubAddrs.includes(tx.address) || privAddrs.includes(tx.address))) {
+        txIndexes.push(index)
+        return true
+      } else return false
+    }).map((tx, index) => {return {...tx, txIndex: txIndexes[index]}});
+  }
+
   render() {
     const { activeId } = this.state
     const walletApp = this.props.mainPathArray[3] ? this.props.mainPathArray[3] : null
@@ -191,7 +207,54 @@ class VerusId extends React.Component {
       if (COMPONENT_MAP[walletApp]) component = COMPONENT_MAP[walletApp]
       else {
         if (activeId.idIndex != null && activeId.chainTicker != null) {
-          component = <IdWallet idIndex={activeId.idIndex} coin={activeId.chainTicker} />
+          const activeIdentity = this.props.identities[activeId.chainTicker]
+            ? this.props.identities[activeId.chainTicker][activeId.idIndex]
+            : null;
+          
+          if (activeIdentity) {
+            for (const currency in activeIdentity.balances.reserve) {
+              if (
+                activeIdentity.balances.reserve[currency] != null &&
+                !isNaN(activeIdentity.balances.reserve[currency])
+              ) {
+                activeIdentity.balances.reserve[currency] = {
+                  public: {
+                    confirmed: activeIdentity.balances.reserve[currency],
+                  },
+                  private: {},
+                };
+              }
+            }
+          }
+
+          if (activeIdentity.addresses.private.length > 0) {
+            activeIdentity.balances.native.private.confirmed = 0
+
+            for (let i = 0; i < activeIdentity.addresses.private.length; i++) {
+              const privAddr = this.props.addresses[
+                activeId.chainTicker
+              ].private.find(
+                (x) => x.address === activeIdentity.addresses.private[i].address
+              );
+
+              if (privAddr) {
+                activeIdentity.addresses.private[i].balances.native = privAddr.balances.native
+
+                activeIdentity.balances.native.private.confirmed += activeIdentity
+                  .addresses.private[i].balances.native
+              }
+            }
+          }
+
+          component = (
+            <CoinWallet
+              coin={activeId.chainTicker}
+              balances={activeIdentity.balances}
+              addresses={activeIdentity.addresses}
+              transactions={this.getIdentityTransactions(this.props.transactions[activeId.chainTicker], activeIdentity)}
+              activeIdentity={activeIdentity}
+            />
+          );
         }
       }
     }
@@ -222,6 +285,8 @@ const mapStateToProps = (state) => {
     identities: state.ledger.identities,
     nameCommitments: state.ledger.nameCommitments,
     activeUser: state.users.activeUser,
+    transactions: state.ledger.transactions,
+    addresses: state.ledger.addresses,
     mainTraversalHistory: state.navigation.mainTraversalHistory
   };
 };

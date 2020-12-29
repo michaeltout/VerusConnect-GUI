@@ -112,7 +112,14 @@ class Wallet extends React.Component {
       else {
         const pathDestination = walletApp.split('_')
 
-        if (pathDestination.length > 1 && pathDestination[1] === CHAIN_POSTFIX) return <CoinWallet coin={pathDestination[0]}/>
+        if (pathDestination.length > 1 && pathDestination[1] === CHAIN_POSTFIX) return (
+          <CoinWallet 
+            coin={pathDestination[0]}
+            balances={this.props.balances[pathDestination[0]]}
+            transactions={this.props.transactions[pathDestination[0]]}
+            addresses={this.props.addresses[pathDestination[0]]}
+          />
+        )
       }
     }
 
@@ -128,7 +135,9 @@ const mapStateToProps = (state) => {
     fiatCurrency: state.settings.config.general.main.fiatCurrency,
     balances: state.ledger.balances,
     loggingOut: state.users.loggingOut,
-    mainTraversalHistory: state.navigation.mainTraversalHistory
+    mainTraversalHistory: state.navigation.mainTraversalHistory,
+    transactions: state.ledger.transactions,
+    addresses: state.ledger.addresses
   };
 };
 

@@ -402,13 +402,10 @@ const mapStateToProps = (state, ownProps) => {
     activatedCoins: state.coins.activatedCoins,
     fiatPrices: state.ledger.fiatPrices[ownProps.coin],
     fiatCurrency: state.settings.config.general.main.fiatCurrency,
-    balances: state.ledger.balances[ownProps.coin],
-    transactions: state.ledger.transactions[ownProps.coin],
     zOperations: state.ledger.zOperations[ownProps.coin],
     info: state.ledger.info[ownProps.coin],
     identities: state.ledger.identities[ownProps.coin],
     errors: state.errors,
-    addresses: state.ledger.addresses[ownProps.coin],
     blacklists: state.localCurrencyLists[BLACKLISTS],
     whitelists: state.localCurrencyLists[WHITELISTS],
     selectedCurrency:
