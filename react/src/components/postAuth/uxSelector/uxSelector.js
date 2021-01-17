@@ -16,8 +16,10 @@ import {
   ID_POSTFIX,
   VERUSID,
   MINING_POSTFIX,
-  MINING
+  MINING,
+  API_SUCCESS
 } from "../../../util/constants/componentConstants";
+import { checkAuthentication } from '../../../util/api/users/userData';
 
 class UxSelector extends React.Component {
   constructor(props) {
@@ -40,10 +42,13 @@ class UxSelector extends React.Component {
 
   async selectUx(navLocation) {
     this.setState({ loading: true }, async () => {
-      const { activatedCoins, dispatch, activeUser, authenticated, identities } = this.props
+      const { activatedCoins, dispatch, activeUser, identities } = this.props
 
       Object.values(activeUser.startCoins).map(async (coinObj) => {
-        if (coinObj.mode === NATIVE || authenticated[coinObj.mode]) {
+        const authCheck = await checkAuthentication(coinObj.mode)
+        const authenticated = authCheck.msg === API_SUCCESS && authCheck.result
+
+        if (coinObj.mode === NATIVE || authenticated) {
           await activateCoin(coinObj, coinObj.mode, dispatch)
         }
       })
@@ -100,7 +105,6 @@ const mapStateToProps = (state) => {
   return {
     activeUser: state.users.activeUser,
     mainPathArray: state.navigation.mainPathArray,
-    authenticated: state.users.authenticated,
     activatedCoins: state.coins.activatedCoins,
     identities: state.ledger.identities
   };
