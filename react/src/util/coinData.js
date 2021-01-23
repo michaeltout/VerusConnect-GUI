@@ -1,5 +1,4 @@
 import explorerList from 'agama-wallet-lib/src/coin-helpers';
-import { staticVar } from './mainWindow';
 import coins from '../translate/coins'
 import {
   NATIVE,
@@ -61,9 +60,9 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
   if (erc20ContractId[chainTickerUc] || chainTickerUc === 'ETH') {
     available_modes[ETH] = true
   } else {
-    if (staticVar.chainParams[chainTickerUc] || chainTickerUc === 'KMD') {
+    if (window.bridge.chainParams[chainTickerUc] || chainTickerUc === 'KMD') {
       available_modes[NATIVE] = true
-      if (chainTickerUc !== 'KMD' && staticVar.chainParams[chainTickerUc].ac_private) {
+      if (chainTickerUc !== 'KMD' && window.bridge.chainParams[chainTickerUc].ac_private) {
         tags = {...tags, [IS_ZCASH]: true, [IS_SAPLING]: true, [Z_ONLY]: true}
       }
 

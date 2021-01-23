@@ -169,7 +169,7 @@ export const StakingCardRender = (props, state, stakingFunction, setDisplayBalan
   return (
     <Cockpit
       leftTachProps={{
-        tachColor: "rgb(0,178,26)",
+        tachColor: "rgb(74, 166, 88)",
         value:
           miningInfo != null && miningInfo.staking ? (useHypothetical ? 100 : percentBalanceStaking) : 0,
         label:

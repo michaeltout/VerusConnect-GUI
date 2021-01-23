@@ -177,7 +177,7 @@ class IdentityCard extends React.Component {
                     textAlign: "left",
                     fontSize: 24,
                     padding: 15,
-                    backgroundColor: "rgb(78,115,223)",
+                    backgroundColor: "rgb(49, 101, 212)",
                     color: "white",
                     display: "flex",
                     justifyContent: "space-between",
@@ -274,7 +274,7 @@ class IdentityCard extends React.Component {
                 <div
                   style={{
                     fontWeight: "bold",
-                    color: "rgb(78,115,223)",
+                    color: "rgb(49, 101, 212)",
                     flex: 1,
                     textAlign: "right",
                   }}
@@ -373,7 +373,7 @@ class IdentityCard extends React.Component {
                     color:
                       identity.privateaddress == null
                         ? "unset"
-                        : "rgb(78,115,223)",
+                        : "rgb(49, 101, 212)",
                     flex: 1,
                     textAlign: "right",
                   }}
@@ -396,7 +396,7 @@ class IdentityCard extends React.Component {
                 <div
                   style={{
                     fontWeight: "bold",
-                    color: numAddrs > 1 ? "#878787" : "rgb(78,115,223)",
+                    color: numAddrs > 1 ? "#878787" : "rgb(49, 101, 212)",
                     flex: 1,
                     textAlign: "right",
                   }}

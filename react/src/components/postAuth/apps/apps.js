@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { 
+import {
   AppsRender,
 } from './apps.render';
 import { logoutActiveUser } from '../../../actions/actionDispatchers'
@@ -17,7 +17,6 @@ class Apps extends React.Component {
       selectedCurrency: this.props.config.general.main.fiatCurrency,
       cards: [],
       secondaryTabs: [],
-      logoutDisabled: false,
       tabsMinimised: false,
     };
 
@@ -53,16 +52,13 @@ class Apps extends React.Component {
     const { dispatch, activatedCoins } = this.props;
     dispatch(setLogoutUser());
 
-    this.setState({ logoutDisabled: true }, async () => {
-      try {
-        await logoutActiveUser(activatedCoins, dispatch);
-        dispatch(finishLogoutUser());
-      } catch (e) {
-        dispatch(newSnackbar(ERROR_SNACK, `Error logging out: ${e.message}`));
-        dispatch(finishLogoutUser());
-        this.setState({ logoutDisabled: false });
-      }
-    });
+    try {
+      await logoutActiveUser(activatedCoins, dispatch);
+      dispatch(finishLogoutUser());
+    } catch (e) {
+      dispatch(newSnackbar(ERROR_SNACK, `Error logging out: ${e.message}`));
+      dispatch(finishLogoutUser());
+    }
   }
 
   selectApp(app) {
@@ -122,7 +118,7 @@ class Apps extends React.Component {
         dispatch(
           newSnackbar(
             SUCCESS_SNACK,
-            "Currency setting saved succesfully!",
+            "Currency setting saved successfully!",
             MID_LENGTH_ALERT
           )
         );
@@ -162,6 +158,7 @@ const mapStateToProps = (state) => {
     config: state.settings.config,
     activatedCoins: state.coins.activatedCoins,
     fiatCurrency: state.settings.config.general.main.fiatCurrency,
+    loggingOut: state.users.loggingOut
   };
 };
 

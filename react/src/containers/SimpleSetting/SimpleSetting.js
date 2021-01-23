@@ -38,8 +38,8 @@ class SimpleSetting extends React.Component {
                 onChange: (e) => handleChange(name, e.target.checked),
                 disabled
               }}
-              colorChecked="rgb(78,115,223)"
-              colorUnchecked="rgb(78,115,223)"
+              colorChecked="rgb(49, 101, 212)"
+              colorUnchecked="rgb(49, 101, 212)"
             />
           );
         case NUMBER_INPUT:
@@ -124,14 +124,14 @@ class SimpleSetting extends React.Component {
       }
     }
 
-    return hidden ? null : (
+    return (
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           paddingLeft: 16,
-          paddingRight: 16
+          paddingRight: 16,
         }}
       >
         <h6
@@ -141,7 +141,11 @@ class SimpleSetting extends React.Component {
           {label}
           {toolTip != null && (
             <Tooltip title={toolTip}>
-              <InfoIcon fontSize='small' color='primary' style={{ marginBottom: 2, marginLeft: 3 }}/>
+              <InfoIcon
+                fontSize="small"
+                color="primary"
+                style={{ marginBottom: 2, marginLeft: 3 }}
+              />
             </Tooltip>
           )}
         </h6>

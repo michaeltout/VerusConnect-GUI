@@ -15,7 +15,8 @@ import {
   SHIELDCOINBASE,
   CURRENCY_INFO,
   BASIC_MODAL,
-  SPLIT_MODAL
+  SPLIT_MODAL,
+  CONVERT_CURRENCY
 } from "../../util/constants/componentConstants";
 import AddCoin from "./addCoin/addCoin";
 import ChainInfo from "./chainInfo/chainInfo";
@@ -23,6 +24,7 @@ import IdInfo from "./idInfo/idInfo";
 import CurrencyInfo from "./currencyInfo/currencyInfo";
 import PbaasChainInfo from "./pbaasChainInfo/pbaasChainInfo";
 import ReceiveCoin from "./receiveCoin/receiveCoin";
+import ConvertCurrency from "./convertCurrency/convertCurrency";
 import SendCoin from "./sendCoin/sendCoin";
 import CreateIdentity from "./createIdentity/createIdentity";
 import TxInfo from "./txInfo/txInfo";
@@ -37,6 +39,9 @@ import { SplitModalRender } from "./modalTypes/splitModal.render";
 export const ModalRender = function() {
   const COMPONENT_PROPS = {
     setModalHeader: this.getModalHeader,
+    setModalLinks: this.getModalLinks,
+    setModalIcon: this.getModalIcon,
+    setModalButtons: this.getModalButtons,
     modalPathArray: this.state.modalPath,
     setModalLock: this.getModalLock,
     closeModal: this.closeModal,
@@ -75,6 +80,11 @@ export const ModalRender = function() {
     ),
     [RECEIVE_COIN]: (
       <ReceiveCoin
+        {...COMPONENT_PROPS}
+      />
+    ),
+    [CONVERT_CURRENCY]: (
+      <ConvertCurrency
         {...COMPONENT_PROPS}
       />
     ),

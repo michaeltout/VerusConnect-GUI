@@ -1,17 +1,8 @@
 import { testConfig } from '../util/testutil/testConfig'
 
-const mainWindow = window.require('electron').remote.getGlobal('app') || { appConfig: testConfig };
-export const mainWindowNonCached = window.require('electron').remote.getCurrentWindow();
+const mainWindow = window.electron.remote.getGlobal('app') || { appConfig: testConfig };
 
-const { ipcRenderer } = window.require('electron');
-export let staticVar;
-
-ipcRenderer.on('staticVar', (event, arg) => {
-  staticVar = arg;
-});
-
-if (!staticVar) { 
-  ipcRenderer.send('staticVar');
-}
+const { ipcRenderer } = window.electron;
+export const staticVar = window.staticVar;
 
 export default mainWindow;

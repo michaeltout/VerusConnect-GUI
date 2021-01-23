@@ -104,7 +104,7 @@ export const CurrenciesCardRender = (
       ) : verusCoins.length == 0 ? (
         <a
           href="#"
-          style={{ color: "rgb(78,115,223)" }}
+          style={{ color: "rgb(49, 101, 212)" }}
           onClick={openAddCoinModal}
         >
           {"Add VRSCTEST to discover new currencies!"}
@@ -156,8 +156,8 @@ export const CurrencyTableRender = (displayCurrencies, openCurrencyInfo, props) 
                     color: rowData.status === 'pending'
                       ? "#878787" /* GRAY */
                       : rowData.status === 'failed'
-                      ? "rgb(236,43,43)" /* RED */
-                      : "rgb(0,178,26)" /* GREEN */,
+                      ? "rgb(212, 49, 62)" /* RED */
+                      : "rgb(74, 166, 88)" /* GREEN */,
                     flex: 1,
                     overflow: "hidden",
                     whiteSpace: "nowrap",

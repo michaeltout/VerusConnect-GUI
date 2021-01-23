@@ -12,8 +12,11 @@ class OperationInfo extends React.Component {
   constructor(props) {
     super(props);
 
-    props.setModalHeader("Pending Transaction Info")
-    this.modalObj = this.generateOperationInfo(props)
+    if (props.inline == null) {
+      props.setModalHeader("Pending Operation Info")
+    }
+    
+    this.modalObj = this.generateOperationInfo({ opObj: props.inline ? props.operation : props.opObjRedux })
   }
 
   // To be called from constructor
@@ -31,7 +34,7 @@ class OperationInfo extends React.Component {
       ["Daemon Command"]: opObj.method,
       ["Transaction ID"]: opObj.result ? opObj.result.txid : null,
       ["Creation Time"]: timeConverter(opObj.creation_time),
-      ["Completion time (seconds)"]: opObj.execution_secs,
+      ["Completion time"]: `${opObj.execution_secs} seconds`,
       ["Operation ID"]: opObj.id,
       ["From"]: params.from,
       ["To"]: params.address,
@@ -44,7 +47,7 @@ class OperationInfo extends React.Component {
       ["Amount"]:
         params.amount != null
           ? params.amount
-          : params.amounts && Array.isArray(obObj.params.amounts)
+          : params.amounts && Array.isArray(opObj.params.amounts)
           ? params.amounts[0].amount
           : null,
       ["Fee"]: params.fee,
@@ -67,7 +70,10 @@ class OperationInfo extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    opObj: state.modal[OPERATION_INFO].opObj ? state.modal[OPERATION_INFO].opObj : {},
+    opObjRedux:
+      state.modal[OPERATION_INFO] && state.modal[OPERATION_INFO].opObj
+        ? state.modal[OPERATION_INFO].opObj
+        : {},
   };
 };
 

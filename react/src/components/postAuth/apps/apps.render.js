@@ -269,7 +269,7 @@ export const AppsRender = function() {
                   className="btn btn-primary noshadow"
                   type="button"
                   onClick={this.logoutAccount}
-                  disabled={this.state.logoutDisabled}
+                  disabled={this.props.loggingOut}
                   style={AppsStyles.topBarMenuItem}
                 >
                   <i

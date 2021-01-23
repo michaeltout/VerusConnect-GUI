@@ -35,7 +35,7 @@ export const VerifyIdSigDataRender = function() {
   return (
     <div
       style={{
-        color: verified ? "rgb(0,178,26)" : "rgb(236,43,43)",
+        color: verified ? "rgb(74, 166, 88)" : "rgb(212, 49, 62)",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",

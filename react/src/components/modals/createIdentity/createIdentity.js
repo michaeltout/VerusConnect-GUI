@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { 
+import {
   CreateIdentityRender
 } from './createIdentity.render';
 import {
@@ -64,7 +64,7 @@ class CreateIdentity extends React.Component {
     this.getContinueDisabled = this.getContinueDisabled.bind(this)
   }
 
-  getFormData(formData) {    
+  getFormData(formData) {
     this.setState({ formData })
   }
 
@@ -86,9 +86,9 @@ class CreateIdentity extends React.Component {
     let _txData
 
     setModalLock(true)
-    this.setState({loading: true, loadingProgress: 99}, async () => {      
+    this.setState({loading: true, loadingProgress: 99}, async () => {
       try {
-        const { 
+        const {
           chainTicker,
           name,
           controlAddress,
@@ -138,7 +138,7 @@ class CreateIdentity extends React.Component {
             _privateAddress,
           );
         }
-        
+
         this.props.setModalLock(false)
         if (_txData.msg === API_SUCCESS) {
           this.setState({ loadingProgress: 100 }, () => {
@@ -147,7 +147,7 @@ class CreateIdentity extends React.Component {
                 this.props.dispatch(
                   newSnackbar(
                     SUCCESS_SNACK,
-                    "Name commited. Please wait a few minutes for it to get confirmed, and then create your ID!",
+                    "Name committed. Please wait a few minutes for it to get confirmed, and then create your ID!",
                     MID_LENGTH_ALERT
                   )
                 );
@@ -166,7 +166,7 @@ class CreateIdentity extends React.Component {
                   )
                 );
               }
-                
+
               // Expire transactions and balances
               this.props.dispatch(expireData(this.props.activeCoin.id, API_GET_TRANSACTIONS))
               this.props.dispatch(expireData(this.props.activeCoin.id, API_GET_BALANCES))

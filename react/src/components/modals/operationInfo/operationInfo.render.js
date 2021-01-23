@@ -8,7 +8,7 @@ export const OperationInfoRender = function() {
     <div
       className="col-xs-12 margin-top-20 backround-gray"
       style={{
-        width: "90%",
+        width: this.props.inline ? "100%" : "90%",
       }}
     >
       <ObjectToTable dataObj={ modalObj } pagination={false} />

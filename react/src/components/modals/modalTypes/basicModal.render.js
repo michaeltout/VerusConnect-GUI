@@ -8,7 +8,7 @@ import IconButton from "@material-ui/core/IconButton";
 export const BasicModalRender = function(content) {
   return (
     <Dialog
-      open={this.props.modalPathArray.length > 0}
+      open={this.props.modalPathArray.length == null ? false : (this.props.modalPathArray.length > 0)}
       onClose={this.closeModal}
       fullWidth={true}
       disableBackdropClick={this.state.modalLock}

@@ -13,13 +13,17 @@ class Modal extends React.Component {
       modalHeader: 'Modal',
       modalPath: [],
       modalLock: false, // If set to true, modal will not be closeable
-      modalLinks: []
+      modalLinks: [], // {url: 'example.com', label: "Example Link"}
+      modalButtons: [], // {onClick: () => {}, isDisabled: false, label: "Example Button", isActive: false}
+      modalIcon: null
     }
 
     this.closeModal = this.closeModal.bind(this)
     this.getModalHeader = this.getModalHeader.bind(this)
     this.getModalLock = this.getModalLock.bind(this)
     this.getModalLinks = this.getModalLinks.bind(this)
+    this.getModalIcon = this.getModalIcon.bind(this)
+    this.getModalButtons = this.getModalButtons.bind(this)
   }
 
   // Prevent modal from flashing to null content on close
@@ -39,6 +43,14 @@ class Modal extends React.Component {
 
   getModalLinks(modalLinks) {
     this.setState({ modalLinks })
+  }
+
+  getModalIcon(modalIcon) {
+    this.setState({ modalIcon })
+  }
+
+  getModalButtons(modalButtons) {
+    this.setState({ modalButtons })
   }
 
   getModalLock(modalLock) {    

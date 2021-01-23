@@ -40,7 +40,7 @@ export const ExportToCsvRender = function() {
       <CustomButton
         onClick={this.exportToCsv}
         title={"Export Transactions"}
-        backgroundColor={"rgb(78,115,223)"}
+        backgroundColor={"rgb(49, 101, 212)"}
         textColor={"white"}
         buttonProps={{
           style: {

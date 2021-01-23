@@ -11,10 +11,10 @@
 }
 
 .active-nav-tab {
-  background-color: rgb(78,115,223) !important;
+  background-color: rgb(49, 101, 212) !important;
   color: white !important;
   border-width: 1px !important;
-  border-color: rgb(78,115,223) !important;
+  border-color: rgb(49, 101, 212) !important;
   border-style: solid !important;
   border-bottom-style: none !important;
 }
@@ -28,7 +28,7 @@
 }
 
 .inactive-nav-tab-icon {
-  color: rgb(78,115,223)
+  color: rgb(49, 101, 212)
 }
 
 .border-on-hover {
@@ -38,15 +38,28 @@
   
   &:hover {
     // BLUE
-    border-color: rgb(78,115,223);
+    border-color: rgb(49, 101, 212);
     border-width: 3px;
     padding: 0px;
     background-color: #EFEFEF;
   }
 }
 
+.blue-darken-on-hover {
+  background-color: rgb(49, 101, 212);
+  transition: background-color 0.1s ease-in-out;
+  
+  &:hover {
+    background-color:rgb(59, 93, 196);
+  }
+}
+
+.blue-dark {
+  background-color:rgb(59, 93, 196);
+}
+
 .active-card {
-  border-color: rgb(78,115,223);
+  border-color: rgb(49, 101, 212);
   border-width: 3px;
   padding: 0px;
   background-color: #EFEFEF;

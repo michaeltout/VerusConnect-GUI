@@ -48,7 +48,7 @@ export const RenderZcpmsPie = function() {
 
   return (
     <PieChart
-      data={[{ value: 1, key: 1, color: "rgb(78,115,223)" }]}
+      data={[{ value: 1, key: 1, color: "rgb(49, 101, 212)" }]}
       reveal={overallProgress}
       lineWidth={20}
       animate

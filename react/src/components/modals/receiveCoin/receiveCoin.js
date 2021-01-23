@@ -32,6 +32,18 @@ import Store from '../../../store'
 class ReceiveCoin extends React.Component {
   constructor(props) {
     super(props);
+    this.setAddrMode = this.setAddrMode.bind(this)
+    this.filterAddresses = this.filterAddresses.bind(this)
+    this.setInput = this.setInput.bind(this)
+    this.generateAddressOptions = this.generateAddressOptions.bind(this)
+    this.getKey = this.getKey.bind(this)
+    this.selectAddressOption = this.selectAddressOption.bind(this)
+    this.getNewAddress = this.getNewAddress.bind(this)
+    this.scrollToBottomAddress = this.scrollToBottomAddress.bind(this)
+    this.toggleAddressQr = this.toggleAddressQr.bind(this)
+    this.clearAddrSearch = this.clearAddrSearch.bind(this)
+    this.updateModalButtons = this.updateModalButtons.bind(this)
+
     this.isIdentity = props.modalProps.identity != null
 
     if (this.isIdentity) {
@@ -42,16 +54,6 @@ class ReceiveCoin extends React.Component {
         [PRIVATE_ADDRS]: this.idZAddrs
       }
     }
-
-    props.setModalHeader("Receive Coin")
-    this.supportedTypes = {
-      [PUBLIC_ADDRS]:
-        this.isIdentity || !props.activeCoin.options.tags.includes(Z_ONLY),
-      [PRIVATE_ADDRS]:
-        (this.isIdentity && this.idZAddrs.length > 0) ||
-        (!this.isIdentity && props.activeCoin.mode === NATIVE &&
-          props.activeCoin.options.tags.includes(IS_ZCASH))
-    };
 
     this.state = {
       selectedMode:
@@ -64,23 +66,29 @@ class ReceiveCoin extends React.Component {
         ? props.addresses
         : {
             [PUBLIC_ADDRS]: [],
-            [PRIVATE_ADDRS]: []
+            [PRIVATE_ADDRS]: [],
           },
       addressSearchTerm: "",
       balanceCurr: props.selectedCurrency,
-      qrAddress: null
+      qrAddress: null,
+      showZeroBalances:
+        props.activeCoin.mode !== NATIVE ||
+        this.isIdentity ||
+        props.config.general.native.defaultShowEmptyAddrs,
     };
 
-    this.setAddrMode = this.setAddrMode.bind(this)
-    this.filterAddresses = this.filterAddresses.bind(this)
-    this.setInput = this.setInput.bind(this)
-    this.generateAddressOptions = this.generateAddressOptions.bind(this)
-    this.getKey = this.getKey.bind(this)
-    this.selectAddressOption = this.selectAddressOption.bind(this)
-    this.getNewAddress = this.getNewAddress.bind(this)
-    this.scrollToBottomAddress = this.scrollToBottomAddress.bind(this)
-    this.toggleAddressQr = this.toggleAddressQr.bind(this)
-    this.clearAddrSearch = this.clearAddrSearch.bind(this)
+    this.supportedTypes = {
+      [PUBLIC_ADDRS]:
+        this.isIdentity || !props.activeCoin.options.tags.includes(Z_ONLY),
+      [PRIVATE_ADDRS]:
+        (this.isIdentity && this.idZAddrs.length > 0) ||
+        (!this.isIdentity && props.activeCoin.mode === NATIVE &&
+          props.activeCoin.options.tags.includes(IS_ZCASH))
+    };
+
+    props.setModalHeader("Manage my addresses")
+    props.setModalIcon('assets/images/icons/modal_icons/my-addresses-icon.svg')
+    this.updateModalButtons(props)
   }
 
   async componentDidMount() {
@@ -101,6 +109,42 @@ class ReceiveCoin extends React.Component {
         this.getNewAddress(PRIVATE_ADDRS, true)
       }
     }
+  }
+
+  componentDidUpdate(lastProps, lastState) {
+    if (
+      lastState.selectedMode !== this.state.selectedMode ||
+      lastState.qrAddress !== this.state.qrAddress
+    )
+      this.updateModalButtons(this.props);
+  }
+
+  componentWillUnmount() {
+    this.props.setModalIcon(null)
+  }
+
+  updateModalButtons(props) {
+    let modalButtons = []
+
+    if (this.supportedTypes[PUBLIC_ADDRS]) {
+      modalButtons.push({
+        onClick: () => this.setAddrMode(PUBLIC_ADDRS),
+        isActive: this.state.selectedMode === PUBLIC_ADDRS,
+        label: "Public",
+        isDisabled: this.state.qrAddress
+      })
+    }
+
+    if (this.supportedTypes[PRIVATE_ADDRS]) {
+      modalButtons.push({
+        onClick: () => this.setAddrMode(PRIVATE_ADDRS),
+        isActive: this.state.selectedMode === PRIVATE_ADDRS,
+        label: "Private",
+        isDisabled: this.state.qrAddress
+      })
+    }
+
+    props.setModalButtons(modalButtons);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -192,8 +236,15 @@ class ReceiveCoin extends React.Component {
   generateAddressOptions(address) {
     let addressOptions = [GENERATE_QR]
 
-    if (!this.isIdentity)
-      addressOptions.push(COPY_PRIVKEY);
+    if (
+      (address[0] === "i" || address.includes("@")) &&
+      this.props.activeCoin.mode === NATIVE
+    ) {
+      return addressOptions;
+    }
+      
+    addressOptions.push(COPY_PRIVKEY);
+      
     if (this.props.activeCoin.mode === NATIVE) {
       if (address[0] !== 'z') addressOptions.push(COPY_PUBKEY)
     } 
@@ -209,9 +260,10 @@ class ReceiveCoin extends React.Component {
     }
   }
 
-  setAddrMode(e) {
-    const { name } = e.target
-    this.setState({ selectedMode: name, balanceCurr: name === PRIVATE_ADDRS ? this.props.activeCoin.id : this.state.balanceCurr })
+  setAddrMode(mode) {
+    this.setState({
+      selectedMode: mode
+    });
   }
 
   setInput(e) {

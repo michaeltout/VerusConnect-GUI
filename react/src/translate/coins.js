@@ -155,7 +155,7 @@ const coins = {
     PCL: 'Peculium',
     PCNC: 'PCN Coin',
     PEP: 'PesaPepe',
-    PGT: 'Puregold Token',
+    PGTS: 'Puregold Token',
     POLY: 'Polymath',
     PURC: 'Peurcoin',
     QBIT: 'Qubitica',

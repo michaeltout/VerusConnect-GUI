@@ -66,8 +66,8 @@ export const ProfileSettingsStartScreenRender = function() {
                   checked: displayUser.startAtLastLocation,
                   onChange: () => this.setStartScreen(true),
                 }}
-                colorChecked="rgb(78,115,223)"
-                colorUnchecked="rgb(78,115,223)"
+                colorChecked="rgb(49, 101, 212)"
+                colorUnchecked="rgb(49, 101, 212)"
               />
               <label
                 className="form-check-label"
@@ -88,8 +88,8 @@ export const ProfileSettingsStartScreenRender = function() {
                   checked: !displayUser.startAtLastLocation,
                   onChange: () => this.setStartScreen(false),
                 }}
-                colorChecked="rgb(78,115,223)"
-                colorUnchecked="rgb(78,115,223)"
+                colorChecked="rgb(49, 101, 212)"
+                colorUnchecked="rgb(49, 101, 212)"
               />
               <select 
                 value={ this.state.selectedStartLocation }
@@ -165,8 +165,8 @@ export const ProfileSettingsStartCoinsRender = function() {
                   checked: displayUser.startWithLastCoins,
                   onChange: () => this.setStartCoins(true),
                 }}
-                colorChecked="rgb(78,115,223)"
-                colorUnchecked="rgb(78,115,223)"
+                colorChecked="rgb(49, 101, 212)"
+                colorUnchecked="rgb(49, 101, 212)"
               />
               <label
                 className="form-check-label"
@@ -187,8 +187,8 @@ export const ProfileSettingsStartCoinsRender = function() {
                   checked: !displayUser.startWithLastCoins,
                   onChange: () => this.setStartCoins(false),
                 }}
-                colorChecked="rgb(78,115,223)"
-                colorUnchecked="rgb(78,115,223)"
+                colorChecked="rgb(49, 101, 212)"
+                colorUnchecked="rgb(49, 101, 212)"
               />
               <select
                 value={ this.state.selectedCoin }
@@ -219,9 +219,9 @@ export const ProfileSettingsStartCoinsRender = function() {
               disabled = { !selectedCoinObj.available_modes[NATIVE] || coinIsSelected }
               style={{
                 fontSize: 14,
-                backgroundColor: "rgb(78,115,223)",
+                backgroundColor: "rgb(49, 101, 212)",
                 borderWidth: 1,
-                borderColor: "rgb(78,115,223)",
+                borderColor: "rgb(49, 101, 212)",
                 minWidth: 103,
                 marginRight: 10,
               }}>
@@ -234,9 +234,9 @@ export const ProfileSettingsStartCoinsRender = function() {
               disabled = { (!selectedCoinObj.available_modes[ETH] && !selectedCoinObj.available_modes[ELECTRUM]) || coinIsSelected }
               style={{
                 fontSize: 14,
-                backgroundColor: "rgb(78,115,223)",
+                backgroundColor: "rgb(49, 101, 212)",
                 borderWidth: 1,
-                borderColor: "rgb(78,115,223)",
+                borderColor: "rgb(49, 101, 212)",
                 minWidth: 103
               }}>
               {"Add Lite"}

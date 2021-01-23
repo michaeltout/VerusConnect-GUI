@@ -17,6 +17,7 @@ export const IS_VERUS = 'is_verus'
 // Recurring API Call names
 export const API_GET_BALANCES = 'get_balances'
 export const API_GET_TRANSACTIONS = 'get_transactions'
+export const API_GET_RESERVE_TRANSFERS = 'get_reserve_transfers'
 export const API_GET_INFO = 'get_info'
 export const API_GET_DEFINEDCHAINS = 'get_definedchains'
 export const API_GET_BLOCKREWARD = 'get_blocksubsidy'
@@ -46,6 +47,7 @@ export const API_GET_RFOX_GET_ACCOUNT_BALANCES = 'rfox/get_account_balances'
 export const API_CREATE_ADDRESS = 'get_newaddress'
 export const API_TX_PREFLIGHT = 'tx_preflight'
 export const API_SENDTX = 'sendtx'
+export const API_SENDCURRENCY = 'sendcurrency'
 export const API_REGISTER_ID_NAME = 'register_id_name'
 export const API_REGISTER_ID = 'register_id'
 export const API_RECOVER_ID = 'recover_id'
@@ -78,7 +80,6 @@ export const RESET_CONFIG = 'config/reset'
 export const GET_SCHEMA = 'config/schema'
 export const ENCRYPT_KEY = 'encryptkey'
 export const DECRYPT_KEY = 'decryptkey'
-export const MODIFY_PIN = 'modifypin'
 export const API_ACTIVATE_COIN = 'coins/activate'
 export const API_REMOVE_COIN = 'remove_coin'
 export const CHECK_ZCASH_PARAMS = 'zcashparamsexist'
@@ -141,6 +142,11 @@ export const LINEAR_DECAY = 100000000
 export const MIN_BILLING_PERIOD = 480
 export const FORM_TITLES = ['NAME', 'LAUNCH_OPTIONS', 'REWARD_STRUCTURE', 'BILLING', 'NODES', 'CONFIRM']
 
+// Currency Conversion Overview
+export const COPY_TRANSFER_TXID = 'Copy Transaction ID'
+export const MORE_INFO = "More Info"
+export const VIEW_TRANSFER_ON_EXPLORER = 'View on Explorer'
+
 // Add coin and login modal and screen
 export const SEED_TRIM_TIMEOUT = 5000
 export const DEFAULT_CHAIN = "defaultChain.png"
@@ -199,6 +205,7 @@ export const CONFIGURE_LITE = 'configure_lite'
 export const CONFIGURE_NATIVE = 'configure_native'
 export const CONFIGURE = 'configure'
 export const IMMATURE_DETAILS = 'immature_details'
+export const CONVERT_CURRENCY = 'convert_currency'
 
 // Coin object data
 export const DEFAULT_DUST_THRESHOLD = 0.00001
@@ -411,7 +418,10 @@ export const ID_REVOKED = 'revoked'
 // loading reducer
 export const MINING_FUNCTIONS = 'mining_functions'
 
-export const MAX_RECURSION_DEPTH_API = 3000
+// Conversion modal constants
+export const SIMPLE_CONVERSION = 'simple_conversion'
+export const ADVANCED_CONVERSION = 'advanced_conversion'
+export const CONVERSION_OVERVIEW = 'conversion_overview'
 
 
 

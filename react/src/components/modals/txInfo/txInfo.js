@@ -13,7 +13,7 @@ import {
   TX_EXPLORER
 } from "../../../util/constants/componentConstants";
 import { decodeMemo } from '../../../util/txUtils/zTxUtils';
-const { shell } = window.require('electron');
+const { shell } = window.bridge
 
 class TxInfo extends React.Component {
   constructor(props) {
