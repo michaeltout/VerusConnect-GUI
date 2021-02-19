@@ -5,10 +5,11 @@ import { API_GET_ADDRESSES } from '../../../constants/componentConstants'
  * Function to get addresses for specific mode 
  * @param {String} mode native || electrum || eth
  * @param {String} chainTicker Ticker symbol for coin to fetch addresses for
- * @param {Boolean} includePrivate Include private addresses (native only)
+ * @param {Boolean} includePrivateAddresses Include private addresses (native only)
+ * @param {Boolean} includePrivateBalances Include private balances (native only)
  */
-export const getAddresses = async (mode, chainTicker, includePrivate = false) => {
-  const params = {chainTicker, includePrivate}
+export const getAddresses = async (mode, chainTicker, includePrivateAddresses = false, includePrivateBalances = false) => {
+  const params = {chainTicker, includePrivateAddresses, includePrivateBalances}
   let addresses = {}
 
   try {
