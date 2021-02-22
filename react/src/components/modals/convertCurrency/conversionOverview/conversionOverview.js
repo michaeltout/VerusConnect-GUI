@@ -94,7 +94,7 @@ class ConversionOverview extends React.Component {
   }
 
   getStatusString(tx) {
-    return tx == null ? "failed" : tx.confirmations ? "confirmed" : "pending";
+    return tx == null ? "failed" : tx.confirmations ? "sent" : "pending";
   }
 
   clearTransferSearch() {

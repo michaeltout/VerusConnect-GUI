@@ -297,7 +297,15 @@ export const ConvertCurrencyConfirmSimpleRender = function() {
 };
 
 export const ConvertCurrencyFormSimpleRender = function() {
-  const { currency, amount, convertto, address, via } = this.state.outputs[0]
+  const {
+    currency,
+    amount,
+    convertto,
+    address,
+    via,
+    sendAmount,
+    receiveAmount,
+  } = this.state.outputs[0];
   const price = this.state.conversionPaths[this.state.selectedConversionPath]
     ? this.state.conversionPaths[this.state.selectedConversionPath].price
     : 0;
@@ -321,7 +329,7 @@ export const ConvertCurrencyFormSimpleRender = function() {
         alignItems: "stretch",
         justifyContent: "space-between",
         height: "100%",
-        marginBottom: 8
+        marginBottom: 8,
       }}
     >
       <div
@@ -363,13 +371,14 @@ export const ConvertCurrencyFormSimpleRender = function() {
               label="Amount"
               variant="outlined"
               size="small"
-              onChange={(e) =>
-                this.updateOutput(
-                  "amount",
-                  isNaN(e.target.value) ? amount : Number(e.target.value)
-                )
+              onChange={(e) => this.updateSimpleFormAmount(e, true)}
+              value={
+                this.state.controlAmounts
+                  ? amount
+                  : sendAmount == null
+                  ? ""
+                  : sendAmount
               }
-              value={amount}
               style={{ flex: 1, marginRight: 4 }}
             />
             <SuggestionInput
@@ -382,7 +391,7 @@ export const ConvertCurrencyFormSimpleRender = function() {
               freeSolo={false}
               onChange={(e) => {
                 if (e.target.value != null && e.target.value.length > 0) {
-                  this.selectSimpleSourceCurrency(e.target.value)
+                  this.selectSimpleSourceCurrency(e.target.value);
                 }
               }}
               containerStyle={{ flex: 2 }}
@@ -421,17 +430,14 @@ export const ConvertCurrencyFormSimpleRender = function() {
               label="Amount"
               variant="outlined"
               size="small"
-              onChange={(e) =>
-                this.updateOutput(
-                  "amount",
-                  isNaN(e.target.value)
-                    ? amount
-                    : Number(
-                        price === 0 ? 0 : (e.target.value / price).toFixed(8)
-                      )
-                )
+              onChange={(e) => this.updateSimpleFormAmount(e, false)}
+              value={
+                this.state.controlAmounts
+                  ? Number((amount * price).toFixed(8))
+                  : receiveAmount == null
+                  ? ""
+                  : receiveAmount
               }
-              value={Number((amount * price).toFixed(8))}
               style={{ flex: 1, marginRight: 4 }}
               disabled={Object.keys(this.state.conversionPaths) == 0}
             />
@@ -619,6 +625,7 @@ export const ConvertCurrencyFormAdvancedRender = function() {
             preconvert,
             refundto,
             memo,
+            sendAmount
           } = output;
 
           return (
@@ -668,14 +675,14 @@ export const ConvertCurrencyFormAdvancedRender = function() {
                   label="Amount"
                   variant="outlined"
                   size="small"
-                  onChange={(e) =>
-                    this.updateOutput(
-                      "amount",
-                      isNaN(e.target.value) ? amount : Number(e.target.value),
-                      index
-                    )
+                  onChange={(e) => this.updateAdvancedFormAmount(e, index)}
+                  value={
+                    this.state.controlAmounts
+                      ? amount
+                      : sendAmount == null
+                      ? ""
+                      : sendAmount
                   }
-                  value={amount}
                   style={{ flex: 1, marginRight: 4 }}
                   disabled={isConfirmStep}
                 />
