@@ -37,7 +37,7 @@ class ConfigureNative extends React.Component {
       error: false,
     };
 
-    this.socket = io.connect(`http://127.0.0.1:${this.props.config.general.main.agamaPort}`);
+    this.socket = io(`http://127.0.0.1:${this.props.config.general.main.agamaPort}`);
     this.initZcashParamsDl = this.initZcashParamsDl.bind(this)
     this.updateSocketsData = this.updateSocketsData.bind(this)
     this.calculateProgress = this.calculateProgress.bind(this)
