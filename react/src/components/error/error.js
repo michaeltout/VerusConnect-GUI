@@ -9,7 +9,7 @@ class Error extends React.Component {
 
   render() {    
     const DISCORD_LINK = "https://discord.gg/VRKMP2S"
-    const WIKI_LINK = "https://wiki.veruscoin.io/#!index.md"
+    const WIKI_LINK = "https://wiki.verus.io/#!index.md"
 
     return (
       <div className="error-container">

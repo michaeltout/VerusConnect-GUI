@@ -19,7 +19,7 @@ export const PreAuthRender = function() {
   }
 
   const DISCORD_LINK = "https://discord.gg/VRKMP2S"
-  const WIKI_LINK = "https://wiki.veruscoin.io/#!index.md"
+  const WIKI_LINK = "https://wiki.verus.io/#!index.md"
 
   return (
     <div className="d-flex d-sm-flex d-md-flex align-items-center align-items-sm-center align-items-md-center contact-clean pre-auth-container">

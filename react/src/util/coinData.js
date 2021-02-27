@@ -1,4 +1,4 @@
-import explorerList from 'agama-wallet-lib/src/coin-helpers';
+import explorerList from './explorerList'
 import coins from '../translate/coins'
 import {
   NATIVE,
@@ -21,10 +21,10 @@ import erc20ContractId from 'agama-wallet-lib/src/eth-erc20-contract-id'
 import electrumServers from 'agama-wallet-lib/src/electrum-servers'
 import networks from 'agama-wallet-lib/src/bitcoinjs-networks'
 import { fromSats } from 'agama-wallet-lib/src/utils'
-import komodoUtils from 'agama-wallet-lib/src/coin-helpers';
+import komodoUtils from 'agama-wallet-lib/src/coin-helpers'
 import * as Vibrant from 'node-vibrant'
 import * as randomColor from 'randomcolor'
-import { coinDataDirectories } from './constants/coinDataDirectories';
+import { coinDataDirectories } from './constants/coinDataDirectories'
 
 /**
  * Aggregates all relevant coin data needed in order to add
