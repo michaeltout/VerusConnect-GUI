@@ -1,8 +1,8 @@
+import Config from '../../config'
 import { 
   ALWAYS_ACTIVATED, 
   NEVER_ACTIVATED, 
-  IS_ZCASH, 
-  IS_PBAAS, 
+  IS_ZCASH,
   IS_PBAAS_ROOT,
   API_GET_ADDRESSES,
   API_GET_BALANCES,
@@ -25,6 +25,10 @@ import {
   API_GET_CURRENTSUPPLY,
   API_GET_RESERVE_TRANSFERS
 } from './componentConstants'
+
+const PASSIVE_MODE_MULTIPLIER = 20
+const TIMEOUT_MULTIPLIER =
+  Config.general != null && Config.general.native.passiveMode ? PASSIVE_MODE_MULTIPLIER : 1;
 
 /**
  * This object holds all the settings for deciding the timing and frequency of system data updates,
@@ -123,7 +127,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 30000,
+          expire_timeout: 30000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000
         }
       }
@@ -159,7 +163,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 60000,
+          expire_timeout: 60000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000,
         }
       },
@@ -175,7 +179,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 60000,
+          expire_timeout: 60000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000,
         }
       }
@@ -211,7 +215,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 60000,
+          expire_timeout: 60000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000,
         }
       },
@@ -227,7 +231,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 60000,
+          expire_timeout: 60000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000,
         }
       }
@@ -263,7 +267,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 60000,
+          expire_timeout: 60000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000,
         }
       },
@@ -279,7 +283,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 60000,
+          expire_timeout: 60000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000,
         }
       }
@@ -315,7 +319,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 120000,
+          expire_timeout: 120000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000,
         }
       },
@@ -331,7 +335,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 120000,
+          expire_timeout: 120000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000,
         }
       }
@@ -367,7 +371,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 120000,
+          expire_timeout: 120000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000,
         }
       },
@@ -383,7 +387,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 120000,
+          expire_timeout: 120000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000,
         }
       }
@@ -420,7 +424,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 60000,
+          expire_timeout: 60000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000,
         }
       },
@@ -436,7 +440,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 60000,
+          expire_timeout: 60000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000,
         }
       }
@@ -472,7 +476,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 30000,
+          expire_timeout: 30000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000
         }
       },
@@ -488,7 +492,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 15000,
+          expire_timeout: 15000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000
         }
       }
@@ -524,7 +528,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 60000,
+          expire_timeout: 60000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000
         }
       },
@@ -540,7 +544,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 60000,
+          expire_timeout: 60000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000
         }
       }
@@ -576,7 +580,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 60000,
+          expire_timeout: 60000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000
         }
       },
@@ -592,7 +596,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 60000,
+          expire_timeout: 60000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000
         }
       }
@@ -628,7 +632,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 30000,
+          expire_timeout: 30000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000
         }
       },
@@ -644,7 +648,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 30000,
+          expire_timeout: 30000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000
         }
       }
@@ -680,7 +684,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 30000,
+          expire_timeout: 30000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000
         }
       },
@@ -696,7 +700,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 30000,
+          expire_timeout: 30000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000
         }
       }
@@ -732,7 +736,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 30000,
+          expire_timeout: 30000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000
         }
       },
@@ -748,7 +752,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 30000,
+          expire_timeout: 30000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000
         }
       }
@@ -784,7 +788,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 30000,
+          expire_timeout: 30000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000,
         }
       },
@@ -800,63 +804,63 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 30000,
+          expire_timeout: 30000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000,
         }
       }
     },
 
-    [API_GET_DEFINEDCHAINS]: {
-      restrictions: [IS_PBAAS_ROOT], 
-      pre_data: {
-        tracking_info: {
-          needs_update: false,
-          busy: false,
-          location_restrictions: [],
-          location_and_type_restrictions: []
-        },
-        interval_info: {
-          expire_id: null,
-          update_expired_id: null,
-          expire_oncomplete: null,
-          update_expired_oncomplete: null,
-          expire_timeout: NEVER_ACTIVATED,
-          update_expired_interval: NEVER_ACTIVATED
-        }
-      },
-      syncing: {
-        tracking_info: {
-          needs_update: true,
-          busy: false,
-          location_restrictions: ['@post_auth/apps/pbaas/discover'],
-          location_and_type_restrictions: []
-        },
-        interval_info: {
-          expire_id: null,
-          update_expired_id: null,
-          expire_oncomplete: null,
-          update_expired_oncomplete: null,
-          expire_timeout: 30000,
-          update_expired_interval: 10000
-        }
-      },
-      post_sync: {
-        tracking_info: {
-          needs_update: true,
-          busy: false,
-          location_restrictions: [/*'@post_auth/apps/pbaas/discover'*/],
-          location_and_type_restrictions: []
-        },
-        interval_info: {
-          expire_id: null,
-          update_expired_id: null,
-          expire_oncomplete: null,
-          update_expired_oncomplete: null,
-          expire_timeout: 30000,
-          update_expired_interval: 10000
-        }
-      }
-    },
+    // [API_GET_DEFINEDCHAINS]: {
+    //   restrictions: [IS_PBAAS_ROOT], 
+    //   pre_data: {
+    //     tracking_info: {
+    //       needs_update: false,
+    //       busy: false,
+    //       location_restrictions: [],
+    //       location_and_type_restrictions: []
+    //     },
+    //     interval_info: {
+    //       expire_id: null,
+    //       update_expired_id: null,
+    //       expire_oncomplete: null,
+    //       update_expired_oncomplete: null,
+    //       expire_timeout: NEVER_ACTIVATED,
+    //       update_expired_interval: NEVER_ACTIVATED
+    //     }
+    //   },
+    //   syncing: {
+    //     tracking_info: {
+    //       needs_update: true,
+    //       busy: false,
+    //       location_restrictions: ['@post_auth/apps/pbaas/discover'],
+    //       location_and_type_restrictions: []
+    //     },
+    //     interval_info: {
+    //       expire_id: null,
+    //       update_expired_id: null,
+    //       expire_oncomplete: null,
+    //       update_expired_oncomplete: null,
+    //       expire_timeout: 30000 * TIMEOUT_MULTIPLIER,
+    //       update_expired_interval: 10000
+    //     }
+    //   },
+    //   post_sync: {
+    //     tracking_info: {
+    //       needs_update: true,
+    //       busy: false,
+    //       location_restrictions: [/*'@post_auth/apps/pbaas/discover'*/],
+    //       location_and_type_restrictions: []
+    //     },
+    //     interval_info: {
+    //       expire_id: null,
+    //       update_expired_id: null,
+    //       expire_oncomplete: null,
+    //       update_expired_oncomplete: null,
+    //       expire_timeout: 30000 * TIMEOUT_MULTIPLIER,
+    //       update_expired_interval: 10000
+    //     }
+    //   }
+    // },
   },
   
   //Electrum and eth have no syncing or pre_data phases
