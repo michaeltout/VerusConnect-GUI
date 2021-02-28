@@ -44,6 +44,7 @@ import HelpIcon from '@material-ui/icons/Help';
 import MigrationHelper from "../../../../../containers/MigrationHelper/MigrationHelper";
 import { closeTextDialog, openTextDialog } from "../../../../../actions/actionDispatchers";
 import { claimRfoxMigration, estimateGasRfoxMigration, getRfoxMigrationAccountBalances } from "../../../../../util/api/wallet/walletCalls";
+import { normalizeNum } from "../../../../../util/displayUtil/numberFormat";
 
 export const CoinWalletRender = function() {
   return (
@@ -761,8 +762,9 @@ export const WalletRenderOperations = function() {
 }
 
 export const WalletRenderCurrencyFunctions = function() {
-  const { whitelists, activatedCoins, coin, selectedCurrency } = this.props
+  const { whitelists, coin, selectedCurrency, balances } = this.props
   const whitelist = whitelists[coin] ? whitelists[coin] : []
+  const currencyBalances = balances != null ? balances.reserve : null
 
   return (
     <React.Fragment>
@@ -795,13 +797,33 @@ export const WalletRenderCurrencyFunctions = function() {
                   e.target.value == -1 ? coin : whitelist[e.target.value]
                 )
               }
-              labelWidth={138}
+              labelWidth={124}
             >
               <MenuItem value={-1}>{coin}</MenuItem>
               {whitelist.map((currency, index) => {
+                const currencyBalance =
+                  currencyBalances == null
+                    ? ["-", 0, ""]
+                    : currencyBalances[currency] == null
+                    ? ["0", 0, ""]
+                    : normalizeNum(currencyBalances[currency].public.confirmed);
+
                 return (
-                  <MenuItem key={index} value={index}>
-                    {currency}
+                  <MenuItem
+                    key={index}
+                    value={index}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <div>{currency}</div>
+                    <div>
+                      {currencyBalances == null || selectedCurrency === currency
+                        ? ""
+                        : `${currencyBalance[0]}${currencyBalance[2]}`}
+                    </div>
                   </MenuItem>
                 );
               })}

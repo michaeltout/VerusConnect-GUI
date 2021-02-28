@@ -15,7 +15,7 @@ export const api = (state = {
       let newCalledTimes = [...state.calledTimes, action.payload.time]
       newCalledTimes = newCalledTimes.filter(
         (x) =>
-          x > action.payload.time - 60000 && x < action.payload.time + 60000
+          x > action.payload.time - 600000 && x < action.payload.time + 600000
       );
 
       return {

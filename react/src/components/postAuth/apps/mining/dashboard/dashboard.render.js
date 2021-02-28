@@ -74,7 +74,7 @@ export const DashboardRenderSystemData = function() {
     ["Blockchains Mining"]: numMined,
     ["Blockchains Staking"]: numStaked,
     //["CPU Temp"]: `${cpuTemp.main ? cpuTemp.main : '-'} °C`,
-    ["CPU Load"]: `${cpuLoad.currentload ? cpuLoad.currentload.toFixed(2) : '- '}%`,
+    ["CPU Load"]: `${cpuLoad.currentLoad ? cpuLoad.currentLoad.toFixed(2) : '- '}%`,
     ["CPU Uptime"]: sysTime.uptime != null ? secondsToTime(sysTime.uptime) : '-'
   }
 

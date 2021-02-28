@@ -11,13 +11,12 @@ import { getIdentity, getCurrency } from "../../util/api/wallet/walletCalls";
 import {
   NATIVE,
   ERROR_SNACK,
-  TRANSPARENT_BALANCE,
   MID_LENGTH_ALERT,
   WARNING_SNACK,
   API_GET_CURRENCY_DATA_MAP,
-  SEND_COIN,
   CONVERT_CURRENCY,
   SPLIT_MODAL,
+  SIMPLE_CONVERSION,
 } from "../../util/constants/componentConstants";
 import { newSnackbar } from '../../actions/actionCreators';
 import IconDropdown from '../IconDropdown/IconDropdown'
@@ -252,13 +251,12 @@ class CurrencyCard extends React.Component {
           API_GET_CURRENCY_DATA_MAP
         );
 
-        const newState = Store.getState()
-
         openModal(
           CONVERT_CURRENCY,
           {
             selectedMode: SIMPLE_CONVERSION,
             selectedCurrency: currencyInfo.currency.name,
+            chainTicker
           },
           SPLIT_MODAL
         )

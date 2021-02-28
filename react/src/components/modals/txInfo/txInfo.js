@@ -4,6 +4,7 @@ import {
   TxInfoRender,
   ExplorerButtonRender,
 } from './txInfo.render';
+import { explorerList } from 'agama-wallet-lib/src/coin-helpers'
 import {
   TX_INFO,
   TX_MESSAGE,
@@ -100,7 +101,7 @@ const mapStateToProps = (state) => {
   return {
     txObj: state.modal[TX_INFO].txObj ? state.modal[TX_INFO].txObj : {},
     info: state.ledger.info[chainTicker] ? state.ledger.info[chainTicker] : {},
-    explorerUrl: state.coins.activatedCoins[chainTicker].options.explorer,
+    explorerUrl: explorerList[chainTicker],
     displayTx: state.modal[TX_INFO].displayTx ? state.modal[TX_INFO].displayTx : {},
   };
 };

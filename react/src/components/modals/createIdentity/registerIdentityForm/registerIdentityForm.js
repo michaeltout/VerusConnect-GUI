@@ -27,7 +27,7 @@ class RegisterIdentityForm extends React.Component {
     const { addresses, chainTicker } = props
 
     const initAddresslist = () => {
-      let addressList = addresses[chainTicker][PRIVATE_ADDRS].map(addressObj => {
+      let addressList = addresses[chainTicker] == null ? [] : addresses[chainTicker][PRIVATE_ADDRS].map(addressObj => {
         return {
           label: `${addressObj.address} (${addressObj.balances.native} ${chainTicker})`,
           address: addressObj.address,

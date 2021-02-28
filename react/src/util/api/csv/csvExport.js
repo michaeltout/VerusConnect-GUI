@@ -5,9 +5,9 @@ import { API_EXPORT_TX_CSV } from "../../constants/componentConstants"
  * Exports a list of transactions as a csv file,
  * format of each tx must be {type, amount, fee, date, address, confirmations, affected_balance, txid, coin}
  */
-export const exportTransactionCsv = async (transactions, path) => {
+export const exportTransactionCsv = async (transactions) => {
   try {
-    const res = await apiPost(API_EXPORT_TX_CSV, { transactions, path })
+    const res = await apiPost(API_EXPORT_TX_CSV, { transactions })
     if (res.msg !== 'success') throw new Error(res.result)
     else return res.result
   } catch (e) {

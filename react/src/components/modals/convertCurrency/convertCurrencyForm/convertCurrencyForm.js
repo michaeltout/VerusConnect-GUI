@@ -33,7 +33,9 @@ class ConvertCurrencyForm extends React.Component {
         address: "",
         refundto: "",
         memo: "",
-        preconvert: ""
+        preconvert: "",
+        sendAmount: "",
+        receiveAmount: ""
       }],
       estArrivals: [],
       conversionPaths: {},
@@ -41,7 +43,8 @@ class ConvertCurrencyForm extends React.Component {
       selectedConversionPath: null,
       addresses: [],
       formStep: ENTER_DATA,
-      confirmOutputIndex: 0
+      confirmOutputIndex: 0,
+      controlAmounts: true
     };
 
     this.updateOutput = this.updateOutput.bind(this)
@@ -54,6 +57,10 @@ class ConvertCurrencyForm extends React.Component {
     this.addOutput = this.addOutput.bind(this)
     this.removeOutput = this.removeOutput.bind(this)
     this.scrollToOutputBottom = this.scrollToOutputBottom.bind(this)
+    this.setControlAmounts = this.setControlAmounts.bind(this)
+    this.updateSimpleFormAmount = this.updateSimpleFormAmount.bind(this)
+    this.updateAdvancedFormAmount = this.updateAdvancedFormAmount.bind(this)
+    this.isValidAmount = this.isValidAmount.bind(this)
 
     this.outputsEnd = null;
   }
@@ -81,7 +88,9 @@ class ConvertCurrencyForm extends React.Component {
         address: "",
         refundto: "",
         memo: "",
-        preconvert: ""
+        preconvert: "",
+        sendAmount: "",
+        receiveAmount: ""
       }],
       estArrivals: [],
       conversionPaths: {},
@@ -89,7 +98,8 @@ class ConvertCurrencyForm extends React.Component {
       selectedConversionPath: null,
       addresses: [],
       formStep: ENTER_DATA,
-      confirmOutputIndex: 0
+      confirmOutputIndex: 0,
+      controlAmounts: true
     }, () => {
       this.processAddresses()
     })
@@ -150,7 +160,33 @@ class ConvertCurrencyForm extends React.Component {
 
   async confirmSend() {
     try {
-      const response = await sendCurrency(this.props.modalProps.chainTicker, this.state.fromAddress, this.state.outputs)
+      const response = await sendCurrency(
+        this.props.modalProps.chainTicker,
+        this.state.fromAddress,
+        this.state.outputs.map((output) => {
+          const {
+            currency,
+            amount,
+            convertto,
+            via,
+            address,
+            refundto,
+            memo,
+            preconvert,
+          } = output;
+
+          return {
+            currency,
+            amount,
+            convertto,
+            via,
+            address,
+            refundto,
+            memo,
+            preconvert,
+          };
+        })
+      );
 
       if (response.msg === 'success') {
         this.props.dispatch(expireData(this.props.modalProps.chainTicker, API_GET_RESERVE_TRANSFERS))
@@ -173,6 +209,84 @@ class ConvertCurrencyForm extends React.Component {
     })
   }
 
+  setControlAmounts(x) {
+    this.setState({
+      controlAmounts: x == true
+    })
+  }
+
+  updateSimpleFormAmount(e, isSend) {
+    const validInput = this.isValidAmount(e.target.value)
+
+    if (isSend) {
+      this.updateOutput(
+        "sendAmount",
+        e.target.value || ""
+      )
+
+      if (validInput) {
+        this.setControlAmounts(true)
+        this.updateOutput(
+          "amount",
+          Number(e.target.value)
+        )
+      } else {
+        this.setControlAmounts(false)
+      }
+    } else {
+      this.updateOutput(
+        "receiveAmount",
+        e.target.value || ""
+      )
+
+      if (validInput) {
+        const price = this.state.conversionPaths[this.state.selectedConversionPath]
+        ? this.state.conversionPaths[this.state.selectedConversionPath].price
+        : 0;
+
+        this.setControlAmounts(true);
+        this.updateOutput(
+          "amount",
+          Number(price === 0 ? 0 : (Number(e.target.value) / price).toFixed(8))
+        );
+      } else {
+        this.setControlAmounts(false);
+      }
+    }
+  }
+
+  isValidAmount(input) {
+    return (
+      !isNaN(input) &&
+      typeof input === "string" &&
+      !(
+        input[input.length - 1] === "." ||
+        (input.includes(".") && input[input.length - 1] === "0")
+      )
+    );
+  }
+
+  updateAdvancedFormAmount(e, index) {
+    const validInput = this.isValidAmount(e.target.value)
+
+    this.updateOutput(
+      "sendAmount",
+      e.target.value || "",
+      index
+    )
+
+    if (validInput) {
+      this.setControlAmounts(true)
+      this.updateOutput(
+        "amount",
+        Number(e.target.value),
+        index
+      )
+    } else {
+      this.setControlAmounts(false)
+    }
+  }
+
   addOutput() {
     this.setState({
       outputs: [...this.state.outputs, {
@@ -183,7 +297,9 @@ class ConvertCurrencyForm extends React.Component {
         address: "",
         refundto: "",
         memo: "",
-        preconvert: ""
+        preconvert: "",
+        sendAmount: "",
+        receiveAmount: ""
       }]
     })
   }
@@ -258,24 +374,31 @@ class ConvertCurrencyForm extends React.Component {
 
   async fetchConversionPaths(from) {
     this.props.setLoading(true, "Searching for currency conversions...")
-    const response = await getCurrencyConversionPaths(NATIVE, this.props.modalProps.chainTicker, from)
 
-    if (response.msg === API_SUCCESS) {
-      if (Object.keys(response.result).length === 0) {
-        this.props.dispatch(newSnackbar(INFO_SNACK, `No possible conversions found from "${from}".`, MID_LENGTH_ALERT))
+    try {
+      const response = await getCurrencyConversionPaths(NATIVE, this.props.modalProps.chainTicker, from)
+
+      if (response.msg === API_SUCCESS) {
+        if (Object.keys(response.result).length === 0) {
+          this.props.dispatch(newSnackbar(INFO_SNACK, `No possible conversions found from "${from}".`, MID_LENGTH_ALERT))
+        } else {
+          let nameMap = {}
+          Object.values(response.result).map(x => {
+            nameMap[x.destination.name] = x.destination.currencyid
+          })
+  
+          this.setState({ conversionPaths: response.result, nameMap })
+        }
       } else {
-        let nameMap = {}
-        Object.values(response.result).map(x => {
-          nameMap[x.destination.name] = x.destination.currencyid
-        })
-
-        this.setState({ conversionPaths: response.result, nameMap })
+        this.props.dispatch(newSnackbar(ERROR_SNACK, `Error fetching potential conversions for ${from}!`, MID_LENGTH_ALERT))
       }
-    } else {
-      this.props.dispatch(newSnackbar(ERROR_SNACK, `Error fetching potential conversions for ${from}!`, MID_LENGTH_ALERT))
+  
+      this.props.setLoading(false)
+    } catch(e) {
+      console.warn(e)
+      this.props.dispatch(newSnackbar(ERROR_SNACK, `Internal error while fetching potential conversions for ${from}!`, MID_LENGTH_ALERT))
+      this.props.setLoading(false)
     }
-
-    this.props.setLoading(false)
   }
 
   render() {
