@@ -1,4 +1,4 @@
-import explorerList from './explorerList'
+import explorerList from 'agama-wallet-lib/src/coin-helpers'
 import coins from '../translate/coins'
 import {
   NATIVE,

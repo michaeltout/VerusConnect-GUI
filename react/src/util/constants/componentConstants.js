@@ -262,7 +262,7 @@ export const NATIVE_MINE = '-gen'
 export const NATIVE_MINE_THREADS = '-genproclimit='
 
 // ZCash params 
-export const ZCPARAMS_VERUS = 'veruscoin.io'
+export const ZCPARAMS_VERUS = 'verus.io'
 export const ZCPARAMS_KOMODO = 'agama.komodoplatform.com'
 export const ZCPARAMS_ZCASH = 'z.cash'
 export const ZCPARAMS_SOCKET = 'zcparams'
