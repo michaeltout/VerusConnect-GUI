@@ -1754,7 +1754,7 @@ aes-js@3.0.0:
 
 "agama-wallet-lib@git+https://github.com/VerusCoin/agama-wallet-lib.git#dev":
   version "0.3.4"
-  resolved "git+https://github.com/VerusCoin/agama-wallet-lib.git#b439b4823a59ebcd8d4c91f34c9e9597d29ea1af"
+  resolved "git+https://github.com/VerusCoin/agama-wallet-lib.git#2db676b769830d8611852a7cc27d0848e033db43"
   dependencies:
     bigi "^1.4.2"
     bip32 "^1.0.2"
