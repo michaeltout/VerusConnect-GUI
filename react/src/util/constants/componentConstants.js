@@ -282,6 +282,7 @@ export const PUBLIC_ADDRS = 'public'
 export const COPY_PUBKEY = 'Copy public key'
 export const COPY_PRIVKEY = 'Copy private key'
 export const GENERATE_QR = 'Generate QR-Code'
+export const REVEAL_PRIVKEY = 'Reveal private key'
 export const SAPLING_ADDR = 'sapling'
 export const SPROUT_ADDR = 'sprout'
 
