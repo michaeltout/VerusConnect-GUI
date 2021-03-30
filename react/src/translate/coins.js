@@ -189,7 +189,7 @@ const coins = {
     OMG: 'OmiseGo',
     R: 'Revain',
     UCASH: 'U.CASH',
-    BNB: 'Binance Coin',
+    //BNB: 'Binance Coin',
     BTK: 'BitcoinToken',
     DAI: 'Dai',
     DDD: 'Scry.info',

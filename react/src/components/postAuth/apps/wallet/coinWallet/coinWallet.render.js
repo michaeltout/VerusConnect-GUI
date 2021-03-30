@@ -25,7 +25,9 @@ import {
   SPLIT_MODAL,
   CONVERT_CURRENCY,
   SIMPLE_CONVERSION,
-  ID_INFO
+  ID_INFO,
+  CREATE_IDENTITY,
+  API_UPDATE_ID
 } from "../../../../../util/constants/componentConstants";
 import { VirtualizedTable } from '../../../../../containers/VirtualizedTable/VirtualizedTable'
 import { TX_TYPES } from '../../../../../util/txUtils/txRenderUtils'
@@ -304,27 +306,58 @@ export const RenderIdInfo = function () {
         <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
           {"ID Information"}
         </h6>
-        <button
-          className="btn btn-primary border rounded"
-          type="button"
-          onClick={() => this.openModal(
-            null,
-            {
-              activeIdentity
-            },
-            ID_INFO
-          )}
-          style={{
-            fontSize: 14,
-            backgroundColor: "rgba(0,178,26,0)",
-            borderWidth: 0,
-            color: "rgb(133,135,150)",
-            borderColor: "rgb(133, 135, 150)",
-            fontWeight: "bold",
-          }}
-        >
-          {"ID Info"}
-        </button>
+        <div>
+          <button
+            className="btn btn-primary border rounded"
+            type="button"
+            disabled={activeIdentity.status === "revoked"}
+            onClick={() =>
+              this.openModal(
+                null,
+                {
+                  modalType: API_UPDATE_ID,
+                  chainTicker: this.props.coin,
+                  identity: activeIdentity,
+                },
+                CREATE_IDENTITY
+              )
+            }
+            style={{
+              fontSize: 14,
+              backgroundColor: "rgb(49, 101, 212)",
+              borderWidth: 0,
+              color: "#FFFFFF",
+              borderColor: "rgb(49, 101, 212)",
+              fontWeight: "bold",
+              marginRight: 8,
+            }}
+          >
+            {"Update ID"}
+          </button>
+          <button
+            className="btn btn-primary border rounded"
+            type="button"
+            onClick={() =>
+              this.openModal(
+                null,
+                {
+                  activeIdentity,
+                },
+                ID_INFO
+              )
+            }
+            style={{
+              fontSize: 14,
+              backgroundColor: "rgba(0,178,26,0)",
+              borderWidth: 0,
+              color: "rgb(133,135,150)",
+              borderColor: "rgb(133, 135, 150)",
+              fontWeight: "bold",
+            }}
+          >
+            {"ID Info"}
+          </button>
+        </div>
       </div>
       <div
         className="d-lg-flex"

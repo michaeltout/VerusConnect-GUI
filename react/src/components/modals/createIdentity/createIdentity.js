@@ -13,8 +13,6 @@ import {
   CONFIRM_DATA,
   API_GET_TRANSACTIONS,
   API_GET_BALANCES,
-  API_GET_ZOPERATIONSTATUSES,
-  Z_SEND,
   INFO_SNACK,
   API_GET_NAME_COMMITMENTS,
   API_GET_IDENTITIES,
@@ -22,9 +20,11 @@ import {
   NATIVE,
   API_REGISTER_ID_NAME,
   API_RECOVER_ID,
-  API_REGISTER_ID
+  API_REGISTER_ID,
+  DEFAULT_REFERRAL_ID,
+  API_UPDATE_ID
 } from "../../../util/constants/componentConstants";
-import { registerIdName, registerId, recoverId } from '../../../util/api/wallet/walletCalls';
+import { registerIdName, registerId, recoverId, updateId } from '../../../util/api/wallet/walletCalls';
 import { newSnackbar, expireData } from '../../../actions/actionCreators';
 import { conditionallyUpdateWallet } from '../../../actions/actionDispatchers';
 import Store from '../../../store'
@@ -44,6 +44,15 @@ class CreateIdentity extends React.Component {
         break;
       case API_RECOVER_ID:
         props.setModalHeader(`Recover ${name} Identity`)
+        break;
+      case API_UPDATE_ID:
+        props.setModalHeader(
+          `Update ${
+            props.modalProps.identity
+              ? `${props.modalProps.identity.identity.name}@`
+              : "Identity"
+          }`
+        );
         break;
       default:
         break;
@@ -80,6 +89,12 @@ class CreateIdentity extends React.Component {
     })
   }
 
+  selectReferralIdentity(inputReferral) {
+    if (inputReferral.length === 0 || inputReferral == null) {
+      return DEFAULT_REFERRAL_ID
+    } else return inputReferral
+  }
+
   advanceFormStep() {
     const { modalProps, setModalLock } = this.props
     const { formStep, formData } = this.state
@@ -97,17 +112,24 @@ class CreateIdentity extends React.Component {
           salt,
           revocationAuthority,
           recoveryAuthority,
-          privateAddress
+          privateAddress,
+          primaryAddress
         } = formData;
 
-        const _privateAddress = privateAddress == null || privateAddress.length === 0 ? null : privateAddress
+        const _privateAddress =
+          privateAddress == null || privateAddress.length === 0
+            ? null
+            : privateAddress;
 
         if (modalProps.modalType === API_REGISTER_ID_NAME) {
           _txData = await registerIdName(
             !formStep,
             chainTicker,
             name,
-            referralId.length > 0 ? referralId : null
+            (primaryAddress == null || primaryAddress.length === 0)
+              ? null
+              : primaryAddress,
+            this.selectReferralIdentity(referralId)
           );
         } else if (modalProps.modalType === API_REGISTER_ID) {
           _txData = await registerId(
@@ -118,12 +140,12 @@ class CreateIdentity extends React.Component {
             salt,
             [controlAddress], //primaryAddresses,
             1,                // minimumSignatures,
-            [],               // contentHashes,
+            {},               // contentmap,
             revocationAuthority,
             recoveryAuthority,
             _privateAddress,
             null,
-            referralId && referralId.length > 0 ? referralId : null
+            this.selectReferralIdentity(referralId)
           );
         } else if (modalProps.modalType === API_RECOVER_ID) {
           _txData = await recoverId(
@@ -132,7 +154,19 @@ class CreateIdentity extends React.Component {
             name,
             [controlAddress], //primaryAddresses,
             1,                // minimumSignatures,
-            [],               // contentHashes,
+            null,             // contentmap, null == keep old map,
+            revocationAuthority,
+            recoveryAuthority,
+            _privateAddress,
+          );
+        } else if (modalProps.modalType === API_UPDATE_ID) {
+          _txData = await updateId(
+            !formStep,
+            this.props.activeCoin.id,
+            name,
+            [controlAddress], //primaryAddresses,
+            1,                // minimumSignatures,
+            null,             // contentmap, null == keep old map,
             revocationAuthority,
             recoveryAuthority,
             _privateAddress,
@@ -165,6 +199,13 @@ class CreateIdentity extends React.Component {
                     `ID recovery transaction posted with txid ${_txData.result.resulttxid}, please wait for it to get confirmed.`
                   )
                 );
+              } else if (modalProps.modalType === API_UPDATE_ID) {
+                this.props.dispatch(
+                  newSnackbar(
+                    INFO_SNACK,
+                    `ID update transaction posted with txid ${_txData.result.resulttxid}, please wait for it to get confirmed.`
+                  )
+                );
               }
 
               // Expire transactions and balances
@@ -185,6 +226,8 @@ class CreateIdentity extends React.Component {
             this.props.dispatch(newSnackbar(ERROR_SNACK, "Error creating ID."))
           } else if (modalProps.modalType === API_RECOVER_ID) {
             this.props.dispatch(newSnackbar(ERROR_SNACK, "Error recovering ID."))
+          } else if (modalProps.modalType === API_UPDATE_ID) {
+            this.props.dispatch(newSnackbar(ERROR_SNACK, "Error updating ID."))
           }
 
           throw new Error(_txData.result)

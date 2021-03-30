@@ -2,10 +2,10 @@ import React from 'react';
 import CommitNameForm from "./commitNameForm/commitNameForm";
 import RegisterIdentityForm from "./registerIdentityForm/registerIdentityForm";
 import RecoverIdentityForm from "./recoverIdentityForm/recoverIdentityForm";
-import { CONFIRM_DATA, API_SUCCESS, SEND_RESULT, API_REGISTER_ID_NAME, API_RECOVER_ID, API_REGISTER_ID } from '../../../util/constants/componentConstants';
+import { CONFIRM_DATA, API_SUCCESS, SEND_RESULT, API_REGISTER_ID_NAME, API_RECOVER_ID, API_REGISTER_ID, API_UPDATE_ID } from '../../../util/constants/componentConstants';
 import Button from '@material-ui/core/Button';
-import PieChart from 'react-minimal-pie-chart';
 import SimpleLoader from '../../../containers/SimpleLoader/SimpleLoader'
+import UpdateIdentityForm from './updateIdentityForm/updateIdentityForm';
 
 export const CreateIdentityRender = function() {
   const { advanceFormStep, state, back, props } = this
@@ -86,6 +86,15 @@ export const CreateIdentityFormRender = function() {
         setContinueDisabled={getContinueDisabled}
       />
     );
+  } else if (modalProps.modalType === API_UPDATE_ID) {
+    return (
+      <UpdateIdentityForm 
+        {...modalProps}
+        {...state}
+        setFormData={getFormData}
+        setContinueDisabled={getContinueDisabled}
+      />
+    )
   }
 };
 
