@@ -24,7 +24,6 @@ class SimpleSetting extends React.Component {
       placeholder,
       inputType,
       name,
-      hidden,
       toolTip
     } = this.props;
 

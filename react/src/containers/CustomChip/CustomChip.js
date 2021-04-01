@@ -5,11 +5,12 @@ import PropTypes from 'prop-types';
 
 class CustomChip extends React.Component {
   render() {
-    const { color, chipProps, handleDelete } = this.props
+    const { color, chipProps, handleDelete, rootProps } = this.props
     const CustomChip = withStyles({
       root: {
         backgroundColor: color ? color : undefined,
-        fontFamily: "inherit"
+        fontFamily: "inherit",
+        ...(rootProps ? rootProps : {})
       },
     })(props => <Chip color="default" {...props} />);
 

@@ -44,7 +44,14 @@ class UxSelector extends React.Component {
 
       Object.values(activeUser.startCoins).map(async (coinObj) => {
         if (coinObj.mode === NATIVE || authenticated[coinObj.mode]) {
-          await activateCoin(coinObj, coinObj.mode, dispatch)
+          await activateCoin(
+            coinObj,
+            coinObj.mode,
+            activeUser.startupOptions[coinObj.mode][coinObj.id] != null
+              ? activeUser.startupOptions[coinObj.mode][coinObj.id]
+              : [],
+            dispatch
+          );
         }
       })
   

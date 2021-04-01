@@ -122,7 +122,6 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
         saplingHeight: 10000,                    // (Optional) height at which sapling will be activated for the chain
         dustThreshold: 0.00001,                  // (Optional) Network threshold for dust values
         daemon: 'verusd',                        // (Optional) Specify a custom daemon for native mode
-        startupOptions: ['-mint'],               // (Optional) Added in a later step, native options for daemon start
         tags: [                                  // Tags for coin to identify properties
         'is_sapling',
         'is_zcash',
