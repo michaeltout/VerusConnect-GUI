@@ -22,7 +22,7 @@ import {
   PRIVATE_BALANCE,
   API_SUCCESS,
   API_ABORTED,
-  ETH
+  REVEAL_PRIVKEY
 } from "../../../util/constants/componentConstants";
 import { expireData, newSnackbar } from '../../../actions/actionCreators'
 import { conditionallyUpdateWallet } from '../../../actions/actionDispatchers'
@@ -230,6 +230,18 @@ class ReceiveCoin extends React.Component {
         this.props.dispatch(newSnackbar(ERROR_SNACK, e.message))
         console.error(e.message)
       })
+    } else if (keyType === REVEAL_PRIVKEY) {
+      getPrivkey(mode, id, address)
+      .then((res) => {
+        if (res.msg === 'error') throw new Error(res.result)
+        else {
+          this.toggleAddressQr(res.result)
+        }
+      })
+      .catch(e => {
+        this.props.dispatch(newSnackbar(ERROR_SNACK, e.message))
+        console.error(e.message)
+      })
     }
   }
 
@@ -244,6 +256,7 @@ class ReceiveCoin extends React.Component {
     }
       
     addressOptions.push(COPY_PRIVKEY);
+    addressOptions.push(REVEAL_PRIVKEY);
       
     if (this.props.activeCoin.mode === NATIVE) {
       if (address[0] !== 'z') addressOptions.push(COPY_PUBKEY)
@@ -253,10 +266,14 @@ class ReceiveCoin extends React.Component {
   }
 
   selectAddressOption(address, addrOption) {
-    if (addrOption === COPY_PUBKEY || addrOption === COPY_PRIVKEY) {
-      this.getKey(address, addrOption)
+    if (
+      addrOption === COPY_PUBKEY ||
+      addrOption === COPY_PRIVKEY ||
+      addrOption === REVEAL_PRIVKEY
+    ) {
+      this.getKey(address, addrOption);
     } else if (addrOption === GENERATE_QR) {
-      this.toggleAddressQr(address)
+      this.toggleAddressQr(address);
     }
   }
 

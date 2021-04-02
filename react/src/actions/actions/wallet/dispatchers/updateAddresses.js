@@ -17,7 +17,18 @@ export const updateAddresses = async (state, dispatch, mode, chainTicker) => {
 
   if (mode === NATIVE || mode === ETH || mode === ELECTRUM) {  
     try {
-      const apiResult = await getAddresses(mode, chainTicker, mode === NATIVE ? state.settings.config.coin.native.includePrivateAddrs[chainTicker] : null)
+      const apiResult = await getAddresses(
+        mode,
+        chainTicker,
+        mode === NATIVE
+          ? state.settings.config.coin.native.includePrivateAddrs[chainTicker]
+          : null,
+        mode === NATIVE
+          ? state.settings.config.coin.native.includePrivateAddressBalances[
+              chainTicker
+            ]
+          : null
+      );
       if (apiResult.msg === 'success') { 
         addressAction = {...addressAction, type: SET_COIN_ADDRESSES, addresses: apiResult.result}
       } else {

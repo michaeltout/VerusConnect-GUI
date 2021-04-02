@@ -49,7 +49,14 @@ class UxSelector extends React.Component {
         const authenticated = authCheck.msg === API_SUCCESS && authCheck.result
 
         if (coinObj.mode === NATIVE || authenticated) {
-          await activateCoin(coinObj, coinObj.mode, dispatch)
+           await activateCoin(
+            coinObj,
+            coinObj.mode,
+            activeUser.startupOptions[coinObj.mode][coinObj.id] != null
+              ? activeUser.startupOptions[coinObj.mode][coinObj.id]
+              : [],
+            dispatch
+          );
         }
       })
   

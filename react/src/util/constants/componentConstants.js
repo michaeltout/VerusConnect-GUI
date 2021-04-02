@@ -51,8 +51,10 @@ export const API_SENDCURRENCY = 'sendcurrency'
 export const API_REGISTER_ID_NAME = 'register_id_name'
 export const API_REGISTER_ID = 'register_id'
 export const API_RECOVER_ID = 'recover_id'
+export const API_UPDATE_ID = 'update_id'
 export const API_REVOKE_ID = 'revoke_id'
 export const API_RECOVER_ID_PREFLIGHT = 'recover_id_preflight'
+export const API_UPDATE_ID_PREFLIGHT = 'update_id_preflight'
 export const API_REGISTER_ID_NAME_PREFLIGHT = 'register_id_name_preflight'
 export const API_REGISTER_ID_PREFLIGHT = 'register_id_preflight'
 export const API_DELETE_NAME_COMMITMENT = 'delete_name_commitment'
@@ -266,7 +268,7 @@ export const NATIVE_MINE = '-gen'
 export const NATIVE_MINE_THREADS = '-genproclimit='
 
 // ZCash params 
-export const ZCPARAMS_VERUS = 'veruscoin.io'
+export const ZCPARAMS_VERUS = 'verus.io'
 export const ZCPARAMS_KOMODO = 'agama.komodoplatform.com'
 export const ZCPARAMS_ZCASH = 'z.cash'
 export const ZCPARAMS_SOCKET = 'zcparams'
@@ -284,6 +286,7 @@ export const PUBLIC_ADDRS = 'public'
 export const COPY_PUBKEY = 'Copy public key'
 export const COPY_PRIVKEY = 'Copy private key'
 export const GENERATE_QR = 'Generate QR-Code'
+export const REVEAL_PRIVKEY = 'Reveal private key'
 export const SAPLING_ADDR = 'sapling'
 export const SPROUT_ADDR = 'sprout'
 
@@ -387,6 +390,9 @@ export const SEND_CURRENCY = 'sendcurrency'
 // Create Identity form errors
 export const ERROR_NAME_REQUIRED = 'A name is required'
 export const ERROR_INVALID_Z_ADDR = 'Invalid private address'
+
+// Create identity defaults
+export const DEFAULT_REFERRAL_ID = 'Verus Coin Foundation@'
 
 // Mining states
 export const MS_IDLE = 'idle'

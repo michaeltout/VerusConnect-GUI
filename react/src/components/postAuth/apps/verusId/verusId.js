@@ -231,11 +231,14 @@ class VerusId extends React.Component {
             activeIdentity.balances.native.private.confirmed = 0
 
             for (let i = 0; i < activeIdentity.addresses.private.length; i++) {
-              const privAddr = this.props.addresses[
-                activeId.chainTicker
-              ].private.find(
-                (x) => x.address === activeIdentity.addresses.private[i].address
-              );
+              const privAddr =
+                this.props.addresses[activeId.chainTicker] == null
+                  ? null
+                  : this.props.addresses[activeId.chainTicker].private.find(
+                      (x) =>
+                        x.address ===
+                        activeIdentity.addresses.private[i].address
+                    );
 
               if (privAddr) {
                 activeIdentity.addresses.private[i].balances.native = privAddr.balances.native

@@ -5,11 +5,12 @@ import {
   LOG_IN,
   LOG_OUT,
   SET_DEFAULT_USER,
+  SET_AUTHENTICATION,
   SET_LOGOUT_USER,
   FINISH_LOGOUT_USER,
   SELECT_CURRENCY_FOR_COIN,
 } from "../../../../util/constants/storeType";
-import { UX_SELECTOR, POST_AUTH } from '../../../../util/constants/componentConstants'
+import { ETH, ELECTRUM, UX_SELECTOR, POST_AUTH, NATIVE } from '../../../../util/constants/componentConstants'
 import { makeId } from '../../../../util/idGenerator'
 import { setMainNavigationPath } from '../../../actionCreators'
 
@@ -27,6 +28,11 @@ export const getNewUser = () => {
     id: makeId(),
     lastCoins: {},
     startCoins: {},
+    startupOptions: {
+      [NATIVE]: {},
+      [ELECTRUM]: {},
+      [ETH]: {}
+    },
     startWithLastCoins: true
   }
 }

@@ -25,7 +25,9 @@ import {
   SPLIT_MODAL,
   CONVERT_CURRENCY,
   SIMPLE_CONVERSION,
-  ID_INFO
+  ID_INFO,
+  CREATE_IDENTITY,
+  API_UPDATE_ID
 } from "../../../../../util/constants/componentConstants";
 import { VirtualizedTable } from '../../../../../containers/VirtualizedTable/VirtualizedTable'
 import { TX_TYPES } from '../../../../../util/txUtils/txRenderUtils'
@@ -44,6 +46,7 @@ import HelpIcon from '@material-ui/icons/Help';
 import MigrationHelper from "../../../../../containers/MigrationHelper/MigrationHelper";
 import { closeTextDialog, openTextDialog } from "../../../../../actions/actionDispatchers";
 import { claimRfoxMigration, estimateGasRfoxMigration, getRfoxMigrationAccountBalances } from "../../../../../util/api/wallet/walletCalls";
+import { normalizeNum } from "../../../../../util/displayUtil/numberFormat";
 
 export const CoinWalletRender = function() {
   return (
@@ -303,27 +306,58 @@ export const RenderIdInfo = function () {
         <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
           {"ID Information"}
         </h6>
-        <button
-          className="btn btn-primary border rounded"
-          type="button"
-          onClick={() => this.openModal(
-            null,
-            {
-              activeIdentity
-            },
-            ID_INFO
-          )}
-          style={{
-            fontSize: 14,
-            backgroundColor: "rgba(0,178,26,0)",
-            borderWidth: 0,
-            color: "rgb(133,135,150)",
-            borderColor: "rgb(133, 135, 150)",
-            fontWeight: "bold",
-          }}
-        >
-          {"ID Info"}
-        </button>
+        <div>
+          <button
+            className="btn btn-primary border rounded"
+            type="button"
+            disabled={activeIdentity.status === "revoked"}
+            onClick={() =>
+              this.openModal(
+                null,
+                {
+                  modalType: API_UPDATE_ID,
+                  chainTicker: this.props.coin,
+                  identity: activeIdentity,
+                },
+                CREATE_IDENTITY
+              )
+            }
+            style={{
+              fontSize: 14,
+              backgroundColor: "rgb(49, 101, 212)",
+              borderWidth: 0,
+              color: "#FFFFFF",
+              borderColor: "rgb(49, 101, 212)",
+              fontWeight: "bold",
+              marginRight: 8,
+            }}
+          >
+            {"Update ID"}
+          </button>
+          <button
+            className="btn btn-primary border rounded"
+            type="button"
+            onClick={() =>
+              this.openModal(
+                null,
+                {
+                  activeIdentity,
+                },
+                ID_INFO
+              )
+            }
+            style={{
+              fontSize: 14,
+              backgroundColor: "rgba(0,178,26,0)",
+              borderWidth: 0,
+              color: "rgb(133,135,150)",
+              borderColor: "rgb(133, 135, 150)",
+              fontWeight: "bold",
+            }}
+          >
+            {"ID Info"}
+          </button>
+        </div>
       </div>
       <div
         className="d-lg-flex"
@@ -761,8 +795,9 @@ export const WalletRenderOperations = function() {
 }
 
 export const WalletRenderCurrencyFunctions = function() {
-  const { whitelists, activatedCoins, coin, selectedCurrency } = this.props
+  const { whitelists, coin, selectedCurrency, balances } = this.props
   const whitelist = whitelists[coin] ? whitelists[coin] : []
+  const currencyBalances = balances != null ? balances.reserve : null
 
   return (
     <React.Fragment>
@@ -795,13 +830,33 @@ export const WalletRenderCurrencyFunctions = function() {
                   e.target.value == -1 ? coin : whitelist[e.target.value]
                 )
               }
-              labelWidth={138}
+              labelWidth={124}
             >
               <MenuItem value={-1}>{coin}</MenuItem>
               {whitelist.map((currency, index) => {
+                const currencyBalance =
+                  currencyBalances == null
+                    ? ["-", 0, ""]
+                    : currencyBalances[currency] == null
+                    ? ["0", 0, ""]
+                    : normalizeNum(currencyBalances[currency].public.confirmed);
+
                 return (
-                  <MenuItem key={index} value={index}>
-                    {currency}
+                  <MenuItem
+                    key={index}
+                    value={index}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <div>{currency}</div>
+                    <div>
+                      {currencyBalances == null || selectedCurrency === currency
+                        ? ""
+                        : `${currencyBalance[0]}${currencyBalance[2]}`}
+                    </div>
                   </MenuItem>
                 );
               })}

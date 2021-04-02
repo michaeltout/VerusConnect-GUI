@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { 
+import {
   AppsRender,
 } from './apps.render';
 import { logoutActiveUser } from '../../../actions/actionDispatchers'
@@ -118,7 +118,7 @@ class Apps extends React.Component {
         dispatch(
           newSnackbar(
             SUCCESS_SNACK,
-            "Currency setting saved succesfully!",
+            "Currency setting saved successfully!",
             MID_LENGTH_ALERT
           )
         );

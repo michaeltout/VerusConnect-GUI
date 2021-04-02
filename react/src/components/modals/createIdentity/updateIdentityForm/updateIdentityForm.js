@@ -1,25 +1,25 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { 
-  RecoverIdentityFormRender
-} from './recoverIdentityForm.render';
+  UpdateIdentityFormRender
+} from './updateIdentityForm.render';
 import {
   WARNING_SNACK,
   TXDATA_STATUS,
   TXDATA_ERROR,
   CONFIRM_DATA,
-  CREATE_IDENTITY,
   ERROR_INVALID_Z_ADDR,
   NATIVE,
   ERROR_INVALID_ADDR,
   ERROR_INVALID_ID,
   ENTER_DATA,
-  LONG_ALERT
+  LONG_ALERT,
+  CREATE_IDENTITY
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar } from '../../../../actions/actionCreators';
 import { checkAddrValidity } from '../../../../util/addrUtils';
 
-class RecoverIdentityForm extends React.Component {
+class UpdateIdentityForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -56,9 +56,9 @@ class RecoverIdentityForm extends React.Component {
   }
 
   componentDidMount() {
-    const { formStep, startFormData } = this.props
+    const { formStep, identity } = this.props
 
-    if (formStep === ENTER_DATA && startFormData != null) {
+    if (formStep === ENTER_DATA && identity != null) {
       this.initFormData()
     }
   }
@@ -66,19 +66,19 @@ class RecoverIdentityForm extends React.Component {
   initFormData() {
     const {
       name,
-      primaryAddress,
-      revocationId,
-      recoveryId,
-      privateAddr
-    } = this.props.startFormData;
+      primaryaddresses,
+      revocationauthority,
+      recoveryauthority,
+      privateaddress
+    } = this.props.identity.identity;
 
     this.setState(
       {
-        name,
-        primaryAddress,
-        revocationId,
-        recoveryId,
-        privateAddr
+        name: `${name}@`,
+        primaryAddress: primaryaddresses[0],
+        revocationId: revocationauthority,
+        recoveryId: recoveryauthority,
+        privateAddr: privateaddress
       },
       () => {
         this.updateFormErrors(this.updateFormData);
@@ -87,12 +87,12 @@ class RecoverIdentityForm extends React.Component {
   }
 
   componentDidUpdate(lastProps) {
-    const { formStep, startFormData, setContinueDisabled } = this.props;
+    const { formStep, identity, setContinueDisabled } = this.props;
 
     if (lastProps.formStep !== formStep && formStep === ENTER_DATA) {
       setContinueDisabled(true)
 
-      if (startFormData != null) {
+      if (identity != null) {
         this.initFormData()
       }
     }
@@ -261,7 +261,7 @@ class RecoverIdentityForm extends React.Component {
 
     this.props.setFormData({
       ...this.props.formData,
-      name,
+      name: name,
       controlAddress: primaryAddress,
       revocationAuthority: revocationId,
       recoveryAuthority: recoveryId,
@@ -270,7 +270,7 @@ class RecoverIdentityForm extends React.Component {
   }
 
   render() {
-    return RecoverIdentityFormRender.call(this);
+    return UpdateIdentityFormRender.call(this);
   }
 }
 
@@ -278,10 +278,10 @@ const mapStateToProps = (state) => {
   const { chainTicker } = state.modal[CREATE_IDENTITY]
 
   return {
-    startFormData: state.modal[CREATE_IDENTITY].formData,
+    identity: state.modal[CREATE_IDENTITY].identity,
     addresses: state.ledger.addresses,
     activeCoin: state.coins.activatedCoins[chainTicker],
   };
 };
 
-export default connect(mapStateToProps)(RecoverIdentityForm);
+export default connect(mapStateToProps)(UpdateIdentityForm);

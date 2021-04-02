@@ -11,14 +11,16 @@ import { newSnackbar } from '../../../actionCreators'
  * Returns true on success, and false on failiure.
  * @param {Object} coinObj Coin obj either created or fetched from getCoinObj
  * @param {String} mode native || electrum || eth
+ * @param {String[]} startupOptions
  * @param {Function} dispatch Function to dispatch activated coin to store
  */
-export const activateCoin = async (coinObj, mode, dispatch) => {
+export const activateCoin = async (coinObj, mode, startupOptions, dispatch) => {
   let daemonResult
   try {
     daemonResult = await initCoin(
       coinObj.id,
       mode,
+      startupOptions,
       coinObj.options
     );
     if (daemonResult.msg === 'error') throw new Error(daemonResult.result)    
@@ -35,7 +37,6 @@ export const activateCoin = async (coinObj, mode, dispatch) => {
 
     activateChainLifecycle(mode, coinObj.id)
     return true
-
   } catch (e) {
     dispatch({
       type: ERROR_ACTIVATE_COIN,
@@ -58,17 +59,15 @@ export const activateCoin = async (coinObj, mode, dispatch) => {
  */
 export const addCoin = async (coinObj, mode, dispatch, activatedTickers, startupOptions) => {
   try {
-    coinObj.options.startupOptions =
-      coinObj.options.startupOptions != null
-        ? coinObj.options.startupOptions.concat(startupOptions)
-        : startupOptions;
-
     if (!coinObj.available_modes[mode]) throw new Error(`${mode} is not supported for ${coinObj.id}.`)
     if (activatedTickers.includes(coinObj.id)) throw new Error(`Error, ${coinObj.id} is already active!`)
 
-    const themeColor = coinObj.themeColor == null ? await getCoinColor(coinObj.id, coinObj.available_modes) : coinObj.themeColor
+    const themeColor =
+      coinObj.themeColor == null
+        ? await getCoinColor(coinObj.id, coinObj.available_modes)
+        : coinObj.themeColor;
 
-    return await activateCoin({...coinObj, themeColor }, mode, dispatch)
+    return await activateCoin({...coinObj, themeColor }, mode, startupOptions, dispatch)
   } catch (e) {
     throw e
   }

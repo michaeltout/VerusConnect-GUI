@@ -1,5 +1,5 @@
 import { getApiData } from '../../callCreator'
-import { API_REGISTER_ID, NATIVE, API_REGISTER_ID_PREFLIGHT, API_RECOVER_ID_PREFLIGHT, API_REVOKE_ID, API_RECOVER_ID } from '../../../constants/componentConstants'
+import { API_REGISTER_ID, NATIVE, API_REGISTER_ID_PREFLIGHT, API_RECOVER_ID_PREFLIGHT, API_REVOKE_ID, API_RECOVER_ID, API_UPDATE_ID_PREFLIGHT, API_UPDATE_ID } from '../../../constants/componentConstants'
 
 /**
  * Creates an ID registration transaction and sends it to the specified chain
@@ -10,7 +10,7 @@ import { API_REGISTER_ID, NATIVE, API_REGISTER_ID_PREFLIGHT, API_RECOVER_ID_PREF
  * @param {String} salt The salt returned from the name reservation
  * @param {String[]} primaryaddresses An array of primary addresses for the ID, (should include name registration address)
  * @param {Number} minimumsignatures The minimum number of signatures to sign a transaction with this ID
- * @param {String[]} contenthashes An array of content hashes to associate to this ID
+ * @param {Object} contentmap A map of content hashes to associate to this ID
  * @param {String} revocationauthority The ID of the revocation authority for this ID (can be itself)
  * @param {String} recoveryauthority The ID of the recovery authority for this ID (can be itself)
  * @param {String} privateaddress The private address associated with this ID
@@ -25,7 +25,7 @@ export const registerId = async (
   salt,
   primaryaddresses,
   minimumsignatures,
-  contenthashes,
+  contentmap,
   revocationauthority,
   recoveryauthority,
   privateaddress,
@@ -43,7 +43,7 @@ export const registerId = async (
         salt,
         primaryaddresses,
         minimumsignatures,
-        contenthashes,
+        contentmap,
         revocationauthority,
         recoveryauthority,
         privateaddress,
@@ -63,7 +63,7 @@ export const registerId = async (
  * @param {String} name The name of the ID
  * @param {String[]} primaryaddresses An array of primary addresses for the ID
  * @param {Number} minimumsignatures The minimum number of signatures to sign a transaction with this ID
- * @param {String[]} contenthashes An array of content hashes to associate to this ID
+ * @param {Object} contentmap A map of content hashes to associate to this ID
  * @param {String} revocationauthority The ID of the revocation authority for this ID (can be itself)
  * @param {String} recoveryauthority The ID of the recovery authority for this ID (can be itself)
  * @param {String} privateaddress The private address associated with this ID
@@ -74,7 +74,7 @@ export const recoverId = async (
   name,
   primaryaddresses,
   minimumsignatures,
-  contenthashes,
+  contentmap,
   revocationauthority,
   recoveryauthority,
   privateaddress,
@@ -89,7 +89,51 @@ export const recoverId = async (
         name,
         primaryaddresses,
         minimumsignatures,
-        contenthashes,
+        contentmap,
+        revocationauthority,
+        recoveryauthority,
+        privateaddress,
+      }
+    );
+  } catch (e) {
+    throw e
+  }
+};
+
+/**
+ * Creates an ID update transaction and sends it to the specified chain
+ * @param {String} preflight Whether or not to actually register the ID or just return data to confirm
+ * @param {String} chainTicker Chain to recover a Verus ID on
+ * @param {String} name The name of the ID
+ * @param {String[]} primaryaddresses An array of primary addresses for the ID
+ * @param {Number} minimumsignatures The minimum number of signatures to sign a transaction with this ID
+ * @param {Object} contentmap A map of content hashes to associate to this ID
+ * @param {String} revocationauthority The ID of the revocation authority for this ID (can be itself)
+ * @param {String} recoveryauthority The ID of the recovery authority for this ID (can be itself)
+ * @param {String} privateaddress The private address associated with this ID
+ */
+ export const updateId = async (
+  preflight,
+  chainTicker,
+  name,
+  primaryaddresses,
+  minimumsignatures,
+  contentmap,
+  revocationauthority,
+  recoveryauthority,
+  privateaddress,
+) => {
+  try {
+    return await getApiData(
+      NATIVE,
+      preflight ? API_UPDATE_ID_PREFLIGHT : API_UPDATE_ID,
+      {
+        preflight,
+        chainTicker,
+        name,
+        primaryaddresses,
+        minimumsignatures,
+        contentmap,
         revocationauthority,
         recoveryauthority,
         privateaddress,

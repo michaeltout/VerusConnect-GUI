@@ -261,16 +261,24 @@ export const ReceiveAddressOptionsRender = function(address) {
 
 export const ReceiveAddressQrRender = function() {
   return (
-    <div style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      flexDirection: "column",
-      paddingTop: 80
-    }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+      }}
+    >
+      <div style={{
+        overflowWrap: "anywhere",
+        textAlign: "center",
+        width: 500,
+        marginBottom: 20
+      }}>{this.state.qrAddress}</div>
       <QRCode
-        value={ this.state.qrAddress }
-        size={ 320 } />
+        value={this.state.qrAddress}
+        size={320}
+      />
       <button
         className="btn btn-primary"
         type="button"
@@ -283,11 +291,12 @@ export const ReceiveAddressQrRender = function() {
           paddingRight: 20,
           paddingLeft: 20,
           marginTop: 40,
-        }}>
+        }}
+      >
         {"Back"}
       </button>
     </div>
-  )
+  );
 }
 
 

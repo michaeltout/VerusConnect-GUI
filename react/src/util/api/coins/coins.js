@@ -18,14 +18,15 @@ import { API_ACTIVATE_COIN, API_REMOVE_COIN, POST } from '../../constants/compon
  * @param {String[]} customServers (Electrum only) An array of custom electrum servers to use in 
  * place of the default servers
  */
-export const initCoin = async (chainTicker, mode, options) => {  
+export const initCoin = async (chainTicker, mode, startupOptions, launchConfig) => {  
   try {
     return await getApiData(
       mode,
       API_ACTIVATE_COIN,
       {
         chainTicker,
-        launchConfig: options
+        launchConfig,
+        startupOptions
       },
       POST
     );

@@ -588,29 +588,39 @@ export const DashboardRevokeDialogue = function() {
   const { revokeDialogueOpen, revokeId } = this.state
   const { identity, chainTicker } = revokeId
 
-  return (<Dialog
-    open={revokeDialogueOpen == null ? false : revokeDialogueOpen}
-    onClose={this.closeRevokeDialogue}
-    aria-labelledby="alert-dialog-title"
-    aria-describedby="alert-dialog-description"
-  >
-    <DialogTitle id="alert-dialog-title">
-      {`Revoke ID?`}
-    </DialogTitle>
-    <DialogContent>
-      <DialogContentText id="alert-dialog-description">
-        {`Are you sure you would like to revoke ${identity.name}@? This will prevent it from being able to be used until it is recovered.`}
-      </DialogContentText>
-    </DialogContent>
-    <DialogActions>
-      <Button onClick={this.closeRevokeDialogue} color="primary">
-        {"No"}
-      </Button>
-      <Button onClick={() => this.revokeId(chainTicker, `${identity.name}@`)} color="primary" autoFocus>
-        {"Yes"}
-      </Button>
-    </DialogActions>
-  </Dialog>)
+  return (
+    <Dialog
+      open={revokeDialogueOpen == null ? false : revokeDialogueOpen}
+      onClose={this.closeRevokeDialogue}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">{`Revoke ID?`}</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          {`Are you sure you would like to revoke ${
+            identity.name
+            }@? This will cost one transaction fee (0.0001 ${
+              chainTicker
+              }), and will prevent ${
+                identity.name
+                }@ from being able to be used until it is recovered.`}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={this.closeRevokeDialogue} color="primary">
+          {"No"}
+        </Button>
+        <Button
+          onClick={() => this.revokeId(chainTicker, `${identity.name}@`)}
+          color="primary"
+          autoFocus
+        >
+          {"Yes"}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 }
 
 export const DashboardRenderIds = function() {
@@ -716,8 +726,7 @@ export const DashboardRenderIds = function() {
                   flex: 1
                 }}
               >
-                {identity.recoveryauthority !== identity.identityaddress &&
-                  idObj.status !== ID_REVOKED && (
+                {idObj.canrevoke && (
                     <Tooltip title="Revoke">
                       <button
                         className="btn btn-primary"
@@ -735,7 +744,7 @@ export const DashboardRenderIds = function() {
                       </button>
                     </Tooltip>
                   )}
-                {idObj.status === ID_REVOKED && (
+                {idObj.canrecover && (
                   <Tooltip title="Recover">
                     <button
                       className="btn btn-primary"

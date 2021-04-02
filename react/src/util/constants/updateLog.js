@@ -1,19 +1,48 @@
 import { loadUsers, saveUsers } from "../api/users/userData";
 import { getNewUser } from "../../actions/actionCreators";
 import { equalizeProperties } from "../objectUtil";
+import { ELECTRUM, NATIVE, ETH } from "./componentConstants";
 
 // Describes the changes that take place during certain versions
 export const UPDATE_LOG_HISTORY = {
+  ["0.7.2-10"]: {
+    breaking: false,
+    desc:
+      "Add startupOptions field to the user object.",
+  },
   ["0.7.1"]: {
     breaking: true,
     desc:
       'Move tags field in every coinObj from the main object to the "options" property|' +
-      'Add selectedCurrencyMap property to users',
+      "Add selectedCurrencyMap property to users",
   },
 };
 
 // Contains the functions to execute on upgrades, all update functions must be idempotent
 export const UPDATE_FUNCTIONS = {
+  ["0.7.2-10"]: async () => {
+    try {
+      let loadedUsers = await loadUsers()
+  
+      for (let userId in loadedUsers) {
+        if (loadedUsers[userId].startupOptions == null) {
+          const replacementUser = {...loadedUsers[userId]}
+
+          replacementUser.startupOptions = {
+            [NATIVE]: {},
+            [ELECTRUM]: {},
+            [ETH]: {}
+          }
+
+          loadedUsers[userId] = replacementUser
+        }
+      }
+     
+      await saveUsers(loadedUsers)
+    } catch (e) {
+      throw e
+    }
+  },
   ["0.7.1"]: async () => {
     try {
       let loadedUsers = await loadUsers()
