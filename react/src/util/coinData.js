@@ -119,7 +119,8 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
       available_modes: {                         // Modes in which this coin can be activated
         'native': true,
         'electrum': true,
-        'eth': false
+        'eth': false,
+        'erc20': false
       },
       options: {
         explorer: https://explorer.veruscoin.io, // (Optional) Explorer URL.

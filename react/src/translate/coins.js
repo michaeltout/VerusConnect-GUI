@@ -277,7 +277,7 @@ const coins = {
     ZIL: 'Zilliqa',
     //OCALL: 'Old Capital',
     //CALLG: 'Capital GAS',
-    TST: "Ropsten Test ERC20"
+    //TST: "Ropsten Test ERC20"
   }
 };
 
