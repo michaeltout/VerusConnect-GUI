@@ -1,4 +1,4 @@
-import { ELECTRUM, ETH, NATIVE } from './constants/componentConstants';
+import { ELECTRUM, ETH, NATIVE, ERC20 } from './constants/componentConstants';
 import { isValidAddress } from 'ethereumjs-util'
 
 const { addressVersionCheck } = require('agama-wallet-lib/src/keys');
@@ -34,7 +34,7 @@ export const checkAddrValidity = (address, mode, chainTicker) => {
     )
       return true;
     else return false;
-  } else if (mode === ETH) {
+  } else if (mode === ETH || mode === ERC20) {
     return isValidAddress(address);
   }
 

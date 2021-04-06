@@ -1063,4 +1063,104 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
       }
     },
   },
+
+  erc20: {
+    [API_GET_INFO]: {
+      restrictions: [], 
+      post_sync: {
+        tracking_info: {
+          needs_update: true,
+          busy: false,
+          location_restrictions: [],
+          location_and_type_restrictions: []
+        },
+        interval_info: {
+          expire_id: null,
+          update_expired_id: null,
+          expire_oncomplete: null,
+          update_expired_oncomplete: null,
+          expire_timeout: NEVER_ACTIVATED,
+          update_expired_interval: NEVER_ACTIVATED,
+        }
+      }
+    },
+
+    [API_GET_TRANSACTIONS]: {
+      restrictions: [], 
+      post_sync: {
+        tracking_info: {
+          needs_update: true,
+          busy: false,
+          location_restrictions: [/*`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`*/],
+          location_and_type_restrictions: []
+        },
+        interval_info: {
+          expire_id: null,
+          update_expired_id: null,
+          expire_oncomplete: null,
+          update_expired_oncomplete: null,
+          expire_timeout: 60000,
+          update_expired_interval: 10000,
+        }
+      }
+    },
+
+    [API_GET_BALANCES]: {
+      restrictions: [], 
+      post_sync: {
+        tracking_info: {
+          needs_update: true,
+          busy: false,
+          location_restrictions: [],
+          location_and_type_restrictions: []
+        },
+        interval_info: {
+          expire_id: null,
+          update_expired_id: null,
+          expire_oncomplete: null,
+          update_expired_oncomplete: null,
+          expire_timeout: 30000,
+          update_expired_interval: 10000
+        }
+      }
+    },
+
+    [API_GET_ADDRESSES]: {
+      restrictions: [], 
+      post_sync: {
+        tracking_info: {
+          needs_update: true,
+          busy: false,
+          location_restrictions: [/*`receive_coin@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`*/],
+        },
+        interval_info: {
+          expire_id: null,
+          update_expired_id: null,
+          expire_oncomplete: null,
+          update_expired_oncomplete: null,
+          expire_timeout: 30000,
+          update_expired_interval: 10000
+        }
+      }
+    },
+
+    [API_GET_FIATPRICE]: {
+      restrictions: [], 
+      post_sync: {
+        tracking_info: {
+          needs_update: true,
+          busy: false,
+          location_restrictions: [/*'@post_auth/apps/wallet'*/],
+        },
+        interval_info: {
+          expire_id: null,
+          update_expired_id: null,
+          expire_oncomplete: null,
+          update_expired_oncomplete: null,
+          expire_timeout: 30000,
+          update_expired_interval: 10000
+        }
+      }
+    },
+  },
 })

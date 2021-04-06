@@ -19,7 +19,8 @@ import {
   MID_LENGTH_ALERT,
   INFO_SNACK,
   ERROR_SNACK,
-  WARNING_SNACK
+  WARNING_SNACK,
+  ERC20
 } from "../../../../util/constants/componentConstants";
 import { getCoinObj } from "../../../../util/coinData";
 import { getPathParent } from "../../../../util/navigationUtils";
@@ -143,7 +144,14 @@ class SelectCoin extends React.Component {
     const { selectedMode, chosenCoin } = this.state
     const { available_modes } = chosenCoin
     
-    const mode = selectedMode === NATIVE ? NATIVE : (available_modes[ETH] ? ETH : ELECTRUM)
+    const mode =
+      selectedMode === NATIVE
+        ? NATIVE
+        : available_modes[ETH]
+        ? ETH
+        : available_modes[ERC20]
+        ? ERC20
+        : ELECTRUM;
 
     if (selectedMode) {
       this.props.setAddCoinParams(
@@ -209,9 +217,13 @@ class SelectCoin extends React.Component {
     const availableModes = chosenCoin.available_modes
 
     let selectedMode
-    if (availableModes[NATIVE]) selectedMode = NATIVE
-    else if (availableModes[ETH] || availableModes[ELECTRUM]) {
-      selectedMode = LITE
+    if (availableModes[NATIVE]) selectedMode = NATIVE;
+    else if (
+      availableModes[ETH] ||
+      availableModes[ELECTRUM] ||
+      availableModes[ERC20]
+    ) {
+      selectedMode = LITE;
     }
 
     this.setState({ chosenCoin, selectedMode })

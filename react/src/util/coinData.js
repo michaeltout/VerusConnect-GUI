@@ -15,9 +15,9 @@ import {
   IS_VERUS,
   ZCASH_DAEMON,
   ZCASH_CONF_NAME,
-  KOMODO_CONF_NAME
+  KOMODO_CONF_NAME,
+  ERC20
 } from './constants/componentConstants'
-import erc20ContractId from 'agama-wallet-lib/src/eth-erc20-contract-id'
 import electrumServers from 'agama-wallet-lib/src/electrum-servers'
 import networks from 'agama-wallet-lib/src/bitcoinjs-networks'
 import { fromSats } from 'agama-wallet-lib/src/utils'
@@ -25,6 +25,7 @@ import komodoUtils from 'agama-wallet-lib/src/coin-helpers'
 import * as Vibrant from 'node-vibrant'
 import * as randomColor from 'randomcolor'
 import { coinDataDirectories } from './constants/coinDataDirectories'
+import { ERC20_CONTRACT_ADDRESSES } from './constants/erc20Contracts'
 
 /**
  * Aggregates all relevant coin data needed in order to add
@@ -33,7 +34,7 @@ import { coinDataDirectories } from './constants/coinDataDirectories'
  * @param {Boolean} isPbaas Whether or not the coin to add is a pbaas chain, will override unsupported coin check
  */
 export const getCoinObj = (chainTicker, isPbaas = false) => {
-  const allCoinNames = {...coins.BTC, ...coins.ETH}
+  const allCoinNames = { ...coins.BTC, ...coins.ETH, ...coins.ERC20 };
   const chainTickerUc = chainTicker.toUpperCase()
   const chainTickerLc = chainTickerUc.toLowerCase()
   let tags = {}
@@ -47,7 +48,8 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
   let available_modes = {
     [NATIVE]: false,
     [ELECTRUM]: false,
-    [ETH]: false
+    [ETH]: false,
+    [ERC20]: false,
   }
 
   //If trying to add an unsupported chain, create a coin obj instead, dont use this function
@@ -57,7 +59,9 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
   if (explorerList.explorerList[chainTickerUc]) coinObj.options.explorer = explorerList.explorerList[chainTickerUc]
 
   // Determine available modes based on available coin data and libraries
-  if (erc20ContractId[chainTickerUc] || chainTickerUc === 'ETH') {
+  if (ERC20_CONTRACT_ADDRESSES[chainTickerUc]) {
+    available_modes[ERC20] = true
+  } else if (chainTickerUc === 'ETH') {
     available_modes[ETH] = true
   } else {
     if (window.bridge.chainParams[chainTickerUc] || chainTickerUc === 'KMD') {
@@ -185,4 +189,8 @@ export const getSimpleCoinArray = () => {
   return coinArr
 }
 
-
+// Temporary fill in before chainTicker is replaced by coin id
+export const getCoinId = (chainTicker, mode) => {
+  if (mode === ERC20) return ERC20_CONTRACT_ADDRESSES[chainTicker]
+  else return chainTicker
+}

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactMinimalPieChart from 'react-minimal-pie-chart';
-import { ETH, CHAIN_FALLBACK_IMAGE } from '../../../../../util/constants/componentConstants';
+import { ETH, CHAIN_FALLBACK_IMAGE, ERC20 } from '../../../../../util/constants/componentConstants';
 import WalletPaper from '../../../../../containers/WalletPaper/WalletPaper';
 import { openAddCoinModal } from '../../../../../actions/actionDispatchers';
 
@@ -175,12 +175,18 @@ export const DashboardRenderTable = function() {
                 >
                   <img
                     src={`assets/images/cryptologo/${
-                      portfolioItem.mode === ETH ? ETH : "btc"
+                      portfolioItem.mode === ETH
+                        ? ETH
+                        : portfolioItem.mode === ERC20
+                        ? ERC20
+                        : "btc"
                     }/${portfolioItem.id.toLowerCase()}.png`}
                     width="20px"
                     height="20px"
                     style={{ marginRight: 3 }}
-                    onError={(e) => {e.target.src = CHAIN_FALLBACK_IMAGE}}
+                    onError={(e) => {
+                      e.target.src = CHAIN_FALLBACK_IMAGE;
+                    }}
                   />
                   <strong>{portfolioItem.name}</strong>
                 </td>
@@ -194,7 +200,8 @@ export const DashboardRenderTable = function() {
                 } ${this.props.fiatCurrency}`}</td>
                 <td
                   style={
-                    portfolioItem.balanceFiat && (portfolioItem.priceChange7d != null)
+                    portfolioItem.balanceFiat &&
+                    portfolioItem.priceChange7d != null
                       ? portfolioItem.priceChange7d > 0
                         ? { color: "rgb(74, 166, 88)" }
                         : { color: "rgb(212, 49, 62)" }
@@ -202,7 +209,8 @@ export const DashboardRenderTable = function() {
                   }
                 >
                   {`${
-                    portfolioItem.balanceFiat && (portfolioItem.priceChange7d != null)
+                    portfolioItem.balanceFiat &&
+                    portfolioItem.priceChange7d != null
                       ? portfolioItem.priceChange7d.toFixed(3)
                       : "-"
                   }%`}
@@ -232,7 +240,11 @@ export const DashboardRenderSpotPrices = function() {
               >
                 <img
                   src={`assets/images/cryptologo/${
-                    portfolioItem.mode === ETH ? ETH : "btc"
+                    portfolioItem.mode === ETH
+                        ? ETH
+                        : portfolioItem.mode === ERC20
+                        ? ERC20
+                        : "btc"
                   }/${portfolioItem.id.toLowerCase()}.png`}
                   width="20px"
                   height="20px"

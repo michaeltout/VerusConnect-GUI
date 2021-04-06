@@ -13,7 +13,8 @@ import {
   NATIVE_STAKE,
   NATIVE_MINE_THREADS,
   NATIVE_REINDEX,
-  IS_VERUS
+  IS_VERUS,
+  ERC20
 } from "../../../../util/constants/componentConstants";
 
 export const SelectCoinRender = function() {  
@@ -93,7 +94,8 @@ export const SelectCoinForm = function() {
 export const SelectModeForm = function() {
   const availableModes = this.state.chosenCoin.available_modes
   const isNative = availableModes[NATIVE]
-  const isLite = availableModes[ETH] || availableModes[ELECTRUM]
+  const isLite =
+    availableModes[ETH] || availableModes[ELECTRUM] || availableModes[ERC20];
   const { selectedMode } = this.state
 
   return (

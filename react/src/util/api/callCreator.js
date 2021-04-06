@@ -5,14 +5,31 @@ import {
 } from '../../config';
 import fetchType from '../fetchType';
 import urlParams from '../url'
-import { NATIVE, ETH, ELECTRUM, POST, GET } from '../constants/componentConstants'
+import {
+  NATIVE,
+  ETH,
+  ERC20,
+  ELECTRUM,
+  POST,
+  GET,
+} from "../constants/componentConstants";
 import {
   getSecretKey,
 } from "../../actions/actionDispatchers";
+import { getCoinId } from '../coinData';
 const CryptoJS = require("crypto-js");
 
 const decrypt = (data, key) => CryptoJS.AES.decrypt(data, key).toString(CryptoJS.enc.Utf8);
 const encrypt = (data, key) => CryptoJS.AES.encrypt(data, key).toString()
+
+const adjustParams = (params, mode) => {
+  return (params == null || params.chainTicker == null)
+    ? params
+    : {
+        ...params,
+        chainTicker: getCoinId(params.chainTicker, mode),
+      };
+}
 
 /**
  * Makes a blockchain call to the API depending on a number of parameters
@@ -25,14 +42,18 @@ export const getApiData = (mode, call, params, reqType, shieldPost = apiEncrypti
   const requestFunc = reqType ? modeNameMap[reqType] : modeDefaultCallMap[mode]
 
   return new Promise((resolve, reject) => {
-    requestFunc(`${mode}/${call}`, params, shieldPost)
-    .catch((error) => {
-      console.error(error);
-      reject(error)
-    })
-    .then(json => {
-      resolve(json)
-    });
+    requestFunc(
+      `${mode}/${call}`,
+      adjustParams(params, mode),
+      shieldPost
+    )
+      .catch((error) => {
+        console.error(error);
+        reject(error);
+      })
+      .then((json) => {
+        resolve(json);
+      });
   })
 }
 
@@ -119,6 +140,7 @@ export const apiPost = async (callPath, params, shield = apiEncryption) => {
 export const modeDefaultCallMap = {
   [NATIVE]: apiPost,
   [ETH]: apiGet,
+  [ERC20]: apiGet,
   [ELECTRUM]: apiGet
 }
 

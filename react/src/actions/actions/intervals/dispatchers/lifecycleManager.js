@@ -6,7 +6,8 @@ import {
   PRE_DATA,
   SYNCING,
   POST_SYNC,
-  API_GET_INFO
+  API_GET_INFO,
+  ERC20
 } from "../../../../util/constants/componentConstants";
 import { setCoinStatus } from '../../../actionCreators'
 
@@ -14,12 +15,13 @@ export const activateChainLifecycle = (mode, chainTicker) => {
   const ON_COMPLETE_FUNCTIONS = {
     [NATIVE]: nativeGetInfoOnComplete,
     [ELECTRUM]: {},
-    [ETH]: {} //TODO: FINISH
+    [ETH]: {}, //TODO: FINISH,
+    [ERC20]: {}
   }
 
   if (mode === NATIVE) {
     refreshCoinIntervals(mode, chainTicker, {[API_GET_INFO]: {update_expired_oncomplete: ON_COMPLETE_FUNCTIONS[mode]}})
-  } else if (mode === ETH || mode === ELECTRUM) {
+  } else if (mode === ETH || mode === ELECTRUM || mode === ERC20) {
     refreshCoinIntervals(mode, chainTicker)
   } else {
     throw new Error(`${mode} is not a supported coin mode.`)

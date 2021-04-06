@@ -1,6 +1,13 @@
 import React from 'react';
 import WalletStyles from './wallet.styles'
-import { NATIVE, DASHBOARD, ETH, CHAIN_POSTFIX, CHAIN_FALLBACK_IMAGE } from '../../../../util/constants/componentConstants'
+import {
+  NATIVE,
+  DASHBOARD,
+  ETH,
+  CHAIN_POSTFIX,
+  CHAIN_FALLBACK_IMAGE,
+  ERC20,
+} from "../../../../util/constants/componentConstants";
 import { openAddCoinModal } from '../../../../actions/actionDispatchers';
 
 export const WalletCardRender = function(coinObj) {
@@ -53,11 +60,17 @@ export const WalletCardRender = function(coinObj) {
               >
                 <img
                   src={`assets/images/cryptologo/${
-                    coinObj.mode === ETH ? ETH : "btc"
+                    coinObj.mode === ETH
+                      ? ETH
+                      : coinObj.mode === ERC20
+                      ? ERC20
+                      : "btc"
                   }/${coinObj.id.toLowerCase()}.png`}
                   width="25px"
                   height="25px"
-                  onError={(e) => {e.target.src = CHAIN_FALLBACK_IMAGE}}
+                  onError={(e) => {
+                    e.target.src = CHAIN_FALLBACK_IMAGE;
+                  }}
                 />
                 <h4 style={WalletStyles.cardCoinName}>
                   <strong>{coinObj.name}</strong>

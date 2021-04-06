@@ -108,6 +108,8 @@ const coins = {
   },
   ETH: {
     ETH: 'Ethereum',
+  },
+  ERC20: {
     RFOX: 'RedFOX Labs',
     AE: 'Aeternity',
     ANN: 'Agent Not Needed',
@@ -275,7 +277,8 @@ const coins = {
     ZIL: 'Zilliqa',
     //OCALL: 'Old Capital',
     //CALLG: 'Capital GAS',
-  },
+    TST: "Ropsten Test ERC20"
+  }
 };
 
 module.exports = coins;

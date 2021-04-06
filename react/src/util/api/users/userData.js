@@ -1,5 +1,16 @@
 import { apiGet, apiPost, getApiData } from '../callCreator'
-import { LOAD_USERS, RESET_USERS, SAVE_USERS, AUTHENTICATE, ETH, ELECTRUM, POST, LOG_OUT, BACKUP_USERS } from '../../constants/componentConstants'
+import {
+  LOAD_USERS,
+  RESET_USERS,
+  SAVE_USERS,
+  AUTHENTICATE,
+  ETH,
+  ERC20,
+  ELECTRUM,
+  POST,
+  LOG_OUT,
+  BACKUP_USERS
+} from "../../constants/componentConstants";
 
 /**
  * Loads the users object from the user file, if no file is present,
@@ -68,9 +79,11 @@ export const authenticateSeed = async (seed) => {
   try {
     const electrumAuthResult = await getApiData(ELECTRUM, AUTHENTICATE, {seed}, POST, true)
     const ethAuthResult = await getApiData(ETH, AUTHENTICATE, {seed}, POST, true)
+    const erc20AuthResult = await getApiData(ERC20, AUTHENTICATE, {seed}, POST, true)
 
     if (electrumAuthResult.msg === 'error') throw new Error("Electrum authentication failed.")
-    else if (ethAuthResult.msg === 'error') throw new Error("Eth authentication failed.")
+    else if (ethAuthResult.msg === 'error') throw new Error("ETH authentication failed.")
+    else if (erc20AuthResult.msg === 'error') throw new Error("ERC20 authentication failed.")
 
     return true
   } catch (e) {
@@ -86,9 +99,11 @@ export const logoutUser = async () => {
   try {
     const electrumLogoutResult = await getApiData(ELECTRUM, LOG_OUT, {}, POST)
     const ethLogoutResult = await getApiData(ETH, LOG_OUT, {}, POST)
+    const erc20LogoutResult = await getApiData(ERC20, LOG_OUT, {}, POST)
 
     if (electrumLogoutResult.msg === 'error') throw new Error("Electrum logout failed.")
-    else if (ethLogoutResult.msg === 'error') throw new Error("Eth logout failed.")
+    else if (ethLogoutResult.msg === 'error') throw new Error("ETH logout failed.")
+    else if (erc20LogoutResult.msg === 'error') throw new Error("ERC20 logout failed.")
 
     return true
   } catch (e) {

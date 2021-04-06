@@ -14,6 +14,7 @@ import {
   NATIVE,
   ELECTRUM,
   IDENTITIES,
+  ERC20,
 } from "../../../../../util/constants/componentConstants";
 import { getSimpleCoinArray, getCoinObj, getCoinColor } from "../../../../../util/coinData";
 
@@ -29,7 +30,8 @@ class ProfileSettings extends React.Component {
         available_modes: {
           [ETH]: false,
           [NATIVE]: false,
-          [ELECTRUM]: false
+          [ELECTRUM]: false,
+          [ERC20]: false
         }
       },
       selectedStartupOptionCoin: PLACEHOLDER,

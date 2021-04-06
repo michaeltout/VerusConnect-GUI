@@ -1,7 +1,7 @@
 import { loadUsers, saveUsers } from "../api/users/userData";
 import { getNewUser } from "../../actions/actionCreators";
 import { equalizeProperties } from "../objectUtil";
-import { ELECTRUM, NATIVE, ETH } from "./componentConstants";
+import { ELECTRUM, NATIVE, ETH, ERC20 } from "./componentConstants";
 
 // Describes the changes that take place during certain versions
 export const UPDATE_LOG_HISTORY = {
@@ -31,7 +31,8 @@ export const UPDATE_FUNCTIONS = {
           replacementUser.startupOptions = {
             [NATIVE]: {},
             [ELECTRUM]: {},
-            [ETH]: {}
+            [ETH]: {},
+            [ERC20]: {}
           }
 
           loadedUsers[userId] = replacementUser

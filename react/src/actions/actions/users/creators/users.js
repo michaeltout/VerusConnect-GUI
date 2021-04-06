@@ -10,7 +10,7 @@ import {
   FINISH_LOGOUT_USER,
   SELECT_CURRENCY_FOR_COIN,
 } from "../../../../util/constants/storeType";
-import { ETH, ELECTRUM, UX_SELECTOR, POST_AUTH, NATIVE } from '../../../../util/constants/componentConstants'
+import { ETH, ELECTRUM, UX_SELECTOR, POST_AUTH, NATIVE, ERC20 } from '../../../../util/constants/componentConstants'
 import { makeId } from '../../../../util/idGenerator'
 import { setMainNavigationPath } from '../../../actionCreators'
 import { authenticateSeed } from '../../../../util/api/users/userData'
@@ -32,7 +32,8 @@ export const getNewUser = () => {
     startupOptions: {
       [NATIVE]: {},
       [ELECTRUM]: {},
-      [ETH]: {}
+      [ETH]: {},
+      [ERC20]: {}
     },
     startWithLastCoins: true
   }
@@ -143,7 +144,8 @@ export const authenticateActiveUser = async (seed) => {
     return {
       type: SET_AUTHENTICATION,
       [ETH]: authResult,
-      [ELECTRUM]: authResult
+      [ELECTRUM]: authResult,
+      [ERC20]: authResult
     }
   } catch (e) {
     throw e

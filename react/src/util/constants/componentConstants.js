@@ -3,6 +3,7 @@
 export const NATIVE = 'native'
 export const LITE = 'lite'
 export const ETH = 'eth'
+export const ERC20 = 'erc20'
 export const ELECTRUM = 'electrum'
 export const PRE_DATA = 'pre_data' // Before any API calls yield useful information (initialization)
 export const SYNCING = 'syncing' // Before blockchain is fully synced, while API does give useful info
