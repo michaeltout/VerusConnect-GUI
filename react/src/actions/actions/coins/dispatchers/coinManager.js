@@ -20,7 +20,12 @@ export const activateCoin = async (coinObj, mode, startupOptions, dispatch) => {
     daemonResult = await initCoin(
       coinObj.id,
       mode,
-      startupOptions,
+      [
+        ...(coinObj.options.startupOptions == null
+          ? []
+          : coinObj.options.startupOptions),
+        ...(startupOptions == null ? [] : startupOptions),
+      ],
       coinObj.options
     );
     if (daemonResult.msg === 'error') throw new Error(daemonResult.result)    
