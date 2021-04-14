@@ -86,9 +86,6 @@ export const getCoinObj = (chainTicker, isPbaas = false, nodePort) => {
       } else if (chainTickerUc === "ZEC") {
         coinObj.options.daemon = ZCASH_DAEMON; // zcashd
         coinObj.options.confName = ZCASH_CONF_NAME; // zcash.conf
-      } else if (chainTickerUc === "VRSCTEST") {
-        coinObj.options.daemon = DEFAULT_DAEMON; // verusd
-        coinObj.options.confName = VERUSTEST_CONF_NAME;
       } else {
         coinObj.options.daemon = DEFAULT_DAEMON; // verusd
       }
@@ -109,11 +106,16 @@ export const getCoinObj = (chainTicker, isPbaas = false, nodePort) => {
 
     // Determine if chain is pbaas compatible, and if it is a pbaas root chain
     if (chainTickerUc === 'VRSCTEST') {
-      tags = {...tags, [IS_ZCASH]: true, [IS_PBAAS]: true, [IS_SAPLING]: true}
+      tags = {
+        ...tags,
+        [IS_ZCASH]: true,
+        [IS_PBAAS]: true,
+        [IS_SAPLING]: true,
+        [IS_PBAAS_ROOT]: true,
+      };
       available_modes[NATIVE] = true
       coinObj.options.daemon = DEFAULT_DAEMON
-
-      if (chainTickerUc === 'VRSCTEST') tags[IS_PBAAS_ROOT] = true
+      coinObj.options.confName = VERUSTEST_CONF_NAME;
     }
 
     if (chainTickerUc === 'VRSCTEST' || chainTickerUc === 'VRSC') {
@@ -179,7 +181,7 @@ export const getPbaasChain = (chainTicker, nodePort) => {
       startupOptions: [`-chain=${chainTickerLc}`],
       dirNames: {
         darwin: `VerusTest/pbaas/${chainTickerLc}`,
-        linux: `.verustest/pbaas/${chainTickerLc}`,
+        linux: `.vrsctest/pbaas/${chainTickerLc}`,
         win32: `VerusTest/pbaas/${chainTickerLc}`,
       },
       tags: [IS_ZCASH, IS_PBAAS, IS_VERUS, IS_SAPLING],
