@@ -41,10 +41,6 @@ class MiningWallet extends React.Component {
     this.toggleBooklet = this.toggleBooklet.bind(this);
   }
 
-  openAddCoinModal() {
-    this.props.dispatch(setModalNavigationPath(`${ADD_COIN}/${SELECT_COIN}`));
-  }
-
   toggleBooklet(booklet) {
     this.setState({ [booklet]: true }, async () => {
       const reduxState = Store.getState();

@@ -41,9 +41,7 @@ export const nativeGetInfoOnComplete = (state, dispatch, chainTicker) => {
 
   if (
     typeof getInfoResult !== "object" ||
-    !getInfoResult.hasOwnProperty("blocks") ||
-    (getInfoResult.hasOwnProperty("longestchain") &&
-      getInfoResult.longestchain === 0)
+    !getInfoResult.hasOwnProperty("blocks")
   ) {
     if (currentStatus !== PRE_DATA) {
       dispatch(setCoinStatus(chainTicker, PRE_DATA));
@@ -51,7 +49,8 @@ export const nativeGetInfoOnComplete = (state, dispatch, chainTicker) => {
     }
   } else if (
     getInfoResult.longestchain != null &&
-    getInfoResult.longestchain > getInfoResult.blocks
+    (getInfoResult.longestchain === 0 ||
+      getInfoResult.longestchain > getInfoResult.blocks)
   ) {
     if (currentStatus !== SYNCING) {
       dispatch(setCoinStatus(chainTicker, SYNCING));

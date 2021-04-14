@@ -313,7 +313,7 @@ export const DashboardRender = function() {
                 <a
                   href="#"
                   style={{ color: "rgb(49, 101, 212)" }}
-                  onClick={openAddCoinModal}
+                  onClick={() => openAddCoinModal()}
                 >
                   {
                     "Add a Verus protocol coin (VRSC or VRSCTEST) to start making IDs!"

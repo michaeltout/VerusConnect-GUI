@@ -103,7 +103,7 @@ class ReceiveCoin extends React.Component {
   
       if ((updateResult === API_SUCCESS || updateResult === API_ABORTED) &&
         supportedTypes[PRIVATE_ADDRS] && 
-        config.coin.native.includePrivateAddrs[id] && 
+        !config.coin.native.excludePrivateAddrs[id] && 
         addresses[PUBLIC_ADDRS].length > 0 &&
         addresses[PRIVATE_ADDRS].length === 0) {
         this.getNewAddress(PRIVATE_ADDRS, true)
@@ -333,7 +333,7 @@ const mapStateToProps = (state) => {
   return {
     activeCoin: state.coins.activatedCoins[chainTicker],
     addresses: state.ledger.addresses[chainTicker],
-    includePrivate: state.settings.config.coin.native.includePrivateAddrs[chainTicker],
+    includePrivate: !state.settings.config.coin.native.excludePrivateAddrs[chainTicker],
     balances: state.ledger.balances[chainTicker],
     modalProps: state.modal[RECEIVE_COIN],
     config: state.settings.config,

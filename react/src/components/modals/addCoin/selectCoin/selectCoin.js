@@ -18,14 +18,12 @@ import {
   ELECTRUM_NSPV,
   MID_LENGTH_ALERT,
   INFO_SNACK,
-  ERROR_SNACK,
   WARNING_SNACK,
   ERC20
 } from "../../../../util/constants/componentConstants";
 import { getCoinObj } from "../../../../util/coinData";
 import { getPathParent } from "../../../../util/navigationUtils";
 import { setModalNavigationPath, newSnackbar } from '../../../../actions/actionCreators'
-import { decodeCoinImportFile } from '../../../../util/coinImports';
 
 class SelectCoin extends React.Component {
   constructor(props) {
@@ -35,7 +33,6 @@ class SelectCoin extends React.Component {
       selectedCoin: null,
       chosenCoin: null,
       selectedMode: null,
-      addFromFile: false,
       coinJsonFile: null,
       nativeOptions: {
         [NATIVE_MINE]: false,
@@ -58,21 +55,12 @@ class SelectCoin extends React.Component {
     this.chooseMode = this.chooseMode.bind(this)
     this.generateStartupOptions = this.generateStartupOptions.bind(this)
     this.detectCodes = this.detectCodes.bind(this)
-    this.setFiles = this.setFiles.bind(this)
-    this.toggleAddFromFile = this.toggleAddFromFile.bind(this)
+    this.getSelectedCoin = this.getSelectedCoin.bind(this)
 
     this.MAX_CODE_CHARS = 50
     this.keyLog = []
     this.keyLogClearIntervals = []
     this.SECRET_CODES = {
-      ["ADDFROMFILE"]: {
-        message: 'Add coin source switched.',
-        event: this.toggleAddFromFile
-      },
-      ["AltAltAlt"]: {
-        message: 'Add coin source switched.',
-        event: this.toggleAddFromFile
-      },
       ["ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightbaEnter"]: {
         message: '(╯°□°)╯︵ ┻━┻',
         event: () => {}
@@ -84,36 +72,14 @@ class SelectCoin extends React.Component {
     document.addEventListener("keydown", this.detectCodes, false);
   }
 
-  setFiles(event) {   
-    event.preventDefault()
-    const reader = new FileReader()
-
-    this.props.setModalLock(true)
-    reader.onload = async (e) => { 
-      const text = (e.target.result)
-      this.props.setModalLock(false)
-
-      try {
-        this.setState({ selectedCoin: decodeCoinImportFile(text) })
-      } catch(e) {
-        console.log(e)
-        this.props.dispatch(newSnackbar(ERROR_SNACK, "Failed to decode provided file.", MID_LENGTH_ALERT))
-      }
-    };
-    reader.readAsText(event.target.files[0]) 
-  }
-
   componentWillUnmount() {
     document.removeEventListener("keydown", this.detectCodes, false);
   }
 
-  toggleAddFromFile() {
-    this.setState({
-      addFromFile: !this.state.addFromFile,
-      selectedCoin: null,
-      chosenCoin: null,
-      coinJsonFile: null
-    });
+  componentDidUpdate(lastProps) {
+    if (lastProps.selectedCoinSource !== this.props.selectedCoinSource) {
+      this.clearCoin();
+    }
   }
 
   detectCodes(event) {
@@ -201,19 +167,14 @@ class SelectCoin extends React.Component {
     this.setState({nativeOptions: {...this.state.nativeOptions, [NATIVE_MINE_THREADS]: e.target.value}})
   }
 
+  getSelectedCoin(coinObj, cb = () => {}) {
+    this.setState({
+      selectedCoin: coinObj
+    }, cb)
+  }
+
   chooseCoin() {
-    let chosenCoin
-
-    try {
-      chosenCoin = getCoinObj(this.state.selectedCoin.id)
-
-      if (this.state.addFromFile) {
-        this.props.dispatch(newSnackbar(WARNING_SNACK, "You cannot import a coin with an already defined ticker symbol, selecting the existing coin.", MID_LENGTH_ALERT))
-      }
-    } catch(e) {
-      chosenCoin = this.state.selectedCoin
-    }
-
+    let chosenCoin = this.state.selectedCoin
     const availableModes = chosenCoin.available_modes
 
     let selectedMode
@@ -233,6 +194,7 @@ class SelectCoin extends React.Component {
     this.setState({
       chosenCoin: null,
       selectedMode: null,
+      selectedCoin: null,
       nativeOptions: {
         [NATIVE_MINE]: false,
         [NATIVE_MINE_THREADS]: "",

@@ -217,6 +217,7 @@ export const ZCASH_DAEMON = 'zcashd'
 export const KOMODO_DAEMON = 'komodod'
 export const ZCASH_CONF_NAME = 'zcash'
 export const KOMODO_CONF_NAME = 'komodo'
+export const VERUSTEST_CONF_NAME = 'vrsctest'
 
 // Coin wallet screen
 export const NATIVE_BALANCE = 'native'
@@ -429,6 +430,12 @@ export const MINING_FUNCTIONS = 'mining_functions'
 export const SIMPLE_CONVERSION = 'simple_conversion'
 export const ADVANCED_CONVERSION = 'advanced_conversion'
 export const CONVERSION_OVERVIEW = 'conversion_overview'
+
+// Add Coin modal constants
+export const ADD_DEFAULT_COIN = 'add_default_preset'
+export const IMPORT_COIN = 'import_coin'
+export const ADD_PBAAS_COIN = 'add_pbaas_coin'
+
 
 
 

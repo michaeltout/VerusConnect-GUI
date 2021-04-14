@@ -23,7 +23,8 @@ import {
   API_GET_CPU_LOAD,
   API_GET_SYS_TIME,
   API_GET_CURRENTSUPPLY,
-  API_GET_RESERVE_TRANSFERS
+  API_GET_RESERVE_TRANSFERS,
+  IS_PBAAS
 } from './componentConstants'
 
 const PASSIVE_MODE_MULTIPLIER = 20
@@ -312,14 +313,14 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [],
-          location_and_type_restrictions: [['@post_auth/apps/multiverse/dashboard', IS_PBAAS_ROOT]]
+          location_and_type_restrictions: [['@post_auth/apps/multiverse/dashboard', IS_PBAAS]]
         },
         interval_info: {
           expire_id: null,
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 120000 * TIMEOUT_MULTIPLIER,
+          expire_timeout: 600000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000,
         }
       },
@@ -328,14 +329,14 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [],
-          location_and_type_restrictions: [['@post_auth/apps/multiverse/dashboard', IS_PBAAS_ROOT]]
+          location_and_type_restrictions: [['@post_auth/apps/multiverse/dashboard', IS_PBAAS]]
         },
         interval_info: {
           expire_id: null,
           update_expired_id: null,
           expire_oncomplete: null,
           update_expired_oncomplete: null,
-          expire_timeout: 120000 * TIMEOUT_MULTIPLIER,
+          expire_timeout: 600000 * TIMEOUT_MULTIPLIER,
           update_expired_interval: 10000,
         }
       }

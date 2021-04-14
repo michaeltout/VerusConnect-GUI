@@ -7,6 +7,8 @@ import {
   CHAIN_POSTFIX,
   CHAIN_FALLBACK_IMAGE,
   ERC20,
+  ADD_DEFAULT_COIN,
+  IMPORT_COIN,
 } from "../../../../util/constants/componentConstants";
 import { openAddCoinModal } from '../../../../actions/actionDispatchers';
 
@@ -117,16 +119,22 @@ export const WalletCardRender = function(coinObj) {
 export const WalletTabsRender = function() {
   return [
     {
-      title: "Add Coin",
-      icon: 'fa-plus',
-      onClick: openAddCoinModal,
-      isActive: () => false
-    },
-    {
       title: "Wallet Dashboard",
       icon: 'fa-home',
       onClick: () => this.openDashboard(),
       isActive: () => this.props.mainPathArray.includes(DASHBOARD)
+    },
+    {
+      title: "Add Coin",
+      icon: 'fa-plus',
+      onClick: () => openAddCoinModal(ADD_DEFAULT_COIN),
+      isActive: () => false
     }
+    // {
+    //   title: "Import Coin",
+    //   icon: 'fa-file-import',
+    //   onClick: () => openAddCoinModal(IMPORT_COIN),
+    //   isActive: () => false
+    // }
   ];
 };

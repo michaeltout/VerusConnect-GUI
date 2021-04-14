@@ -15,16 +15,14 @@ export const updateTransactions = async (state, dispatch, mode, chainTicker) => 
   let transactionAction = {chainTicker}
   let wasSuccess = true
 
-  if (mode === NATIVE || mode === ETH || mode === ELECTRUM || mode === ERC20) {
-    //if (mode === NATIVE && !state.settings.config.coin.native.includePrivateTransactions.hasOwnProperty(chainTicker)) throw new Error(`${chainTicker} has no config setting set for includePrivateTransactions`)
-    
+  if (mode === NATIVE || mode === ETH || mode === ELECTRUM || mode === ERC20) {    
     try {
       const apiResult = await getTransactions(
         mode,
         chainTicker,
         null,
         mode === NATIVE
-          ? state.settings.config.coin.native.includePrivateTransactions[
+          ? !state.settings.config.coin.native.excludePrivateTransactions[
               chainTicker
             ]
           : null,

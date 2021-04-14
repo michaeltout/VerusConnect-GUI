@@ -3,9 +3,8 @@ import { connect } from 'react-redux';
 import { 
   DashboardRender,
 } from './dashboard.render';
-import { NumberType } from 'io-ts';
-import { setMainNavigationPath, setModalNavigationPath } from '../../../../../actions/actionCreators';
-import { POST_AUTH, APPS, SETTINGS, PROFILE_SETTINGS, ADD_COIN, SELECT_COIN } from '../../../../../util/constants/componentConstants';
+import { setMainNavigationPath } from '../../../../../actions/actionCreators';
+import { POST_AUTH, APPS, SETTINGS, PROFILE_SETTINGS } from '../../../../../util/constants/componentConstants';
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -32,10 +31,6 @@ class Dashboard extends React.Component {
     if (this.props != lastProps) {
       this.calculatePortolio()
     }
-  }
-
-  openAddCoinModal() {
-    this.props.dispatch(setModalNavigationPath(`${ADD_COIN}/${SELECT_COIN}`))
   }
 
   calculatePortolio() {

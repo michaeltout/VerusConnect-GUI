@@ -151,7 +151,7 @@ export const DashboardRenderMiningCards = function() {
         <a
           href="#"
           style={{ color: "rgb(49, 101, 212)", marginLeft: "0.516%" }}
-          onClick={openAddCoinModal}
+          onClick={() => openAddCoinModal()}
         >
           {"Add a coin in native mode to start mining and/or staking coins!"}
         </a>

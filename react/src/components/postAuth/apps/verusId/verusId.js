@@ -1,12 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { DASHBOARD, CHAIN_POSTFIX, ADD_COIN, SELECT_COIN, IS_VERUS, ID_POSTFIX, NATIVE, ERROR_SNACK, SUCCESS_SNACK, ID_INFO, MID_LENGTH_ALERT } from '../../../../util/constants/componentConstants'
+import {
+  DASHBOARD,
+  IS_VERUS,
+  ID_POSTFIX,
+  NATIVE,
+  ERROR_SNACK,
+  SUCCESS_SNACK,
+  MID_LENGTH_ALERT,
+} from "../../../../util/constants/componentConstants";
 import Dashboard from './dashboard/dashboard'
 import {
   IdCardRender,
   IdTabsRender
 } from './verusId.render'
-import { setMainNavigationPath, setModalNavigationPath, newSnackbar, setModalParams } from '../../../../actions/actionCreators'
+import { setMainNavigationPath, newSnackbar } from '../../../../actions/actionCreators'
 import { getPathParent, getLastLocation } from '../../../../util/navigationUtils'
 import FormDialog from '../../../../containers/FormDialog/FormDialog'
 import { getIdentity } from '../../../../util/api/wallet/walletCalls'
@@ -158,10 +166,6 @@ class VerusId extends React.Component {
 
       this.setState({ activeId }, updateCards)
     } else updateCards()
-  }
-
-  openAddCoinModal() {
-    this.props.dispatch(setModalNavigationPath(`${ADD_COIN}/${SELECT_COIN}`))
   }
 
   openId(chainTicker, idIndex) {

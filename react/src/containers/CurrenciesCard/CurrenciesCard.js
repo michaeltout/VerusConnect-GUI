@@ -99,6 +99,7 @@ function CurrenciesCard(props) {
   const [verusCoins, setVerusCoins] = useState(Object.values(activatedCoins).filter((coinObj) => {
     return coinObj.options.tags.includes(IS_VERUS) && coinObj.mode === NATIVE
   }))
+
   const currencyArray =
     activeTicker == null
       ? Object.values(allCurrencies).flat()
@@ -109,7 +110,7 @@ function CurrenciesCard(props) {
       setDisplayCurrencies(
         filterCurrencies(getDisplayCurrencies(currencyArray, info, blacklists, identities), currencySearchTerm)
       ),
-    [allCurrencies, info, blacklists, activatedCoins, identities]
+    [allCurrencies, info, blacklists, activatedCoins, identities, activeTicker]
   );
 
   useEffect(

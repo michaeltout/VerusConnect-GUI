@@ -12,13 +12,13 @@ import { SET_COIN_ALL_CURRENCIES, ERROR_COIN_ALL_CURRENCIES } from '../../../../
  * @param {String} chainTicker Chain ticker id for chain to fetch currencies for
  * @param {Boolean} includeExpired Whether or not to include currencies that are no longer active
  */
-export const updateAllCurrencies = async (state, dispatch, mode, chainTicker, includeExpired) => {
+export const updateAllCurrencies = async (state, dispatch, mode, chainTicker, query) => {
   let currenciesAction = {chainTicker}
   let wasSuccess = true
 
   if (mode === NATIVE) {
     try {
-      const apiResult = await getAllCurrencies(mode, chainTicker, includeExpired)
+      const apiResult = await getAllCurrencies(mode, chainTicker, query)
       if (apiResult.msg === 'success') {
         currenciesAction = {...currenciesAction, type: SET_COIN_ALL_CURRENCIES, currencies: apiResult.result}
       } else {

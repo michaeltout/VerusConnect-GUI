@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { 
   DashboardRender,
 } from './dashboard.render';
-import { setModalParams, setModalNavigationPath, expireData, newSnackbar, setMainNavigationPath } from '../../../../../actions/actionCreators';
+import { expireData, newSnackbar, setMainNavigationPath } from '../../../../../actions/actionCreators';
 import {
   CREATE_IDENTITY,
   NATIVE,
@@ -17,8 +17,6 @@ import {
   API_RECOVER_ID,
   API_SUCCESS,
   INFO_SNACK,
-  ADD_COIN,
-  SELECT_COIN,
   SIGN_VERIFY_ID_DATA,
   VERIFY_ID_DATA,
   SIGN_ID_DATA,
@@ -70,10 +68,6 @@ class Dashboard extends React.Component {
 
   openId(chainTicker, idIndex) {
     this.props.dispatch(setMainNavigationPath(`${getPathParent(this.props.mainPathArray)}/${idIndex}_${chainTicker}_${ID_POSTFIX}`))
-  }
-
-  openAddCoinModal() {
-    this.props.dispatch(setModalNavigationPath(`${ADD_COIN}/${SELECT_COIN}`))
   }
 
   componentWillUnmount() {

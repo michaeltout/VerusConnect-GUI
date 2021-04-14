@@ -3,11 +3,7 @@ import { connect } from 'react-redux';
 import { 
   DashboardRender,
 } from './dashboard.render';
-import { setModalNavigationPath } from '../../../../../actions/actionCreators';
 import {
-  ADD_COIN,
-  SELECT_COIN,
-  IS_VERUS,
   NATIVE,
   API_GET_ALL_CURRENCIES
 } from "../../../../../util/constants/componentConstants";
@@ -65,10 +61,6 @@ class Dashboard extends React.Component {
       verusProtoCoins: this.getVerusProtocolCoins(this.props.activatedCoins),
       loadedCurrencyCoins: this.getLoadedCurrencyCoins(this.props.allCurrencies)
     })
-  }
-
-  openAddCoinModal() {
-    this.props.dispatch(setModalNavigationPath(`${ADD_COIN}/${SELECT_COIN}`))
   }
 
   render() {

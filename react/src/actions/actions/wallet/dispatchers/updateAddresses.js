@@ -21,10 +21,10 @@ export const updateAddresses = async (state, dispatch, mode, chainTicker) => {
         mode,
         chainTicker,
         mode === NATIVE
-          ? state.settings.config.coin.native.includePrivateAddrs[chainTicker]
+          ? !state.settings.config.coin.native.excludePrivateAddrs[chainTicker]
           : null,
         mode === NATIVE
-          ? state.settings.config.coin.native.includePrivateAddressBalances[
+          ? !state.settings.config.coin.native.excludePrivateAddressBalances[
               chainTicker
             ]
           : null

@@ -15,7 +15,9 @@ export const AddCoinRender = function() {
     setModalLock: this.props.setModalLock,
     closeModal: this.props.closeModal,
     setAddCoinParams: this.getAddCoinParams,
-    addCoinParams: this.state.addCoinParams
+    addCoinParams: this.state.addCoinParams,
+    selectedCoinSource: this.state.selectedCoinSource,
+    setSelectedCoinSource: this.setSelectedCoinSource
   }
 
   const COMPONENT_MAP = {

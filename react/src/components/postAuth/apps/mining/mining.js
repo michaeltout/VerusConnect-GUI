@@ -1,6 +1,22 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { DASHBOARD, ADD_COIN, SELECT_COIN, NATIVE, MINING_POSTFIX, MS_MERGE_MINING_STAKING, MS_MINING_STAKING, MS_MINING, MS_STAKING, MS_MERGE_MINING, MS_OFF, MS_IDLE, ERROR_SNACK, MID_LENGTH_ALERT, API_GET_MININGINFO, MINING_FUNCTIONS, API_ERROR } from '../../../../util/constants/componentConstants'
+import {
+  DASHBOARD,
+  NATIVE,
+  MINING_POSTFIX,
+  MS_MERGE_MINING_STAKING,
+  MS_MINING_STAKING,
+  MS_MINING,
+  MS_STAKING,
+  MS_MERGE_MINING,
+  MS_OFF,
+  MS_IDLE,
+  ERROR_SNACK,
+  MID_LENGTH_ALERT,
+  API_GET_MININGINFO,
+  MINING_FUNCTIONS,
+  API_ERROR,
+} from "../../../../util/constants/componentConstants";
 import Dashboard from './dashboard/dashboard'
 import MiningWallet from './miningWallet/miningWallet'
 import {
@@ -8,7 +24,13 @@ import {
   MiningTabsRender
 } from './mining.render'
 import Store from '../../../../store'
-import { setMainNavigationPath, setModalNavigationPath, expireData, newSnackbar, startLoadingMiningFunctions, finishLoadingMiningFunctions } from '../../../../actions/actionCreators'
+import {
+  setMainNavigationPath,
+  expireData,
+  newSnackbar,
+  startLoadingMiningFunctions,
+  finishLoadingMiningFunctions,
+} from "../../../../actions/actionCreators";
 import { getPathParent, getLastLocation } from '../../../../util/navigationUtils'
 import { stopStaking, startStaking, stopMining, startMining } from '../../../../util/api/wallet/walletCalls';
 import { conditionallyUpdateWallet } from '../../../../actions/actionDispatchers';
@@ -206,10 +228,6 @@ class Mining extends React.Component {
         this.setCards(activatedCoins)
       })
     })
-  }
-
-  openAddCoinModal() {
-    this.props.dispatch(setModalNavigationPath(`${ADD_COIN}/${SELECT_COIN}`))
   }
 
   openDashboard() {

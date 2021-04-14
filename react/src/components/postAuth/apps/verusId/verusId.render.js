@@ -1,6 +1,10 @@
 import React from 'react';
 import VerusIdStyles from './verusId.styles'
-import { DASHBOARD, ID_POSTFIX, CHAIN_FALLBACK_IMAGE } from '../../../../util/constants/componentConstants'
+import {
+  DASHBOARD,
+  CHAIN_FALLBACK_IMAGE,
+  ADD_DEFAULT_COIN,
+} from "../../../../util/constants/componentConstants";
 import { openAddCoinModal } from '../../../../actions/actionDispatchers';
 
 export const IdCardRender = function(coinObj) {
@@ -108,16 +112,16 @@ export const IdCardRender = function(coinObj) {
 export const IdTabsRender = function() {
   return [
     {
-      title: "Add Coin",
-      icon: 'fa-plus',
-      onClick: openAddCoinModal,
-      isActive: () => false
-    },
-    {
       title: "VerusID Dashboard",
       icon: 'fa-home',
       onClick: () => this.openDashboard(),
       isActive: () => this.props.mainPathArray.includes(DASHBOARD)
+    },
+    {
+      title: "Add Coin",
+      icon: 'fa-plus',
+      onClick: () => openAddCoinModal(ADD_DEFAULT_COIN),
+      isActive: () => false
     }
   ];
 }

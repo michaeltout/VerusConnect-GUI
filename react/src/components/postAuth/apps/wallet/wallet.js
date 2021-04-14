@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import {
   DASHBOARD,
   CHAIN_POSTFIX,
-  ADD_COIN,
-  SELECT_COIN,
   SUCCESS_SNACK,
   MID_LENGTH_ALERT,
 } from "../../../../util/constants/componentConstants";
@@ -14,7 +12,7 @@ import {
   WalletCardRender,
   WalletTabsRender
 } from './wallet.render'
-import { setMainNavigationPath, setModalNavigationPath, newSnackbar } from '../../../../actions/actionCreators'
+import { setMainNavigationPath, newSnackbar } from '../../../../actions/actionCreators'
 import { deactivateCoin } from '../../../../actions/actionDispatchers'
 import { getPathParent, getLastLocation } from '../../../../util/navigationUtils'
 import { useStringAsKey } from '../../../../util/objectUtil';
@@ -76,10 +74,6 @@ class Wallet extends React.Component {
     this.props.setCards(Object.values(activatedCoins).map((coinObj) => {
       return WalletCardRender.call(this, coinObj)
     }))
-  }
-
-  openAddCoinModal() {
-    this.props.dispatch(setModalNavigationPath(`${ADD_COIN}/${SELECT_COIN}`))
   }
 
   openCoin(wallet) {

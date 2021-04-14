@@ -16,7 +16,8 @@ import {
   ZCASH_DAEMON,
   ZCASH_CONF_NAME,
   KOMODO_CONF_NAME,
-  ERC20
+  ERC20,
+  VERUSTEST_CONF_NAME
 } from './constants/componentConstants'
 import electrumServers from 'agama-wallet-lib/src/electrum-servers'
 import networks from 'agama-wallet-lib/src/bitcoinjs-networks'
@@ -34,6 +35,8 @@ import { ERC20_CONTRACT_ADDRESSES } from './constants/erc20Contracts'
  * @param {Boolean} isPbaas Whether or not the coin to add is a pbaas chain, will override unsupported coin check
  */
 export const getCoinObj = (chainTicker, isPbaas = false) => {
+  if (isPbaas) return getPbaasChain(chainTicker)
+
   const allCoinNames = { ...coins.BTC, ...coins.ETH, ...coins.ERC20 };
   const chainTickerUc = chainTicker.toUpperCase()
   const chainTickerLc = chainTickerUc.toLowerCase()
@@ -42,8 +45,7 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
     id: chainTicker,
     options: {
       dustThreshold: DEFAULT_DUST_THRESHOLD, // 0.00001
-    },
-    isPbaasChain: isPbaas
+    }
   }
   let available_modes = {
     [NATIVE]: false,
@@ -53,7 +55,7 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
   }
 
   //If trying to add an unsupported chain, create a coin obj instead, dont use this function
-  if (!isPbaas && !allCoinNames[chainTickerUc]) throw new Error(`${chainTicker} not found in Verus coin list.`)
+  if (!allCoinNames[chainTickerUc]) throw new Error(`${chainTicker} not found in Verus coin list.`)
   else coinObj.name = allCoinNames[chainTickerUc]
 
   if (explorerList.explorerList[chainTickerUc]) coinObj.options.explorer = explorerList.explorerList[chainTickerUc]
@@ -72,16 +74,23 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
 
       coinObj.options.dirNames = coinDataDirectories[chainTickerUc]
 
-      if (komodoUtils.isKomodoCoin(chainTickerUc) && chainTickerUc !== 'VRSC' && chainTickerUc !== 'VRSCTEST') {
-        coinObj.options.daemon = KOMODO_DAEMON  // komodod
+      if (
+        komodoUtils.isKomodoCoin(chainTickerUc) &&
+        chainTickerUc !== "VRSC" &&
+        chainTickerUc !== "VRSCTEST"
+      ) {
+        coinObj.options.daemon = KOMODO_DAEMON; // komodod
 
-        if (chainTickerUc === 'KMD') coinObj.options.confName = KOMODO_CONF_NAME // komodo.conf
-
-      } else if (chainTickerUc === 'ZEC') {
-        coinObj.options.daemon = ZCASH_DAEMON // zcashd
-        coinObj.options.confName = ZCASH_CONF_NAME // zcash.conf
+        if (chainTickerUc === "KMD")
+          coinObj.options.confName = KOMODO_CONF_NAME; // komodo.conf
+      } else if (chainTickerUc === "ZEC") {
+        coinObj.options.daemon = ZCASH_DAEMON; // zcashd
+        coinObj.options.confName = ZCASH_CONF_NAME; // zcash.conf
+      } else if (chainTickerUc === "VRSCTEST") {
+        coinObj.options.daemon = DEFAULT_DAEMON; // verusd
+        coinObj.options.confName = VERUSTEST_CONF_NAME;
       } else {
-        coinObj.options.daemon = DEFAULT_DAEMON // verusd
+        coinObj.options.daemon = DEFAULT_DAEMON; // verusd
       }
     }
 
@@ -99,7 +108,7 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
     }
 
     // Determine if chain is pbaas compatible, and if it is a pbaas root chain
-    if (isPbaas || chainTickerUc === 'VRSCTEST') {
+    if (chainTickerUc === 'VRSCTEST') {
       tags = {...tags, [IS_ZCASH]: true, [IS_PBAAS]: true, [IS_SAPLING]: true}
       available_modes[NATIVE] = true
       coinObj.options.daemon = DEFAULT_DAEMON
@@ -132,8 +141,7 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
         'is_zcash',
         'is_pbaas',
         'is_pbaas_root'],
-      },
-      isPbaasChain: false,                       // Boolean to decide whether or not to skip coin compatability check
+      }                     // Boolean to decide whether or not to skip coin compatability check
       themeColor: hexCode                        // Theme color for coin to add, added to coin object in addCoin asynchronously
     }
   */
@@ -143,6 +151,42 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
     ...coinObj,
     available_modes
   }
+}
+
+export const getPbaasChain = (chainTicker) => {
+  const allCoinNames = { ...coins.BTC, ...coins.ETH, ...coins.ERC20 };
+  const chainTickerLc = chainTicker.toLowerCase()
+  const chainTickerUc = chainTicker.toUpperCase()
+
+  if (
+    !isValidMultiverseName(chainTicker) ||
+    allCoinNames[chainTickerUc] ||
+    typeof chainTicker !== "string"
+  )
+    throw new Error("Invalid PBaaS chain name " + chainTicker);
+
+  return {
+    id: chainTickerUc,
+    name: chainTicker,
+    available_modes: {
+      [NATIVE]: true,
+      [ELECTRUM]: false,
+      [ETH]: false,
+      [ERC20]: false,
+    },
+    options: {
+      daemon: DEFAULT_DAEMON,
+      startupOptions: [`-chain=${chainTickerLc}`],
+      dirNames: {
+        darwin: `VerusTest/pbaas/${chainTickerLc}`,
+        linux: `.verustest/pbaas/${chainTickerLc}`,
+        win32: `VerusTest/pbaas/${chainTickerLc}`,
+      },
+      tags: [IS_ZCASH, IS_PBAAS, IS_VERUS, IS_SAPLING],
+      dustThreshold: 0.00001,
+      fallbackPort: 10001
+    },
+  };
 }
 
 /**
@@ -194,4 +238,9 @@ export const getSimpleCoinArray = () => {
 export const getCoinId = (chainTicker, mode) => {
   if (mode === ERC20) return ERC20_CONTRACT_ADDRESSES[chainTicker]
   else return chainTicker
+}
+
+export const isValidMultiverseName = (name) => {
+  const notAllowed = ["\\", "/", ":", "*", "?", '"', "<", ">", "|", "@", "."]
+  return !(name.trim() !== name || notAllowed.some((v) => name.includes(v)))
 }

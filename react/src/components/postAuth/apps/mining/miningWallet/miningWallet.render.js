@@ -293,7 +293,7 @@ export const MiningWalletRenderGenerateOverview = function() {
             paddingTop: 8,
             display: "block"
           }}
-          onClick={openAddCoinModal}
+          onClick={() => openAddCoinModal()}
         >
           {"No coins added yet, click here to add one!"}
         </a>

@@ -105,7 +105,7 @@ export const CurrenciesCardRender = (
         <a
           href="#"
           style={{ color: "rgb(49, 101, 212)" }}
-          onClick={openAddCoinModal}
+          onClick={() => openAddCoinModal()}
         >
           {"Add VRSCTEST to discover new currencies!"}
         </a>
