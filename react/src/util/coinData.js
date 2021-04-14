@@ -181,7 +181,7 @@ export const getPbaasChain = (chainTicker, nodePort) => {
       startupOptions: [`-chain=${chainTickerLc}`],
       dirNames: {
         darwin: `VerusTest/pbaas/${chainTickerLc}`,
-        linux: `.vrsctest/pbaas/${chainTickerLc}`,
+        linux: `.verustest/pbaas/${chainTickerLc}`,
         win32: `VerusTest/pbaas/${chainTickerLc}`,
       },
       tags: [IS_ZCASH, IS_PBAAS, IS_VERUS, IS_SAPLING],
