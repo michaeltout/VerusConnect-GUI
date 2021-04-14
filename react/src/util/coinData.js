@@ -34,8 +34,8 @@ import { ERC20_CONTRACT_ADDRESSES } from './constants/erc20Contracts'
  * @param {String} chainTicker Coin to add's chain ticker
  * @param {Boolean} isPbaas Whether or not the coin to add is a pbaas chain, will override unsupported coin check
  */
-export const getCoinObj = (chainTicker, isPbaas = false) => {
-  if (isPbaas) return getPbaasChain(chainTicker)
+export const getCoinObj = (chainTicker, isPbaas = false, nodePort) => {
+  if (isPbaas) return getPbaasChain(chainTicker, nodePort)
 
   const allCoinNames = { ...coins.BTC, ...coins.ETH, ...coins.ERC20 };
   const chainTickerUc = chainTicker.toUpperCase()
@@ -153,7 +153,7 @@ export const getCoinObj = (chainTicker, isPbaas = false) => {
   }
 }
 
-export const getPbaasChain = (chainTicker) => {
+export const getPbaasChain = (chainTicker, nodePort) => {
   const allCoinNames = { ...coins.BTC, ...coins.ETH, ...coins.ERC20 };
   const chainTickerLc = chainTicker.toLowerCase()
   const chainTickerUc = chainTicker.toUpperCase()
@@ -184,7 +184,7 @@ export const getPbaasChain = (chainTicker) => {
       },
       tags: [IS_ZCASH, IS_PBAAS, IS_VERUS, IS_SAPLING],
       dustThreshold: 0.00001,
-      fallbackPort: 10001
+      fallbackPort: nodePort
     },
   };
 }

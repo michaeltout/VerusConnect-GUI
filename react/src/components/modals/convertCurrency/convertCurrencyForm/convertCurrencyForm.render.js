@@ -110,7 +110,6 @@ export const ConvertCurrencyConfirmSimpleRender = function() {
     ? Number((0.0005 * output.amount + 0.0002).toFixed(8))
     : Number((0.00025 * output.amount + 0.0001).toFixed(8));
 
-
   return (
     <div
       style={{
@@ -471,7 +470,13 @@ export const ConvertCurrencyFormSimpleRender = function() {
                   >
                     {`${this.state.conversionPaths[id].destination.name}${
                       this.state.conversionPaths[id].via
-                        ? ` (via ${this.state.conversionPaths[id].via.name})`
+                        ? ` (${
+                            this.state.conversionPaths[id].exportto
+                              ? "off-chain "
+                              : ""
+                          }via ${this.state.conversionPaths[id].via.name})`
+                        : this.state.conversionPaths[id].exportto
+                        ? " (off-chain)"
                         : ""
                     }`}
                   </h1>

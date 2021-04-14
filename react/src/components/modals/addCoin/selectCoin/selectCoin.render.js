@@ -40,7 +40,8 @@ export const SelectCoinForm = function() {
     setSelectedCoin: this.getSelectedCoin,
     clearCoin: this.clearCoin,
     setSelectedCoinSource: this.props.setSelectedCoinSource,
-    chooseCoin: this.chooseCoin
+    chooseCoin: this.chooseCoin,
+    selectedCoin: this.state.selectedCoin
   }
 
   const COIN_SELECTORS = {

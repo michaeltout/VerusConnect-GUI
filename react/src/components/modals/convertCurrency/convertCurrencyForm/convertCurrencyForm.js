@@ -90,7 +90,8 @@ class ConvertCurrencyForm extends React.Component {
         memo: "",
         preconvert: "",
         sendAmount: "",
-        receiveAmount: ""
+        receiveAmount: "",
+        exportto: ""
       }],
       estArrivals: [],
       conversionPaths: {},
@@ -142,6 +143,7 @@ class ConvertCurrencyForm extends React.Component {
           refundto: isPreconvert ? x.address : null,
           memo: x.memo,
           preconvert: isPreconvert,
+          exportto: x.exportto
         };
       });
 
@@ -173,6 +175,7 @@ class ConvertCurrencyForm extends React.Component {
             refundto,
             memo,
             preconvert,
+            exportto
           } = output;
 
           return {
@@ -184,6 +187,7 @@ class ConvertCurrencyForm extends React.Component {
             refundto,
             memo,
             preconvert,
+            exportto
           };
         })
       );
@@ -299,7 +303,8 @@ class ConvertCurrencyForm extends React.Component {
         memo: "",
         preconvert: "",
         sendAmount: "",
-        receiveAmount: ""
+        receiveAmount: "",
+        exportto: ""
       }]
     })
   }
@@ -324,6 +329,7 @@ class ConvertCurrencyForm extends React.Component {
     }, () => {
       this.updateOutput("convertto", selectedPathObj.destination.currencyid)
       if (selectedPathObj.via) this.updateOutput("via", selectedPathObj.via.currencyid)
+      if (selectedPathObj.exportto) this.updateOutput("exportto", selectedPathObj.exportto)
       else this.updateOutput("via", null)
     })
   }
@@ -365,7 +371,8 @@ class ConvertCurrencyForm extends React.Component {
       conversionPaths: {},
       selectedConversionPath: null
     }, async () => {
-      this.updateOutput("convertto", null)
+      this.updateOutput("convertto", "")
+      this.updateOutput("exportto", "")
       this.updateOutput("currency", source)
       await this.fetchConversionPaths(source)
       this.props.clearInitCurrency()

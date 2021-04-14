@@ -67,16 +67,14 @@ export const PbaasCoinSelectorRender = function() {
         loadingText={this.state.loadingText}
         disabled={this.state.disabled}
         options={this.state.chainIds}
-        getOptionLabel={(option) =>
-          this.state.chainMap[option].name
-        }
+        getOptionLabel={(option) => {
+          return this.state.chainMap[option].name;
+        }}
         style={{ width: 300 }}
         value={
           this.props.selectedCoin == null
             ? null
-            : this.state.chainMap[
-                this.state.nameMap[this.props.selectedCoin.name]
-              ]
+            : this.state.nameMap[this.props.selectedCoin.name]
         }
         onChange={(e, value) =>
           this.selectPbaasChain(this.state.chainMap[value])
