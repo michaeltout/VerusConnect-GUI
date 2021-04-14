@@ -184,7 +184,8 @@ export const getPbaasChain = (chainTicker, nodePort) => {
       },
       tags: [IS_ZCASH, IS_PBAAS, IS_VERUS, IS_SAPLING],
       dustThreshold: 0.00001,
-      fallbackPort: nodePort
+      fallbackPort: nodePort,
+      confName: chainTickerLc
     },
   };
 }
