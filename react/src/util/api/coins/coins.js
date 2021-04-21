@@ -1,5 +1,10 @@
 import { getApiData } from '../callCreator'
-import { API_ACTIVATE_COIN, API_REMOVE_COIN, POST } from '../../constants/componentConstants'
+import {
+  API_ACTIVATE_COIN,
+  API_REMOVE_COIN,
+  API_RESTART_COIN,
+  POST,
+} from "../../constants/componentConstants";
 
 /**
  * Makes an api call to activate a chain and returns the API call result
@@ -27,6 +32,24 @@ export const initCoin = async (chainTicker, mode, startupOptions, launchConfig) 
         chainTicker,
         launchConfig,
         startupOptions
+      },
+      POST
+    );
+  } catch (e) {
+    throw e
+  }
+}
+
+export const restartCoin = async (chainTicker, mode, startupOptions, launchConfig, bootstrap = false) => {  
+  try {
+    return await getApiData(
+      mode,
+      API_RESTART_COIN,
+      {
+        chainTicker,
+        launchConfig,
+        startupOptions,
+        bootstrap
       },
       POST
     );

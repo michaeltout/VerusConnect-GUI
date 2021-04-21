@@ -28,7 +28,8 @@ import {
   ID_INFO,
   CREATE_IDENTITY,
   API_UPDATE_ID,
-  IS_PBAAS
+  IS_PBAAS,
+  Z_ONLY
 } from "../../../../../util/constants/componentConstants";
 import { VirtualizedTable } from '../../../../../containers/VirtualizedTable/VirtualizedTable'
 import { TX_TYPES } from '../../../../../util/txUtils/txRenderUtils'
@@ -444,7 +445,18 @@ export const WalletRenderPie = function() {
 
 export const WalletRenderBalances = function() {
   const filteredBalances = this.state.walletDisplayBalances.filter(
-    (balance) => balance.currency === this.props.selectedCurrency
+    (balance) => {
+      return (
+        balance.currency === this.props.selectedCurrency &&
+        !(
+          balance.balanceAddrType === PUBLIC_BALANCE &&
+          this.props.activatedCoins[this.props.coin] &&
+          this.props.activatedCoins[this.props.coin].options.tags.includes(
+            Z_ONLY
+          )
+        )
+      );
+    }
   );
 
   const walletDisplayBalances =

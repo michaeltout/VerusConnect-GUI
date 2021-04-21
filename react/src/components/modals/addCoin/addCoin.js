@@ -57,12 +57,19 @@ class AddCoin extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.setModalLinks([])
+  }
+
   componentDidUpdate(lastProps, lastState) {
     if (lastProps.loggingOut != this.props.loggingOut && this.props.loggingOut) {
       this._handleLoggingOut()
     }
 
-    if (lastState.selectedCoinSource !== this.state.selectedCoinSource)
+    if (
+      lastState.selectedCoinSource !== this.state.selectedCoinSource ||
+      lastProps.isModalLocked !== this.props.isModalLocked
+    )
       this.updateModalButtons(this.props);
   }
 
@@ -81,17 +88,20 @@ class AddCoin extends React.Component {
     props.setModalButtons([{
       onClick: () => this.setSelectedCoinSource(ADD_DEFAULT_COIN),
       isActive: this.state.selectedCoinSource === ADD_DEFAULT_COIN,
-      label: "Add Coin From List"
+      label: "Add Coin From List",
+      isDisabled: this.props.isModalLocked
     },
     {
       onClick: () => this.setSelectedCoinSource(IMPORT_COIN),
       isActive: this.state.selectedCoinSource === IMPORT_COIN,
-      label: "Import Coin"
+      label: "Import Coin",
+      isDisabled: this.props.isModalLocked
     },
     {
       onClick: () => this.setSelectedCoinSource(ADD_PBAAS_COIN),
       isActive: this.state.selectedCoinSource === ADD_PBAAS_COIN,
-      label: "Add PBaaS Chain"
+      label: "Add PBaaS Chain",
+      isDisabled: this.props.isModalLocked
     }]);
   }
 

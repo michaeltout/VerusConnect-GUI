@@ -103,6 +103,7 @@ export const testConfig = {
   "KMD",
   "KOMODO",
   "zcashd",
+  "pirated",
   "komodod",
   "chipsd",
   "CHIPS"],

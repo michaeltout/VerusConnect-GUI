@@ -12,6 +12,7 @@ import {
   SET_COIN_ZOPERATIONS,
   SET_COIN_FIATPRICE,
   DEACTIVATE_COIN,
+  CLEAR_COIN_DATA,
   SET_COIN_IDENTITIES,
   SET_COIN_NAME_COMMITMENTS,
   SET_COIN_CURRENTSUPPLY,
@@ -41,6 +42,7 @@ export const ledger = (state = {
 }, action) => {
   switch (action.type) {
     case DEACTIVATE_COIN:
+    case CLEAR_COIN_DATA:
       const {
         balances,
         transactions,

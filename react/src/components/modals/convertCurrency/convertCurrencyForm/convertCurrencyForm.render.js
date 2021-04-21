@@ -107,8 +107,8 @@ export const ConvertCurrencyConfirmSimpleRender = function() {
     : 0;
 
   const fee = output.via
-    ? Number((0.0005 * output.amount + 0.0002).toFixed(8))
-    : Number((0.00025 * output.amount + 0.0001).toFixed(8));
+    ? Number((0.0005 * output.amount + (output.exportto ? 0.0201 : 0.0001)).toFixed(8))
+    : Number((0.00025 * output.amount + (output.exportto ? 0.0201 : 0.0001)).toFixed(8));
 
   return (
     <div
@@ -202,7 +202,7 @@ export const ConvertCurrencyConfirmSimpleRender = function() {
           }}
           label="Fee"
           variant="outlined"
-          value={`${fee} ${this.props.modalProps.chainTicker}`}
+          value={`${fee} ${output.currency}`}
           InputProps={{
             readOnly: true,
           }}
@@ -304,6 +304,7 @@ export const ConvertCurrencyFormSimpleRender = function() {
     via,
     sendAmount,
     receiveAmount,
+    exportto
   } = this.state.outputs[0];
   const price = this.state.conversionPaths[this.state.selectedConversionPath]
     ? this.state.conversionPaths[this.state.selectedConversionPath].price
@@ -551,10 +552,18 @@ export const ConvertCurrencyFormSimpleRender = function() {
             <div style={{ fontWeight: "bold" }}>{`Est. Fee: ${
               amount
                 ? via
-                  ? Number((0.0005 * amount + 0.0002).toFixed(8))
-                  : Number((0.00025 * amount + 0.0001).toFixed(8))
+                  ? Number(
+                      (0.0005 * amount + (exportto ? 0.0201 : 0.0001)).toFixed(
+                        8
+                      )
+                    )
+                  : Number(
+                      (0.00025 * amount + (exportto ? 0.0201 : 0.0001)).toFixed(
+                        8
+                      )
+                    )
                 : "-"
-            } ${this.props.modalProps.chainTicker}`}</div>
+            } ${currency ? currency : "-"}`}</div>
           </WalletPaper>
         </div>
         <CustomButton
@@ -721,6 +730,19 @@ export const ConvertCurrencyFormAdvancedRender = function() {
                   size="small"
                   onChange={(e) =>
                     this.updateOutput("via", e.target.value, index)
+                  }
+                  value={via}
+                  style={{ flex: 1 }}
+                  disabled={isConfirmStep}
+                />
+              </div>
+              <div style={{ display: "flex", marginTop: 8 }}>
+                <TextField
+                  label="Destination System (if required)"
+                  variant="outlined"
+                  size="small"
+                  onChange={(e) =>
+                    this.updateOutput("exportto", e.target.value, index)
                   }
                   value={via}
                   style={{ flex: 1 }}

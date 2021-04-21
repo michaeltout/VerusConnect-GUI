@@ -4,7 +4,7 @@ import {
   SignUpRender
 } from './signUp.render';
 import { setUserAuth, newSnackbar } from '../../../../../actions/actionCreators'
-import { SUCCESS_SNACK, MID_LENGTH_ALERT } from '../../../../../util/constants/componentConstants';
+import { SUCCESS_SNACK, MID_LENGTH_ALERT, ERROR_SNACK } from '../../../../../util/constants/componentConstants';
 
 
 class SignUp extends React.Component {
@@ -31,7 +31,7 @@ class SignUp extends React.Component {
         this.props.activateCoin()
       } catch (e) {
         this.props.setModalLock(false)
-        console.error(e.message)
+        this.props.dispatch(newSnackbar(ERROR_SNACK, e.message))
         this.setState({ formErrors: e.message, formLock: false })
       }
     })

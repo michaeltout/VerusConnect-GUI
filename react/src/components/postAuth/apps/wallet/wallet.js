@@ -4,7 +4,7 @@ import {
   DASHBOARD,
   CHAIN_POSTFIX,
   SUCCESS_SNACK,
-  MID_LENGTH_ALERT,
+  MID_LENGTH_ALERT
 } from "../../../../util/constants/componentConstants";
 import Dashboard from './dashboard/dashboard'
 import CoinWallet from './coinWallet/coinWallet'

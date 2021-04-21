@@ -240,7 +240,6 @@ class CoinWallet extends React.Component {
     if (balances) {
       const fiatPrices = this.props.fiatPrices;
       const fiatCurrency = this.props.fiatCurrency;
-      //const currencyBalances = balances[NATIVE_BALANCE]
 
       for (let balanceCurrency in balances) {
         const currencyBalances = balances[balanceCurrency];

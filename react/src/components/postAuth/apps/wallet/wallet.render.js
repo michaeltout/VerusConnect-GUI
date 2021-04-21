@@ -8,9 +8,13 @@ import {
   CHAIN_FALLBACK_IMAGE,
   ERC20,
   ADD_DEFAULT_COIN,
-  IMPORT_COIN,
+  CHAIN_OPTIONS,
+  POST_SYNC,
 } from "../../../../util/constants/componentConstants";
-import { openAddCoinModal } from '../../../../actions/actionDispatchers';
+import { openAddCoinModal, openModal } from '../../../../actions/actionDispatchers';
+import { IconButton } from '@material-ui/core';
+import SettingsIcon from '@material-ui/icons/Settings';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 export const WalletCardRender = function(coinObj) {
   const {
@@ -35,6 +39,8 @@ export const WalletCardRender = function(coinObj) {
     coinFiatRate && coinBalance !== "-"
       ? (coinFiatRate * coinBalance).toFixed(2)
       : "-";
+  
+  const errorOrLoading = coinObj.status !== POST_SYNC
 
   return (
     <button
@@ -51,65 +57,118 @@ export const WalletCardRender = function(coinObj) {
           className={`card ${isActive ? "active-card" : "border-on-hover"}`}
           style={WalletStyles.cardInnerContainer}
         >
+          {errorOrLoading && (
+            <div
+              style={{
+                color: `rgb(49, 101, 212)`,
+                alignSelf: "flex-end",
+                height: 20,
+              }}
+            >
+              <CircularProgress
+                variant={"indeterminate"}
+                thickness={4.5}
+                size={20}
+                color="inherit"
+              />
+            </div>
+          )}
           <div
             className="card-body d-flex justify-content-between"
-            style={WalletStyles.cardBody}
+            style={{
+              ...WalletStyles.cardBody,
+              display: "flex",
+              flexDirection: "column",
+              paddingTop: errorOrLoading ? 0 : 20,
+            }}
           >
-            <div>
-              <div
-                className="d-flex"
-                style={WalletStyles.cardCoinInfoContainer}
-              >
-                <img
-                  src={`assets/images/cryptologo/${
-                    coinObj.mode === ETH
-                      ? ETH
-                      : coinObj.mode === ERC20
-                      ? ERC20
-                      : "btc"
-                  }/${coinObj.id.toLowerCase()}.png`}
-                  width="25px"
-                  height="25px"
-                  onError={(e) => {
-                    e.target.src = CHAIN_FALLBACK_IMAGE;
-                  }}
-                />
-                <h4 style={WalletStyles.cardCoinName}>
-                  <strong>{coinObj.name}</strong>
-                </h4>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <div>
+                <div
+                  className="d-flex"
+                  style={WalletStyles.cardCoinInfoContainer}
+                >
+                  <img
+                    src={`assets/images/cryptologo/${
+                      coinObj.mode === ETH
+                        ? ETH
+                        : coinObj.mode === ERC20
+                        ? ERC20
+                        : "btc"
+                    }/${coinObj.id.toLowerCase()}.png`}
+                    width="25px"
+                    height="25px"
+                    onError={(e) => {
+                      e.target.src = CHAIN_FALLBACK_IMAGE;
+                    }}
+                  />
+                  <h4 style={WalletStyles.cardCoinName}>
+                    <strong>{coinObj.name}</strong>
+                  </h4>
+                </div>
+                <h5
+                  className={`text-left coin-type ${
+                    coinObj.mode === NATIVE ? "native" : "lite"
+                  }`}
+                  style={WalletStyles.cardCoinType}
+                >
+                  <strong>{coinObj.mode === NATIVE ? "NATIVE" : "LITE"}</strong>
+                </h5>
               </div>
-              <h5
-                className={`text-left coin-type ${
-                  coinObj.mode === NATIVE ? "native" : "lite"
-                }`}
-                style={WalletStyles.cardCoinType}
-              >
-                <strong>{coinObj.mode === NATIVE ? "NATIVE" : "LITE"}</strong>
-              </h5>
-            </div>
-            <div style={{ paddingTop: 6 }}>
-              <h6 className="text-right" style={WalletStyles.fiatValue}>
-                {`${balanceFiat}  ${fiatCurrency}`}
-              </h6>
-              <h5 className="text-right" style={WalletStyles.balance}>
-                {`${
-                  isNaN(coinBalance)
-                    ? coinBalance
-                    : Number(coinBalance.toFixed(8))
-                } ${coinObj.id}`}
-              </h5>
+              <div style={{ paddingTop: 6 }}>
+                <h6 className="text-right" style={WalletStyles.fiatValue}>
+                  {`${balanceFiat}  ${fiatCurrency}`}
+                </h6>
+                <h5 className="text-right" style={WalletStyles.balance}>
+                  {`${
+                    isNaN(coinBalance)
+                      ? coinBalance
+                      : Number(coinBalance.toFixed(8))
+                  } ${coinObj.id}`}
+                </h5>
+              </div>
             </div>
           </div>
         </div>
         {isActive && !loggingOut && (
-          <a
-            className="text-right"
-            href="#"
-            onClick={() => this.deactivate(coinObj.id, coinObj.mode)}
-            style={WalletStyles.deactivateCoin}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+              alignItems: "center",
+            }}
           >
-            {"Deactivate"}
-          </a>
+            <a
+              className="text-right"
+              href="#"
+              onClick={() => this.deactivate(coinObj.id, coinObj.mode)}
+              style={WalletStyles.deactivateCoin}
+            >
+              {"Deactivate"}
+            </a>
+            {coinObj.mode === NATIVE && (
+              <IconButton
+                aria-label={"coin options"}
+                onClick={() =>
+                  openModal(CHAIN_OPTIONS, { chainTicker: coinObj.id })
+                }
+                size="small"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <SettingsIcon />
+              </IconButton>
+            )}
+          </div>
         )}
       </div>
     </button>

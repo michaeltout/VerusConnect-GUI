@@ -1,4 +1,4 @@
-import explorerList from 'agama-wallet-lib/src/coin-helpers'
+import { EXPLORER_LIST } from './explorers'
 import coins from '../translate/coins'
 import {
   NATIVE,
@@ -17,7 +17,8 @@ import {
   ZCASH_CONF_NAME,
   KOMODO_CONF_NAME,
   ERC20,
-  VERUSTEST_CONF_NAME
+  VERUSTEST_CONF_NAME,
+  PIRATE_DAEMON
 } from './constants/componentConstants'
 import electrumServers from 'agama-wallet-lib/src/electrum-servers'
 import networks from 'agama-wallet-lib/src/bitcoinjs-networks'
@@ -58,7 +59,7 @@ export const getCoinObj = (chainTicker, isPbaas = false, nodePort) => {
   if (!allCoinNames[chainTickerUc]) throw new Error(`${chainTicker} not found in Verus coin list.`)
   else coinObj.name = allCoinNames[chainTickerUc]
 
-  if (explorerList.explorerList[chainTickerUc]) coinObj.options.explorer = explorerList.explorerList[chainTickerUc]
+  if (EXPLORER_LIST[chainTickerUc]) coinObj.options.explorer = EXPLORER_LIST[chainTickerUc];
 
   // Determine available modes based on available coin data and libraries
   if (ERC20_CONTRACT_ADDRESSES[chainTickerUc]) {
@@ -77,7 +78,8 @@ export const getCoinObj = (chainTicker, isPbaas = false, nodePort) => {
       if (
         komodoUtils.isKomodoCoin(chainTickerUc) &&
         chainTickerUc !== "VRSC" &&
-        chainTickerUc !== "VRSCTEST"
+        chainTickerUc !== "VRSCTEST" && 
+        chainTickerUc !== "PIRATE"
       ) {
         coinObj.options.daemon = KOMODO_DAEMON; // komodod
 
@@ -86,6 +88,8 @@ export const getCoinObj = (chainTicker, isPbaas = false, nodePort) => {
       } else if (chainTickerUc === "ZEC") {
         coinObj.options.daemon = ZCASH_DAEMON; // zcashd
         coinObj.options.confName = ZCASH_CONF_NAME; // zcash.conf
+      } else if (chainTickerUc === 'PIRATE') {
+        coinObj.options.daemon = PIRATE_DAEMON;
       } else {
         coinObj.options.daemon = DEFAULT_DAEMON; // verusd
       }
