@@ -15,6 +15,43 @@ import { openAddCoinModal, openModal } from '../../../../actions/actionDispatche
 import { IconButton } from '@material-ui/core';
 import SettingsIcon from '@material-ui/icons/Settings';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dashboard from './dashboard/dashboard'
+import CoinWallet from './coinWallet/coinWallet'
+
+const COMPONENT_MAP = {
+  [DASHBOARD]: <Dashboard />,
+}
+
+export const WalletRender = function () {
+  const walletApp = this.props.mainPathArray[3]
+    ? this.props.mainPathArray[3]
+    : null;
+
+  if (walletApp) {
+    if (COMPONENT_MAP[walletApp]) return COMPONENT_MAP[walletApp];
+    else {
+      const pathDestination = walletApp.split("_");
+
+      if (pathDestination.length > 1 && pathDestination[1] === CHAIN_POSTFIX)
+        return (
+          <CoinWallet
+            coin={pathDestination[0]}
+            balances={this.props.balances[pathDestination[0]]}
+            transactions={this.props.transactions[pathDestination[0]]}
+            addresses={this.props.addresses[pathDestination[0]]}
+          />
+        );
+    }
+  }
+
+  return null;
+};
 
 export const WalletCardRender = function(coinObj) {
   const {
@@ -148,7 +185,7 @@ export const WalletCardRender = function(coinObj) {
             <a
               className="text-right"
               href="#"
-              onClick={() => this.deactivate(coinObj.id, coinObj.mode)}
+              onClick={() => this.openDeactivateDialog(coinObj.id, coinObj.mode)}
               style={WalletStyles.deactivateCoin}
             >
               {"Deactivate"}
@@ -174,6 +211,43 @@ export const WalletCardRender = function(coinObj) {
     </button>
   );
 };
+
+export const CoinDeactivateDialogue = function() {
+  const { coinDeactivateDialogue } = this.state
+
+  return (
+    <Dialog
+      open={coinDeactivateDialogue == null ? false : true}
+      onClose={this.closeDeactivateDialog}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">{`Deactivate ${coinDeactivateDialogue.coin}?`}</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          {`Are you sure you would like to deactivate ${coinDeactivateDialogue.coin}?`}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => this.closeDeactivateDialog()} color="primary">
+          {"No"}
+        </Button>
+        <Button
+          onClick={() =>
+            this.deactivate(
+              coinDeactivateDialogue.coin,
+              coinDeactivateDialogue.mode
+            )
+          }
+          color="primary"
+          autoFocus
+        >
+          {"Yes"}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
 
 export const WalletTabsRender = function() {
   return [

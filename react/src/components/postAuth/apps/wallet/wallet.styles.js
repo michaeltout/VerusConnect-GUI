@@ -50,7 +50,7 @@ export default {
   deactivateCoin: {
     paddingRight: 0,
     maxWidth: 90,
-    marginRight: 4,
+    marginLeft: 4,
     color: "#3f51b5"
   },
   navigationTabIcon: {

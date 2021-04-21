@@ -6,31 +6,46 @@ import {
   SUCCESS_SNACK,
   MID_LENGTH_ALERT
 } from "../../../../util/constants/componentConstants";
-import Dashboard from './dashboard/dashboard'
-import CoinWallet from './coinWallet/coinWallet'
+
 import {
   WalletCardRender,
-  WalletTabsRender
+  WalletTabsRender,
+  CoinDeactivateDialogue,
+  WalletRender
 } from './wallet.render'
 import { setMainNavigationPath, newSnackbar } from '../../../../actions/actionCreators'
 import { deactivateCoin } from '../../../../actions/actionDispatchers'
 import { getPathParent, getLastLocation } from '../../../../util/navigationUtils'
 import { useStringAsKey } from '../../../../util/objectUtil';
 
-const COMPONENT_MAP = {
-  [DASHBOARD]: <Dashboard />,
-}
-
 class Wallet extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      coinDeactivateDialogue: null
+    }
     
     this.setCards = this.setCards.bind(this)
     this.setTabs = this.setTabs.bind(this)
     this.openCoin = this.openCoin.bind(this)
     this.openDashboard = this.openDashboard.bind(this)
     this.deactivate = this.deactivate.bind(this)
+    this.closeDeactivateDialog = this.closeDeactivateDialog.bind(this)
+    this.openDeactivateDialog = this.openDeactivateDialog.bind(this)
     this.setTabs()
+  }
+
+  closeDeactivateDialog() {
+    this.setState({
+      coinDeactivateDialogue: null
+    })
+  }
+
+  openDeactivateDialog(coin, mode) {
+    this.setState({
+      coinDeactivateDialogue: { coin, mode }
+    })
   }
 
   componentDidMount() {
@@ -81,6 +96,8 @@ class Wallet extends React.Component {
   }
 
   async deactivate(chainTicker, mode) {
+    this.closeDeactivateDialog()
+
     const { openDashboard, props } = this
     const { dispatch, mainPathArray } = props
 
@@ -99,25 +116,14 @@ class Wallet extends React.Component {
   }
 
   render() {
-    const walletApp = this.props.mainPathArray[3] ? this.props.mainPathArray[3] : null
-
-    if (walletApp) {
-      if (COMPONENT_MAP[walletApp]) return COMPONENT_MAP[walletApp]
-      else {
-        const pathDestination = walletApp.split('_')
-
-        if (pathDestination.length > 1 && pathDestination[1] === CHAIN_POSTFIX) return (
-          <CoinWallet 
-            coin={pathDestination[0]}
-            balances={this.props.balances[pathDestination[0]]}
-            transactions={this.props.transactions[pathDestination[0]]}
-            addresses={this.props.addresses[pathDestination[0]]}
-          />
-        )
-      }
-    }
-
-    return null
+    return (
+      <React.Fragment>
+        {this.state.coinDeactivateDialogue != null
+          ? CoinDeactivateDialogue.call(this)
+          : null}
+        {WalletRender.call(this)}
+      </React.Fragment>
+    );
   }
 }
 
