@@ -6,9 +6,11 @@ import {
   MS_IDLE,
   CHAIN_FALLBACK_IMAGE,
   ADD_DEFAULT_COIN,
+  POST_SYNC
 } from "../../../../util/constants/componentConstants";
 import Tooltip from '@material-ui/core/Tooltip';
 import { openAddCoinModal } from '../../../../actions/actionDispatchers';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 export const MiningCardRender = function(coinObj) {
   const {
@@ -17,6 +19,7 @@ export const MiningCardRender = function(coinObj) {
   } = this.props;
   const miningState = this.state.miningStates[coinObj.id] ? this.state.miningStates[coinObj.id] : MS_IDLE
 
+  const errorOrLoading = coinObj.status !== POST_SYNC
   const isActive = mainPathArray.includes(`${coinObj.id}_${MINING_POSTFIX}`);
   const coinBalance = balances[coinObj.id]
     ? balances[coinObj.id].native.public.confirmed +
@@ -41,9 +44,28 @@ export const MiningCardRender = function(coinObj) {
           className={`card ${isActive ? "active-card" : "border-on-hover"}`}
           style={MiningStyles.cardInnerContainer}
         >
+          {errorOrLoading && (
+            <div
+              style={{
+                color: `rgb(49, 101, 212)`,
+                alignSelf: "flex-end",
+                height: 20,
+              }}
+            >
+              <CircularProgress
+                variant={"indeterminate"}
+                thickness={4.5}
+                size={20}
+                color="inherit"
+              />
+            </div>
+          )}
           <div
             className="card-body d-flex justify-content-between"
-            style={MiningStyles.cardBody}
+            style={{
+              ...MiningStyles.cardBody,
+              paddingTop: errorOrLoading ? 0 : 20,
+            }}
           >
             <div>
               <div

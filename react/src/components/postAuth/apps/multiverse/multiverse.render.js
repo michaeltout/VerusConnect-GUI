@@ -5,11 +5,14 @@ import {
   CHAIN_FALLBACK_IMAGE,
   ADD_DEFAULT_COIN,
   ADD_PBAAS_COIN,
+  POST_SYNC
 } from "../../../../util/constants/componentConstants";
 import { openAddCoinModal } from '../../../../actions/actionDispatchers';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 export const MultiverseCardRender = function(coinObj) {
   const { allCurrencies } = this.props
+  const errorOrLoading = coinObj.status !== POST_SYNC
   const numCurrencies = allCurrencies[coinObj.id] ? allCurrencies[coinObj.id].length : '-'
 
   return (
@@ -25,9 +28,28 @@ export const MultiverseCardRender = function(coinObj) {
           className={'card'}
           style={MultiverseStyles.cardInnerContainer}
         >
+          {errorOrLoading && (
+            <div
+              style={{
+                color: `rgb(49, 101, 212)`,
+                alignSelf: "flex-end",
+                height: 20,
+              }}
+            >
+              <CircularProgress
+                variant={"indeterminate"}
+                thickness={4.5}
+                size={20}
+                color="inherit"
+              />
+            </div>
+          )}
           <div
             className="card-body d-flex justify-content-between"
-            style={MultiverseStyles.cardBody}
+            style={{
+              ...MultiverseStyles.cardBody,
+              paddingTop: errorOrLoading ? 0 : 20,
+            }}
           >
             <div style={{ width: "100%" }}>
               <div

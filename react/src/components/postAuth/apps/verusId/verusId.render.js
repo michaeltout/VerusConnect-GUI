@@ -4,13 +4,16 @@ import {
   DASHBOARD,
   CHAIN_FALLBACK_IMAGE,
   ADD_DEFAULT_COIN,
+  POST_SYNC
 } from "../../../../util/constants/componentConstants";
 import { openAddCoinModal } from '../../../../actions/actionDispatchers';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 export const IdCardRender = function(coinObj) {
   const { identities } = this.props
   const { activeId } = this.state
   const coinIdentities = identities[coinObj.id] || []
+  const errorOrLoading = coinObj.status !== POST_SYNC
 
   return (
     <div
@@ -30,9 +33,28 @@ export const IdCardRender = function(coinObj) {
           }`}
           style={VerusIdStyles.cardInnerContainer}
         >
+          {errorOrLoading && (
+            <div
+              style={{
+                color: `rgb(49, 101, 212)`,
+                alignSelf: "flex-end",
+                height: 20,
+              }}
+            >
+              <CircularProgress
+                variant={"indeterminate"}
+                thickness={4.5}
+                size={20}
+                color="inherit"
+              />
+            </div>
+          )}
           <div
             className="card-body d-flex justify-content-between"
-            style={VerusIdStyles.cardBody}
+            style={{
+              ...VerusIdStyles.cardBody,
+              paddingTop: errorOrLoading ? 0 : 20,
+            }}
           >
             <div style={{ width: "100%" }}>
               <div
