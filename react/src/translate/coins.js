@@ -276,9 +276,8 @@ const coins = {
     //TODO: Get erc20 contract ID for eos
     //EOS: 'EOS',
     ZIL: 'Zilliqa',
-    //OCALL: 'Old Capital',
-    //CALLG: 'Capital GAS',
-    //TST: "Ropsten Test ERC20"
+    //TSTROPSTEN: "Ropsten Test ERC20",
+    //TSTRINKEBY: "Rinkeby Test ERC20",
   }
 };
 
