@@ -66,3 +66,7 @@ export const makeAppDataChanges = async (changes) => {
 
   await saveUpdateLog(UPDATE_LOG_HISTORY)
 }
+
+export const clearUpdateChanges = async () => {
+  await saveUpdateLog({})
+}
