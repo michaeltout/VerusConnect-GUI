@@ -164,8 +164,16 @@ class SendCoin extends React.Component {
 
               // Expire transactions and balances
               this.props.dispatch(expireData(chainTicker, API_GET_TRANSACTIONS))
-              this.props.dispatch(expireData(chainTicker, API_GET_BALANCES))
-              this.props.dispatch(expireData(chainTicker, API_GET_ZOPERATIONSTATUSES))
+
+              const expireBalancesAndOperations = () => {
+                this.props.dispatch(expireData(chainTicker, API_GET_BALANCES))
+                this.props.dispatch(expireData(chainTicker, API_GET_ZOPERATIONSTATUSES))
+              }
+              
+              expireBalancesAndOperations()
+              setTimeout(() => expireBalancesAndOperations(), 5000)
+              setTimeout(() => expireBalancesAndOperations(), 10000)
+              setTimeout(() => expireBalancesAndOperations(), 15000)
             }
 
             this.setState({ loading: false, txData: {status: API_SUCCESS, ..._txData.result}, formStep: formStep + 1 })

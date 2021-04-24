@@ -1001,7 +1001,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           expire_oncomplete: null,
           update_expired_oncomplete: null,
           expire_timeout: 60000,
-          update_expired_interval: 10000,
+          update_expired_interval: 5000,
         }
       }
     },
@@ -1021,7 +1021,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           expire_oncomplete: null,
           update_expired_oncomplete: null,
           expire_timeout: 30000,
-          update_expired_interval: 10000
+          update_expired_interval: 5000
         }
       }
     },
@@ -1101,7 +1101,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           expire_oncomplete: null,
           update_expired_oncomplete: null,
           expire_timeout: 60000,
-          update_expired_interval: 10000,
+          update_expired_interval: 5000,
         }
       }
     },
@@ -1121,7 +1121,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           expire_oncomplete: null,
           update_expired_oncomplete: null,
           expire_timeout: 30000,
-          update_expired_interval: 10000
+          update_expired_interval: 5000
         }
       }
     },
