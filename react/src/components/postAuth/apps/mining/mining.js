@@ -16,6 +16,7 @@ import {
   API_GET_MININGINFO,
   MINING_FUNCTIONS,
   API_ERROR,
+  FIX_CHARACTER
 } from "../../../../util/constants/componentConstants";
 import Dashboard from './dashboard/dashboard'
 import MiningWallet from './miningWallet/miningWallet'
@@ -77,8 +78,10 @@ class Mining extends React.Component {
         );
   
         const lastCoin =
-          lastLocation != null && lastLocation.length > 0 && lastLocation[0].includes("_mining")
-            ? lastLocation[0].split("_")[0]
+          lastLocation != null &&
+          lastLocation.length > 0 &&
+          lastLocation[0].includes(`${FIX_CHARACTER}${MINING_POSTFIX}`)
+            ? lastLocation[0].split(FIX_CHARACTER)[0]
             : null;
   
         this.props.dispatch(setMainNavigationPath(`${this.props.mainPathArray.join('/')}/${
@@ -239,7 +242,13 @@ class Mining extends React.Component {
   }
 
   openCoin(wallet) {
-    this.props.dispatch(setMainNavigationPath(`${getPathParent(this.props.mainPathArray)}/${wallet}_${MINING_POSTFIX}`))
+    this.props.dispatch(
+      setMainNavigationPath(
+        `${getPathParent(
+          this.props.mainPathArray
+        )}/${wallet}${FIX_CHARACTER}${MINING_POSTFIX}`
+      )
+    );
   }
 
   render() {
@@ -261,7 +270,7 @@ class Mining extends React.Component {
           />
         );
       else {
-        const pathDestination = walletApp.split("_");
+        const pathDestination = walletApp.split(FIX_CHARACTER);
 
         if (pathDestination.length > 1 && pathDestination[1] === MINING_POSTFIX)
           return (

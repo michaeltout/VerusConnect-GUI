@@ -35,8 +35,9 @@ import { ERC20_CONTRACT_ADDRESSES } from './constants/erc20Contracts'
  * @param {String} chainTicker Coin to add's chain ticker
  * @param {Boolean} isPbaas Whether or not the coin to add is a pbaas chain, will override unsupported coin check
  */
-export const getCoinObj = (chainTicker, isPbaas = false, nodePort) => {
-  if (isPbaas) return getPbaasChain(chainTicker, nodePort)
+export const getCoinObj = (chainTicker, chainDefinition) => {
+  const isPbaas = chainDefinition != null
+  if (isPbaas) return getPbaasChain(chainTicker, chainDefinition)
 
   const allCoinNames = { ...coins.BTC, ...coins.ETH, ...coins.ERC20 };
   const chainTickerUc = chainTicker.toUpperCase()
@@ -159,7 +160,7 @@ export const getCoinObj = (chainTicker, isPbaas = false, nodePort) => {
   }
 }
 
-export const getPbaasChain = (chainTicker, nodePort) => {
+export const getPbaasChain = (chainTicker, chainDefinition) => {
   const allCoinNames = { ...coins.BTC, ...coins.ETH, ...coins.ERC20 };
   const chainTickerLc = chainTicker.toLowerCase()
   const chainTickerUc = chainTicker.toUpperCase()
@@ -190,8 +191,10 @@ export const getPbaasChain = (chainTicker, nodePort) => {
       },
       tags: [IS_ZCASH, IS_PBAAS, IS_VERUS, IS_SAPLING],
       dustThreshold: 0.00001,
-      fallbackPort: nodePort,
-      confName: chainTickerLc
+      fallbackPort: chainDefinition.nodes
+        ? Number(chainDefinition.nodes[0].networkaddress.split(":")[1]) + 1
+        : null,
+      confName: chainTickerLc,
     },
   };
 }
@@ -204,7 +207,10 @@ export const getPbaasChain = (chainTicker, nodePort) => {
 export const getCoinColor = async (chainTicker, availableModes) => {
   try {
     const palette = await Vibrant.from(
-      `assets/images/cryptologo/${availableModes[ETH] ? ETH : 'btc'}/${chainTicker.toLowerCase()}.png`).getPalette()
+      `assets/images/cryptologo/${
+        availableModes[ETH] ? ETH : (availableModes[ERC20] ? "erc20" : "btc")
+      }/${chainTicker.toLowerCase()}.png`
+    ).getPalette();
 
     return palette.Vibrant.getHex()
   } catch (e) {

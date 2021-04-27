@@ -66,7 +66,7 @@ class ProfileSettings extends React.Component {
 
   updateCoinSelection(e) {
     const selectedCoin = e.target.options[e.target.selectedIndex].value
-    const coinObj = getCoinObj(selectedCoin, false)
+    const coinObj = getCoinObj(selectedCoin)
 
     this.setState({ selectedCoinObj: coinObj, selectedCoin })
   }

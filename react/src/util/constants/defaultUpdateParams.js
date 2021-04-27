@@ -6,7 +6,6 @@ import {
   IS_PBAAS_ROOT,
   API_GET_ADDRESSES,
   API_GET_BALANCES,
-  API_GET_DEFINEDCHAINS,
   API_GET_BLOCKREWARD,
   API_GET_INFO,
   API_GET_MININGINFO,
@@ -14,6 +13,7 @@ import {
   API_GET_ZOPERATIONSTATUSES,
   API_GET_FIATPRICE,
   CHAIN_POSTFIX,
+  FIX_CHARACTER,
   API_GET_IDENTITIES,
   API_GET_ALL_CURRENCIES,
   API_GET_CURRENCY_DATA_MAP,
@@ -156,7 +156,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: [`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`],
+          location_restrictions: [`@post_auth/apps/wallet/${ticker}${FIX_CHARACTER}${CHAIN_POSTFIX}`],
           location_and_type_restrictions: [/*['@post_auth/apps/mining/dashboard', IS_PBAAS], */['@post_auth/apps/', IS_VERUS]]
         },
         interval_info: {
@@ -172,7 +172,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: [`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`],
+          location_restrictions: [`@post_auth/apps/wallet/${ticker}${FIX_CHARACTER}${CHAIN_POSTFIX}`],
           location_and_type_restrictions: [/*['@post_auth/apps/mining/dashboard', IS_PBAAS], */['@post_auth/apps/', IS_VERUS]]
         },
         interval_info: {
@@ -625,7 +625,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: [/*`receive_coin@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`*/],
+          location_restrictions: [/*`receive_coin@post_auth/apps/wallet/${ticker}${FIX_CHARACTER}${CHAIN_POSTFIX}`*/],
           location_and_type_restrictions: [/*['@post_auth/apps/pbaas/create', IS_PBAAS_ROOT]*/]
         },
         interval_info: {
@@ -641,7 +641,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: [/*`receive_coin@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`*/],
+          location_restrictions: [/*`receive_coin@post_auth/apps/wallet/${ticker}${FIX_CHARACTER}${CHAIN_POSTFIX}`*/],
           location_and_type_restrictions: [/*['@post_auth/apps/pbaas/create', IS_PBAAS_ROOT]*/]
         },
         interval_info: {
@@ -781,7 +781,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: [`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`],
+          location_restrictions: [`@post_auth/apps/wallet/${ticker}${FIX_CHARACTER}${CHAIN_POSTFIX}`],
           location_and_type_restrictions: [['@post_auth/apps/verus_id', IS_VERUS]]
         },
         interval_info: {
@@ -797,7 +797,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: [`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`],
+          location_restrictions: [`@post_auth/apps/wallet/${ticker}${FIX_CHARACTER}${CHAIN_POSTFIX}`],
           location_and_type_restrictions: [['@post_auth/apps/verus_id', IS_VERUS]]
         },
         interval_info: {
@@ -892,7 +892,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: [/*`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`*/],
+          location_restrictions: [/*`@post_auth/apps/wallet/${ticker}${FIX_CHARACTER}${CHAIN_POSTFIX}`*/],
           location_and_type_restrictions: []
         },
         interval_info: {
@@ -932,7 +932,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: [/*`receive_coin@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`*/],
+          location_restrictions: [/*`receive_coin@post_auth/apps/wallet/${ticker}${FIX_CHARACTER}${CHAIN_POSTFIX}`*/],
         },
         interval_info: {
           expire_id: null,
@@ -992,7 +992,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: [/*`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`*/],
+          location_restrictions: [/*`@post_auth/apps/wallet/${ticker}${FIX_CHARACTER}${CHAIN_POSTFIX}`*/],
           location_and_type_restrictions: []
         },
         interval_info: {
@@ -1032,7 +1032,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: [/*`receive_coin@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`*/],
+          location_restrictions: [/*`receive_coin@post_auth/apps/wallet/${ticker}${FIX_CHARACTER}${CHAIN_POSTFIX}`*/],
         },
         interval_info: {
           expire_id: null,
@@ -1092,7 +1092,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: [/*`@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`*/],
+          location_restrictions: [/*`@post_auth/apps/wallet/${ticker}${FIX_CHARACTER}${CHAIN_POSTFIX}`*/],
           location_and_type_restrictions: []
         },
         interval_info: {
@@ -1132,7 +1132,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: [/*`receive_coin@post_auth/apps/wallet/${ticker}_${CHAIN_POSTFIX}`*/],
+          location_restrictions: [/*`receive_coin@post_auth/apps/wallet/${ticker}${FIX_CHARACTER}${CHAIN_POSTFIX}`*/],
         },
         interval_info: {
           expire_id: null,

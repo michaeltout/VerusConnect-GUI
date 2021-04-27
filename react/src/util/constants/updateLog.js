@@ -28,6 +28,7 @@ export const UPDATE_FUNCTIONS = {
         // Add property to userObjs
         let replacementUser
 
+        // Add startupOptions key to user
         if (loadedUsers[userId].startupOptions == null) {
           replacementUser = {changed: true, result: {...loadedUsers[userId]}}
 
@@ -39,12 +40,17 @@ export const UPDATE_FUNCTIONS = {
           }
         } else replacementUser = {changed: false, result: loadedUsers[userId]}
 
+        // Reset navigation locations due to change in coin postfix seperator
+        replacementUser.changed = true
+        replacementUser.result.startLocation = "post_auth/apps/wallet/dashboard"
+        replacementUser.result.lastNavigationLocation = "post_auth/apps/wallet/dashboard"
+
         let totalCoins = {
           ...replacementUser.result.lastCoins,
           ...replacementUser.result.startCoins
         }
 
-        // Replace ETH mode with ERC20 mode for coins
+        // Replace ETH mode with ERC20 mode for ERC20 coins
         for (let chainTicker in totalCoins) {
           if (
             totalCoins[chainTicker].available_modes[ETH] === true &&

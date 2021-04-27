@@ -14,6 +14,7 @@ import {
   APPS,
   WALLET,
   ID_POSTFIX,
+  FIX_CHARACTER,
   VERUSID,
   MINING_POSTFIX,
   MINING
@@ -57,9 +58,9 @@ class UxSelector extends React.Component {
   
       // TODO: Investigate why this isnt working, if navigation is in coin wallet it 
       // will always go back to dashboard
-      if (navLocation.includes(`_${CHAIN_POSTFIX}`)) {
+      if (navLocation.includes(`${FIX_CHARACTER}${CHAIN_POSTFIX}`)) {
         const coinWalletName = navLocation.split('/').filter(value => {
-          return value.includes(`_${CHAIN_POSTFIX}`)
+          return value.includes(`${FIX_CHARACTER}${CHAIN_POSTFIX}`)
         })
         
         if (!activatedCoins[coinWalletName[0]]) {
@@ -68,9 +69,9 @@ class UxSelector extends React.Component {
         }
       } 
 
-      if (navLocation.includes(`_${ID_POSTFIX}`)) {
+      if (navLocation.includes(`${FIX_CHARACTER}${ID_POSTFIX}`)) {
         const identityWalletName = navLocation.split('/').filter(value => {
-          return value.includes(`_${ID_POSTFIX}`)
+          return value.includes(`${FIX_CHARACTER}${ID_POSTFIX}`)
         })
         
         if (!identities[identityWalletName[1]] || !identities[identityWalletName[1]][[Number(identityWalletName[0])]]) {
@@ -79,9 +80,9 @@ class UxSelector extends React.Component {
         }
       }
 
-      if (navLocation.includes(`_${MINING_POSTFIX}`)) {
+      if (navLocation.includes(`${FIX_CHARACTER}${MINING_POSTFIX}`)) {
         const miningWalletName = navLocation.split('/').filter(value => {
-          return value.includes(`_${MINING_POSTFIX}`)
+          return value.includes(`${FIX_CHARACTER}${MINING_POSTFIX}`)
         })
         
         if (!activatedCoins[miningWalletName[0]]) {

@@ -6,7 +6,8 @@ import {
   MS_IDLE,
   CHAIN_FALLBACK_IMAGE,
   ADD_DEFAULT_COIN,
-  POST_SYNC
+  POST_SYNC,
+  FIX_CHARACTER
 } from "../../../../util/constants/componentConstants";
 import Tooltip from '@material-ui/core/Tooltip';
 import { openAddCoinModal } from '../../../../actions/actionDispatchers';
@@ -20,7 +21,7 @@ export const MiningCardRender = function(coinObj) {
   const miningState = this.state.miningStates[coinObj.id] ? this.state.miningStates[coinObj.id] : MS_IDLE
 
   const errorOrLoading = coinObj.status !== POST_SYNC
-  const isActive = mainPathArray.includes(`${coinObj.id}_${MINING_POSTFIX}`);
+  const isActive = mainPathArray.includes(`${coinObj.id}${FIX_CHARACTER}${MINING_POSTFIX}`);
   const coinBalance = balances[coinObj.id]
     ? balances[coinObj.id].native.public.confirmed +
       (balances[coinObj.id].native.private.confirmed

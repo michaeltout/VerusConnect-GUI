@@ -54,10 +54,7 @@ class PbaasChainSelector extends React.Component {
         this.props.setSelectedCoin(
           getCoinObj(
             chain.name,
-            true,
-            chain.nodes
-              ? Number(chain.nodes[0].networkaddress.split(":")[1]) + 1
-              : null
+            chain
           )
         );
       } catch (e) {

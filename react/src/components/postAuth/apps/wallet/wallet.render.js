@@ -5,6 +5,7 @@ import {
   DASHBOARD,
   ETH,
   CHAIN_POSTFIX,
+  FIX_CHARACTER,
   CHAIN_FALLBACK_IMAGE,
   ERC20,
   ADD_DEFAULT_COIN,
@@ -36,7 +37,7 @@ export const WalletRender = function () {
   if (walletApp) {
     if (COMPONENT_MAP[walletApp]) return COMPONENT_MAP[walletApp];
     else {
-      const pathDestination = walletApp.split("_");
+      const pathDestination = walletApp.split(FIX_CHARACTER);
 
       if (pathDestination.length > 1 && pathDestination[1] === CHAIN_POSTFIX)
         return (
@@ -62,7 +63,7 @@ export const WalletCardRender = function(coinObj) {
     loggingOut
   } = this.props;
 
-  const isActive = mainPathArray.includes(`${coinObj.id}_${CHAIN_POSTFIX}`);
+  const isActive = mainPathArray.includes(`${coinObj.id}${FIX_CHARACTER}${CHAIN_POSTFIX}`);
   const coinFiatRate = fiatPrices[coinObj.id]
     ? fiatPrices[coinObj.id][fiatCurrency]
     : null;

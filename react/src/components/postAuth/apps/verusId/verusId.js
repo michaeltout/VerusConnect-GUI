@@ -8,6 +8,7 @@ import {
   ERROR_SNACK,
   SUCCESS_SNACK,
   MID_LENGTH_ALERT,
+  FIX_CHARACTER,
 } from "../../../../util/constants/componentConstants";
 import Dashboard from './dashboard/dashboard'
 import {
@@ -66,10 +67,14 @@ class VerusId extends React.Component {
         )
       );
 
-      if (lastLocation != null && lastLocation.length > 0 && lastLocation[0].includes("_identity")) {
-        const lastLocationData = lastLocation[0].split('_')
-        const coinId = lastLocationData[1]
-        const identityIndex = lastLocationData[0]
+      if (
+        lastLocation != null &&
+        lastLocation.length > 0 &&
+        lastLocation[0].includes(`${FIX_CHARACTER}${ID_POSTFIX}`)
+      ) {
+        const lastLocationData = lastLocation[0].split(FIX_CHARACTER);
+        const coinId = lastLocationData[1];
+        const identityIndex = lastLocationData[0];
 
         this.props.dispatch(
           setMainNavigationPath(
@@ -80,8 +85,13 @@ class VerusId extends React.Component {
                 : DASHBOARD
             }`
           )
-        ); 
-      } else this.props.dispatch(setMainNavigationPath(`${this.props.mainPathArray.join('/')}/${DASHBOARD}`))
+        );
+      } else
+        this.props.dispatch(
+          setMainNavigationPath(
+            `${this.props.mainPathArray.join("/")}/${DASHBOARD}`
+          )
+        );
     } 
   }
 
@@ -152,7 +162,7 @@ class VerusId extends React.Component {
     }
 
     if (walletApp) {
-      const pathDestination = walletApp.split('_') 
+      const pathDestination = walletApp.split(FIX_CHARACTER) 
       let activeId = {chainTicker: null, idIndex: null}
 
       if (pathDestination.length > 2 && pathDestination[2] === ID_POSTFIX) {
@@ -169,7 +179,13 @@ class VerusId extends React.Component {
   }
 
   openId(chainTicker, idIndex) {
-    this.props.dispatch(setMainNavigationPath(`${getPathParent(this.props.mainPathArray)}/${idIndex}_${chainTicker}_${ID_POSTFIX}`))
+    this.props.dispatch(
+      setMainNavigationPath(
+        `${getPathParent(
+          this.props.mainPathArray
+        )}/${idIndex}${FIX_CHARACTER}${chainTicker}${FIX_CHARACTER}${ID_POSTFIX}`
+      )
+    );
   }
 
   openDashboard() {

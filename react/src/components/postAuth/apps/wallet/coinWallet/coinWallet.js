@@ -31,12 +31,13 @@ import {
   MULTIVERSE,
   API_GET_CURRENCY_DATA_MAP,
   BASIC_MODAL,
-  API_GET_RESERVE_TRANSFERS
+  API_GET_RESERVE_TRANSFERS,
+  INFO_SNACK
 } from '../../../../../util/constants/componentConstants'
 import { setUserPreferredCurrency, newSnackbar, setMainNavigationPath } from '../../../../../actions/actionCreators'
 
 //TODO: Use these to update on mount conditionally
-import { conditionallyUpdateWallet, openModal, openCurrencyCard } from '../../../../../actions/actionDispatchers'
+import { conditionallyUpdateWallet, openModal, openCurrencyCard, restartCoinInPlace } from '../../../../../actions/actionDispatchers'
 import Store from '../../../../../store'
 import { getCurrency } from '../../../../../util/api/wallet/walletCalls';
 import { getCurrencyInfo } from '../../../../../util/multiverse/multiverseCurrencyUtils';
@@ -96,7 +97,10 @@ class CoinWallet extends React.Component {
     this.onCurrencySearchSubmit = this.onCurrencySearchSubmit.bind(this);
     this.setPreferredCurrency = this.setPreferredCurrency.bind(this);
     this.openMultiverse = this.openMultiverse.bind(this);
-    this.ensureSelectedCurrencyExists = this.ensureSelectedCurrencyExists.bind(this)
+    this.ensureSelectedCurrencyExists = this.ensureSelectedCurrencyExists.bind(
+      this
+    );
+    this.tryNativeRelaunch = this.tryNativeRelaunch.bind(this)
   }
 
   updateCurrencySearchTerm(term) {
@@ -107,6 +111,32 @@ class CoinWallet extends React.Component {
     this.ensureSelectedCurrencyExists();
     this.calculateBalances();
     this.calculateLoadState();
+  }
+
+  async tryNativeRelaunch() {
+    const activeCoin = this.props.activatedCoins[this.props.coin]
+    const startParams =
+      this.props.startupOptions != null &&
+      this.props.startupOptions[NATIVE][activeCoin.id] != null
+        ? this.props.startupOptions[NATIVE][activeCoin.id]
+        : [];
+
+    try {
+      this.props.dispatch(
+        newSnackbar(INFO_SNACK, "Restarting coin daemon, please wait...")
+      );
+      await restartCoinInPlace(
+        activeCoin,
+        activeCoin.mode,
+        startParams,
+        this.props.dispatch
+      );
+      this.props.dispatch(
+        newSnackbar(SUCCESS_SNACK, "Daemon relaunched successfully!")
+      );
+    } catch (e) {
+      this.props.dispatch(newSnackbar(ERROR_SNACK, e.message));
+    }
   }
 
   calculateCurrencyData(props, currency) {
@@ -123,7 +153,11 @@ class CoinWallet extends React.Component {
 
   openModal(e, modalParams = {}, modal, modalType = BASIC_MODAL) {
     const _modal = modal ? modal : e.target.name;
-    openModal(_modal, { chainTicker: this.props.coin, ...modalParams }, modalType);
+    openModal(
+      _modal,
+      { chainTicker: this.props.coin, ...modalParams },
+      modalType
+    );
   }
 
   openMultiverse() {
@@ -161,7 +195,11 @@ class CoinWallet extends React.Component {
                 MID_LENGTH_ALERT
               )
             );
-            openCurrencyCard(res.result, this.props.coin, this.props.identities[this.props.coin]);
+            openCurrencyCard(
+              res.result,
+              this.props.coin,
+              this.props.identities[this.props.coin]
+            );
             this.setState({ loadingCurrency: false, currencySearchTerm: "" });
           } else {
             this.props.dispatch(newSnackbar(ERROR_SNACK, res.result));
@@ -176,11 +214,11 @@ class CoinWallet extends React.Component {
   }
 
   ensureSelectedCurrencyExists() {
-    const { coin, whitelists, selectedCurrency } = this.props
-    const whitelist = whitelists[coin] || []
+    const { coin, whitelists, selectedCurrency } = this.props;
+    const whitelist = whitelists[coin] || [];
 
     if (selectedCurrency !== coin && !whitelist.includes(selectedCurrency)) {
-      this.setPreferredCurrency(coin)
+      this.setPreferredCurrency(coin);
     }
   }
 
@@ -208,7 +246,7 @@ class CoinWallet extends React.Component {
       }
 
       if (this.props.whitelists !== lastProps.whitelists) {
-        this.ensureSelectedCurrencyExists()
+        this.ensureSelectedCurrencyExists();
       }
 
       if (
@@ -217,7 +255,10 @@ class CoinWallet extends React.Component {
         this.props.identities !== lastProps.identities
       ) {
         this.setState({
-          currencyInfo: this.calculateCurrencyData(this.props, this.props.selectedCurrency),
+          currencyInfo: this.calculateCurrencyData(
+            this.props,
+            this.props.selectedCurrency
+          ),
         });
       }
     }
@@ -414,6 +455,7 @@ const mapStateToProps = (state, ownProps) => {
     currencyDataMap: state.ledger.currencyDataMap[ownProps.coin] || {},
     multiverseNameMap: state.ledger.multiverseNameMap[ownProps.coin],
     filterGenerateTransactions: state.settings.config.general.native.filterGenerateTransactions,
+    startupOptions: state.users.activeUser.startupOptions
   };
 };
 

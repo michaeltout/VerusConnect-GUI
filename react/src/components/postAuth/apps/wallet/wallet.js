@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import {
   DASHBOARD,
   CHAIN_POSTFIX,
+  FIX_CHARACTER,
   SUCCESS_SNACK,
   MID_LENGTH_ALERT
 } from "../../../../util/constants/componentConstants";
@@ -59,8 +60,10 @@ class Wallet extends React.Component {
       );
 
       const lastCoin =
-        lastLocation != null && lastLocation.length > 0 && lastLocation[0].includes("_chain")
-          ? lastLocation[0].split("_")[0]
+        lastLocation != null &&
+        lastLocation.length > 0 &&
+        lastLocation[0].includes(`${FIX_CHARACTER}${CHAIN_POSTFIX}`)
+          ? lastLocation[0].split(FIX_CHARACTER)[0]
           : null;
 
       this.props.dispatch(setMainNavigationPath(`${this.props.mainPathArray.join('/')}/${
@@ -92,7 +95,13 @@ class Wallet extends React.Component {
   }
 
   openCoin(wallet) {
-    this.props.dispatch(setMainNavigationPath(`${getPathParent(this.props.mainPathArray)}/${wallet}_${CHAIN_POSTFIX}`))
+    this.props.dispatch(
+      setMainNavigationPath(
+        `${getPathParent(
+          this.props.mainPathArray
+        )}/${wallet}${FIX_CHARACTER}${CHAIN_POSTFIX}`
+      )
+    );
   }
 
   async deactivate(chainTicker, mode) {
@@ -102,7 +111,7 @@ class Wallet extends React.Component {
     const { dispatch, mainPathArray } = props
 
     await deactivateCoin(chainTicker, mode, dispatch, true)
-    if (mainPathArray.includes(`${chainTicker}_${CHAIN_POSTFIX}`)) openDashboard()
+    if (mainPathArray.includes(`${chainTicker}${FIX_CHARACTER}${CHAIN_POSTFIX}`)) openDashboard()
 
     this.props.dispatch(newSnackbar(SUCCESS_SNACK, `${chainTicker} deactivated!`, MID_LENGTH_ALERT))
   }

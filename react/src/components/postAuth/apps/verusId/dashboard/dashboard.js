@@ -12,6 +12,7 @@ import {
   MID_LENGTH_ALERT,
   SUCCESS_SNACK,
   ID_POSTFIX,
+  FIX_CHARACTER,
   API_REGISTER_ID,
   API_REGISTER_ID_NAME,
   API_RECOVER_ID,
@@ -67,7 +68,13 @@ class Dashboard extends React.Component {
   }
 
   openId(chainTicker, idIndex) {
-    this.props.dispatch(setMainNavigationPath(`${getPathParent(this.props.mainPathArray)}/${idIndex}_${chainTicker}_${ID_POSTFIX}`))
+    this.props.dispatch(
+      setMainNavigationPath(
+        `${getPathParent(
+          this.props.mainPathArray
+        )}/${idIndex}${FIX_CHARACTER}${chainTicker}${FIX_CHARACTER}${ID_POSTFIX}`
+      )
+    );
   }
 
   componentWillUnmount() {

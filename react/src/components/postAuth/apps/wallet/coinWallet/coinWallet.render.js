@@ -240,6 +240,11 @@ export const CoinWalletRender = function() {
 };
 
 export const RenderBlockchainInfo = function () {
+  const noRunningDaemon =
+    this.state.walletLoadState.error &&
+    this.state.walletLoadState.message != null &&
+    this.state.walletLoadState.message.includes("No running");
+
   return (
     <WalletPaper
       style={{
@@ -276,6 +281,7 @@ export const RenderBlockchainInfo = function () {
           display: "flex",
           justifyContent: "start",
           alignItems: "center",
+          height: "100%"
         }}
       >
         {WalletRenderPie.call(this)}
@@ -298,7 +304,19 @@ export const RenderBlockchainInfo = function () {
               }}
             />
           )}
-          {this.state.walletLoadState.message}
+          {noRunningDaemon ? (
+            <a
+              onClick={() => this.tryNativeRelaunch()}
+              href="#"
+              style={{
+                color: "#3f51b5"
+              }}
+            >
+              {"No running daemon found. Click here to retry."}
+            </a>
+          ) : (
+            this.state.walletLoadState.message
+          )}
         </h1>
       </div>
     </WalletPaper>

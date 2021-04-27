@@ -27,7 +27,7 @@ class Settings extends React.Component {
   constructor(props) {
     super(props);
     this.coinsWithSettings = getSimpleCoinArray().reduce(function(result, simpleCoinObj) {
-      const coinObj = getCoinObj(simpleCoinObj.id, false)
+      const coinObj = getCoinObj(simpleCoinObj.id)
 
       // Currently there are only coin specific settings for native
       if (coinObj.available_modes[NATIVE]) {
