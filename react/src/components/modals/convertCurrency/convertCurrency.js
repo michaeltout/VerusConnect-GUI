@@ -90,6 +90,7 @@ class ConvertCurrency extends React.Component {
       label: "Advanced",
       isDisabled: this.state.formStep !== 0
     }]);
+    //props.setModalButtons([]);
   }
 
   render() {
@@ -98,8 +99,6 @@ class ConvertCurrency extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const { chainTicker } = state.modal[CONVERT_CURRENCY]
-
   return {
     modalProps: state.modal[CONVERT_CURRENCY],
   };

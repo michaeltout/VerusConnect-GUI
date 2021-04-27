@@ -197,7 +197,7 @@ export const ConvertCurrencyConfirmSimpleRender = function() {
         <TextField
           style={{
             flex: 1,
-            marginRight: 4,
+            //marginRight: 4,
             marginLeft: 4,
           }}
           label="Fee"
@@ -211,6 +211,7 @@ export const ConvertCurrencyConfirmSimpleRender = function() {
           style={{
             flex: 1,
             marginLeft: 4,
+            display: "none"
           }}
           label="Receive (Estimated)"
           variant="outlined"
@@ -414,7 +415,7 @@ export const ConvertCurrencyFormSimpleRender = function() {
               fontSize: 18,
             }}
           >
-            {"Receive (estimated)"}
+            {"Receive"}
           </h5>
           <div>{`My Balance: ${
             destination != null && this.props.balances != null
@@ -438,7 +439,7 @@ export const ConvertCurrencyFormSimpleRender = function() {
                   ? ""
                   : receiveAmount
               }
-              style={{ flex: 1, marginRight: 4 }}
+              style={{ flex: 1, marginRight: 4, display: "none" }}
               disabled={Object.keys(this.state.conversionPaths) == 0}
             />
             <SuggestionInput
@@ -487,15 +488,23 @@ export const ConvertCurrencyFormSimpleRender = function() {
             />
           </div>
           <div style={{ display: "flex", marginTop: 8 }}>
-            <SuggestionInput
+            {/* <SuggestionInput
               value={address}
               name="DestinationAddress"
-              items={this.state.addresses}
+              items={(exportto == null || exportto.length == 0)? [] : this.state.addresses}
               label="Destination"
               size="small"
               disabled={this.state.addresses.length === 0}
               onChange={(e) => this.updateOutput("address", e.target.value)}
               containerStyle={{ flex: 1 }}
+            /> */}
+            <TextField
+              label="Destination"
+              variant="outlined"
+              size="small"
+              onChange={(e) => this.updateOutput("address", e.target.value)}
+              value={address}
+              style={{ flex: 1 }}
             />
             {this.state.estArrivals[0] && (
               <TextField
@@ -532,6 +541,7 @@ export const ConvertCurrencyFormSimpleRender = function() {
               marginBottom: 8,
               marginRight: 4,
               flex: 1,
+              display: "none"
             }}
             square={false}
           >
@@ -544,7 +554,7 @@ export const ConvertCurrencyFormSimpleRender = function() {
           <WalletPaper
             style={{
               marginBottom: 8,
-              marginLeft: 4,
+              //marginLeft: 4,
               flex: 1,
             }}
             square={false}

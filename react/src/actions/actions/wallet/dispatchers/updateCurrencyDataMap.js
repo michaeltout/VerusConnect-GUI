@@ -16,9 +16,16 @@ import { getInfo } from '../../../../util/api/wallet/walletCalls'
 export const updateCurrencyDataMap = async (state, dispatch, mode, chainTicker) => {
   let dataMapAction = { chainTicker }
   let wasSuccess = true
+
+  //TODO: Switch to using currency IDs instead of names
   let currencies =
     state.localCurrencyLists.whitelists[chainTicker] != null
-      ? [chainTicker, ...state.localCurrencyLists.whitelists[chainTicker]]
+      ? [
+          chainTicker,
+          ...state.localCurrencyLists.whitelists[chainTicker].map(
+            (name) => `${name}.${chainTicker}`
+          ),
+        ]
       : [chainTicker];
 
   if (mode === NATIVE) {

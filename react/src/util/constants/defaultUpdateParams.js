@@ -365,7 +365,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [],
-          location_and_type_restrictions: [['@post_auth', IS_PBAAS_ROOT]]
+          location_and_type_restrictions: [['@post_auth', IS_PBAAS]]
         },
         interval_info: {
           expire_id: null,
@@ -381,7 +381,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [],
-          location_and_type_restrictions: [['@post_auth', IS_PBAAS_ROOT]]
+          location_and_type_restrictions: [['@post_auth', IS_PBAAS]]
         },
         interval_info: {
           expire_id: null,

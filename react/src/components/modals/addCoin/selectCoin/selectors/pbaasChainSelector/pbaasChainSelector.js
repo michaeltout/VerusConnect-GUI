@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { newSnackbar } from '../../../../../../actions/actionCreators';
 import { getAllCurrencies } from '../../../../../../util/api/wallet/walletCalls';
-import { getCoinObj } from '../../../../../../util/coinData';
+import { getCoinObj, isValidMultiverseName } from '../../../../../../util/coinData';
 import {
   API_SUCCESS,
   ERROR_SNACK,
@@ -97,14 +97,16 @@ class PbaasChainSelector extends React.Component {
               disabled = true;
             } else {
               response.result
-                .sort((a, b) =>
-                  a.name > b.name ? 1 : -1
-                )
+                .sort((a, b) => (a.name > b.name ? 1 : -1))
                 .forEach((x) => {
-                  chainMap[x.currencyid] = x;
-                  chainIds.push(x.currencyid);
-                  nameMap[x.name] =
-                    x.currencyid;
+                  if (
+                    isValidMultiverseName(x.name) &&
+                    !this.props.activatedCoins[x.name.toUpperCase()]
+                  ) {
+                    chainMap[x.currencyid] = x;
+                    chainIds.push(x.currencyid);
+                    nameMap[x.name] = x.currencyid;
+                  }
                 });
             }
           } else {
