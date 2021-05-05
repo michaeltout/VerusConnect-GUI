@@ -24,6 +24,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dashboard from './dashboard/dashboard'
 import CoinWallet from './coinWallet/coinWallet'
+import { normalizeNum } from '../../../../util/displayUtil/numberFormat';
 
 const COMPONENT_MAP = {
   [DASHBOARD]: <Dashboard />,
@@ -167,8 +168,12 @@ export const WalletCardRender = function(coinObj) {
                   {`${
                     isNaN(coinBalance)
                       ? coinBalance
-                      : Number(coinBalance.toFixed(8))
-                  } ${coinObj.id}`}
+                      : normalizeNum(Number(coinBalance.toFixed(8)))[3]
+                  } ${
+                    coinObj.id.length > 4
+                      ? `${coinObj.id.substring(0, 5)}...`
+                      : coinObj.id
+                  }`}
                 </h5>
               </div>
             </div>
@@ -186,7 +191,9 @@ export const WalletCardRender = function(coinObj) {
             <a
               className="text-right"
               href="#"
-              onClick={() => this.openDeactivateDialog(coinObj.id, coinObj.mode)}
+              onClick={() =>
+                this.openDeactivateDialog(coinObj.id, coinObj.mode)
+              }
               style={WalletStyles.deactivateCoin}
             >
               {"Deactivate"}

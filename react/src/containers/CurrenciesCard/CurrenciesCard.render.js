@@ -221,15 +221,15 @@ export const CurrencyTableRender = (displayCurrencies, openCurrencyInfo, props) 
             label: 'Age',
             dataKey: 'age',
           },
-          {
-            width: 100,
-            flexGrow: 1,
-            cellDataGetter: ({ rowData }) => {
-              return rowData.spendableTo ? "Yes" : "No"
-            },
-            label: 'Convertable To',
-            dataKey: 'spendableTo',
-          },
+          // {
+          //   width: 100,
+          //   flexGrow: 1,
+          //   cellDataGetter: ({ rowData }) => {
+          //     return rowData.spendableTo ? "Yes" : "No"
+          //   },
+          //   label: 'Convertable To',
+          //   dataKey: 'spendableTo',
+          // },
           {
             width: 100,
             flexGrow: 1,
@@ -243,7 +243,7 @@ export const CurrencyTableRender = (displayCurrencies, openCurrencyInfo, props) 
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {rowData.currency.parent_name}
+                  {rowData.currency.systemname}
                 </div>
               );
             },
@@ -263,8 +263,8 @@ export const CurrencyTableRender = (displayCurrencies, openCurrencyInfo, props) 
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {props.whitelists && props.whitelists[rowData.currency.parent_name]
-                    ? props.whitelists[rowData.currency.parent_name].includes(
+                  {props.whitelists && props.whitelists[rowData.currency.spotterid]
+                    ? props.whitelists[rowData.currency.spotterid].includes(
                         rowData.currency.name
                       ) || Object.keys(props.activatedCoins).includes(rowData.currency.name)
                       ? "Yes"

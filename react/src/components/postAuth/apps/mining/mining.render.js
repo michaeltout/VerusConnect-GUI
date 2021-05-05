@@ -12,6 +12,7 @@ import {
 import Tooltip from '@material-ui/core/Tooltip';
 import { openAddCoinModal } from '../../../../actions/actionDispatchers';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { normalizeNum } from '../../../../util/displayUtil/numberFormat';
 
 export const MiningCardRender = function(coinObj) {
   const {
@@ -94,10 +95,14 @@ export const MiningCardRender = function(coinObj) {
               </Tooltip>
               <h5 className="text-right" style={MiningStyles.balance}>
                 {`${
-                  isNaN(coinBalance)
-                    ? coinBalance
-                    : Number(coinBalance.toFixed(8))
-                } ${coinObj.id}`}
+                    isNaN(coinBalance)
+                      ? coinBalance
+                      : normalizeNum(Number(coinBalance.toFixed(8)))[3]
+                  } ${
+                    coinObj.id.length > 4
+                      ? `${coinObj.id.substring(0, 5)}...`
+                      : coinObj.id
+                  }`}
               </h5>
             </div>
           </div>
