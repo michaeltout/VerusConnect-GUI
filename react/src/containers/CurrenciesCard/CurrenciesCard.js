@@ -9,7 +9,7 @@ import { getCurrency } from '../../util/api/wallet/walletCalls';
 async function openCurrencyInfo(rowData, identities) {
   const fullCurrency = await getCurrency(
     NATIVE,
-    rowData.currency.spotterid,
+    rowData.currency.spottername,
     rowData.currency.currencyid
   )
   
@@ -19,8 +19,8 @@ async function openCurrencyInfo(rowData, identities) {
       currency:
         fullCurrency.msg === "success" ? fullCurrency.result : rowData.currency,
     },
-    rowData.currency.spotterid,
-    identities[rowData.currency.spotterid],
+    rowData.currency.spottername,
+    identities[rowData.currency.spottername],
     true
   );
 }
@@ -73,15 +73,15 @@ function getDisplayCurrencies(currencies, info, blacklists, identities) {
 
     if (
       !(blacklists != null &&
-      blacklists[currency.spotterid] != null &&
-      blacklists[currency.spotterid].includes(currency.name))
+      blacklists[currency.spottername] != null &&
+      blacklists[currency.spottername].includes(currency.name))
     ) {
       currencyComps.push(getCurrencyInfo(
         currency,
-        info[currency.spotterid]
-          ? info[currency.spotterid].longestchain
+        info[currency.spottername]
+          ? info[currency.spottername].longestchain
           : -1,
-        identities[currency.spotterid]
+        identities[currency.spottername]
       ))
     }
   });

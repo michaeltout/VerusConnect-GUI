@@ -125,13 +125,20 @@ class ConvertCurrencyForm extends React.Component {
           x.convertto != null &&
           this.state.conversionPaths[x.convertto] &&
           this.props.info.longestchain &&
-          this.state.conversionPaths[x.convertto].destination.startblock >
+          ((this.state.conversionPaths[x.convertto].destination.launchsystemid !==
+            this.state.conversionPaths[x.convertto].destination.spotterid)
+            ? 1
+            : this.state.conversionPaths[x.convertto].destination.startblock) >
             this.props.info.longestchain;
 
         arrivals.push(
           isPreconvert
-            ? this.state.conversionPaths[x.convertto].destination.startblock -
-                this.props.info.longestchain
+            ? ((this.state.conversionPaths[x.convertto].destination
+                .launchsystemid !==
+                this.state.conversionPaths[x.convertto].destination.spotterid)
+                ? 1
+                : this.state.conversionPaths[x.convertto].destination
+                    .startblock) - this.props.info.longestchain
             : null
         );
         return {

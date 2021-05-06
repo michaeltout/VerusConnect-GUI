@@ -263,8 +263,8 @@ export const CurrencyTableRender = (displayCurrencies, openCurrencyInfo, props) 
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {props.whitelists && props.whitelists[rowData.currency.spotterid]
-                    ? props.whitelists[rowData.currency.spotterid].includes(
+                  {props.whitelists && props.whitelists[rowData.currency.spottername]
+                    ? props.whitelists[rowData.currency.spottername].includes(
                         rowData.currency.name
                       ) || Object.keys(props.activatedCoins).includes(rowData.currency.name)
                       ? "Yes"

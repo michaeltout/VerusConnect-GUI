@@ -653,7 +653,7 @@ export const DashboardRenderIds = function() {
               marginBottom: "1.032%",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "space-between"
+              justifyContent: "space-between",
             }}
             key={index}
           >
@@ -668,12 +668,12 @@ export const DashboardRenderIds = function() {
                   className="d-lg-flex align-items-lg-center"
                   style={{
                     fontSize: 16,
-                    color: 'rgb(49, 101, 212)',
+                    color: "rgb(49, 101, 212)",
                     fontWeight: "bold",
                     textOverflow: "ellipsis",
                     overflow: "hidden",
                     whiteSpace: "nowrap",
-                    textDecoration: "none"
+                    textDecoration: "none",
                   }}
                   href={"#"}
                   onClick={() => copyDataToClipboard(`${identity.name}@`)}
@@ -690,15 +690,15 @@ export const DashboardRenderIds = function() {
                     padding: 4,
                     paddingTop: 1,
                     paddingBottom: 1,
-                    borderWidth: 1
+                    borderWidth: 1,
                   }}
                 >
-                  {idObj.canspendfor
+                  {idObj.status === ID_REVOKED
+                    ? "Revoked"
+                    : idObj.canspendfor
                     ? "Can Spend"
                     : idObj.cansignfor
                     ? "Can Sign"
-                    : idObj.status === ID_REVOKED
-                    ? "Revoked"
                     : "Can't Sign/Spend"}
                 </h3>
               </div>
@@ -712,7 +712,7 @@ export const DashboardRenderIds = function() {
                   style={{
                     fontSize: 16,
                     color: "rgb(0,0,0)",
-                    marginBottom: 0
+                    marginBottom: 0,
                   }}
                 >
                   {`${spendableBalance} ${idObj.chainTicker}`}
@@ -723,27 +723,27 @@ export const DashboardRenderIds = function() {
                   display: "flex",
                   justifyContent: "flex-end",
                   alignItems: "flex-end",
-                  flex: 1
+                  flex: 1,
                 }}
               >
                 {idObj.canrevoke && (
-                    <Tooltip title="Revoke">
-                      <button
-                        className="btn btn-primary"
-                        type="button"
-                        onClick={() => this.openRevokeDialogue(idObj)}
-                        style={{
-                          fontSize: 10,
-                          backgroundColor: "rgb(212, 49, 62)",
-                          borderWidth: 1,
-                          borderColor: "rgb(212, 49, 62)",
-                          fontWeight: "bold"
-                        }}
-                      >
-                        <Block />
-                      </button>
-                    </Tooltip>
-                  )}
+                  <Tooltip title="Revoke">
+                    <button
+                      className="btn btn-primary"
+                      type="button"
+                      onClick={() => this.openRevokeDialogue(idObj)}
+                      style={{
+                        fontSize: 10,
+                        backgroundColor: "rgb(212, 49, 62)",
+                        borderWidth: 1,
+                        borderColor: "rgb(212, 49, 62)",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <Block />
+                    </button>
+                  </Tooltip>
+                )}
                 {idObj.canrecover && (
                   <Tooltip title="Recover">
                     <button
@@ -755,7 +755,7 @@ export const DashboardRenderIds = function() {
                           revocationId: identity.revocationauthority,
                           recoveryId: identity.recoveryauthority,
                           privateAddr: identity.privateaddress,
-                          name: `${identity.name}@`
+                          name: `${identity.name}@`,
                         })
                       }
                       style={{
@@ -763,7 +763,7 @@ export const DashboardRenderIds = function() {
                         backgroundColor: "rgb(74, 166, 88)",
                         borderWidth: 1,
                         borderColor: "rgb(74, 166, 88)",
-                        fontWeight: "bold"
+                        fontWeight: "bold",
                       }}
                     >
                       <SettingsBackupRestoreIcon />
@@ -781,7 +781,7 @@ export const DashboardRenderIds = function() {
                       borderWidth: 1,
                       marginLeft: 3,
                       borderColor: "#2f65d0",
-                      fontWeight: "bold"
+                      fontWeight: "bold",
                     }}
                   >
                     <OpenInNewIcon />

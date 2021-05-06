@@ -45,7 +45,7 @@ export const getDecentralizationScore = (
  */
 export const getCurrencyInfo = (
   currency,
-  currentHeight,
+  launchSystemHeight,
   ownedIdentities = []
 ) => {
   const {
@@ -56,13 +56,17 @@ export const getCurrencyInfo = (
     conversions,
     proofprotocol,
     name,
+    spotterid,
+    launchsystemid
   } = currency;
+  let finalStartBlock = launchsystemid !== spotterid ? 1 : startblock;
+
   const { supply } = bestcurrencystate != null ? bestcurrencystate : {};
   const isToken = checkFlag(options, IS_TOKEN_FLAG);
 
   const isReserve = checkFlag(options, IS_FRACTIONAL);
-  const isPending = startblock > currentHeight;
-  const age = currentHeight - startblock;
+  const isPending = finalStartBlock > launchSystemHeight;
+  const age = launchSystemHeight - finalStartBlock;
   const isFailed =
     !isPending &&
     minpreconversion != null &&
