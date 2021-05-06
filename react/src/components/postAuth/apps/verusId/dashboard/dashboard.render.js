@@ -426,7 +426,7 @@ export const DashboardRenderTable = function() {
             
             if (identities[chainTicker] && transactions[chainTicker]) {
               if (!(identities[chainTicker].every(idObj => {
-                return idObj.identity.name !== namereservation.name
+                return idObj.identity.identityaddress !== namereservation.nameid
               }))) {
                 isUsed = true
               } else {
@@ -470,7 +470,11 @@ export const DashboardRenderTable = function() {
                     borderTop: 0,
                   }}
                 >
-                  {`${namereservation.name}@`}
+                  {`${namereservation.name}${
+                    chainTicker === "VRSC" || chainTicker === "VRSCTEST"
+                      ? ""
+                      : `.${chainTicker}`
+                  }@`}
                 </td>
                 <td style={{ borderTop: 0 }}>
                   <h3
@@ -527,10 +531,11 @@ export const DashboardRenderTable = function() {
                       }}
                       onClick={
                         failed
-                          ? () => this.openCommitNameModal(chainTicker, {
-                              name: namereservation.name,
-                              referralId: namereservation.referral,
-                            })
+                          ? () =>
+                              this.openCommitNameModal(chainTicker, {
+                                name: namereservation.name,
+                                referralId: namereservation.referral,
+                              })
                           : reservationObj.confirmations == null ||
                             reservationObj.confirmations == 0 ||
                             loading

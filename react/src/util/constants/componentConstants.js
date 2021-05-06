@@ -395,7 +395,9 @@ export const ERROR_NAME_REQUIRED = 'A name is required'
 export const ERROR_INVALID_Z_ADDR = 'Invalid private address'
 
 // Create identity defaults
-export const DEFAULT_REFERRAL_ID = 'Verus Coin Foundation@'
+export const DEFAULT_REFERRAL_IDS = {
+  ["VRSC"]: 'Verus Coin Foundation@'
+}
 
 // Mining states
 export const MS_IDLE = 'idle'

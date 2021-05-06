@@ -380,14 +380,10 @@ class ConvertCurrencyForm extends React.Component {
       conversionPaths: {},
       selectedConversionPath: null
     }, async () => {
-      const adjustedSource =
-        source.toUpperCase() === this.props.modalProps.chainTicker
-          ? source
-          : `${source}.${this.props.modalProps.chainTicker}`;
       this.updateOutput("convertto", "")
       this.updateOutput("exportto", "")
-      this.updateOutput("currency", adjustedSource)
-      await this.fetchConversionPaths(adjustedSource)
+      this.updateOutput("currency", source)
+      await this.fetchConversionPaths(source)
       this.props.clearInitCurrency()
     })
   }

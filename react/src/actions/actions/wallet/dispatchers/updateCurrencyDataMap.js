@@ -22,9 +22,7 @@ export const updateCurrencyDataMap = async (state, dispatch, mode, chainTicker) 
     state.localCurrencyLists.whitelists[chainTicker] != null
       ? [
           chainTicker,
-          ...state.localCurrencyLists.whitelists[chainTicker].map(
-            (name) => `${name}.${chainTicker}`
-          ),
+          ...state.localCurrencyLists.whitelists[chainTicker],
         ]
       : [chainTicker];
 

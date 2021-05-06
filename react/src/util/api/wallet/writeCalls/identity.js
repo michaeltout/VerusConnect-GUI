@@ -1,5 +1,14 @@
 import { getApiData } from '../../callCreator'
-import { API_REGISTER_ID, NATIVE, API_REGISTER_ID_PREFLIGHT, API_RECOVER_ID_PREFLIGHT, API_REVOKE_ID, API_RECOVER_ID, API_UPDATE_ID_PREFLIGHT, API_UPDATE_ID } from '../../../constants/componentConstants'
+import {
+  API_REGISTER_ID,
+  NATIVE,
+  API_REGISTER_ID_PREFLIGHT,
+  API_RECOVER_ID_PREFLIGHT,
+  API_REVOKE_ID,
+  API_RECOVER_ID,
+  API_UPDATE_ID_PREFLIGHT,
+  API_UPDATE_ID,
+} from "../../../constants/componentConstants";
 
 /**
  * Creates an ID registration transaction and sends it to the specified chain

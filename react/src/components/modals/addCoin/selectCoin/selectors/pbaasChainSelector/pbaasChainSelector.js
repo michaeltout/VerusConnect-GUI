@@ -59,7 +59,7 @@ class PbaasChainSelector extends React.Component {
         );
       } catch (e) {
         this.props.dispatch(
-          newSnackbar(ERROR_SNACK, e.message, MID_LENGTH_ALERT)
+          newSnackbar(ERROR_SNACK, e.message)
         );
       }
     }
@@ -77,7 +77,7 @@ class PbaasChainSelector extends React.Component {
         try {
           //TODO Adapt to work with more than just VRSCTEST
           const response = await getAllCurrencies(NATIVE, chainTicker, {
-            systemtype: "pbaas",
+            systemtype: "pbaas"
           });
 
           let disabled = false;

@@ -27,7 +27,11 @@ export default {
     margin: 0,
     paddingLeft: 6,
     fontSize: 20,
-    height: "min-content"
+    height: "min-content",
+    maxWidth: 120,
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    overflow: "hidden"
   },
   cardCoinType: {
     fontSize: 12,
@@ -45,7 +49,11 @@ export default {
   },
   balance: { 
     color: "rgb(55, 67, 77)", 
-    marginTop: 3 
+    marginTop: 3,
+    maxWidth: 102,
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    overflow: "hidden"
   },
   deactivateCoin: {
     paddingRight: 0,

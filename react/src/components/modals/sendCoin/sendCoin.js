@@ -126,7 +126,7 @@ class SendCoin extends React.Component {
               {
                 currency:
                   fromCurrencyInfo != null
-                    ? `${fromCurrencyInfo.currency.name}.${chainTicker}`
+                    ? fromCurrencyInfo.currency.name
                     : undefined,
                 mintnew: mint
               }

@@ -169,11 +169,7 @@ export const WalletCardRender = function(coinObj) {
                     isNaN(coinBalance)
                       ? coinBalance
                       : normalizeNum(Number(coinBalance.toFixed(8)))[3]
-                  } ${
-                    coinObj.id.length > 4
-                      ? `${coinObj.id.substring(0, 5)}...`
-                      : coinObj.id
-                  }`}
+                  } ${coinObj.id}`}
                 </h5>
               </div>
             </div>

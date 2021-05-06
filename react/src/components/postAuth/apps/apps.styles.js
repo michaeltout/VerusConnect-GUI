@@ -79,7 +79,8 @@ export default {
     marginLeft: 0, 
     width: "100%",
     flexWrap: "nowrap",
-    height: "94%"
+    height: "94%",
+    overflowX: "scroll"
   },
   sideBarInnerContainer: { 
     backgroundColor: "#ffffff", 

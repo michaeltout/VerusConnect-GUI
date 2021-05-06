@@ -26,16 +26,24 @@ const SETTINGS_TYPES = [PROFILE_SETTINGS, GENERAL_SETTINGS, COIN_SETTINGS]
 class Settings extends React.Component {
   constructor(props) {
     super(props);
-    this.coinsWithSettings = getSimpleCoinArray().reduce(function(result, simpleCoinObj) {
+    const activeNativeCoinArray = Object.values(props.activeCoins).filter(coin => coin.mode === NATIVE)  
+    const inactiveNativeCoinArray = getSimpleCoinArray().reduce(function(result, simpleCoinObj) {
       const coinObj = getCoinObj(simpleCoinObj.id)
 
       // Currently there are only coin specific settings for native
-      if (coinObj.available_modes[NATIVE]) {
+      if (
+        coinObj.available_modes[NATIVE] &&
+        !activeNativeCoinArray.some(
+          (activeCoin) => activeCoin.id === coinObj.id
+        )
+      ) {
         result.push(coinObj);
       }
 
       return result;
     }, []);
+    
+    this.coinsWithSettings = [...activeNativeCoinArray, ...inactiveNativeCoinArray]
 
     this.state = {
       displayConfig: props.config,
@@ -154,7 +162,8 @@ const mapStateToProps = (state) => {
     mainPathArray: state.navigation.mainPathArray,
     config: state.settings.config,
     activeUser: state.users.activeUser,
-    loadedUsers: state.users.loadedUsers
+    loadedUsers: state.users.loadedUsers,
+    activeCoins: state.coins.activatedCoins
   };
 };
 

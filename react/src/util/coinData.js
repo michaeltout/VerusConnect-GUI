@@ -170,7 +170,9 @@ export const getPbaasChain = (chainTicker, chainDefinition) => {
     allCoinNames[chainTickerUc] ||
     typeof chainTicker !== "string"
   )
-    throw new Error("Invalid PBaaS chain name " + chainTicker);
+    throw new Error(
+      `"${chainTicker}" is an unsupported/invalid PBaaS chain name. Verus Desktop does not currently support activating PBaaS chains with the same ticker as a non-PBaaS supported coin.`
+    );
 
   return {
     id: chainTickerUc,

@@ -27,6 +27,17 @@ export default {
     margin: 0,
     paddingLeft: 6,
     fontSize: 20,
+    height: "min-content",
+    maxWidth: 120,
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    overflow: "hidden"
+  },
+  miniButtonName: {
+    color: "rgb(55, 67, 77)",
+    margin: 0,
+    paddingLeft: 6,
+    fontSize: 20,
     height: "min-content"
   },
   cardCoinType: {
@@ -45,7 +56,11 @@ export default {
   },
   balance: { 
     color: "rgb(55, 67, 77)", 
-    marginTop: 3 
+    marginTop: 3,
+    maxWidth: 102,
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    overflow: "hidden"
   },
   deactivateCoin: {
     paddingRight: 0,

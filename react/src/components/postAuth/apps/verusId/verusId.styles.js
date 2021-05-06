@@ -31,7 +31,11 @@ export default {
     margin: 0,
     paddingLeft: 6,
     fontSize: 20,
-    height: "min-content"
+    height: "min-content",
+    maxWidth: 200,
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    overflow: "hidden"
   },
   cardCoinType: {
     fontSize: 12,

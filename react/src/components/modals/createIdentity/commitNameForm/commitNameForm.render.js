@@ -2,8 +2,9 @@ import React from 'react';
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import ObjectToTable from '../../../../containers/ObjectToTable/ObjectToTable'
-import { ENTER_DATA, DEFAULT_REFERRAL_ID } from '../../../../util/constants/componentConstants';
+import { ENTER_DATA, DEFAULT_REFERRAL_IDS } from '../../../../util/constants/componentConstants';
 import SuggestionInput from '../../../../containers/SuggestionInput/SuggestionInput'
+import { InputAdornment } from '@material-ui/core';
 
 export const CommitNameFormRender = function() {
   const { formStep } = this.props
@@ -39,7 +40,7 @@ export const CommitNameTxDataRender = function() {
 export const CommitNameFormEnterRender = function() {
   const { state, updateInput, props } = this
   const { name, referralId, formErrors, primaryAddress, addrList } = state;
-  const { identities } = props
+  const { identities, activeCoin } = props
 
   return (
     <React.Fragment>
@@ -52,6 +53,15 @@ export const CommitNameFormEnterRender = function() {
         name="name"
         value={name}
         style={{ marginTop: 5, width: "100%" }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              {activeCoin.id !== "VRSCTEST" && activeCoin.id !== "VRSC"
+                ? `.${activeCoin.id}@`
+                : "@"}
+            </InputAdornment>
+          ),
+        }}
       />
       <SuggestionInput
         value={primaryAddress}
@@ -95,7 +105,13 @@ export const CommitNameFormEnterRender = function() {
         helperText={
           formErrors.referralId && formErrors.referralId.length > 0
             ? formErrors.referralId[0]
-            : `Using a referral identity will discount the cost of creating your VerusID. If left blank, this will default to "${DEFAULT_REFERRAL_ID}".`
+            : `Using a referral identity will discount the cost of creating your VerusID.${
+                DEFAULT_REFERRAL_IDS[activeCoin.id] != null
+                  ? ` If left blank, this will default to "${
+                      DEFAULT_REFERRAL_IDS[activeCoin.id]
+                    }".`
+                  : ""
+              }`
         }
         items={identities.map((id) => `${id.identity.name}@`)}
         label="Enter referral identity (optional)"
