@@ -109,7 +109,7 @@ export const TraditionalSendFormEnterRender = function() {
           style={{ marginTop: 5, width: "100%" }}
         />
       )}
-      {/* {fromCurrencyInfo != null && fromCurrencyInfo.mintable && (
+      {fromCurrencyInfo != null && fromCurrencyInfo.mintable && (
         <FormControlLabel
           control={
             <CustomCheckbox
@@ -125,7 +125,7 @@ export const TraditionalSendFormEnterRender = function() {
           }
           label="Fund this transaction by minting new coins."
         />
-      )} */}
+      )}
     </React.Fragment>
   );
 }

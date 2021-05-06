@@ -197,7 +197,7 @@ export const ConvertCurrencyConfirmSimpleRender = function() {
         <TextField
           style={{
             flex: 1,
-            //marginRight: 4,
+            marginRight: 4,
             marginLeft: 4,
           }}
           label="Fee"
@@ -210,8 +210,7 @@ export const ConvertCurrencyConfirmSimpleRender = function() {
         <TextField
           style={{
             flex: 1,
-            marginLeft: 4,
-            display: "none"
+            marginLeft: 4
           }}
           label="Receive (Estimated)"
           variant="outlined"
@@ -404,7 +403,7 @@ export const ConvertCurrencyFormSimpleRender = function() {
             display: "flex",
             flexDirection: "column",
             alignItems: "stretch",
-            marginTop: 32,
+            marginTop: 8,
           }}
           square={false}
         >
@@ -439,7 +438,7 @@ export const ConvertCurrencyFormSimpleRender = function() {
                   ? ""
                   : receiveAmount
               }
-              style={{ flex: 1, marginRight: 4, display: "none" }}
+              style={{ flex: 1, marginRight: 4 }}
               disabled={Object.keys(this.state.conversionPaths) == 0}
             />
             <SuggestionInput
@@ -539,9 +538,7 @@ export const ConvertCurrencyFormSimpleRender = function() {
           <WalletPaper
             style={{
               marginBottom: 8,
-              marginRight: 4,
               flex: 1,
-              display: "none"
             }}
             square={false}
           >
@@ -551,11 +548,13 @@ export const ConvertCurrencyFormSimpleRender = function() {
               this.state.selectedConversionPath ? Number(price.toFixed(8)) : "-"
             }`}</div>
           </WalletPaper>
+        </div>
+        <div style={{ display: "flex" }}>
           <WalletPaper
             style={{
               marginBottom: 8,
-              //marginLeft: 4,
               flex: 1,
+              marginRight: 4
             }}
             square={false}
           >
@@ -574,6 +573,22 @@ export const ConvertCurrencyFormSimpleRender = function() {
                     )
                 : "-"
             } ${currency ? currency : "-"}`}</div>
+          </WalletPaper>
+          <WalletPaper
+            style={{
+              marginBottom: 8,
+              marginLeft: 4,
+              flex: 1,
+            }}
+            square={false}
+          >
+            <div style={{ fontWeight: "bold" }}>{`Est. Time: ${
+              this.state.selectedConversionPath
+                ? (exportto
+                  ? "20-30 Min."
+                  : "2-10 Min.")
+                : "- Min."
+            }`}</div>
           </WalletPaper>
         </div>
         <CustomButton
