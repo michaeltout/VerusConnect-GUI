@@ -1,5 +1,6 @@
 import { ELECTRUM, ETH, NATIVE, ERC20 } from './constants/componentConstants';
 import { isValidAddress } from 'ethereumjs-util'
+import { getSimpleCoinArray } from './coinData';
 
 const { addressVersionCheck } = require('agama-wallet-lib/src/keys');
 const networks = require('agama-wallet-lib/src/bitcoinjs-networks');
@@ -12,9 +13,13 @@ const networks = require('agama-wallet-lib/src/bitcoinjs-networks');
  * @param {String} chainTicker 
  */
 export const checkAddrValidity = (address, mode, chainTicker) => {
+  const simpleCoins = getSimpleCoinArray()
+
   //Validate IDs
   if (
-    (chainTicker === "VRSC" || chainTicker === "VRSCTEST") &&
+    (chainTicker === "VRSC" ||
+      chainTicker === "VRSCTEST" ||
+      !simpleCoins.some((simpleCoinObj) => simpleCoinObj.id === chainTicker)) &&
     (address[address.length - 1] === "@" || address[0] === "i")
   ) {
     return true;
