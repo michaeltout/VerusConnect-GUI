@@ -50,7 +50,6 @@
     "clsx": "^1.0.4",
     "crypto-js": "^4.0.0",
     "ethereumjs-util": "^6.2.0",
-    "handlebars": "^4.5.3 ",
     "node-vibrant": "^3.1.4",
     "passwd-strength": "https://github.com/michaeltout/passwd-strength.git",
     "prop-types": "^15.7.2",
@@ -122,12 +121,12 @@
     "webpack-dev-server": "^3.11.0"
   },
   "resolutions": {
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "static-eval": "^2.0.2",
     "tar": "^4.4.11",
     "js-yaml": "^3.13.1",
     "braces": "^3.0.2",
-    "handlebars": "^4.5.3 ",
+    "handlebars": "^4.7.7",
     "serialize-javascript": "^3.1.0",
     "bin-links": "1.1.6",
     "https-proxy-agent": "2.2.4",
@@ -148,6 +147,9 @@
     "socket.io": "^3.1.1",
     "y18n": "5.0.5",
     "xmlhttprequest-ssl": "1.6.2",
-    "ssri": "8.0.1"
+    "ssri": "8.0.1",
+    "hosted-git-info":"3.0.8",
+    "ua-parser-js": "^0.7.24",
+    "url-parse":"^1.5.1"
   }
 }
