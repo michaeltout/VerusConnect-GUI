@@ -72,17 +72,24 @@ function getDisplayCurrencies(currencies, info, blacklists, identities) {
   currencies.map((currency) => {
 
     if (
-      !(blacklists != null &&
-      blacklists[currency.spottername] != null &&
-      blacklists[currency.spottername].includes(currency.name))
+      !(
+        blacklists != null &&
+        blacklists[currency.spottername] != null &&
+        blacklists[currency.spottername].some(
+          (blacklistedCurrency) =>
+            blacklistedCurrency.toUpperCase() === currency.name.toUpperCase()
+        )
+      )
     ) {
-      currencyComps.push(getCurrencyInfo(
-        currency,
-        info[currency.spottername]
-          ? info[currency.spottername].longestchain
-          : -1,
-        identities[currency.spottername]
-      ))
+      currencyComps.push(
+        getCurrencyInfo(
+          currency,
+          info[currency.spottername]
+            ? info[currency.spottername].longestchain
+            : -1,
+          identities[currency.spottername]
+        )
+      );
     }
   });
 
