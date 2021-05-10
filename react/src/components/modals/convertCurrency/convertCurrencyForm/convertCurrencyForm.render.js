@@ -315,11 +315,14 @@ export const ConvertCurrencyFormSimpleRender = function() {
     ? this.state.conversionPaths[this.state.selectedConversionPath].destination
     : this.state.selectedConversionPath;
   
-  const sources = this.props.whitelist.includes(
+  const whitelist = this.props.whitelists[this.props.activeCoin.id]
+    ? this.props.whitelists[this.props.activeCoin.id]
+    : [];
+  const sources = whitelist.includes(
     this.props.modalProps.chainTicker
   )
-    ? this.props.whitelist
-    : [this.props.modalProps.chainTicker, ...this.props.whitelist];
+    ? whitelist
+    : [this.props.modalProps.chainTicker, ...whitelist];
 
   return (
     <div

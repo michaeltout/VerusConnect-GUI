@@ -18,7 +18,7 @@ import {
   WHITELISTS,
 } from "../../../../util/constants/componentConstants";
 import { getCurrencyConversionPaths, getIdentity, sendCurrency } from '../../../../util/api/wallet/walletCalls';
-import { expireData, newSnackbar } from '../../../../actions/actionCreators';
+import { expireData, newSnackbar, updateLocalWhitelists } from '../../../../actions/actionCreators';
 
 class ConvertCurrencyForm extends React.Component {
   constructor(props) {
@@ -61,6 +61,7 @@ class ConvertCurrencyForm extends React.Component {
     this.updateSimpleFormAmount = this.updateSimpleFormAmount.bind(this)
     this.updateAdvancedFormAmount = this.updateAdvancedFormAmount.bind(this)
     this.isValidAmount = this.isValidAmount.bind(this)
+    this.addToWhitelist = this.addToWhitelist.bind(this)
 
     this.outputsEnd = null;
   }
@@ -164,6 +165,27 @@ class ConvertCurrencyForm extends React.Component {
       setTimeout(() => {
         this.scrollToOutputBottom()
       }, 0);
+    }
+  }
+
+  async addToWhitelist(name) {
+    const {
+      whitelists,
+      activeCoin,
+      dispatch,
+    } = this.props;
+
+    const currentWhitelist = whitelists[activeCoin.id] || []
+
+    try {
+      dispatch(
+        await updateLocalWhitelists({
+          ...whitelists,
+          [activeCoin.id]: [...currentWhitelist, name],
+        })
+      );
+    } catch(e) {
+      dispatch(newSnackbar(ERROR_SNACK, e.message));
     }
   }
 
@@ -429,10 +451,8 @@ const mapStateToProps = (state) => {
       state.ledger.addresses[state.modal[CONVERT_CURRENCY].chainTicker],
     info: state.ledger.info[state.modal[CONVERT_CURRENCY].chainTicker],
     balances: state.ledger.balances[state.modal[CONVERT_CURRENCY].chainTicker],
-    whitelist:
-      state.localCurrencyLists[WHITELISTS][
-        state.modal[CONVERT_CURRENCY].chainTicker
-      ] || [],
+    activeCoin: state.coins.activatedCoins[state.modal[CONVERT_CURRENCY].chainTicker],
+    whitelists: state.localCurrencyLists[WHITELISTS]
   };
 };
 

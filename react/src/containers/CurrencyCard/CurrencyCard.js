@@ -153,13 +153,13 @@ class CurrencyCard extends React.Component {
 
           idRes.map((promiseRes) => {
             if (promiseRes.msg !== "success") {
-              this.props.dispatch(
-                newSnackbar(
-                  WARNING_SNACK,
-                  `Couldn't fetch information about all related identities.`,
-                  MID_LENGTH_ALERT
-                )
-              );
+              // this.props.dispatch(
+              //   newSnackbar(
+              //     WARNING_SNACK,
+              //     `Couldn't fetch information about all related identities.`,
+              //     MID_LENGTH_ALERT
+              //   )
+              // );
             } else {
               idMap[promiseRes.result.identity.identityaddress] =
                 promiseRes.result;
