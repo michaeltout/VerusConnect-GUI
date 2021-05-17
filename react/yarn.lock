@@ -11974,6 +11974,10 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
+"verus-wallet-endpoints@https://github.com/michaeltout/verus-wallet-endpoints.git":
+  version "1.0.0"
+  resolved "https://github.com/michaeltout/verus-wallet-endpoints.git#2a508a170ca0e2825b78254cdbad28118b0be132"
+
 "verus-zkedid-utils@https://github.com/michaeltout/verus-zkedid-utils":
   version "1.0.0"
   resolved "https://github.com/michaeltout/verus-zkedid-utils#c779c3c3b739ea121a1c8222c107acf93bad48dc"
