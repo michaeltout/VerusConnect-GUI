@@ -50,7 +50,7 @@
     "clsx": "^1.0.4",
     "crypto-js": "^4.0.0",
     "ethereumjs-util": "^6.2.0",
-    "node-vibrant": "^3.1.4",
+    "node-vibrant": "^3.1.6",
     "passwd-strength": "https://github.com/michaeltout/passwd-strength.git",
     "prop-types": "^15.7.2",
     "qrcode.react": "^0.7.1",
@@ -151,6 +151,7 @@
     "ssri": "8.0.1",
     "hosted-git-info": "3.0.8",
     "ua-parser-js": "^0.7.24",
-    "url-parse": "^1.5.1"
+    "url-parse": "^1.5.1",
+    "ajv": "6.12.3"
   }
 }
