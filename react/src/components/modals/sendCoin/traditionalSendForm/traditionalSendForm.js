@@ -249,7 +249,8 @@ class TraditionalSendForm extends React.Component {
         txData[TXDATA_ERROR] || !txData[TXDATA_VALUE]
           ? null
           : Number(txData[TXDATA_VALUE]),
-      ["Fee:"]: txData[TXDATA_FEE] == null ? null : Number(txData[TXDATA_FEE]),
+      [formStep === CONFIRM_DATA ? "Estimated Fee:" : "Fee:"]:
+        txData[TXDATA_FEE] == null ? null : Number(txData[TXDATA_FEE]),
       [txData.cliCmd === SEND_TO_ADDRESS
         ? formStep === CONFIRM_DATA
           ? "Interest to Claim:"
@@ -261,7 +262,8 @@ class TraditionalSendForm extends React.Component {
               txData[TXDATA_TOTAL_AMOUNT]
             )}`
           : null,
-      ["Current Balance:"]: txData[TXDATA_BALANCE] == null ? null : Number(txData[TXDATA_BALANCE]),
+      ["Current Balance:"]:
+        txData[TXDATA_BALANCE] == null ? null : Number(txData[TXDATA_BALANCE]),
       ["Est. Balance After Transaction:"]:
         txData[TXDATA_REMAINING_BALANCE] != null
           ? Number(txData[TXDATA_REMAINING_BALANCE])

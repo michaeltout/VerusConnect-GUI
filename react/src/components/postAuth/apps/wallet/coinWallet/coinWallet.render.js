@@ -25,7 +25,11 @@ import {
   SPLIT_MODAL,
   CONVERT_CURRENCY,
   SIMPLE_CONVERSION,
-  ID_INFO
+  ID_INFO,
+  CREATE_IDENTITY,
+  API_UPDATE_ID,
+  IS_PBAAS,
+  Z_ONLY
 } from "../../../../../util/constants/componentConstants";
 import { VirtualizedTable } from '../../../../../containers/VirtualizedTable/VirtualizedTable'
 import { TX_TYPES } from '../../../../../util/txUtils/txRenderUtils'
@@ -160,34 +164,47 @@ export const CoinWalletRender = function() {
             </div>
           </WalletPaper>
         )}
-        {this.props.activeIdentity == null ? RenderBlockchainInfo.call(this) : RenderIdInfo.call(this)}
+        {this.props.activeIdentity == null
+          ? RenderBlockchainInfo.call(this)
+          : RenderIdInfo.call(this)}
       </WalletPaper>
-      {/* TODO: Change this when currencies get to mainnet */ this.props
-        .coin === "VRSCTEST"
-        ? WalletRenderCurrencyFunctions.call(this)
-        : null}
-      {/* TODO: Add a way to detect if a coin allows migration */ this.props
-        .coin === "RFOX" && (
-        <MigrationHelper
-          coin={this.props.coin}
-          fetchMigrationBalance={getRfoxMigrationAccountBalances}
-          fetchFee={estimateGasRfoxMigration}
-          feeCurr={"ETH"}
-          migrate={claimRfoxMigration}
-          onSuccess={() => openTextDialog(
-            closeTextDialog,
-            [{ title: "OK", onClick: closeTextDialog }],
-            `${this.props.coin} claimed! It may take a few minutes to show in your wallet.`,
-            'Success!'
-          )}
-          onError={(e) => openTextDialog(
-            closeTextDialog,
-            [{ title: "OK", onClick: closeTextDialog }],
-            `Error claiming ${this.props.coin}. (${e.message})`,
-            'Error'
-          )}
-        />
-      )}
+      {
+        /* TODO: Change this when currencies get to mainnet */
+        this.props.activatedCoins[this.props.coin] &&
+        this.props.activatedCoins[this.props.coin].options.tags.includes(
+          IS_PBAAS
+        )
+          ? WalletRenderCurrencyFunctions.call(this)
+          : null
+      }
+      {
+        /* TODO: Add a way to detect if a coin allows migration */ this.props
+          .coin === "RFOX" && (
+          <MigrationHelper
+            coin={this.props.coin}
+            fetchMigrationBalance={getRfoxMigrationAccountBalances}
+            fetchFee={estimateGasRfoxMigration}
+            feeCurr={"ETH"}
+            migrate={claimRfoxMigration}
+            onSuccess={() =>
+              openTextDialog(
+                closeTextDialog,
+                [{ title: "OK", onClick: closeTextDialog }],
+                `${this.props.coin} claimed! It may take a few minutes to show in your wallet.`,
+                "Success!"
+              )
+            }
+            onError={(e) =>
+              openTextDialog(
+                closeTextDialog,
+                [{ title: "OK", onClick: closeTextDialog }],
+                `Error claiming ${this.props.coin}. (${e.message})`,
+                "Error"
+              )
+            }
+          />
+        )
+      }
       {WalletRenderBalances.call(this)}
       <TransactionCard
         transactions={
@@ -223,6 +240,11 @@ export const CoinWalletRender = function() {
 };
 
 export const RenderBlockchainInfo = function () {
+  const noRunningDaemon =
+    this.state.walletLoadState.error &&
+    this.state.walletLoadState.message != null &&
+    this.state.walletLoadState.message.includes("No running");
+
   return (
     <WalletPaper
       style={{
@@ -259,6 +281,7 @@ export const RenderBlockchainInfo = function () {
           display: "flex",
           justifyContent: "start",
           alignItems: "center",
+          height: "100%"
         }}
       >
         {WalletRenderPie.call(this)}
@@ -281,7 +304,19 @@ export const RenderBlockchainInfo = function () {
               }}
             />
           )}
-          {this.state.walletLoadState.message}
+          {noRunningDaemon ? (
+            <a
+              onClick={() => this.tryNativeRelaunch()}
+              href="#"
+              style={{
+                color: "#3f51b5"
+              }}
+            >
+              {"No running daemon found. Click here to retry."}
+            </a>
+          ) : (
+            this.state.walletLoadState.message
+          )}
         </h1>
       </div>
     </WalletPaper>
@@ -304,27 +339,58 @@ export const RenderIdInfo = function () {
         <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
           {"ID Information"}
         </h6>
-        <button
-          className="btn btn-primary border rounded"
-          type="button"
-          onClick={() => this.openModal(
-            null,
-            {
-              activeIdentity
-            },
-            ID_INFO
-          )}
-          style={{
-            fontSize: 14,
-            backgroundColor: "rgba(0,178,26,0)",
-            borderWidth: 0,
-            color: "rgb(133,135,150)",
-            borderColor: "rgb(133, 135, 150)",
-            fontWeight: "bold",
-          }}
-        >
-          {"ID Info"}
-        </button>
+        <div>
+          <button
+            className="btn btn-primary border rounded"
+            type="button"
+            disabled={activeIdentity.status === "revoked"}
+            onClick={() =>
+              this.openModal(
+                null,
+                {
+                  modalType: API_UPDATE_ID,
+                  chainTicker: this.props.coin,
+                  identity: activeIdentity,
+                },
+                CREATE_IDENTITY
+              )
+            }
+            style={{
+              fontSize: 14,
+              backgroundColor: "rgb(49, 101, 212)",
+              borderWidth: 0,
+              color: "#FFFFFF",
+              borderColor: "rgb(49, 101, 212)",
+              fontWeight: "bold",
+              marginRight: 8,
+            }}
+          >
+            {"Update ID"}
+          </button>
+          <button
+            className="btn btn-primary border rounded"
+            type="button"
+            onClick={() =>
+              this.openModal(
+                null,
+                {
+                  activeIdentity,
+                },
+                ID_INFO
+              )
+            }
+            style={{
+              fontSize: 14,
+              backgroundColor: "rgba(0,178,26,0)",
+              borderWidth: 0,
+              color: "rgb(133,135,150)",
+              borderColor: "rgb(133, 135, 150)",
+              fontWeight: "bold",
+            }}
+          >
+            {"ID Info"}
+          </button>
+        </div>
       </div>
       <div
         className="d-lg-flex"
@@ -397,7 +463,18 @@ export const WalletRenderPie = function() {
 
 export const WalletRenderBalances = function() {
   const filteredBalances = this.state.walletDisplayBalances.filter(
-    (balance) => balance.currency === this.props.selectedCurrency
+    (balance) => {
+      return (
+        balance.currency === this.props.selectedCurrency &&
+        !(
+          balance.balanceAddrType === PUBLIC_BALANCE &&
+          this.props.activatedCoins[this.props.coin] &&
+          this.props.activatedCoins[this.props.coin].options.tags.includes(
+            Z_ONLY
+          )
+        )
+      );
+    }
   );
 
   const walletDisplayBalances =
@@ -890,22 +967,23 @@ export const WalletRenderCurrencyFunctions = function() {
           />
         </WalletPaper>
       </WalletPaper>
-      {coin === "VRSCTEST" && (
-        <WalletPaper
-          style={{
-            marginBottom: 16,
-            padding: 8,
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <Typography style={{ fontWeight: "bold", textAlign: "center" }}>
-            {
-              "Warning: All testnet coins/currencies have no value and will disappear whenever VRSCTEST is reset"
-            }
-          </Typography>
-        </WalletPaper>
-      )}
+      {this.props.activatedCoins[coin] &&
+        this.props.activatedCoins[coin].options.tags.includes(IS_PBAAS) && (
+          <WalletPaper
+            style={{
+              marginBottom: 16,
+              padding: 8,
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Typography style={{ fontWeight: "bold", textAlign: "center" }}>
+              {
+                "Warning: All testnet coins/currencies have no value and will disappear whenever VRSCTEST is reset"
+              }
+            </Typography>
+          </WalletPaper>
+        )}
     </React.Fragment>
   );
 };

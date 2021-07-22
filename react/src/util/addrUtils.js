@@ -1,5 +1,6 @@
-import { ELECTRUM, ETH, NATIVE } from './constants/componentConstants';
+import { ELECTRUM, ETH, NATIVE, ERC20 } from './constants/componentConstants';
 import { isValidAddress } from 'ethereumjs-util'
+import { getSimpleCoinArray } from './coinData';
 
 const { addressVersionCheck } = require('agama-wallet-lib/src/keys');
 const networks = require('agama-wallet-lib/src/bitcoinjs-networks');
@@ -12,11 +13,21 @@ const networks = require('agama-wallet-lib/src/bitcoinjs-networks');
  * @param {String} chainTicker 
  */
 export const checkAddrValidity = (address, mode, chainTicker) => {
+  const simpleCoins = getSimpleCoinArray()
+
   //Validate IDs
-  if ((chainTicker === 'VRSC' || chainTicker === 'VRSCTEST') && (address[address.length - 1] === '@' || address[0] === 'i')) {
-    return true
+  if (
+    (chainTicker === "VRSC" ||
+      chainTicker === "VRSCTEST" ||
+      !simpleCoins.some((simpleCoinObj) => simpleCoinObj.id === chainTicker)) &&
+    (address[address.length - 1] === "@" || address[0] === "i")
+  ) {
+    return true;
   } else if (mode === ELECTRUM || mode === NATIVE) {
-    let addrCheck = addressVersionCheck(networks[chainTicker.toLowerCase()] || networks.kmd, address)
+    let addrCheck = addressVersionCheck(
+      networks[chainTicker.toLowerCase()] || networks.kmd,
+      address
+    );
 
     if (
       addrCheck === true ||
@@ -28,9 +39,16 @@ export const checkAddrValidity = (address, mode, chainTicker) => {
     )
       return true;
     else return false;
-  } else if (mode === ETH) {
-    return isValidAddress(address)
+  } else if (mode === ETH || mode === ERC20) {
+    return isValidAddress(address);
   }
 
   return false
+}
+
+export const checkPublicAddress = (address, chainTicker) => {
+  return (addressVersionCheck(
+    networks[chainTicker.toLowerCase()] || networks.kmd,
+    address
+  ) === true)
 }

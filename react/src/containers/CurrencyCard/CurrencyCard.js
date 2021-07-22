@@ -153,13 +153,13 @@ class CurrencyCard extends React.Component {
 
           idRes.map((promiseRes) => {
             if (promiseRes.msg !== "success") {
-              this.props.dispatch(
-                newSnackbar(
-                  WARNING_SNACK,
-                  `Couldn't fetch information about all related identities.`,
-                  MID_LENGTH_ALERT
-                )
-              );
+              // this.props.dispatch(
+              //   newSnackbar(
+              //     WARNING_SNACK,
+              //     `Couldn't fetch information about all related identities.`,
+              //     MID_LENGTH_ALERT
+              //   )
+              // );
             } else {
               idMap[promiseRes.result.identity.identityaddress] =
                 promiseRes.result;
@@ -344,6 +344,15 @@ class CurrencyCard extends React.Component {
     this.setState({ loadingCurrencyLists: true }, async () => {
       await addToWhitelist(name)
       await removeFromBlacklist(name)
+      const oldState = Store.getState()
+
+      await udpateWalletData(
+        oldState,
+        this.props.dispatch,
+        NATIVE,
+        this.props.activeCoin.id,
+        API_GET_CURRENCY_DATA_MAP
+      );
 
       this.setState({ loadingCurrencyLists: false })
       setLock(false)

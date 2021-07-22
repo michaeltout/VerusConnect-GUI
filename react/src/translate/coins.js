@@ -5,7 +5,8 @@ const coins = {
     VRSC: 'Verus',
     KMD: 'Komodo',
     BTC: 'Bitcoin',
-    VOTE2020: 'VOTE2020',
+    //VOTE2020: 'VOTE2020',
+    //VOTE2021: 'Vote2021',
     KSB: 'KSB',
     MORTY: 'Morty',
     RICK: 'Rick',
@@ -104,10 +105,12 @@ const coins = {
     //ZET: 'Zetacoin',
     //AXE: 'Axe',
     //MZC: 'Mazacoin',
-    BZC: 'Bitzec',
+    //BZC: 'Bitzec',
   },
   ETH: {
     ETH: 'Ethereum',
+  },
+  ERC20: {
     RFOX: 'RedFOX Labs',
     AE: 'Aeternity',
     ANN: 'Agent Not Needed',
@@ -189,7 +192,7 @@ const coins = {
     OMG: 'OmiseGo',
     R: 'Revain',
     UCASH: 'U.CASH',
-    BNB: 'Binance Coin',
+    //BNB: 'Binance Coin',
     BTK: 'BitcoinToken',
     DAI: 'Dai',
     DDD: 'Scry.info',
@@ -210,6 +213,9 @@ const coins = {
     YLC: 'YoloCash',
     ZRX: '0x',
     BAT: 'Basic Attention Token',
+    GLM: 'Golem Network Token',
+    GET: 'Guaranteed Entrance Token',
+    WBTC: "Wrapped BTC",
     ETHOS: 'Ethos',
     QASH: 'Qash',
     FUN: 'FunFair',
@@ -273,9 +279,9 @@ const coins = {
     //TODO: Get erc20 contract ID for eos
     //EOS: 'EOS',
     ZIL: 'Zilliqa',
-    //OCALL: 'Old Capital',
-    //CALLG: 'Capital GAS',
-  },
+    //TSTROPSTEN: "Ropsten Test ERC20",
+    //TSTRINKEBY: "Rinkeby Test ERC20",
+  }
 };
 
 module.exports = coins;

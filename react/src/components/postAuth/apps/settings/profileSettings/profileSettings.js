@@ -14,6 +14,7 @@ import {
   NATIVE,
   ELECTRUM,
   IDENTITIES,
+  ERC20,
 } from "../../../../../util/constants/componentConstants";
 import { getSimpleCoinArray, getCoinObj, getCoinColor } from "../../../../../util/coinData";
 
@@ -29,9 +30,13 @@ class ProfileSettings extends React.Component {
         available_modes: {
           [ETH]: false,
           [NATIVE]: false,
-          [ELECTRUM]: false
+          [ELECTRUM]: false,
+          [ERC20]: false
         }
-      }
+      },
+      selectedStartupOptionCoin: PLACEHOLDER,
+      startupOptionText: '',
+      startupOptions: props.activeUser.startupOptions
     }
 
     this.locationPresets = [UX_SELECTOR, WALLET, IDENTITIES, MINING]
@@ -41,6 +46,10 @@ class ProfileSettings extends React.Component {
     this.updateLocationSelection = this.updateLocationSelection.bind(this)
     this.updateCoinSelection = this.updateCoinSelection.bind(this)
     this.addStartCoin = this.addStartCoin.bind(this)
+    this.addStartupOption = this.addStartupOption.bind(this)
+    this.removeStartupOption = this.removeStartupOption.bind(this)
+    this.updateStartupOptionText = this.updateStartupOptionText.bind(this)
+    this.updateStartupOptionCoinSelection = this.updateStartupOptionCoinSelection.bind(this)
   }
 
   updateLocationSelection(e) {
@@ -57,9 +66,69 @@ class ProfileSettings extends React.Component {
 
   updateCoinSelection(e) {
     const selectedCoin = e.target.options[e.target.selectedIndex].value
-    const coinObj = getCoinObj(selectedCoin, false)
+    const coinObj = getCoinObj(selectedCoin)
 
     this.setState({ selectedCoinObj: coinObj, selectedCoin })
+  }
+
+  updateStartupOptionCoinSelection(e) {
+    const selectedStartupOptionCoin = e.target.options[e.target.selectedIndex].value
+
+    this.setState({ selectedStartupOptionCoin })
+  }
+
+  updateStartupOptionText(text) {
+    this.setState({ startupOptionText: text })
+  }
+
+  addStartupOption() {
+    const { selectedStartupOptionCoin, startupOptionText } = this.state
+    let startupOption = startupOptionText
+
+    if (startupOption[0] !== '-') {
+      startupOption = "-" + startupOption
+    }
+
+    this.setState(
+      {
+        startupOptions: {
+          ...this.state.startupOptions,
+          [NATIVE]: {
+            ...this.state.startupOptions[NATIVE],
+            [selectedStartupOptionCoin]:
+              this.state.startupOptions[NATIVE][selectedStartupOptionCoin] ==
+              null
+                ? [startupOption]
+                : [
+                    ...this.state.startupOptions[NATIVE][
+                      selectedStartupOptionCoin
+                    ],
+                    startupOption,
+                  ],
+          },
+        },
+      },
+      () => this.setStartupOptions()
+    );
+  }
+
+  removeStartupOption(option) {
+    const { selectedStartupOptionCoin } = this.state 
+
+    this.setState(
+      {
+        startupOptions: {
+          ...this.state.startupOptions,
+          [NATIVE]: {
+            ...this.state.startupOptions[NATIVE],
+            [selectedStartupOptionCoin]: this.state.startupOptions[NATIVE][
+              selectedStartupOptionCoin
+            ].filter((x) => x !== option),
+          },
+        },
+      },
+      () => this.setStartupOptions()
+    );
   }
 
   async addStartCoin(mode) {
@@ -117,6 +186,13 @@ class ProfileSettings extends React.Component {
     } else {
       setDisplayUser({ ...displayUser, startWithLastCoins: false, startCoins: selectedStartCoins })
     }
+  }
+
+  setStartupOptions() {
+    const { setDisplayUser, displayUser } = this.props
+    const { startupOptions } = this.state
+
+    setDisplayUser({ ...displayUser, startupOptions })
   }
 
   render() {

@@ -276,53 +276,6 @@ export const MiningWalletRenderNetworkOverview = function() {
   });
 }
 
-export const MiningWalletRenderGenerateOverview = function() {
-  return (
-    <WalletPaper style={{ marginBottom: 16 }}>
-      <h6
-        className="card-title"
-        style={{ fontSize: 14, margin: 0, width: "100%" }}
-      >
-        {"Portfolio Overview"}
-      </h6>
-      {numCoins == 0 && (
-        <a
-          href="#"
-          style={{
-            color: "rgb(49, 101, 212)",
-            paddingTop: 8,
-            display: "block"
-          }}
-          onClick={openAddCoinModal}
-        >
-          {"No coins added yet, click here to add one!"}
-        </a>
-      )}
-      {numCoins > 0 && (
-        <div className="d-lg-flex justify-content-lg-center">
-          <div className="col-lg-3" style={{ padding: 0, marginTop: 20 }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center"
-              }}
-            >
-              {DashboardRenderPie.call(this)}
-            </div>
-          </div>
-          <div
-            className="col d-lg-flex align-items-lg-center"
-            style={{ marginTop: 20 }}
-          >
-            {DashboardRenderTable.call(this)}
-          </div>
-        </div>
-      )}
-    </WalletPaper>
-  );
-};
-
 export const MiningWalletFunctions = function() {
   const { props } = this
   const {

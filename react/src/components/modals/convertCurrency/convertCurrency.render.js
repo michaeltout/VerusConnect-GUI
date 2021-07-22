@@ -1,4 +1,3 @@
-import { Backdrop, CircularProgress } from '@material-ui/core';
 import React from 'react';
 import { CONVERSION_OVERVIEW } from '../../../util/constants/componentConstants';
 import ConvertCurrencyForm from './convertCurrencyForm/convertCurrencyForm'
@@ -7,6 +6,21 @@ import { Lottie } from '@crello/react-lottie';
 import ConversionOverview from './conversionOverview/conversionOverview';
 
 export const ConvertCurrencyRender = function() {
+  // return (
+  //   <div
+  //     style={{
+  //       width: "100%",
+  //       height: "100%",
+  //       alignItems: "center",
+  //       justifyContent: "center",
+  //       display: "flex",
+  //       flexDirection: "column",
+  //       paddingBottom: 56,
+  //     }}
+  //   >
+  //     {ConvertCurrencyUnderConstruction.call(this)}
+  //   </div>
+  // );
   return (
     <div style={{ width: "100%", height: "100%" }}>
       {this.state.loading ? (
@@ -52,3 +66,23 @@ export const ConvertCurrencyRender = function() {
     </div>
   );
 };
+
+export const ConvertCurrencyUnderConstruction = function() {
+  return (
+    <React.Fragment>
+      <i className="fas fa-tools" style={{ fontSize: 80, color: "#959595" }} />
+      <div
+        style={{
+          marginTop: 30,
+          textAlign: "center",
+          paddingRight: 24,
+          paddingLeft: 24,
+        }}
+      >
+        {
+          "This section is currently being worked on to accomodate cross-chain sends and conversions. Until GUI support is available, try them out through the Verus CLI!"
+        }
+      </div>
+    </React.Fragment>
+  );
+}

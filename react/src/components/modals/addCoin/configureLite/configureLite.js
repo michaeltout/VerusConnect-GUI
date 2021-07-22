@@ -69,10 +69,7 @@ class ConfigureLite extends React.Component {
           addCoinParams.coinObj,
           addCoinParams.mode,
           this.props.dispatch,
-          Object.keys(activatedCoins),
-          addCoinParams.startParams && addCoinParams.startParams.indexOf('-nspv') > -1 ? {
-            nspv: true,
-          } : null
+          Object.keys(activatedCoins)
         );
 
         this.props.setModalLock(false)

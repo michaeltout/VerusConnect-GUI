@@ -105,7 +105,7 @@ export const CurrenciesCardRender = (
         <a
           href="#"
           style={{ color: "rgb(49, 101, 212)" }}
-          onClick={openAddCoinModal}
+          onClick={() => openAddCoinModal()}
         >
           {"Add VRSCTEST to discover new currencies!"}
         </a>
@@ -221,15 +221,15 @@ export const CurrencyTableRender = (displayCurrencies, openCurrencyInfo, props) 
             label: 'Age',
             dataKey: 'age',
           },
-          {
-            width: 100,
-            flexGrow: 1,
-            cellDataGetter: ({ rowData }) => {
-              return rowData.spendableTo ? "Yes" : "No"
-            },
-            label: 'Convertable To',
-            dataKey: 'spendableTo',
-          },
+          // {
+          //   width: 100,
+          //   flexGrow: 1,
+          //   cellDataGetter: ({ rowData }) => {
+          //     return rowData.spendableTo ? "Yes" : "No"
+          //   },
+          //   label: 'Convertable To',
+          //   dataKey: 'spendableTo',
+          // },
           {
             width: 100,
             flexGrow: 1,
@@ -243,7 +243,7 @@ export const CurrencyTableRender = (displayCurrencies, openCurrencyInfo, props) 
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {rowData.currency.parent_name}
+                  {rowData.currency.systemname}
                 </div>
               );
             },
@@ -263,10 +263,18 @@ export const CurrencyTableRender = (displayCurrencies, openCurrencyInfo, props) 
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {props.whitelists && props.whitelists[rowData.currency.parent_name]
-                    ? props.whitelists[rowData.currency.parent_name].includes(
-                        rowData.currency.name
-                      ) || Object.keys(props.activatedCoins).includes(rowData.currency.name)
+                  {props.whitelists &&
+                  props.whitelists[rowData.currency.spottername]
+                    ? props.whitelists[rowData.currency.spottername].some(
+                        (whitelistCoin) =>
+                          whitelistCoin.toUpperCase() ===
+                          rowData.currency.name.toUpperCase()
+                      ) ||
+                      Object.keys(props.activatedCoins).some(
+                        (activeCoinKey) =>
+                          activeCoinKey.toUpperCase() ===
+                          rowData.currency.name.toUpperCase()
+                      )
                       ? "Yes"
                       : "No"
                     : "-"}

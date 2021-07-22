@@ -13,6 +13,7 @@ import {
   MID_LENGTH_ALERT,
   ADD_COIN,
   SELECT_COIN,
+  NATIVE,
 } from "../../../../util/constants/componentConstants";
 import { addCoin } from '../../../../actions/actionDispatchers'
 import { newSnackbar, setModalNavigationPath } from '../../../../actions/actionCreators'
@@ -124,15 +125,29 @@ class ConfigureNative extends React.Component {
   }
 
   async addCoin() {
-    const { addCoinParams, activatedCoins } = this.props
+    const { addCoinParams, activatedCoins, startupOptions } = this.props
 
     try {
+      let startParams = []
+
+      if (addCoinParams.mode === NATIVE) {
+        startParams = [
+          ...(addCoinParams.startParams == null
+            ? []
+            : addCoinParams.startParams),
+          ...(startupOptions != null &&
+          startupOptions[NATIVE][addCoinParams.coinObj.id] != null
+            ? startupOptions[NATIVE][addCoinParams.coinObj.id]
+            : []),
+        ];
+      }
+
       const result = await addCoin(
         addCoinParams.coinObj,
         addCoinParams.mode,
         this.props.dispatch,
         Object.keys(activatedCoins),
-        addCoinParams.startParams
+        startParams
       );
 
       if (result.msg === "error") {
@@ -199,7 +214,8 @@ const mapStateToProps = (state) => {
   return {
     mainPath: state.navigation.mainPath,
     config: state.settings.config,
-    activatedCoins: state.coins.activatedCoins
+    activatedCoins: state.coins.activatedCoins,
+    startupOptions: state.users.activeUser.startupOptions
   };
 };
 

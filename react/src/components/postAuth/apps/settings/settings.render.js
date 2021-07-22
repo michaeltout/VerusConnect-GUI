@@ -22,7 +22,8 @@ export const SettingsRender = function() {
     setDisplayConfig: getDisplayConfig,
     displayUser,
     setDisplayUser: getDisplayUser,
-    selectedCoinObj
+    selectedCoinObj,
+    nativeCoins: coinsWithSettings
   }
 
   const COMPONENT_MAP = {

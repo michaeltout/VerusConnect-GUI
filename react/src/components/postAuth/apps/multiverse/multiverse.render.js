@@ -1,10 +1,18 @@
 import React from 'react';
 import MultiverseStyles from './multiverse.styles'
-import { DASHBOARD, ID_POSTFIX, CHAIN_FALLBACK_IMAGE } from '../../../../util/constants/componentConstants'
+import {
+  DASHBOARD,
+  CHAIN_FALLBACK_IMAGE,
+  ADD_DEFAULT_COIN,
+  ADD_PBAAS_COIN,
+  POST_SYNC
+} from "../../../../util/constants/componentConstants";
 import { openAddCoinModal } from '../../../../actions/actionDispatchers';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 export const MultiverseCardRender = function(coinObj) {
   const { allCurrencies } = this.props
+  const errorOrLoading = coinObj.status !== POST_SYNC
   const numCurrencies = allCurrencies[coinObj.id] ? allCurrencies[coinObj.id].length : '-'
 
   return (
@@ -20,9 +28,28 @@ export const MultiverseCardRender = function(coinObj) {
           className={'card'}
           style={MultiverseStyles.cardInnerContainer}
         >
+          {errorOrLoading && (
+            <div
+              style={{
+                color: `rgb(49, 101, 212)`,
+                alignSelf: "flex-end",
+                height: 20,
+              }}
+            >
+              <CircularProgress
+                variant={"indeterminate"}
+                thickness={4.5}
+                size={20}
+                color="inherit"
+              />
+            </div>
+          )}
           <div
             className="card-body d-flex justify-content-between"
-            style={MultiverseStyles.cardBody}
+            style={{
+              ...MultiverseStyles.cardBody,
+              paddingTop: errorOrLoading ? 0 : 20,
+            }}
           >
             <div style={{ width: "100%" }}>
               <div
@@ -73,16 +100,22 @@ export const MultiverseCardRender = function(coinObj) {
 export const MultiverseTabsRender = function() {
   return [
     {
-      title: "Add Coin",
-      icon: 'fa-plus',
-      onClick: openAddCoinModal,
-      isActive: () => false
-    },
-    {
       title: "Multiverse Dashboard",
       icon: 'fa-home',
       onClick: () => {},
       isActive: () => this.props.mainPathArray.includes(DASHBOARD)
+    },
+    {
+      title: "Add Coin",
+      icon: 'fa-plus',
+      onClick: () => openAddCoinModal(ADD_DEFAULT_COIN),
+      isActive: () => false
+    },
+    {
+      title: "Add PBaaS Chain",
+      icon: 'fa-globe',
+      onClick: () => openAddCoinModal(ADD_PBAAS_COIN),
+      isActive: () => false
     }
   ];
 }

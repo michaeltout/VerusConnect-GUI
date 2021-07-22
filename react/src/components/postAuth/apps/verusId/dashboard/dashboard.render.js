@@ -313,7 +313,7 @@ export const DashboardRender = function() {
                 <a
                   href="#"
                   style={{ color: "rgb(49, 101, 212)" }}
-                  onClick={openAddCoinModal}
+                  onClick={() => openAddCoinModal()}
                 >
                   {
                     "Add a Verus protocol coin (VRSC or VRSCTEST) to start making IDs!"
@@ -426,7 +426,7 @@ export const DashboardRenderTable = function() {
             
             if (identities[chainTicker] && transactions[chainTicker]) {
               if (!(identities[chainTicker].every(idObj => {
-                return idObj.identity.name !== namereservation.name
+                return idObj.identity.identityaddress !== namereservation.nameid
               }))) {
                 isUsed = true
               } else {
@@ -470,7 +470,11 @@ export const DashboardRenderTable = function() {
                     borderTop: 0,
                   }}
                 >
-                  {`${namereservation.name}@`}
+                  {`${namereservation.name}${
+                    chainTicker === "VRSC" || chainTicker === "VRSCTEST"
+                      ? ""
+                      : `.${chainTicker}`
+                  }@`}
                 </td>
                 <td style={{ borderTop: 0 }}>
                   <h3
@@ -527,10 +531,11 @@ export const DashboardRenderTable = function() {
                       }}
                       onClick={
                         failed
-                          ? () => this.openCommitNameModal(chainTicker, {
-                              name: namereservation.name,
-                              referralId: namereservation.referral,
-                            })
+                          ? () =>
+                              this.openCommitNameModal(chainTicker, {
+                                name: namereservation.name,
+                                referralId: namereservation.referral,
+                              })
                           : reservationObj.confirmations == null ||
                             reservationObj.confirmations == 0 ||
                             loading
@@ -588,29 +593,39 @@ export const DashboardRevokeDialogue = function() {
   const { revokeDialogueOpen, revokeId } = this.state
   const { identity, chainTicker } = revokeId
 
-  return (<Dialog
-    open={revokeDialogueOpen == null ? false : revokeDialogueOpen}
-    onClose={this.closeRevokeDialogue}
-    aria-labelledby="alert-dialog-title"
-    aria-describedby="alert-dialog-description"
-  >
-    <DialogTitle id="alert-dialog-title">
-      {`Revoke ID?`}
-    </DialogTitle>
-    <DialogContent>
-      <DialogContentText id="alert-dialog-description">
-        {`Are you sure you would like to revoke ${identity.name}@? This will prevent it from being able to be used until it is recovered.`}
-      </DialogContentText>
-    </DialogContent>
-    <DialogActions>
-      <Button onClick={this.closeRevokeDialogue} color="primary">
-        {"No"}
-      </Button>
-      <Button onClick={() => this.revokeId(chainTicker, `${identity.name}@`)} color="primary" autoFocus>
-        {"Yes"}
-      </Button>
-    </DialogActions>
-  </Dialog>)
+  return (
+    <Dialog
+      open={revokeDialogueOpen == null ? false : revokeDialogueOpen}
+      onClose={this.closeRevokeDialogue}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">{`Revoke ID?`}</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          {`Are you sure you would like to revoke ${
+            identity.name
+            }@? This will cost one transaction fee (0.0001 ${
+              chainTicker
+              }), and will prevent ${
+                identity.name
+                }@ from being able to be used until it is recovered.`}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={this.closeRevokeDialogue} color="primary">
+          {"No"}
+        </Button>
+        <Button
+          onClick={() => this.revokeId(chainTicker, `${identity.name}@`)}
+          color="primary"
+          autoFocus
+        >
+          {"Yes"}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 }
 
 export const DashboardRenderIds = function() {
@@ -643,7 +658,7 @@ export const DashboardRenderIds = function() {
               marginBottom: "1.032%",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "space-between"
+              justifyContent: "space-between",
             }}
             key={index}
           >
@@ -658,12 +673,12 @@ export const DashboardRenderIds = function() {
                   className="d-lg-flex align-items-lg-center"
                   style={{
                     fontSize: 16,
-                    color: 'rgb(49, 101, 212)',
+                    color: "rgb(49, 101, 212)",
                     fontWeight: "bold",
                     textOverflow: "ellipsis",
                     overflow: "hidden",
                     whiteSpace: "nowrap",
-                    textDecoration: "none"
+                    textDecoration: "none",
                   }}
                   href={"#"}
                   onClick={() => copyDataToClipboard(`${identity.name}@`)}
@@ -680,15 +695,15 @@ export const DashboardRenderIds = function() {
                     padding: 4,
                     paddingTop: 1,
                     paddingBottom: 1,
-                    borderWidth: 1
+                    borderWidth: 1,
                   }}
                 >
-                  {idObj.canspendfor
+                  {idObj.status === ID_REVOKED
+                    ? "Revoked"
+                    : idObj.canspendfor
                     ? "Can Spend"
                     : idObj.cansignfor
                     ? "Can Sign"
-                    : idObj.status === ID_REVOKED
-                    ? "Revoked"
                     : "Can't Sign/Spend"}
                 </h3>
               </div>
@@ -702,7 +717,7 @@ export const DashboardRenderIds = function() {
                   style={{
                     fontSize: 16,
                     color: "rgb(0,0,0)",
-                    marginBottom: 0
+                    marginBottom: 0,
                   }}
                 >
                   {`${spendableBalance} ${idObj.chainTicker}`}
@@ -713,29 +728,28 @@ export const DashboardRenderIds = function() {
                   display: "flex",
                   justifyContent: "flex-end",
                   alignItems: "flex-end",
-                  flex: 1
+                  flex: 1,
                 }}
               >
-                {identity.recoveryauthority !== identity.identityaddress &&
-                  idObj.status !== ID_REVOKED && (
-                    <Tooltip title="Revoke">
-                      <button
-                        className="btn btn-primary"
-                        type="button"
-                        onClick={() => this.openRevokeDialogue(idObj)}
-                        style={{
-                          fontSize: 10,
-                          backgroundColor: "rgb(212, 49, 62)",
-                          borderWidth: 1,
-                          borderColor: "rgb(212, 49, 62)",
-                          fontWeight: "bold"
-                        }}
-                      >
-                        <Block />
-                      </button>
-                    </Tooltip>
-                  )}
-                {idObj.status === ID_REVOKED && (
+                {idObj.canrevoke && (
+                  <Tooltip title="Revoke">
+                    <button
+                      className="btn btn-primary"
+                      type="button"
+                      onClick={() => this.openRevokeDialogue(idObj)}
+                      style={{
+                        fontSize: 10,
+                        backgroundColor: "rgb(212, 49, 62)",
+                        borderWidth: 1,
+                        borderColor: "rgb(212, 49, 62)",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <Block />
+                    </button>
+                  </Tooltip>
+                )}
+                {idObj.canrecover && (
                   <Tooltip title="Recover">
                     <button
                       className="btn btn-primary"
@@ -746,7 +760,7 @@ export const DashboardRenderIds = function() {
                           revocationId: identity.revocationauthority,
                           recoveryId: identity.recoveryauthority,
                           privateAddr: identity.privateaddress,
-                          name: `${identity.name}@`
+                          name: `${identity.name}@`,
                         })
                       }
                       style={{
@@ -754,7 +768,7 @@ export const DashboardRenderIds = function() {
                         backgroundColor: "rgb(74, 166, 88)",
                         borderWidth: 1,
                         borderColor: "rgb(74, 166, 88)",
-                        fontWeight: "bold"
+                        fontWeight: "bold",
                       }}
                     >
                       <SettingsBackupRestoreIcon />
@@ -772,7 +786,7 @@ export const DashboardRenderIds = function() {
                       borderWidth: 1,
                       marginLeft: 3,
                       borderColor: "#2f65d0",
-                      fontWeight: "bold"
+                      fontWeight: "bold",
                     }}
                   >
                     <OpenInNewIcon />

@@ -87,7 +87,7 @@ class RecoverIdentityForm extends React.Component {
   }
 
   componentDidUpdate(lastProps) {
-    const { formStep, startFormData } = this.props;
+    const { formStep, startFormData, setContinueDisabled } = this.props;
 
     if (lastProps.formStep !== formStep && formStep === ENTER_DATA) {
       setContinueDisabled(true)

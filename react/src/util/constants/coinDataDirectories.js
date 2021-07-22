@@ -230,14 +230,14 @@ export const coinDataDirectories = {
     win32: "Komodo/OOT"
   },
   VRSCTEST: {
-    darwin: "Komodo/VRSCTEST",
-    linux: ".komodo/VRSCTEST",
-    win32: "Komodo/VRSCTEST"
+    darwin: "Komodo/vrsctest",
+    linux: ".komodo/vrsctest",
+    win32: "Komodo/vrsctest"
   },
-  VOTE2020: {
-    darwin: "Komodo/VOTE2020",
-    linux: ".komodo/VOTE2020",
-    win32: "Komodo/VOTE2020"
+  VOTE2021: {
+    darwin: "Komodo/VOTE2021",
+    linux: ".komodo/VOTE2021",
+    win32: "Komodo/VOTE2021"
   },
   WLC21: {
     darwin: "Komodo/WLC21",

@@ -22,7 +22,7 @@ import {
   PRIVATE_BALANCE,
   API_SUCCESS,
   API_ABORTED,
-  ETH
+  REVEAL_PRIVKEY
 } from "../../../util/constants/componentConstants";
 import { expireData, newSnackbar } from '../../../actions/actionCreators'
 import { conditionallyUpdateWallet } from '../../../actions/actionDispatchers'
@@ -71,6 +71,7 @@ class ReceiveCoin extends React.Component {
       addressSearchTerm: "",
       balanceCurr: props.selectedCurrency,
       qrAddress: null,
+      showingPrivkey: false,
       showZeroBalances:
         props.activeCoin.mode !== NATIVE ||
         this.isIdentity ||
@@ -103,7 +104,7 @@ class ReceiveCoin extends React.Component {
   
       if ((updateResult === API_SUCCESS || updateResult === API_ABORTED) &&
         supportedTypes[PRIVATE_ADDRS] && 
-        config.coin.native.includePrivateAddrs[id] && 
+        !config.coin.native.excludePrivateAddrs[id] && 
         addresses[PUBLIC_ADDRS].length > 0 &&
         addresses[PRIVATE_ADDRS].length === 0) {
         this.getNewAddress(PRIVATE_ADDRS, true)
@@ -163,8 +164,11 @@ class ReceiveCoin extends React.Component {
     this.table.scrollToRow(this.state.addresses[this.state.selectedMode].length - 1);
   }
 
-  toggleAddressQr(address) {
-    this.setState({ qrAddress: this.state.qrAddress ? null : address})
+  toggleAddressQr(address, privKey = false) {
+    this.setState({
+      qrAddress: this.state.qrAddress ? null : address,
+      showingPrivkey: privKey ? !this.state.showingPrivkey : false,
+    });
   }
 
   filterAddresses(addresses) {
@@ -230,6 +234,18 @@ class ReceiveCoin extends React.Component {
         this.props.dispatch(newSnackbar(ERROR_SNACK, e.message))
         console.error(e.message)
       })
+    } else if (keyType === REVEAL_PRIVKEY) {
+      getPrivkey(mode, id, address)
+      .then((res) => {
+        if (res.msg === 'error') throw new Error(res.result)
+        else {
+          this.toggleAddressQr(res.result, true)
+        }
+      })
+      .catch(e => {
+        this.props.dispatch(newSnackbar(ERROR_SNACK, e.message))
+        console.error(e.message)
+      })
     }
   }
 
@@ -243,6 +259,7 @@ class ReceiveCoin extends React.Component {
       return addressOptions;
     }
       
+    addressOptions.push(REVEAL_PRIVKEY);
     addressOptions.push(COPY_PRIVKEY);
       
     if (this.props.activeCoin.mode === NATIVE) {
@@ -253,10 +270,14 @@ class ReceiveCoin extends React.Component {
   }
 
   selectAddressOption(address, addrOption) {
-    if (addrOption === COPY_PUBKEY || addrOption === COPY_PRIVKEY) {
-      this.getKey(address, addrOption)
+    if (
+      addrOption === COPY_PUBKEY ||
+      addrOption === COPY_PRIVKEY ||
+      addrOption === REVEAL_PRIVKEY
+    ) {
+      this.getKey(address, addrOption);
     } else if (addrOption === GENERATE_QR) {
-      this.toggleAddressQr(address)
+      this.toggleAddressQr(address);
     }
   }
 
@@ -316,7 +337,7 @@ const mapStateToProps = (state) => {
   return {
     activeCoin: state.coins.activatedCoins[chainTicker],
     addresses: state.ledger.addresses[chainTicker],
-    includePrivate: state.settings.config.coin.native.includePrivateAddrs[chainTicker],
+    includePrivate: !state.settings.config.coin.native.excludePrivateAddrs[chainTicker],
     balances: state.ledger.balances[chainTicker],
     modalProps: state.modal[RECEIVE_COIN],
     config: state.settings.config,

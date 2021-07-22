@@ -2,8 +2,6 @@ import React from 'react';
 import TextField from "@material-ui/core/TextField";
 import ObjectToTable from '../../../../containers/ObjectToTable/ObjectToTable'
 import { ENTER_DATA } from '../../../../util/constants/componentConstants';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Button from '@material-ui/core/Button';
 
 export const RecoverIdentityFormRender = function() {
   const { formStep } = this.props

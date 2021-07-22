@@ -1,9 +1,18 @@
 import React from 'react';
 import MiningStyles from './mining.styles'
-import { DASHBOARD, MINING_POSTFIX, MS_IDLE, INFO_SNACK, MID_LENGTH_ALERT, CHAIN_FALLBACK_IMAGE } from '../../../../util/constants/componentConstants'
+import {
+  DASHBOARD,
+  MINING_POSTFIX,
+  MS_IDLE,
+  CHAIN_FALLBACK_IMAGE,
+  ADD_DEFAULT_COIN,
+  POST_SYNC,
+  FIX_CHARACTER
+} from "../../../../util/constants/componentConstants";
 import Tooltip from '@material-ui/core/Tooltip';
-import { newSnackbar } from '../../../../actions/actionCreators';
 import { openAddCoinModal } from '../../../../actions/actionDispatchers';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { normalizeNum } from '../../../../util/displayUtil/numberFormat';
 
 export const MiningCardRender = function(coinObj) {
   const {
@@ -12,7 +21,8 @@ export const MiningCardRender = function(coinObj) {
   } = this.props;
   const miningState = this.state.miningStates[coinObj.id] ? this.state.miningStates[coinObj.id] : MS_IDLE
 
-  const isActive = mainPathArray.includes(`${coinObj.id}_${MINING_POSTFIX}`);
+  const errorOrLoading = coinObj.status !== POST_SYNC
+  const isActive = mainPathArray.includes(`${coinObj.id}${FIX_CHARACTER}${MINING_POSTFIX}`);
   const coinBalance = balances[coinObj.id]
     ? balances[coinObj.id].native.public.confirmed +
       (balances[coinObj.id].native.private.confirmed
@@ -36,9 +46,28 @@ export const MiningCardRender = function(coinObj) {
           className={`card ${isActive ? "active-card" : "border-on-hover"}`}
           style={MiningStyles.cardInnerContainer}
         >
+          {errorOrLoading && (
+            <div
+              style={{
+                color: `rgb(49, 101, 212)`,
+                alignSelf: "flex-end",
+                height: 20,
+              }}
+            >
+              <CircularProgress
+                variant={"indeterminate"}
+                thickness={4.5}
+                size={20}
+                color="inherit"
+              />
+            </div>
+          )}
           <div
             className="card-body d-flex justify-content-between"
-            style={MiningStyles.cardBody}
+            style={{
+              ...MiningStyles.cardBody,
+              paddingTop: errorOrLoading ? 0 : 20,
+            }}
           >
             <div>
               <div
@@ -60,16 +89,16 @@ export const MiningCardRender = function(coinObj) {
               <Tooltip title={this.miningStateDescs[miningState]}>
                 <img
                   src={`assets/images/icons/status_icons/${miningState}.svg`}
-                  width="25px"
-                  height="25px"
+                  width="70px"
+                  height="30px"
                 />
               </Tooltip>
               <h5 className="text-right" style={MiningStyles.balance}>
                 {`${
-                  isNaN(coinBalance)
-                    ? coinBalance
-                    : Number(coinBalance.toFixed(8))
-                } ${coinObj.id}`}
+                    isNaN(coinBalance)
+                      ? coinBalance
+                      : normalizeNum(Number(coinBalance.toFixed(8)))[3]
+                  } ${coinObj.id}`}
               </h5>
             </div>
           </div>
@@ -83,16 +112,16 @@ export const MiningCardRender = function(coinObj) {
 export const MiningTabsRender = function() {
   return [
     {
-      title: "Add Coin",
-      icon: 'fa-plus',
-      onClick: openAddCoinModal,
-      isActive: () => false
-    },
-    {
       title: "Mining Dashboard",
       icon: 'fa-home',
       onClick: () => this.openDashboard(),
       isActive: () => this.props.mainPathArray.includes(DASHBOARD)
+    },
+    {
+      title: "Add Coin",
+      icon: 'fa-plus',
+      onClick: () => openAddCoinModal(ADD_DEFAULT_COIN),
+      isActive: () => false
     }
   ];
 }

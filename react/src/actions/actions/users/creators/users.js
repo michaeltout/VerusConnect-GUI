@@ -1,7 +1,16 @@
-import { saveUsers, loadUsers, backupUsers } from '../../../../util/api/users/userData'
+import { saveUsers, loadUsers } from '../../../../util/api/users/userData'
 import { encryptKey } from '../../../../util/api/users/pinData'
-import { SET_USERS, LOG_IN, LOG_OUT, SET_DEFAULT_USER, SET_AUTHENTICATION, SET_LOGOUT_USER, FINISH_LOGOUT_USER, SELECT_CURRENCY_FOR_COIN } from '../../../../util/constants/storeType'
-import { ETH, ELECTRUM, UX_SELECTOR, POST_AUTH } from '../../../../util/constants/componentConstants'
+import {
+  SET_USERS,
+  LOG_IN,
+  LOG_OUT,
+  SET_DEFAULT_USER,
+  SET_AUTHENTICATION,
+  SET_LOGOUT_USER,
+  FINISH_LOGOUT_USER,
+  SELECT_CURRENCY_FOR_COIN,
+} from "../../../../util/constants/storeType";
+import { ETH, ELECTRUM, UX_SELECTOR, POST_AUTH, NATIVE, ERC20 } from '../../../../util/constants/componentConstants'
 import { makeId } from '../../../../util/idGenerator'
 import { setMainNavigationPath } from '../../../actionCreators'
 import { authenticateSeed } from '../../../../util/api/users/userData'
@@ -20,6 +29,12 @@ export const getNewUser = () => {
     id: makeId(),
     lastCoins: {},
     startCoins: {},
+    startupOptions: {
+      [NATIVE]: {},
+      [ELECTRUM]: {},
+      [ETH]: {},
+      [ERC20]: {}
+    },
     startWithLastCoins: true
   }
 }
@@ -129,7 +144,8 @@ export const authenticateActiveUser = async (seed) => {
     return {
       type: SET_AUTHENTICATION,
       [ETH]: authResult,
-      [ELECTRUM]: authResult
+      [ELECTRUM]: authResult,
+      [ERC20]: authResult
     }
   } catch (e) {
     throw e

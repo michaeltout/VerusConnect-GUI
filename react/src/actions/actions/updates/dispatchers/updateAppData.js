@@ -13,8 +13,8 @@ export const getAppDataUpdateStatus = async () => {
   if (updateLog.msg != 'success' || updateLog.result.history == null) history = {};
   else history = updateLog.result.history
 
-  const changesDone = Object.keys(history)
-  const changesNeeded = Object.keys(UPDATE_LOG_HISTORY)
+  let changesDone = Object.keys(history).sort(compareVersions)
+  let changesNeeded = Object.keys(UPDATE_LOG_HISTORY).sort(compareVersions)
 
   if (changesDone.length < changesNeeded.length) {
     const requiredChanges = changesNeeded.filter((version) => !changesDone.includes(version))
@@ -65,4 +65,8 @@ export const makeAppDataChanges = async (changes) => {
   }
 
   await saveUpdateLog(UPDATE_LOG_HISTORY)
+}
+
+export const clearUpdateChanges = async () => {
+  await saveUpdateLog({})
 }

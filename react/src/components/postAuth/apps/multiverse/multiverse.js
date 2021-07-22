@@ -2,14 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   DASHBOARD,
-  CURRENCY_INFO,
-  ADD_COIN,
-  SELECT_COIN,
-  IS_VERUS,
   NATIVE,
   ERROR_SNACK,
   SUCCESS_SNACK,
   MID_LENGTH_ALERT,
+  IS_PBAAS,
 } from "../../../../util/constants/componentConstants";
 import Dashboard from './dashboard/dashboard'
 import {
@@ -105,7 +102,7 @@ class Multiverse extends React.Component {
     
     const updateCards = () => {
       const verusProtocolCoins = Object.values(activatedCoins).filter((coinObj) => {
-        return /*coinObj.options.tags.includes(IS_VERUS)*/ coinObj.id === 'VRSCTEST' && coinObj.mode === NATIVE
+        return coinObj.options.tags.includes(IS_PBAAS)
       })
   
       setCards(verusProtocolCoins.map((coinObj) => {
@@ -114,10 +111,6 @@ class Multiverse extends React.Component {
     }
 
     updateCards()
-  }
-
-  openAddCoinModal() {
-    this.props.dispatch(setModalNavigationPath(`${ADD_COIN}/${SELECT_COIN}`))
   }
 
   setTabs() {

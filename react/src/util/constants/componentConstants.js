@@ -3,6 +3,7 @@
 export const NATIVE = 'native'
 export const LITE = 'lite'
 export const ETH = 'eth'
+export const ERC20 = 'erc20'
 export const ELECTRUM = 'electrum'
 export const PRE_DATA = 'pre_data' // Before any API calls yield useful information (initialization)
 export const SYNCING = 'syncing' // Before blockchain is fully synced, while API does give useful info
@@ -51,8 +52,10 @@ export const API_SENDCURRENCY = 'sendcurrency'
 export const API_REGISTER_ID_NAME = 'register_id_name'
 export const API_REGISTER_ID = 'register_id'
 export const API_RECOVER_ID = 'recover_id'
+export const API_UPDATE_ID = 'update_id'
 export const API_REVOKE_ID = 'revoke_id'
 export const API_RECOVER_ID_PREFLIGHT = 'recover_id_preflight'
+export const API_UPDATE_ID_PREFLIGHT = 'update_id_preflight'
 export const API_REGISTER_ID_NAME_PREFLIGHT = 'register_id_name_preflight'
 export const API_REGISTER_ID_PREFLIGHT = 'register_id_preflight'
 export const API_DELETE_NAME_COMMITMENT = 'delete_name_commitment'
@@ -81,6 +84,7 @@ export const GET_SCHEMA = 'config/schema'
 export const ENCRYPT_KEY = 'encryptkey'
 export const DECRYPT_KEY = 'decryptkey'
 export const API_ACTIVATE_COIN = 'coins/activate'
+export const API_RESTART_COIN = 'coins/restart'
 export const API_REMOVE_COIN = 'remove_coin'
 export const CHECK_ZCASH_PARAMS = 'zcashparamsexist'
 export const DL_ZCASH_PARAMS = 'zcparamsdl'
@@ -174,6 +178,7 @@ export const SELECT_PROFILE = 'select_profile'
 export const UNLOCK_PROFILE = 'unlock_profile'
 export const APPS = 'apps'
 export const DASHBOARD = 'dashboard'
+export const FIX_CHARACTER = '|'
 export const CHAIN_POSTFIX = 'chain'
 export const ID_POSTFIX = 'identity'
 export const MINING_POSTFIX = 'mining'
@@ -187,6 +192,7 @@ export const SPLIT_MODAL = 'split_modal'
 
 export const ADD_COIN = 'add_coin'
 export const CHAIN_INFO = 'chain_info'
+export const CHAIN_OPTIONS = 'chain_options'
 export const PBAAS_CHAIN_INFO = 'pbaas_chain_info'
 export const RECEIVE_COIN = 'receive_coin'
 export const SEND_COIN = 'send_coin'
@@ -211,9 +217,11 @@ export const CONVERT_CURRENCY = 'convert_currency'
 export const DEFAULT_DUST_THRESHOLD = 0.00001
 export const DEFAULT_DAEMON = 'verusd'
 export const ZCASH_DAEMON = 'zcashd'
+export const PIRATE_DAEMON = 'pirated'
 export const KOMODO_DAEMON = 'komodod'
 export const ZCASH_CONF_NAME = 'zcash'
 export const KOMODO_CONF_NAME = 'komodo'
+export const VERUSTEST_CONF_NAME = 'vrsctest'
 
 // Coin wallet screen
 export const NATIVE_BALANCE = 'native'
@@ -257,6 +265,7 @@ export const CHAIN_FALLBACK_IMAGE = 'assets/images/cryptologo/defaultChain.png'
 // Addcoin native options
 export const NATIVE_RESCAN = '-rescan'
 export const NATIVE_REINDEX = '-reindex'
+export const NATIVE_ZAPWALLETTXES = '-zapwallettxes'
 export const NATIVE_STAKE = '-mint'
 export const NATIVE_MINE = '-gen'
 export const NATIVE_MINE_THREADS = '-genproclimit='
@@ -280,6 +289,7 @@ export const PUBLIC_ADDRS = 'public'
 export const COPY_PUBKEY = 'Copy public key'
 export const COPY_PRIVKEY = 'Copy private key'
 export const GENERATE_QR = 'Generate QR-Code'
+export const REVEAL_PRIVKEY = 'Reveal private key'
 export const SAPLING_ADDR = 'sapling'
 export const SPROUT_ADDR = 'sprout'
 
@@ -384,6 +394,11 @@ export const SEND_CURRENCY = 'sendcurrency'
 export const ERROR_NAME_REQUIRED = 'A name is required'
 export const ERROR_INVALID_Z_ADDR = 'Invalid private address'
 
+// Create identity defaults
+export const DEFAULT_REFERRAL_IDS = {
+  ["VRSC"]: 'Verus Coin Foundation@'
+}
+
 // Mining states
 export const MS_IDLE = 'idle'
 export const MS_OFF = 'off'
@@ -422,6 +437,12 @@ export const MINING_FUNCTIONS = 'mining_functions'
 export const SIMPLE_CONVERSION = 'simple_conversion'
 export const ADVANCED_CONVERSION = 'advanced_conversion'
 export const CONVERSION_OVERVIEW = 'conversion_overview'
+
+// Add Coin modal constants
+export const ADD_DEFAULT_COIN = 'add_default_preset'
+export const IMPORT_COIN = 'import_coin'
+export const ADD_PBAAS_COIN = 'add_pbaas_coin'
+
 
 
 

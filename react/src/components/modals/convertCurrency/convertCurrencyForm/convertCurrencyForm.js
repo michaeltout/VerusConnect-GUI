@@ -18,7 +18,7 @@ import {
   WHITELISTS,
 } from "../../../../util/constants/componentConstants";
 import { getCurrencyConversionPaths, getIdentity, sendCurrency } from '../../../../util/api/wallet/walletCalls';
-import { expireData, newSnackbar } from '../../../../actions/actionCreators';
+import { expireData, newSnackbar, updateLocalWhitelists } from '../../../../actions/actionCreators';
 
 class ConvertCurrencyForm extends React.Component {
   constructor(props) {
@@ -61,6 +61,7 @@ class ConvertCurrencyForm extends React.Component {
     this.updateSimpleFormAmount = this.updateSimpleFormAmount.bind(this)
     this.updateAdvancedFormAmount = this.updateAdvancedFormAmount.bind(this)
     this.isValidAmount = this.isValidAmount.bind(this)
+    this.addToWhitelist = this.addToWhitelist.bind(this)
 
     this.outputsEnd = null;
   }
@@ -90,7 +91,8 @@ class ConvertCurrencyForm extends React.Component {
         memo: "",
         preconvert: "",
         sendAmount: "",
-        receiveAmount: ""
+        receiveAmount: "",
+        exportto: ""
       }],
       estArrivals: [],
       conversionPaths: {},
@@ -124,13 +126,20 @@ class ConvertCurrencyForm extends React.Component {
           x.convertto != null &&
           this.state.conversionPaths[x.convertto] &&
           this.props.info.longestchain &&
-          this.state.conversionPaths[x.convertto].destination.startblock >
+          ((this.state.conversionPaths[x.convertto].destination.launchsystemid !==
+            this.state.conversionPaths[x.convertto].destination.spotterid)
+            ? 1
+            : this.state.conversionPaths[x.convertto].destination.startblock) >
             this.props.info.longestchain;
 
         arrivals.push(
           isPreconvert
-            ? this.state.conversionPaths[x.convertto].destination.startblock -
-                this.props.info.longestchain
+            ? ((this.state.conversionPaths[x.convertto].destination
+                .launchsystemid !==
+                this.state.conversionPaths[x.convertto].destination.spotterid)
+                ? 1
+                : this.state.conversionPaths[x.convertto].destination
+                    .startblock) - this.props.info.longestchain
             : null
         );
         return {
@@ -142,6 +151,7 @@ class ConvertCurrencyForm extends React.Component {
           refundto: isPreconvert ? x.address : null,
           memo: x.memo,
           preconvert: isPreconvert,
+          exportto: x.exportto
         };
       });
 
@@ -155,6 +165,27 @@ class ConvertCurrencyForm extends React.Component {
       setTimeout(() => {
         this.scrollToOutputBottom()
       }, 0);
+    }
+  }
+
+  async addToWhitelist(name) {
+    const {
+      whitelists,
+      activeCoin,
+      dispatch,
+    } = this.props;
+
+    const currentWhitelist = whitelists[activeCoin.id] || []
+
+    try {
+      dispatch(
+        await updateLocalWhitelists({
+          ...whitelists,
+          [activeCoin.id]: [...currentWhitelist, name],
+        })
+      );
+    } catch(e) {
+      dispatch(newSnackbar(ERROR_SNACK, e.message));
     }
   }
 
@@ -173,6 +204,7 @@ class ConvertCurrencyForm extends React.Component {
             refundto,
             memo,
             preconvert,
+            exportto
           } = output;
 
           return {
@@ -184,6 +216,7 @@ class ConvertCurrencyForm extends React.Component {
             refundto,
             memo,
             preconvert,
+            exportto
           };
         })
       );
@@ -299,7 +332,8 @@ class ConvertCurrencyForm extends React.Component {
         memo: "",
         preconvert: "",
         sendAmount: "",
-        receiveAmount: ""
+        receiveAmount: "",
+        exportto: ""
       }]
     })
   }
@@ -325,6 +359,9 @@ class ConvertCurrencyForm extends React.Component {
       this.updateOutput("convertto", selectedPathObj.destination.currencyid)
       if (selectedPathObj.via) this.updateOutput("via", selectedPathObj.via.currencyid)
       else this.updateOutput("via", null)
+
+      if (selectedPathObj.exportto) this.updateOutput("exportto", selectedPathObj.exportto)
+      else this.updateOutput("exportto", null)
     })
   }
 
@@ -365,7 +402,8 @@ class ConvertCurrencyForm extends React.Component {
       conversionPaths: {},
       selectedConversionPath: null
     }, async () => {
-      this.updateOutput("convertto", null)
+      this.updateOutput("convertto", "")
+      this.updateOutput("exportto", "")
       this.updateOutput("currency", source)
       await this.fetchConversionPaths(source)
       this.props.clearInitCurrency()
@@ -413,10 +451,8 @@ const mapStateToProps = (state) => {
       state.ledger.addresses[state.modal[CONVERT_CURRENCY].chainTicker],
     info: state.ledger.info[state.modal[CONVERT_CURRENCY].chainTicker],
     balances: state.ledger.balances[state.modal[CONVERT_CURRENCY].chainTicker],
-    whitelist:
-      state.localCurrencyLists[WHITELISTS][
-        state.modal[CONVERT_CURRENCY].chainTicker
-      ] || [],
+    activeCoin: state.coins.activatedCoins[state.modal[CONVERT_CURRENCY].chainTicker],
+    whitelists: state.localCurrencyLists[WHITELISTS]
   };
 };
 

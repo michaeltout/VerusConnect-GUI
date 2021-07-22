@@ -23,8 +23,15 @@ import {
   MID_LENGTH_ALERT,
   WARNING_SNACK,
   SEND_CURRENCY,
+  ERC20,
 } from "../../../util/constants/componentConstants";
-import { sendNative, sendEth, sendElectrum, getCurrency } from '../../../util/api/wallet/walletCalls';
+import {
+  sendNative,
+  sendEth,
+  sendElectrum,
+  getCurrency,
+  sendErc20,
+} from "../../../util/api/wallet/walletCalls";
 import { newSnackbar, expireData } from '../../../actions/actionCreators';
 
 class SendCoin extends React.Component {
@@ -128,6 +135,9 @@ class SendCoin extends React.Component {
           case ETH:  
             _txData = await sendEth(!formStep, chainTicker, toAddress, Number(amount));
             break;
+          case ERC20:  
+            _txData = await sendErc20(!formStep, chainTicker, toAddress, Number(amount));
+            break;
           case ELECTRUM:  
             _txData = await sendElectrum(
               !formStep,
@@ -154,8 +164,16 @@ class SendCoin extends React.Component {
 
               // Expire transactions and balances
               this.props.dispatch(expireData(chainTicker, API_GET_TRANSACTIONS))
-              this.props.dispatch(expireData(chainTicker, API_GET_BALANCES))
-              this.props.dispatch(expireData(chainTicker, API_GET_ZOPERATIONSTATUSES))
+
+              const expireBalancesAndOperations = () => {
+                this.props.dispatch(expireData(chainTicker, API_GET_BALANCES))
+                this.props.dispatch(expireData(chainTicker, API_GET_ZOPERATIONSTATUSES))
+              }
+              
+              expireBalancesAndOperations()
+              setTimeout(() => expireBalancesAndOperations(), 5000)
+              setTimeout(() => expireBalancesAndOperations(), 10000)
+              setTimeout(() => expireBalancesAndOperations(), 15000)
             }
 
             this.setState({ loading: false, txData: {status: API_SUCCESS, ..._txData.result}, formStep: formStep + 1 })

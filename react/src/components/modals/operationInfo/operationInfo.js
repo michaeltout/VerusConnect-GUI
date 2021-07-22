@@ -34,16 +34,13 @@ class OperationInfo extends React.Component {
       ["Daemon Command"]: opObj.method,
       ["Transaction ID"]: opObj.result ? opObj.result.txid : null,
       ["Creation Time"]: timeConverter(opObj.creation_time),
-      ["Completion time"]: `${opObj.execution_secs} seconds`,
+      ["Completion time"]:
+        opObj.execution_secs == null ? null : `${opObj.execution_secs} seconds`,
       ["Operation ID"]: opObj.id,
       ["From"]: params.from,
       ["To"]: params.address,
       ["Minted?"]:
-        params.minted != null
-          ? params.minted
-            ? "Yes"
-            : "No"
-          : null,
+        params.minted != null ? (params.minted ? "Yes" : "No") : null,
       ["Amount"]:
         params.amount != null
           ? params.amount

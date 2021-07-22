@@ -103,11 +103,31 @@ class RegisterIdentityForm extends React.Component {
   }
 
   setRecoverSelf() {
-    this.updateInput({target: {name: 'recoveryId', value: `${this.props.nameCommitmentObj.namereservation.name}@`}})
+    const chainTicker = this.props.activeCoin.id
+    this.updateInput({
+      target: {
+        name: "recoveryId",
+        value: `${this.props.nameCommitmentObj.namereservation.name}${
+          chainTicker === "VRSC" || chainTicker === "VRSCTEST"
+            ? ""
+            : `.${chainTicker}`
+        }@`,
+      },
+    });
   }
 
   setRevokeSelf() {
-    this.updateInput({target: {name: 'revocationId', value: `${this.props.nameCommitmentObj.namereservation.name}@`}})
+    const chainTicker = this.props.activeCoin.id
+    this.updateInput({
+      target: {
+        name: "revocationId",
+        value: `${this.props.nameCommitmentObj.namereservation.name}${
+          chainTicker === "VRSC" || chainTicker === "VRSCTEST"
+            ? ""
+            : `.${chainTicker}`
+        }@`,
+      },
+    });
   }
 
   generateTxDataDisplay() {

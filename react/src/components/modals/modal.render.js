@@ -16,10 +16,12 @@ import {
   CURRENCY_INFO,
   BASIC_MODAL,
   SPLIT_MODAL,
-  CONVERT_CURRENCY
+  CONVERT_CURRENCY,
+  CHAIN_OPTIONS
 } from "../../util/constants/componentConstants";
 import AddCoin from "./addCoin/addCoin";
 import ChainInfo from "./chainInfo/chainInfo";
+import ChainOptions from "./chainOptions/chainOptions";
 import IdInfo from "./idInfo/idInfo";
 import CurrencyInfo from "./currencyInfo/currencyInfo";
 import PbaasChainInfo from "./pbaasChainInfo/pbaasChainInfo";
@@ -45,6 +47,7 @@ export const ModalRender = function() {
     modalPathArray: this.state.modalPath,
     setModalLock: this.getModalLock,
     closeModal: this.closeModal,
+    isModalLocked: this.state.modalLock
   }
 
   const MODAL_MAP = {
@@ -60,6 +63,11 @@ export const ModalRender = function() {
     ),
     [CHAIN_INFO]: (
       <ChainInfo
+        {...COMPONENT_PROPS}
+      />
+    ),
+    [CHAIN_OPTIONS]: (
+      <ChainOptions
         {...COMPONENT_PROPS}
       />
     ),

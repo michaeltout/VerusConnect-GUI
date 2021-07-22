@@ -1,5 +1,5 @@
 import { getFiatPrice } from '../../../../util/api/wallet/walletCalls'
-import { NATIVE, ETH, ELECTRUM } from '../../../../util/constants/componentConstants'
+import { NATIVE, ETH, ELECTRUM, ERC20 } from '../../../../util/constants/componentConstants'
 import { SET_COIN_FIATPRICE, ERROR_COIN_FIATPRICE } from '../../../../util/constants/storeType'
 
 /**
@@ -15,7 +15,7 @@ export const updateFiatPrice = async (state, dispatch, mode, chainTicker) => {
   let fiatpriceAction = {chainTicker}
   let wasSuccess = true
 
-  if (mode === NATIVE || mode === ETH || mode === ELECTRUM) {  
+  if (mode === NATIVE || mode === ETH || mode === ELECTRUM || mode === ERC20) {  
     try {
       const apiResult = await getFiatPrice(mode, chainTicker)
 

@@ -17,13 +17,15 @@ import {
   ENABLE_START_AT_LAST_LOCATION,
   SET_LOGOUT_USER,
   FINISH_LOGOUT_USER,
-  SELECT_CURRENCY_FOR_COIN
+  SELECT_CURRENCY_FOR_COIN,
+  SET_STARTUP_OPTIONS
 } from '../util/constants/storeType'
 import {
   ETH,
   ELECTRUM,
   POST_AUTH,
-  UX_SELECTOR
+  UX_SELECTOR,
+  ERC20
 } from '../util/constants/componentConstants'
 
 export const users = (state = {
@@ -33,7 +35,8 @@ export const users = (state = {
   loggingOut: false,
   authenticated: {
     [ETH]: false,
-    [ELECTRUM]: false
+    [ELECTRUM]: false,
+    [ERC20]: false
   }
 }, action) => {
   switch (action.type) {
@@ -98,7 +101,8 @@ export const users = (state = {
         loggedIn: false,
         authenticated: {
           [ETH]: false,
-          [ELECTRUM]: false
+          [ELECTRUM]: false,
+          [ERC20]: false
         }
       }
     case ACTIVATE_COIN: 
@@ -140,6 +144,20 @@ export const users = (state = {
           startCoins: state.activeUser.lastCoins
         }
       }
+    case SET_STARTUP_OPTIONS:
+      return {
+        ...state,
+        activeUser: {
+          ...state.activeUser,
+          startupOptions: {
+            ...state.activeUser.startupOptions,
+            [action.mode]: {
+              ...state.activeUser.startupOptions[action.mode],
+              [action.chainTicker]: action.startupOptions
+            }
+          }
+        }
+      }
     case SET_LOGOUT_USER: 
       return {
         ...state,
@@ -153,8 +171,13 @@ export const users = (state = {
     case SET_AUTHENTICATION:
       return {
         ...state,
-        authenticated: {...state.authenticated, [ETH]: action[ETH], [ELECTRUM]: action[ELECTRUM]}
-      }
+        authenticated: {
+          ...state.authenticated,
+          [ETH]: action[ETH],
+          [ELECTRUM]: action[ELECTRUM],
+          [ERC20]: action[ERC20],
+        },
+      };
     default:
       return state;
   }

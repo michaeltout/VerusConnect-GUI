@@ -261,16 +261,58 @@ export const ReceiveAddressOptionsRender = function(address) {
 
 export const ReceiveAddressQrRender = function() {
   return (
-    <div style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      flexDirection: "column",
-      paddingTop: 80
-    }}>
-      <QRCode
-        value={ this.state.qrAddress }
-        size={ 320 } />
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        height: '100%'
+      }}
+    >
+      <div
+        style={{
+          overflowWrap: "anywhere",
+          textAlign: "center",
+          width: 500,
+          marginBottom: 20,
+        }}
+      >
+        {this.state.qrAddress}
+      </div>
+      <QRCode value={this.state.qrAddress} size={320} />
+      {this.state.showingPrivkey && (
+        <React.Fragment>
+          <div
+            style={{
+              overflowWrap: "anywhere",
+              textAlign: "center",
+              width: 500,
+              marginBottom: 20,
+              marginTop: 20,
+            }}
+          >
+            {
+              <i
+                className="fas fa-exclamation-triangle"
+                style={{ paddingRight: 6, color: "rgb(236,124,43)" }}
+              />
+            }
+            {"WARNING, DO NOT SHARE!"}
+            {
+              <i
+                className="fas fa-exclamation-triangle"
+                style={{ paddingLeft: 6, color: "rgb(236,124,43)" }}
+              />
+            }
+          </div>
+          <div>
+            {
+              "This is a private key, anyone with access to this will have access to your funds!"
+            }
+          </div>
+        </React.Fragment>
+      )}
       <button
         className="btn btn-primary"
         type="button"
@@ -282,12 +324,13 @@ export const ReceiveAddressQrRender = function() {
           borderColor: "rgb(49, 101, 212)",
           paddingRight: 20,
           paddingLeft: 20,
-          marginTop: 40,
-        }}>
+          marginTop: 20,
+        }}
+      >
         {"Back"}
       </button>
     </div>
-  )
+  );
 }
 
 

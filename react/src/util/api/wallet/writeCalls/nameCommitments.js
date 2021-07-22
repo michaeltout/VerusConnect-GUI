@@ -33,16 +33,24 @@ export const registerIdName = async (
   preflight,
   chainTicker,
   name,
+  primaryAddress,
   referralId
 ) => {
   try {
     return await getApiData(
       NATIVE,
       preflight ? API_REGISTER_ID_NAME_PREFLIGHT : API_REGISTER_ID_NAME,
-      {
+      primaryAddress != null ? {
         chainTicker,
         name,
-        referralId
+        referralId,
+        primaryAddress,
+        delocalize: true
+      } : {
+        chainTicker,
+        name,
+        referralId,
+        delocalize: true
       }
     );
   } catch (e) {

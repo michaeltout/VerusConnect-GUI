@@ -15,10 +15,19 @@ export const normalizeNum = (num, decimals = 2) => {
 		displayNum = displayNum / 1000
     steps++
 	}
+
+  const normalized = Number(displayNum.toFixed(decimals))
+  const postfix =
+    steps > -1 && steps < numPostfixes.length
+      ? numPostfixes[steps]
+      : steps > -1
+      ? `e${(steps + 1) * 3}`
+      : "";
   
   return [
-    Number(displayNum.toFixed(decimals)),
+    normalized,
     (steps + 1) * 3,
-    steps > -1 && steps < numPostfixes.length ? numPostfixes[steps] : (steps > -1 ? `e${(steps + 1) * 3}` : '')
+    postfix,
+    `${normalized}${postfix}`
   ];
 }

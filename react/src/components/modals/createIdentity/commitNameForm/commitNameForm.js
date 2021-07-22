@@ -14,19 +14,46 @@ import {
   ERROR_NAME_REQUIRED,
   ERROR_INVALID_ID,
   ENTER_DATA,
-  LONG_ALERT
+  LONG_ALERT,
+  ERROR_INVALID_ADDR
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar } from '../../../../actions/actionCreators';
+import { checkPublicAddress } from '../../../../util/addrUtils';
 
 class CommitNameForm extends React.Component {
   constructor(props) {
     super(props);
+    // TODO: Let the user create an ID with more then one address
+    const { addresses, chainTicker } = props
+
+    const initAddresslist = () => {
+      let addressList =
+        addresses[chainTicker] == null
+          ? []
+          : addresses[chainTicker][PUBLIC_ADDRS].filter(
+              (addr) => addr.tag === PUBLIC_ADDRS
+            ).map((addressObj) => {
+              return {
+                label: `${addressObj.address} (${addressObj.balances.native} ${chainTicker})`,
+                address: addressObj.address,
+                balance: addressObj.balances.native,
+              };
+            });
+
+      return addressList
+    }
+
+    const addressListFormatted = initAddresslist()
+
     this.state = {
+      addrList: addressListFormatted,
       name: '',
       referralId: '',
+      primaryAddress: '',
       formErrors: {
         referralId: [],
-        name: []
+        name: [],
+        primaryAddress: ''
       },
       txDataDisplay: {}
     }
@@ -93,18 +120,32 @@ class CommitNameForm extends React.Component {
   updateFormErrors() {
     //TODO: Add more errors in here by checking referralId
     const { setContinueDisabled } = this.props
-    const { referralId, name } = this.state
+    const { referralId, name, primaryAddress } = this.state
     let formErrors = {
       referralId: [],
-      name: []
+      name: [],
+      primaryAddress: []
     }
 
     if (name != null && name.length == 0) {
       formErrors.name.push(ERROR_NAME_REQUIRED)
     }  
 
-    if (referralId != null && referralId.length > 0 && referralId[referralId.length - 1] !== '@' && referralId[0] !== 'i') {
-      formErrors.referralId.push(ERROR_INVALID_ID)
+    if (
+      referralId != null &&
+      referralId.length > 0 &&
+      referralId[referralId.length - 1] !== "@" &&
+      referralId[0] !== "i"
+    ) {
+      formErrors.referralId.push(ERROR_INVALID_ID);
+    }
+
+    if (
+      primaryAddress != null &&
+      primaryAddress.length > 0 &&
+      !checkPublicAddress(primaryAddress, "VRSC")
+    ) {
+      formErrors.primaryAddress.push(ERROR_INVALID_ADDR);
     }
 
     this.setState({ formErrors }, () => {
@@ -122,18 +163,22 @@ class CommitNameForm extends React.Component {
   }
 
   updateInput(e, value = false) {
-    this.setAndUpdateState({ [e.target.name]: value === false ? e.target.value : (value == null ? '' : value)})
+    this.setAndUpdateState({
+      [e.target.name]:
+        value === false ? e.target.value : value == null ? "" : value,
+    });
   }
 
   updateFormData() {
     const { chainTicker } = this.props
-    const { name, referralId } = this.state
+    const { name, referralId, primaryAddress } = this.state
 
     this.props.setFormData({
       chainTicker,
       name,
-      referralId
-    })
+      referralId,
+      primaryAddress
+    });
   }
 
   render() {

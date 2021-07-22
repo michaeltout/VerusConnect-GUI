@@ -1,12 +1,19 @@
 import React from 'react';
 import VerusIdStyles from './verusId.styles'
-import { DASHBOARD, ID_POSTFIX, CHAIN_FALLBACK_IMAGE } from '../../../../util/constants/componentConstants'
+import {
+  DASHBOARD,
+  CHAIN_FALLBACK_IMAGE,
+  ADD_DEFAULT_COIN,
+  POST_SYNC
+} from "../../../../util/constants/componentConstants";
 import { openAddCoinModal } from '../../../../actions/actionDispatchers';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 export const IdCardRender = function(coinObj) {
   const { identities } = this.props
   const { activeId } = this.state
   const coinIdentities = identities[coinObj.id] || []
+  const errorOrLoading = coinObj.status !== POST_SYNC
 
   return (
     <div
@@ -26,9 +33,28 @@ export const IdCardRender = function(coinObj) {
           }`}
           style={VerusIdStyles.cardInnerContainer}
         >
+          {errorOrLoading && (
+            <div
+              style={{
+                color: `rgb(49, 101, 212)`,
+                alignSelf: "flex-end",
+                height: 20,
+              }}
+            >
+              <CircularProgress
+                variant={"indeterminate"}
+                thickness={4.5}
+                size={20}
+                color="inherit"
+              />
+            </div>
+          )}
           <div
             className="card-body d-flex justify-content-between"
-            style={VerusIdStyles.cardBody}
+            style={{
+              ...VerusIdStyles.cardBody,
+              paddingTop: errorOrLoading ? 0 : 20,
+            }}
           >
             <div style={{ width: "100%" }}>
               <div
@@ -108,16 +134,16 @@ export const IdCardRender = function(coinObj) {
 export const IdTabsRender = function() {
   return [
     {
-      title: "Add Coin",
-      icon: 'fa-plus',
-      onClick: openAddCoinModal,
-      isActive: () => false
-    },
-    {
       title: "VerusID Dashboard",
       icon: 'fa-home',
       onClick: () => this.openDashboard(),
       isActive: () => this.props.mainPathArray.includes(DASHBOARD)
+    },
+    {
+      title: "Add Coin",
+      icon: 'fa-plus',
+      onClick: () => openAddCoinModal(ADD_DEFAULT_COIN),
+      isActive: () => false
     }
   ];
 }

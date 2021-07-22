@@ -1,7 +1,4 @@
 import React from "react";
-import TextField from "@material-ui/core/TextField";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import { getSimpleCoinArray } from "../../../../util/coinData";
 import CustomCheckbox from '../../../../containers/CustomCheckbox/CustomCheckbox'
 import {
   LITE,
@@ -13,14 +10,20 @@ import {
   NATIVE_STAKE,
   NATIVE_MINE_THREADS,
   NATIVE_REINDEX,
-  IS_VERUS
+  IS_VERUS,
+  ERC20,
+  ADD_PBAAS_COIN,
+  IMPORT_COIN,
+  ADD_DEFAULT_COIN
 } from "../../../../util/constants/componentConstants";
+import ImportCoinSelector from "./selectors/importCoinSelector/importCoinSelector";
+import DefaultCoinSelector from "./selectors/defaultCoinSelector/defaultCoinSelector";
+import PbaasChainSelector from "./selectors/pbaasChainSelector/pbaasChainSelector";
 
 export const SelectCoinRender = function() {  
   return (
     <div
       style={{
-        paddingBottom: 60,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -32,25 +35,24 @@ export const SelectCoinRender = function() {
 };
 
 export const SelectCoinForm = function() {
+  const COMPONENT_PROPS = {
+    setModalLock: this.props.setModalLock,
+    setSelectedCoin: this.getSelectedCoin,
+    clearCoin: this.clearCoin,
+    setSelectedCoinSource: this.props.setSelectedCoinSource,
+    chooseCoin: this.chooseCoin,
+    selectedCoin: this.state.selectedCoin
+  }
+
+  const COIN_SELECTORS = {
+    [ADD_PBAAS_COIN]: <PbaasChainSelector {...COMPONENT_PROPS} />,
+    [IMPORT_COIN]: <ImportCoinSelector {...COMPONENT_PROPS} />,
+    [ADD_DEFAULT_COIN]: <DefaultCoinSelector {...COMPONENT_PROPS} />,
+  };
+
   return (
     <React.Fragment>
-      <h1
-        style={{
-          margin: 0,
-          paddingBottom: 40,
-          fontSize: 20,
-          color: "rgb(0,0,0)",
-        }}
-      >
-        {this.state.addFromFile
-          ? "Enter a coin file to add (this should be provided to you)"
-          : "Choose coin to add"}
-      </h1>
-      {this.state.addFromFile ? (
-        <input type="file" id="coin_upload" style={{paddingLeft: '15%'}} onChange={this.setFiles} />
-      ) : (
-        RenderCoinDropdown.call(this)
-      )}
+      {COIN_SELECTORS[this.props.selectedCoinSource]}
       <button
         className="btn btn-primary"
         type="button"
@@ -69,23 +71,6 @@ export const SelectCoinForm = function() {
       >
         {"Continue"}
       </button>
-      {this.state.addFromFile && <button
-        className="btn btn-primary"
-        type="button"
-        onClick={this.toggleAddFromFile}
-        style={{
-          fontSize: 14,
-          backgroundColor: "rgb(49, 101, 212)",
-          borderWidth: 1,
-          borderColor: "rgb(49, 101, 212)",
-          paddingRight: 20,
-          paddingLeft: 20,
-          marginTop: 40,
-          fontWeight: "bold",
-        }}
-      >
-        {"Cancel"}
-      </button>}
     </React.Fragment>
   );
 }
@@ -93,7 +78,8 @@ export const SelectCoinForm = function() {
 export const SelectModeForm = function() {
   const availableModes = this.state.chosenCoin.available_modes
   const isNative = availableModes[NATIVE]
-  const isLite = availableModes[ETH] || availableModes[ELECTRUM]
+  const isLite =
+    availableModes[ETH] || availableModes[ELECTRUM] || availableModes[ERC20];
   const { selectedMode } = this.state
 
   return (
@@ -290,41 +276,6 @@ export const SelectModeForm = function() {
           </div>
         </div>
       )}
-      {/* {
-        this.props.enableNspv && 
-        this.state.selectedMode === LITE && 
-        window.bridge.nspvPorts[this.state.chosenCoin.id] > -1 && (
-        <div
-          className="d-flex d-sm-flex d-md-flex d-lg-flex flex-column align-items-center align-items-sm-center align-items-md-center justify-content-lg-center align-items-lg-center"
-          style={{ paddingTop: 28 }}
-        >
-          <div>
-            <div>
-              <div
-                className="form-check d-flex align-items-center"
-                style={{ padding: 0 }}
-              >
-                <CustomCheckbox
-                  checkboxProps={{
-                    checked: this.state.electrumOptions[ELECTRUM_NSPV],
-                    onChange: this.checkBoxElectrum,
-                    name: ELECTRUM_NSPV
-                  }}
-                  colorChecked="rgb(49, 101, 212)"
-                  colorUnchecked="rgb(49, 101, 212)"
-                />
-                <label
-                  className="form-check-label"
-                  htmlFor="formCheck-1"
-                  style={{ color: "rgb(0,0,0)" }}
-                >
-                  {"Use nSPV daemon"}
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-      )} */}
       <div className="d-flex d-sm-flex justify-content-center justify-content-sm-center">
         <button
           className="btn btn-primary"
@@ -346,40 +297,4 @@ export const SelectModeForm = function() {
       </div>
     </div>
   );
-}
-
-export const RenderCoinDropdown = function() {
-  return (
-    <Autocomplete
-      options={getSimpleCoinArray()}
-      getOptionLabel={option => option.name}
-      style={{ width: 300 }}
-      value={this.state.selectedCoin}
-      onChange={(e, value) => { this.setState({selectedCoin: value}) }}
-      renderInput={params => (
-        <TextField
-          {...params}
-          label="Add Coin"
-          variant="outlined"
-          fullWidth
-        />
-      )}
-      renderOption={option => {
-        return (
-          <h1
-            className="d-lg-flex align-items-lg-center"
-            style={{ marginBottom: 0, fontSize: 16 }}>
-            <img
-              src={`assets/images/cryptologo/${option.protocol.toLowerCase()}/${option.id.toLowerCase()}.png`}
-              width="20px"
-              height="20px"
-              style={{ marginRight: 5, marginBottom: 2 }}
-              onError={this.switchToDefaultSrc}
-            />
-            {option.name}
-          </h1>
-        );
-      }}
-    />
-  )
 }

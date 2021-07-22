@@ -1,5 +1,13 @@
 import { getApiData } from '../../callCreator'
-import { API_SENDTX, API_TX_PREFLIGHT, NATIVE, ELECTRUM, ETH, API_SUCCESS } from '../../../constants/componentConstants'
+import {
+  API_SENDTX,
+  API_TX_PREFLIGHT,
+  NATIVE,
+  ELECTRUM,
+  ETH,
+  API_SUCCESS,
+  ERC20,
+} from "../../../constants/componentConstants";
 import { getNetworkFees } from '../../network/networkFees';
 
 /**
@@ -97,6 +105,32 @@ export const sendEth = async (
 ) => {
   return await getApiData(
     ETH,
+    preflight ? API_TX_PREFLIGHT : API_SENDTX,
+    {
+      chainTicker,
+      toAddress,
+      amount
+    },
+    "post"
+  );
+};
+
+//TODO: Add variable tx speed by fee
+/**
+ * Send or preflight an erc20 send transaction
+ * @param {Boolean} preflight If true, nothing will be sent, and information for the user to confirm will be returned
+ * @param {String} chainTicker The chainticker to send from 
+ * @param {String} toAddress The address to send to
+ * @param {Number} amount The amount to send
+ */
+ export const sendErc20 = async (
+  preflight = true,
+  chainTicker,
+  toAddress,
+  amount
+) => {
+  return await getApiData(
+    ERC20,
     preflight ? API_TX_PREFLIGHT : API_SENDTX,
     {
       chainTicker,
