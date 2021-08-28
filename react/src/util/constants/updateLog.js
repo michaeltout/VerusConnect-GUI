@@ -1,12 +1,13 @@
 import { loadUsers, saveUsers } from "../api/users/userData";
 import { getNewUser } from "../../actions/actionCreators";
 import { equalizeProperties } from "../objectUtil";
-import { ELECTRUM, NATIVE, ETH } from "./componentConstants";
+import { ELECTRUM, NATIVE, ETH, ERC20 } from "./componentConstants";
+import { saveLocalBlacklist, saveLocalWhitelist } from "../api/currencies/localCurrencyData";
 
 // Describes the changes that take place during certain versions
 export const UPDATE_LOG_HISTORY = {
   ["0.7.2-10"]: {
-    breaking: false,
+    breaking: true,
     desc:
       "Add startupOptions field to the user object.",
   },
@@ -25,20 +26,61 @@ export const UPDATE_FUNCTIONS = {
       let loadedUsers = await loadUsers()
   
       for (let userId in loadedUsers) {
-        if (loadedUsers[userId].startupOptions == null) {
-          const replacementUser = {...loadedUsers[userId]}
+        // Add property to userObjs
+        let replacementUser
 
-          replacementUser.startupOptions = {
+        // Add startupOptions key to user
+        if (loadedUsers[userId].startupOptions == null) {
+          replacementUser = {changed: true, result: {...loadedUsers[userId]}}
+
+          replacementUser.result.startupOptions = {
             [NATIVE]: {},
             [ELECTRUM]: {},
-            [ETH]: {}
+            [ETH]: {},
+            [ERC20]: {}
+          }
+        } else replacementUser = {changed: false, result: loadedUsers[userId]}
+
+        // Reset navigation locations due to change in coin postfix seperator
+        replacementUser.changed = true
+        replacementUser.result.startLocation = "post_auth/apps/wallet/dashboard"
+        replacementUser.result.lastNavigationLocation = "post_auth/apps/wallet/dashboard"
+
+        let totalCoins = {
+          ...replacementUser.result.lastCoins,
+          ...replacementUser.result.startCoins
+        }
+
+        // Replace ETH mode with ERC20 mode for ERC20 coins
+        for (let chainTicker in totalCoins) {
+          if (
+            totalCoins[chainTicker].available_modes[ETH] === true &&
+            totalCoins[chainTicker].id !== "ETH" && 
+            totalCoins[chainTicker].mode === ETH
+          ) {
+            replacementUser.changed = true;
+            totalCoins[chainTicker].available_modes[ERC20] = true;
+            totalCoins[chainTicker].available_modes[ETH] = false;
+            totalCoins[chainTicker].mode = ERC20;
           }
 
-          loadedUsers[userId] = replacementUser
+          if (replacementUser.result.lastCoins[chainTicker] != null) {
+            replacementUser.result.lastCoins[chainTicker] = totalCoins[chainTicker]
+          }
+
+          if (replacementUser.result.startCoins[chainTicker] != null) {
+            replacementUser.result.startCoins[chainTicker] = totalCoins[chainTicker]
+          }
+        }
+  
+        if (replacementUser.changed) {
+          loadedUsers[userId] = replacementUser.result
         }
       }
      
       await saveUsers(loadedUsers)
+      await saveLocalBlacklist({})
+      await saveLocalWhitelist({})
     } catch (e) {
       throw e
     }

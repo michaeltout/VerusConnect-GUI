@@ -9,7 +9,8 @@ import {
   NATIVE,
   ETH,
   ELECTRUM,
-  LITE
+  LITE,
+  ERC20
 } from "../../../../../util/constants/componentConstants";
 import CustomCheckbox from '../../../../../containers/CustomCheckbox/CustomCheckbox';
 import CustomChip from '../../../../../containers/CustomChip/CustomChip';
@@ -127,39 +128,53 @@ export const ProfileSettingsStartCoinsRender = function() {
   const coinIsSelected = Object.keys(selectedStartCoins).includes(selectedCoinObj.id)
 
   return (
-    <div style={{ display: "flex", justifyContent: "space-between", paddingLeft: 16, paddingRight: 16 }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        paddingLeft: 16,
+        paddingRight: 16,
+      }}
+    >
       <div style={{ flex: 1 }}>
         <h6
           className="card-title"
-          style={{ fontSize: 14, margin: 0, width: "max-content" }}>
+          style={{ fontSize: 14, margin: 0, width: "max-content" }}
+        >
           Coins started on launch
         </h6>
         <div style={{ display: "flex", flexWrap: "wrap" }}>
-          { !displayUser.startWithLastCoins &&
+          {!displayUser.startWithLastCoins &&
             Object.keys(displayUser.startCoins).map((chainTicker, index) => {
-              const coinObj = displayUser.startCoins[chainTicker]
+              const coinObj = displayUser.startCoins[chainTicker];
 
               return (
                 <div style={{ padding: 5, paddingLeft: 0 }} key={index}>
                   <CustomChip
                     chipProps={{
-                      label: `${coinObj.id} (${coinObj.mode === NATIVE ? NATIVE : LITE})`,
-                      icon: <i className="fas fa-circle" style={{ color: coinObj.themeColor }} />
+                      label: `${coinObj.id} (${
+                        coinObj.mode === NATIVE ? NATIVE : LITE
+                      })`,
+                      icon: (
+                        <i
+                          className="fas fa-circle"
+                          style={{ color: coinObj.themeColor }}
+                        />
+                      ),
                     }}
                     handleDelete={() => this.removeStartCoin(coinObj.id)}
                     rootProps={{
-                      height: 32
+                      height: 32,
                     }}
                   />
                 </div>
               );
-            })
-          }
+            })}
         </div>
       </div>
       <div
         className="d-flex d-sm-flex d-md-flex d-lg-flex flex-column align-items-center align-items-sm-center align-items-md-center justify-content-lg-center align-items-lg-center"
-        style={{ maxWidth: "min-content"}}
+        style={{ maxWidth: "min-content" }}
       >
         <div style={{ maxWidth: 250 }}>
           <div>
@@ -198,32 +213,41 @@ export const ProfileSettingsStartCoinsRender = function() {
                 colorUnchecked="rgb(49, 101, 212)"
               />
               <select
-                value={ this.state.selectedCoin }
-                className="custom-select custom-select-lg" 
+                value={this.state.selectedCoin}
+                className="custom-select custom-select-lg"
                 style={{
-                  fontSize: 14
+                  fontSize: 14,
                 }}
-                onChange={ this.updateCoinSelection }>
-                  <option 
-                    key={PLACEHOLDER}
-                    value={PLACEHOLDER}
-                    selected
-                    disabled>{"Select Coin"}</option>
-                  {this.startCoinOptions.map((coin, index) => {
-                    return (
-                      <option 
-                        key={index} 
-                        value={coin.id}>{`${coin.name} (${coin.id})`}</option>)
-                  })}
+                onChange={this.updateCoinSelection}
+              >
+                <option key={PLACEHOLDER} value={PLACEHOLDER} selected disabled>
+                  {"Select Coin"}
+                </option>
+                {this.startCoinOptions.map((coin, index) => {
+                  return (
+                    <option
+                      key={index}
+                      value={coin.id}
+                    >{`${coin.name} (${coin.id})`}</option>
+                  );
+                })}
               </select>
             </div>
           </div>
-          <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: 10 }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              paddingTop: 10,
+            }}
+          >
             <button
               className="btn btn-primary"
               type="button"
-              onClick = { () => this.addStartCoin(NATIVE) }
-              disabled = { !selectedCoinObj.available_modes[NATIVE] || coinIsSelected }
+              onClick={() => this.addStartCoin(NATIVE)}
+              disabled={
+                !selectedCoinObj.available_modes[NATIVE] || coinIsSelected
+              }
               style={{
                 fontSize: 14,
                 backgroundColor: "rgb(49, 101, 212)",
@@ -231,28 +255,43 @@ export const ProfileSettingsStartCoinsRender = function() {
                 borderColor: "rgb(49, 101, 212)",
                 minWidth: 103,
                 marginRight: 10,
-              }}>
+              }}
+            >
               {"Add Native"}
             </button>
             <button
               className="btn btn-primary"
               type="button"
-              onClick = { () => this.addStartCoin(selectedCoinObj.available_modes[ETH] ? ETH : ELECTRUM) }
-              disabled = { (!selectedCoinObj.available_modes[ETH] && !selectedCoinObj.available_modes[ELECTRUM]) || coinIsSelected }
+              onClick={() =>
+                this.addStartCoin(
+                  selectedCoinObj.available_modes[ETH]
+                    ? ETH
+                    : selectedCoinObj.available_modes[ERC20]
+                    ? ERC20
+                    : ELECTRUM
+                )
+              }
+              disabled={
+                (!selectedCoinObj.available_modes[ETH] &&
+                  !selectedCoinObj.available_modes[ELECTRUM] &&
+                  !selectedCoinObj.available_modes[ERC20]) ||
+                coinIsSelected
+              }
               style={{
                 fontSize: 14,
                 backgroundColor: "rgb(49, 101, 212)",
                 borderWidth: 1,
                 borderColor: "rgb(49, 101, 212)",
-                minWidth: 103
-              }}>
+                minWidth: 103,
+              }}
+            >
               {"Add Lite"}
             </button>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export const ProfileSettingsStartupOptionsRender = function() {

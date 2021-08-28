@@ -10,7 +10,7 @@ import {
   FINISH_LOGOUT_USER,
   SELECT_CURRENCY_FOR_COIN,
 } from "../../../../util/constants/storeType";
-import { ETH, ELECTRUM, UX_SELECTOR, POST_AUTH, NATIVE } from '../../../../util/constants/componentConstants'
+import { ETH, ELECTRUM, UX_SELECTOR, POST_AUTH, NATIVE, ERC20 } from '../../../../util/constants/componentConstants'
 import { makeId } from '../../../../util/idGenerator'
 import { setMainNavigationPath } from '../../../actionCreators'
 
@@ -31,7 +31,8 @@ export const getNewUser = () => {
     startupOptions: {
       [NATIVE]: {},
       [ELECTRUM]: {},
-      [ETH]: {}
+      [ETH]: {},
+      [ERC20]: {}
     },
     startWithLastCoins: true
   }
@@ -130,6 +131,26 @@ export const loginUser = async (userObj) => {
  */
 export const logout = () => {
   return { type: LOG_OUT }
+}
+
+/**
+ * Returns an action to authenticate the active
+ * user based on a seed for both electrum and eth
+ * modes. This allows them to add coins in those modes
+ */
+export const authenticateActiveUser = async (seed) => {
+  try {
+    const authResult = await authenticateSeed(seed)
+
+    return {
+      type: SET_AUTHENTICATION,
+      [ETH]: authResult,
+      [ELECTRUM]: authResult,
+      [ERC20]: authResult
+    }
+  } catch (e) {
+    throw e
+  }
 }
 
 /**

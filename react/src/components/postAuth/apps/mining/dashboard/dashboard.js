@@ -3,10 +3,13 @@ import { connect } from 'react-redux';
 import { 
   DashboardRender,
 } from './dashboard.render';
-import { startMining, startStaking, stopMining, stopStaking } from '../../../../../util/api/wallet/walletCalls'
 import Store from '../../../../../store'
-import { setModalNavigationPath, newSnackbar, expireData } from '../../../../../actions/actionCreators';
-import { ADD_COIN, SELECT_COIN, NATIVE, API_GET_INFO, API_GET_MININGINFO, ERROR_SNACK, MID_LENGTH_ALERT, API_GET_CPU_TEMP } from '../../../../../util/constants/componentConstants';
+import {
+  NATIVE,
+  API_GET_INFO,
+  API_GET_MININGINFO,
+  API_GET_CPU_TEMP,
+} from "../../../../../util/constants/componentConstants";
 import { conditionallyUpdateWallet } from '../../../../../actions/actionDispatchers';
 
 class Dashboard extends React.Component {
@@ -53,10 +56,6 @@ class Dashboard extends React.Component {
     if (lastProps.miningInfo != this.props.miningInfo) {
       this.updateMineStakeCoins()
     }
-  }
-
-  openAddCoinModal() {
-    this.props.dispatch(setModalNavigationPath(`${ADD_COIN}/${SELECT_COIN}`))
   }
 
   render() {

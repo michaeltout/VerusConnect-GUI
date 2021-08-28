@@ -4,7 +4,6 @@ import {
   TxInfoRender,
   ExplorerButtonRender,
 } from './txInfo.render';
-import { explorerList } from 'agama-wallet-lib/src/coin-helpers'
 import {
   TX_INFO,
   TX_MESSAGE,
@@ -14,6 +13,7 @@ import {
   TX_EXPLORER
 } from "../../../util/constants/componentConstants";
 import { decodeMemo } from '../../../util/txUtils/zTxUtils';
+import { EXPLORER_LIST } from '../../../util/explorers';
 const { shell } = window.bridge
 
 class TxInfo extends React.Component {
@@ -101,7 +101,7 @@ const mapStateToProps = (state) => {
   return {
     txObj: state.modal[TX_INFO].txObj ? state.modal[TX_INFO].txObj : {},
     info: state.ledger.info[chainTicker] ? state.ledger.info[chainTicker] : {},
-    explorerUrl: explorerList[chainTicker],
+    explorerUrl: EXPLORER_LIST[chainTicker],
     displayTx: state.modal[TX_INFO].displayTx ? state.modal[TX_INFO].displayTx : {},
   };
 };

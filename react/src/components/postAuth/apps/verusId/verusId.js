@@ -1,12 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { DASHBOARD, CHAIN_POSTFIX, ADD_COIN, SELECT_COIN, IS_VERUS, ID_POSTFIX, NATIVE, ERROR_SNACK, SUCCESS_SNACK, ID_INFO, MID_LENGTH_ALERT } from '../../../../util/constants/componentConstants'
+import {
+  DASHBOARD,
+  IS_VERUS,
+  ID_POSTFIX,
+  NATIVE,
+  ERROR_SNACK,
+  SUCCESS_SNACK,
+  MID_LENGTH_ALERT,
+  FIX_CHARACTER,
+} from "../../../../util/constants/componentConstants";
 import Dashboard from './dashboard/dashboard'
 import {
   IdCardRender,
   IdTabsRender
 } from './verusId.render'
-import { setMainNavigationPath, setModalNavigationPath, newSnackbar, setModalParams } from '../../../../actions/actionCreators'
+import { setMainNavigationPath, newSnackbar } from '../../../../actions/actionCreators'
 import { getPathParent, getLastLocation } from '../../../../util/navigationUtils'
 import FormDialog from '../../../../containers/FormDialog/FormDialog'
 import { getIdentity } from '../../../../util/api/wallet/walletCalls'
@@ -58,10 +67,14 @@ class VerusId extends React.Component {
         )
       );
 
-      if (lastLocation != null && lastLocation.length > 0 && lastLocation[0].includes("_identity")) {
-        const lastLocationData = lastLocation[0].split('_')
-        const coinId = lastLocationData[1]
-        const identityIndex = lastLocationData[0]
+      if (
+        lastLocation != null &&
+        lastLocation.length > 0 &&
+        lastLocation[0].includes(`${FIX_CHARACTER}${ID_POSTFIX}`)
+      ) {
+        const lastLocationData = lastLocation[0].split(FIX_CHARACTER);
+        const coinId = lastLocationData[1];
+        const identityIndex = lastLocationData[0];
 
         this.props.dispatch(
           setMainNavigationPath(
@@ -72,8 +85,13 @@ class VerusId extends React.Component {
                 : DASHBOARD
             }`
           )
-        ); 
-      } else this.props.dispatch(setMainNavigationPath(`${this.props.mainPathArray.join('/')}/${DASHBOARD}`))
+        );
+      } else
+        this.props.dispatch(
+          setMainNavigationPath(
+            `${this.props.mainPathArray.join("/")}/${DASHBOARD}`
+          )
+        );
     } 
   }
 
@@ -144,7 +162,7 @@ class VerusId extends React.Component {
     }
 
     if (walletApp) {
-      const pathDestination = walletApp.split('_') 
+      const pathDestination = walletApp.split(FIX_CHARACTER) 
       let activeId = {chainTicker: null, idIndex: null}
 
       if (pathDestination.length > 2 && pathDestination[2] === ID_POSTFIX) {
@@ -160,12 +178,14 @@ class VerusId extends React.Component {
     } else updateCards()
   }
 
-  openAddCoinModal() {
-    this.props.dispatch(setModalNavigationPath(`${ADD_COIN}/${SELECT_COIN}`))
-  }
-
   openId(chainTicker, idIndex) {
-    this.props.dispatch(setMainNavigationPath(`${getPathParent(this.props.mainPathArray)}/${idIndex}_${chainTicker}_${ID_POSTFIX}`))
+    this.props.dispatch(
+      setMainNavigationPath(
+        `${getPathParent(
+          this.props.mainPathArray
+        )}/${idIndex}${FIX_CHARACTER}${chainTicker}${FIX_CHARACTER}${ID_POSTFIX}`
+      )
+    );
   }
 
   openDashboard() {

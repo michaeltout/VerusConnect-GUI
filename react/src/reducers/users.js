@@ -23,7 +23,8 @@ import {
   ETH,
   ELECTRUM,
   POST_AUTH,
-  UX_SELECTOR
+  UX_SELECTOR,
+  ERC20
 } from '../util/constants/componentConstants'
 
 export const users = (state = {
@@ -31,6 +32,11 @@ export const users = (state = {
   activeUser: null,
   loggedIn: false,
   loggingOut: false,
+  authenticated: {
+    [ETH]: false,
+    [ELECTRUM]: false,
+    [ERC20]: false
+  }
 }, action) => {
   switch (action.type) {
     case SET_USERS: 
@@ -94,7 +100,8 @@ export const users = (state = {
         loggedIn: false,
         authenticated: {
           [ETH]: false,
-          [ELECTRUM]: false
+          [ELECTRUM]: false,
+          [ERC20]: false
         }
       }
     case ACTIVATE_COIN: 
@@ -160,6 +167,16 @@ export const users = (state = {
         ...state,
         loggingOut: false
       }
+    case SET_AUTHENTICATION:
+      return {
+        ...state,
+        authenticated: {
+          ...state.authenticated,
+          [ETH]: action[ETH],
+          [ELECTRUM]: action[ELECTRUM],
+          [ERC20]: action[ERC20],
+        },
+      };
     default:
       return state;
   }

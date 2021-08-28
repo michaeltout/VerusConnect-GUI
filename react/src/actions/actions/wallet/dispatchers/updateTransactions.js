@@ -1,5 +1,5 @@
 import { getTransactions } from '../../../../util/api/wallet/walletCalls'
-import { NATIVE, ETH, ELECTRUM } from '../../../../util/constants/componentConstants'
+import { NATIVE, ETH, ELECTRUM, ERC20 } from '../../../../util/constants/componentConstants'
 import { SET_COIN_TRANSACTIONS, ERROR_COIN_TRANSACTIONS } from '../../../../util/constants/storeType'
 
 /**
@@ -15,27 +15,33 @@ export const updateTransactions = async (state, dispatch, mode, chainTicker) => 
   let transactionAction = {chainTicker}
   let wasSuccess = true
 
-  if (mode === NATIVE || mode === ETH || mode === ELECTRUM) {
-    //if (mode === NATIVE && !state.settings.config.coin.native.includePrivateTransactions.hasOwnProperty(chainTicker)) throw new Error(`${chainTicker} has no config setting set for includePrivateTransactions`)
-    
+  if (mode === NATIVE || mode === ETH || mode === ELECTRUM || mode === ERC20) {    
     try {
       const apiResult = await getTransactions(
         mode,
         chainTicker,
         null,
         mode === NATIVE
-          ? state.settings.config.coin.native.includePrivateTransactions[
+          ? !state.settings.config.coin.native.excludePrivateTransactions[
               chainTicker
             ]
           : null,
         state.settings.config.general.native.maxTxListLength
       );
       
-      if (apiResult.msg === 'success') {
-        transactionAction = {...transactionAction, type: SET_COIN_TRANSACTIONS, transactions: apiResult.result}
+      if (apiResult.msg === "success") {
+        transactionAction = {
+          ...transactionAction,
+          type: SET_COIN_TRANSACTIONS,
+          transactions: apiResult.result,
+        };
       } else {
-        transactionAction = {...transactionAction, type: ERROR_COIN_TRANSACTIONS, result: apiResult.result}
-        wasSuccess = false
+        transactionAction = {
+          ...transactionAction,
+          type: ERROR_COIN_TRANSACTIONS,
+          result: apiResult.result,
+        };
+        wasSuccess = false;
       }
     } catch (e) {
       throw e

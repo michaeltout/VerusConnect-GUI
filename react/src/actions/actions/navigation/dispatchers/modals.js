@@ -1,7 +1,15 @@
 import Store from '../../../../store'
 import { setModalParams } from '../../modal/creators/modal';
 import { setModalNavigationPath } from '../creators/navigator';
-import { ID_INFO, CURRENCY_INFO, ADD_COIN, SELECT_COIN, BASIC_MODAL } from '../../../../util/constants/componentConstants';
+import {
+  ID_INFO,
+  CURRENCY_INFO,
+  ADD_COIN,
+  SELECT_COIN,
+  BASIC_MODAL,
+  SPLIT_MODAL,
+  ADD_DEFAULT_COIN,
+} from "../../../../util/constants/componentConstants";
 
 export const openModal = (modal, modalParams = {}, modalType = BASIC_MODAL) => {
   Store.dispatch(setModalParams(modal, modalParams));
@@ -24,6 +32,12 @@ export const openIdentityCard = (activeIdentity, chainTicker) => {
   openModal(ID_INFO, { chainTicker, activeIdentity, openIdentityCard, openCurrencyCard })
 }
 
-export const openAddCoinModal = () => {
-  openModal(`${ADD_COIN}/${SELECT_COIN}`)
+export const openAddCoinModal = (mode = ADD_DEFAULT_COIN) => {
+  openModal(
+    `${ADD_COIN}/${SELECT_COIN}`,
+    {
+      mode,
+    },
+    SPLIT_MODAL
+  );
 }

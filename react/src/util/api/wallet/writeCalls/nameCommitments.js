@@ -44,11 +44,13 @@ export const registerIdName = async (
         chainTicker,
         name,
         referralId,
-        primaryAddress
+        primaryAddress,
+        delocalize: true
       } : {
         chainTicker,
         name,
-        referralId
+        referralId,
+        delocalize: true
       }
     );
   } catch (e) {

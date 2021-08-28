@@ -112,7 +112,7 @@ export const SplitModalRender = function(content) {
                             >
                               <h4
                                 style={{
-                                  ...WalletStyles.cardCoinName,
+                                  ...WalletStyles.miniButtonName,
                                   color: "white",
                                   padding: 0,
                                   paddingTop: 3,

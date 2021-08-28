@@ -6,7 +6,8 @@ import {
   PRE_DATA,
   SYNCING,
   POST_SYNC,
-  API_GET_INFO
+  API_GET_INFO,
+  ERC20
 } from "../../../../util/constants/componentConstants";
 import { setCoinStatus } from '../../../actionCreators'
 
@@ -14,12 +15,13 @@ export const activateChainLifecycle = (mode, chainTicker) => {
   const ON_COMPLETE_FUNCTIONS = {
     [NATIVE]: nativeGetInfoOnComplete,
     [ELECTRUM]: {},
-    [ETH]: {} //TODO: FINISH
+    [ETH]: {}, //TODO: FINISH,
+    [ERC20]: {}
   }
 
   if (mode === NATIVE) {
     refreshCoinIntervals(mode, chainTicker, {[API_GET_INFO]: {update_expired_oncomplete: ON_COMPLETE_FUNCTIONS[mode]}})
-  } else if (mode === ETH || mode === ELECTRUM) {
+  } else if (mode === ETH || mode === ELECTRUM || mode === ERC20) {
     refreshCoinIntervals(mode, chainTicker)
   } else {
     throw new Error(`${mode} is not a supported coin mode.`)
@@ -39,9 +41,7 @@ export const nativeGetInfoOnComplete = (state, dispatch, chainTicker) => {
 
   if (
     typeof getInfoResult !== "object" ||
-    !getInfoResult.hasOwnProperty("blocks") ||
-    (getInfoResult.hasOwnProperty("longestchain") &&
-      getInfoResult.longestchain === 0)
+    !getInfoResult.hasOwnProperty("blocks")
   ) {
     if (currentStatus !== PRE_DATA) {
       dispatch(setCoinStatus(chainTicker, PRE_DATA));
@@ -49,7 +49,8 @@ export const nativeGetInfoOnComplete = (state, dispatch, chainTicker) => {
     }
   } else if (
     getInfoResult.longestchain != null &&
-    getInfoResult.longestchain > getInfoResult.blocks
+    (getInfoResult.longestchain === 0 ||
+      getInfoResult.longestchain > getInfoResult.blocks)
   ) {
     if (currentStatus !== SYNCING) {
       dispatch(setCoinStatus(chainTicker, SYNCING));

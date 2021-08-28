@@ -9,7 +9,7 @@ import { getCurrency } from '../../util/api/wallet/walletCalls';
 async function openCurrencyInfo(rowData, identities) {
   const fullCurrency = await getCurrency(
     NATIVE,
-    rowData.currency.parent_name,
+    rowData.currency.spottername,
     rowData.currency.currencyid
   )
   
@@ -19,8 +19,8 @@ async function openCurrencyInfo(rowData, identities) {
       currency:
         fullCurrency.msg === "success" ? fullCurrency.result : rowData.currency,
     },
-    rowData.currency.parent_name,
-    identities[rowData.currency.parent_name],
+    rowData.currency.spottername,
+    identities[rowData.currency.spottername],
     true
   );
 }
@@ -72,17 +72,24 @@ function getDisplayCurrencies(currencies, info, blacklists, identities) {
   currencies.map((currency) => {
 
     if (
-      !(blacklists != null &&
-      blacklists[currency.parent_name] != null &&
-      blacklists[currency.parent_name].includes(currency.name))
+      !(
+        blacklists != null &&
+        blacklists[currency.spottername] != null &&
+        blacklists[currency.spottername].some(
+          (blacklistedCurrency) =>
+            blacklistedCurrency.toUpperCase() === currency.name.toUpperCase()
+        )
+      )
     ) {
-      currencyComps.push(getCurrencyInfo(
-        currency,
-        info[currency.parent_name]
-          ? info[currency.parent_name].longestchain
-          : -1,
-        identities[currency.parent_name]
-      ))
+      currencyComps.push(
+        getCurrencyInfo(
+          currency,
+          info[currency.spottername]
+            ? info[currency.spottername].longestchain
+            : -1,
+          identities[currency.spottername]
+        )
+      );
     }
   });
 
@@ -99,6 +106,7 @@ function CurrenciesCard(props) {
   const [verusCoins, setVerusCoins] = useState(Object.values(activatedCoins).filter((coinObj) => {
     return coinObj.options.tags.includes(IS_VERUS) && coinObj.mode === NATIVE
   }))
+
   const currencyArray =
     activeTicker == null
       ? Object.values(allCurrencies).flat()
@@ -109,7 +117,7 @@ function CurrenciesCard(props) {
       setDisplayCurrencies(
         filterCurrencies(getDisplayCurrencies(currencyArray, info, blacklists, identities), currencySearchTerm)
       ),
-    [allCurrencies, info, blacklists, activatedCoins, identities]
+    [allCurrencies, info, blacklists, activatedCoins, identities, activeTicker]
   );
 
   useEffect(

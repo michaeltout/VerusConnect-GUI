@@ -1,5 +1,5 @@
 import { getAllBalances } from '../../../../util/api/wallet/walletCalls'
-import { NATIVE, ETH, ELECTRUM } from '../../../../util/constants/componentConstants'
+import { NATIVE, ETH, ELECTRUM, ERC20 } from '../../../../util/constants/componentConstants'
 import { SET_COIN_BALANCES, ERROR_COIN_BALANCES } from '../../../../util/constants/storeType'
 
 /**
@@ -15,11 +15,17 @@ export const updateAllBalances = async (state, dispatch, mode, chainTicker) => {
   let balanceAction = {chainTicker}
   let wasSuccess = true
 
-  if (mode === NATIVE || mode === ETH || mode === ELECTRUM) {
-    //if (mode === NATIVE && !state.settings.config.coin.native.includePrivateBalances.hasOwnProperty(chainTicker)) throw new Error(`${chainTicker} has no config setting set for includePrivateBalances`)
-    
+  if (mode === NATIVE || mode === ETH || mode === ELECTRUM || mode === ERC20) {    
     try {
-      const apiResult = await getAllBalances(mode, chainTicker, mode === NATIVE ? state.settings.config.coin.native.includePrivateBalances[chainTicker] : null)
+      const apiResult = await getAllBalances(
+        mode,
+        chainTicker,
+        mode === NATIVE
+          ? !state.settings.config.coin.native.excludePrivateBalances[
+              chainTicker
+            ]
+          : null
+      );
       if (apiResult.msg === 'success') {
         balanceAction = {...balanceAction, type: SET_COIN_BALANCES, balances: apiResult.result}
       } else {

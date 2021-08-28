@@ -1,6 +1,23 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { DASHBOARD, ADD_COIN, SELECT_COIN, NATIVE, MINING_POSTFIX, MS_MERGE_MINING_STAKING, MS_MINING_STAKING, MS_MINING, MS_STAKING, MS_MERGE_MINING, MS_OFF, MS_IDLE, ERROR_SNACK, MID_LENGTH_ALERT, API_GET_MININGINFO, MINING_FUNCTIONS, API_ERROR } from '../../../../util/constants/componentConstants'
+import {
+  DASHBOARD,
+  NATIVE,
+  MINING_POSTFIX,
+  MS_MERGE_MINING_STAKING,
+  MS_MINING_STAKING,
+  MS_MINING,
+  MS_STAKING,
+  MS_MERGE_MINING,
+  MS_OFF,
+  MS_IDLE,
+  ERROR_SNACK,
+  MID_LENGTH_ALERT,
+  API_GET_MININGINFO,
+  MINING_FUNCTIONS,
+  API_ERROR,
+  FIX_CHARACTER
+} from "../../../../util/constants/componentConstants";
 import Dashboard from './dashboard/dashboard'
 import MiningWallet from './miningWallet/miningWallet'
 import {
@@ -8,7 +25,13 @@ import {
   MiningTabsRender
 } from './mining.render'
 import Store from '../../../../store'
-import { setMainNavigationPath, setModalNavigationPath, expireData, newSnackbar, startLoadingMiningFunctions, finishLoadingMiningFunctions } from '../../../../actions/actionCreators'
+import {
+  setMainNavigationPath,
+  expireData,
+  newSnackbar,
+  startLoadingMiningFunctions,
+  finishLoadingMiningFunctions,
+} from "../../../../actions/actionCreators";
 import { getPathParent, getLastLocation } from '../../../../util/navigationUtils'
 import { stopStaking, startStaking, stopMining, startMining } from '../../../../util/api/wallet/walletCalls';
 import { conditionallyUpdateWallet } from '../../../../actions/actionDispatchers';
@@ -55,8 +78,10 @@ class Mining extends React.Component {
         );
   
         const lastCoin =
-          lastLocation != null && lastLocation.length > 0 && lastLocation[0].includes("_mining")
-            ? lastLocation[0].split("_")[0]
+          lastLocation != null &&
+          lastLocation.length > 0 &&
+          lastLocation[0].includes(`${FIX_CHARACTER}${MINING_POSTFIX}`)
+            ? lastLocation[0].split(FIX_CHARACTER)[0]
             : null;
   
         this.props.dispatch(setMainNavigationPath(`${this.props.mainPathArray.join('/')}/${
@@ -208,10 +233,6 @@ class Mining extends React.Component {
     })
   }
 
-  openAddCoinModal() {
-    this.props.dispatch(setModalNavigationPath(`${ADD_COIN}/${SELECT_COIN}`))
-  }
-
   openDashboard() {
     this.props.dispatch(setMainNavigationPath(`${getPathParent(this.props.mainPathArray)}/${DASHBOARD}`))
   }
@@ -221,7 +242,13 @@ class Mining extends React.Component {
   }
 
   openCoin(wallet) {
-    this.props.dispatch(setMainNavigationPath(`${getPathParent(this.props.mainPathArray)}/${wallet}_${MINING_POSTFIX}`))
+    this.props.dispatch(
+      setMainNavigationPath(
+        `${getPathParent(
+          this.props.mainPathArray
+        )}/${wallet}${FIX_CHARACTER}${MINING_POSTFIX}`
+      )
+    );
   }
 
   render() {
@@ -243,7 +270,7 @@ class Mining extends React.Component {
           />
         );
       else {
-        const pathDestination = walletApp.split("_");
+        const pathDestination = walletApp.split(FIX_CHARACTER);
 
         if (pathDestination.length > 1 && pathDestination[1] === MINING_POSTFIX)
           return (

@@ -8,8 +8,15 @@ import {
   initLocalBlacklists,
   initLocalWhitelists
 } from '../../actions/actionCreators';
-import { refreshSystemIntervals, openTextDialog, closeTextDialog, getAppDataUpdateStatus, makeAppDataChanges } from '../../actions/actionDispatchers'
-import { POST_AUTH, PRE_AUTH, SELECT_PROFILE, ERROR_SNACK, MID_LENGTH_ALERT, NATIVE, UNLOCK_PROFILE, API_GET_CURRENT_USER } from '../../util/constants/componentConstants';
+import {
+  refreshSystemIntervals,
+  openTextDialog,
+  closeTextDialog,
+  getAppDataUpdateStatus,
+  makeAppDataChanges,
+  clearUpdateChanges
+} from "../../actions/actionDispatchers";
+import { POST_AUTH, PRE_AUTH, SELECT_PROFILE, ERROR_SNACK, MID_LENGTH_ALERT, NATIVE, UNLOCK_PROFILE } from '../../util/constants/componentConstants';
 import Config from '../../config';
 import { connect } from 'react-redux';
 import PostAuth from '../postAuth/postAuth'
@@ -45,15 +52,16 @@ class Main extends React.Component {
           closeTextDialog,
           [
             {
-              title: "Dismiss",
+              title: "Dismiss & Continue",
               onClick: async () => {              
                 closeTextDialog()
+                await clearUpdateChanges()
                 await this.initialize()
               },
             },
           ],
           `You are running a version of Verus Desktop that may not recognize the file structures in your Verus Desktop data folder. This could lead to unexpected behaviour. To avoid this, quit now, and upgrade to version ${appDataUpdateStatus.latestChange} or later.`,
-          "Incompatible Version Detected"
+          "Incompatible Version Detected — Continue at Own Risk"
         );
       } else {
         if (appDataUpdateStatus.requiredChanges.length > 0) {
@@ -151,7 +159,7 @@ class Main extends React.Component {
     if (this.state.error != null) throw this.state.error
   }
 
-  async componentDidMount() {
+  async componentDidMount() {    
     const appVersion = window.bridge.appBasicInfo;
 
     this.setState({ initializing: true });

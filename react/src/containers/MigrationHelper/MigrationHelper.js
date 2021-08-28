@@ -24,11 +24,11 @@ class MigrationHelper extends React.Component {
     const fee = await this.props.fetchFee()
     let displayFee = '??'
 
-    if (fee.msg === 'success') displayFee = BigNumber(fee.result._hex).dividedBy("1000000000000000000").toString()
+    if (fee.msg === 'success') displayFee = BigNumber(fee.result.hex).dividedBy("1000000000000000000").toString()
 
     if (balances.msg === 'success') {
       this.setState({
-        amount: BigNumber(balances.result[1]._hex).dividedBy("1000000000000000000"),
+        amount: BigNumber(balances.result[1].hex).dividedBy("1000000000000000000"),
         displayFee
       })
     }

@@ -21,7 +21,7 @@ import {
   API_REGISTER_ID_NAME,
   API_RECOVER_ID,
   API_REGISTER_ID,
-  DEFAULT_REFERRAL_ID,
+  DEFAULT_REFERRAL_IDS,
   API_UPDATE_ID
 } from "../../../util/constants/componentConstants";
 import { registerIdName, registerId, recoverId, updateId } from '../../../util/api/wallet/walletCalls';
@@ -90,8 +90,8 @@ class CreateIdentity extends React.Component {
   }
 
   selectReferralIdentity(inputReferral) {
-    if (inputReferral.length === 0 || inputReferral == null) {
-      return DEFAULT_REFERRAL_ID
+    if (inputReferral == null || inputReferral.length === 0) {
+      return DEFAULT_REFERRAL_IDS[this.props.modalProps.chainTicker]
     } else return inputReferral
   }
 
