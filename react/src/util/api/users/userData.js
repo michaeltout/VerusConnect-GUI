@@ -9,7 +9,9 @@ import {
   ELECTRUM,
   POST,
   LOG_OUT,
-  BACKUP_USERS
+  BACKUP_USERS,
+  API_LOGIN_USER,
+  CHECK_AUTHENTICATION
 } from "../../constants/componentConstants";
 
 /**

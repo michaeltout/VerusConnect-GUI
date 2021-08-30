@@ -17,7 +17,8 @@ import {
   SET_LOGOUT_USER,
   FINISH_LOGOUT_USER,
   SELECT_CURRENCY_FOR_COIN,
-  SET_STARTUP_OPTIONS
+  SET_STARTUP_OPTIONS,
+  SET_AUTHENTICATION
 } from '../util/constants/storeType'
 import {
   ETH,
