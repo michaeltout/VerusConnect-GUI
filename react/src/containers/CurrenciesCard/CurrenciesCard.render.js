@@ -190,9 +190,11 @@ export const CurrencyTableRender = (displayCurrencies, openCurrencyInfo, props) 
                   }}
                 >
                   {rowData.currency.endblock === 0
-                    ? `Permanent ${rowData.isToken ? "Token" : "Blockchain"}`
+                    ? `Permanent ${
+                        rowData.isToken ? (rowData.isGateway ? "Gateway" : "Token") : "Blockchain"
+                      }`
                     : `Temporary ${
-                        rowData.isToken ? "Token" : "Blockchain"
+                        rowData.isToken ? (rowData.isGateway ? "Gateway" : "Token") : "Blockchain"
                       }`}
                 </div>
               );

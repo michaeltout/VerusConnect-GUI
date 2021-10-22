@@ -476,11 +476,15 @@ export const ConvertCurrencyFormSimpleRender = function() {
                       this.state.conversionPaths[id].via
                         ? ` (${
                             this.state.conversionPaths[id].exportto
-                              ? "off-chain "
+                              ? this.state.conversionPaths[id].gateway
+                                ? "gateway "
+                                : "off-chain "
                               : ""
                           }via ${this.state.conversionPaths[id].via.name})`
                         : this.state.conversionPaths[id].exportto
-                        ? " (off-chain)"
+                        ? this.state.conversionPaths[id].gateway
+                          ? " (gateway)"
+                          : " (off-chain)"
                         : ""
                     }`}
                   </h1>
