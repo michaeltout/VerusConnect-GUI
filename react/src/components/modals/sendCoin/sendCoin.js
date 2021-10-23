@@ -35,6 +35,7 @@ import {
 import { newSnackbar, expireData } from '../../../actions/actionCreators';
 import { checkFlag } from '../../../util/flagUtils';
 import { IS_GATEWAY_FLAG } from '../../../util/constants/flags';
+import { checkAddrValidity } from '../../../util/addrUtils';
 
 class SendCoin extends React.Component {
   constructor(props) {
@@ -130,7 +131,8 @@ class SendCoin extends React.Component {
                 mintnew: mint,
                 exportto:
                   fromCurrencyInfo != null &&
-                  checkFlag(fromCurrencyInfo.currency.options, IS_GATEWAY_FLAG)
+                  checkFlag(fromCurrencyInfo.currency.options, IS_GATEWAY_FLAG) &&
+                  checkAddrValidity(toAddress, ETH, "ETH") // TODO: Generalize
                     ? fromCurrencyInfo.currency.currencyid
                     : undefined,
               }
