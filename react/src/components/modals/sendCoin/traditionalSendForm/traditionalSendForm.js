@@ -41,6 +41,8 @@ import {
   LONG_ALERT
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar } from '../../../../actions/actionCreators';
+import { checkFlag } from '../../../../util/flagUtils';
+import { IS_GATEWAY_FLAG } from '../../../../util/constants/flags';
 
 class TraditionalSendForm extends React.Component {
   constructor(props) {
@@ -287,7 +289,7 @@ class TraditionalSendForm extends React.Component {
 
   updateFormErrors() {
     const { chainTicker, activeCoin, setContinueDisabled } = this.props
-    const { amount, sendFrom, sendTo } = this.state
+    const { amount, sendFrom, sendTo, fromCurrencyInfo } = this.state
     const { mode } = activeCoin
     let formErrors = {
       amount: [],
@@ -301,9 +303,18 @@ class TraditionalSendForm extends React.Component {
       formErrors.amount.push(ERROR_AMOUNT_MORE_THAN_BALANCE)
     }
 
-    if (sendTo == null || (sendTo.length !== 0 && !checkAddrValidity(sendTo, mode, chainTicker))) {
-      formErrors.sendTo.push(ERROR_INVALID_ADDR)
-    }  
+    // Do an address validity check only if fromCurrency isn't a PBaaS
+    // gateway (PBaaS gateways can support multiple address types)
+    // TODO: Check the address types supported by the pbaas gateway
+    if (
+      !(
+        fromCurrencyInfo.currency &&
+        checkFlag(fromCurrencyInfo.currency.options, IS_GATEWAY_FLAG)
+      ) &&
+      (sendTo == null || (sendTo.length !== 0 && !checkAddrValidity(sendTo, mode, chainTicker)))
+    ) {
+      formErrors.sendTo.push(ERROR_INVALID_ADDR);
+    }
     
     if (sendTo[0] === 'z' && (sendTo.length === 95 || sendTo.length === 78)) {
       if (!sendFrom.address) formErrors.sendFrom.push(ERROR_Z_AND_NO_FROM)

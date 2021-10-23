@@ -33,6 +33,8 @@ import {
   sendErc20,
 } from "../../../util/api/wallet/walletCalls";
 import { newSnackbar, expireData } from '../../../actions/actionCreators';
+import { checkFlag } from '../../../util/flagUtils';
+import { IS_GATEWAY_FLAG } from '../../../util/constants/flags';
 
 class SendCoin extends React.Component {
   constructor(props) {
@@ -113,7 +115,7 @@ class SendCoin extends React.Component {
         } = formData;
   
         switch (mode) {
-          case NATIVE:
+          case NATIVE:            
             _txData = await sendNative(
               !formStep,
               chainTicker,
@@ -124,11 +126,13 @@ class SendCoin extends React.Component {
               Number(customFee),
               memo != null && memo.length > 0 ? memo : undefined,
               {
-                currency:
-                  fromCurrencyInfo != null
-                    ? fromCurrencyInfo.currency.name
+                currency: fromCurrencyInfo != null ? fromCurrencyInfo.currency.name : undefined,
+                mintnew: mint,
+                exportto:
+                  fromCurrencyInfo != null &&
+                  checkFlag(fromCurrencyInfo.currency.options, IS_GATEWAY_FLAG)
+                    ? fromCurrencyInfo.currency.currencyid
                     : undefined,
-                mintnew: mint
               }
             );
             break;
