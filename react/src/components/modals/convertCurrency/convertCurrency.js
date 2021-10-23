@@ -31,7 +31,7 @@ class ConvertCurrency extends React.Component {
 
     props.setModalHeader("Convert currencies")
     props.setModalLinks([
-      {label: 'Learn more about currencies', onClick: () => shell.openExternal("https://verus.io/technology/currencies")}
+      {label: 'Learn more about currencies', onClick: () => shell.openExternal("https://verus.io/global-network")}
     ])
     this.updateModalButtons(props)
   }
