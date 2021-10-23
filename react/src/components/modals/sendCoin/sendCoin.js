@@ -131,9 +131,12 @@ class SendCoin extends React.Component {
                 mintnew: mint,
                 exportto:
                   fromCurrencyInfo != null &&
-                  checkFlag(fromCurrencyInfo.currency.options, IS_GATEWAY_FLAG) &&
+                  ((fromCurrencyInfo.currency.nativecurrencyid != null &&
+                    fromCurrencyInfo.currency.nativecurrencyid.type === 9) ||
+                    fromCurrencyInfo.currency.currencyid ===
+                      "iJhCezBExJHvtyH3fGhNnt2NhU4Ztkf2yq") &&
                   checkAddrValidity(toAddress, ETH, "ETH") // TODO: Generalize
-                    ? fromCurrencyInfo.currency.currencyid
+                    ? "iCtawpxUiCc2sEupt7Z4u8SDAncGZpgSKm" // vETH
                     : undefined,
               }
             );

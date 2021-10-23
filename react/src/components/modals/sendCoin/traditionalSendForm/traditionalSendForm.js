@@ -308,8 +308,11 @@ class TraditionalSendForm extends React.Component {
     // TODO: Check the address types supported by the pbaas gateway
     if (
       !(
-        fromCurrencyInfo.currency &&
-        checkFlag(fromCurrencyInfo.currency.options, IS_GATEWAY_FLAG)
+        fromCurrencyInfo != null &&
+        fromCurrencyInfo.currency != null &&
+        ((fromCurrencyInfo.currency.nativecurrencyid != null &&
+          fromCurrencyInfo.currency.nativecurrencyid.type === 9) ||
+          fromCurrencyInfo.currency.currencyid === "iJhCezBExJHvtyH3fGhNnt2NhU4Ztkf2yq")
       ) &&
       (sendTo == null || (sendTo.length !== 0 && !checkAddrValidity(sendTo, mode, chainTicker)))
     ) {
