@@ -198,7 +198,7 @@ export const DashboardRenderTable = function() {
                     ? portfolioItem.balanceFiat.toFixed(2)
                     : "-"
                 } ${this.props.fiatCurrency}`}</td>
-                <td
+                {/* <td
                   style={
                     portfolioItem.balanceFiat &&
                     portfolioItem.priceChange7d != null
@@ -212,9 +212,9 @@ export const DashboardRenderTable = function() {
                     portfolioItem.balanceFiat &&
                     portfolioItem.priceChange7d != null
                       ? portfolioItem.priceChange7d.toFixed(3)
-                      : "-"
+                      : ""
                   }%`}
-                </td>
+                </td> */}
               </tr>
             );
           })}
