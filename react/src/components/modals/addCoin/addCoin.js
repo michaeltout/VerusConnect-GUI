@@ -34,7 +34,7 @@ class AddCoin extends React.Component {
     props.setModalLinks([
       {
         label: "What is a PBaaS chain?",
-        onClick: () => shell.openExternal("https://verus.io/technology/PbaaS"),
+        onClick: () => shell.openExternal("https://verus.io/global-network"),
       },
     ]);
 

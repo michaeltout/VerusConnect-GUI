@@ -386,7 +386,8 @@ class CurrencyCard extends React.Component {
       convertPanelOpen,
       preallocationPanelOpen
     } = this.state;
-    const { currency, age, status, isToken, preConvert, ageString, spendableTo } = currencyInfo
+    const { currency, age, status, isToken, isGateway, preConvert, ageString, spendableTo } =
+      currencyInfo;
     const {
       name,
       currencyid,
@@ -448,8 +449,9 @@ class CurrencyCard extends React.Component {
                   }}
                 >
                   {status === "pending"
-                    ? `${preConvert ? "Preconvert" : "Pending"} - ${-1 *
-                        age} blocks (~${blocksToTime(-1 * age)}) until start`
+                    ? `${preConvert ? "Preconvert" : "Pending"} - ${
+                        -1 * age
+                      } blocks (~${blocksToTime(-1 * age)}) until start`
                     : status === "failed"
                     ? "Failed to Launch"
                     : `Active (~${ageString} old)`}
@@ -472,9 +474,9 @@ class CurrencyCard extends React.Component {
                   }}
                 >
                   {endblock === 0
-                    ? `Permanent ${isToken ? "Token" : "Blockchain"}`
+                    ? `Permanent ${isToken ? (isGateway ? "Gateway" : "Token") : "Blockchain"}`
                     : `Temporary ${
-                        isToken ? "Token" : "Blockchain"
+                        isToken ? (isGateway ? "Gateway" : "Token") : "Blockchain"
                       } (exists until ${
                         namesMap[parent] != null
                           ? namesMap[parent]
@@ -531,9 +533,7 @@ class CurrencyCard extends React.Component {
                 aria-controls="panel2bh-content"
                 id="panel2bh-header"
               >
-                <div style={{ fontWeight: "bold", alignSelf: "center" }}>
-                  {"Currency ID"}
-                </div>
+                <div style={{ fontWeight: "bold", alignSelf: "center" }}>{"Currency ID"}</div>
                 <div
                   style={{
                     fontWeight: "bold",
@@ -556,11 +556,7 @@ class CurrencyCard extends React.Component {
               </ExpansionPanelSummary>
             </ExpansionPanel>
             {spendableTo && (
-              <ExpansionPanel
-                square
-                disabled={!spendableTo}
-                expanded={convertPanelOpen}
-              >
+              <ExpansionPanel square disabled={!spendableTo} expanded={convertPanelOpen}>
                 <ExpansionPanelSummary
                   expandIcon={spendableTo ? <ExpandMoreIcon /> : null}
                   aria-controls="panel2bh-content"
@@ -585,9 +581,7 @@ class CurrencyCard extends React.Component {
                       : null}
                   </div>
                 </ExpansionPanelSummary>
-                <ExpansionPanelDetails
-                  style={{ maxHeight: 300, overflow: "scroll" }}
-                >
+                <ExpansionPanelDetails style={{ maxHeight: 300, overflow: "scroll" }}>
                   {spendableTo && (
                     <div
                       style={{
@@ -606,13 +600,10 @@ class CurrencyCard extends React.Component {
                               : currencies[index],
                             price:
                               bestcurrencystate != null
-                                ? bestcurrencystate.currencies[
-                                    currencies[index]
-                                  ].lastconversionprice
+                                ? bestcurrencystate.currencies[currencies[index]]
+                                    .lastconversionprice
                                 : "-",
-                            minpreconversion: minpreconversion
-                              ? minpreconversion[index]
-                              : 0,
+                            minpreconversion: minpreconversion ? minpreconversion[index] : 0,
                             index,
                           };
                         }}
@@ -652,20 +643,14 @@ class CurrencyCard extends React.Component {
                                   {preConvert
                                     ? rowData.minpreconversion
                                     : bestcurrencystate != null &&
-                                      bestcurrencystate.reservecurrencies[
-                                        rowData.index
-                                      ] != null
-                                    ? bestcurrencystate.reservecurrencies[
-                                        rowData.index
-                                      ].reserves
+                                      bestcurrencystate.reservecurrencies[rowData.index] != null
+                                    ? bestcurrencystate.reservecurrencies[rowData.index].reserves
                                     : "-"}
                                 </div>
                               );
                             },
                             flexGrow: 1,
-                            label: preConvert
-                              ? "Min. Pre-Conversion"
-                              : "Reserves",
+                            label: preConvert ? "Min. Pre-Conversion" : "Reserves",
                             dataKey: "minpreconvert",
                           },
                           {
@@ -694,9 +679,7 @@ class CurrencyCard extends React.Component {
                               return (
                                 <IconDropdown
                                   items={[FIND_CURRENCY, COPY, CONVERT]}
-                                  dropdownIconComponent={
-                                    <MoreVertIcon fontSize="small" />
-                                  }
+                                  dropdownIconComponent={<MoreVertIcon fontSize="small" />}
                                   onSelect={(option) => {
                                     if (option === FIND_CURRENCY) {
                                       this.setState({
@@ -727,16 +710,12 @@ class CurrencyCard extends React.Component {
                 expanded={preallocationPanelOpen}
               >
                 <ExpansionPanelSummary
-                  expandIcon={
-                    preallocation.length !== 0 ? <ExpandMoreIcon /> : null
-                  }
+                  expandIcon={preallocation.length !== 0 ? <ExpandMoreIcon /> : null}
                   aria-controls="panel2bh-content"
                   id="panel2bh-header"
                   onClick={this.togglePreallocationPanel}
                 >
-                  <div style={{ fontWeight: "bold", alignSelf: "center" }}>
-                    {"Preallocation"}
-                  </div>
+                  <div style={{ fontWeight: "bold", alignSelf: "center" }}>{"Preallocation"}</div>
                   <div
                     style={{
                       fontWeight: "bold",
@@ -752,9 +731,7 @@ class CurrencyCard extends React.Component {
                       : "None"}
                   </div>
                 </ExpansionPanelSummary>
-                <ExpansionPanelDetails
-                  style={{ maxHeight: 300, overflow: "scroll" }}
-                >
+                <ExpansionPanelDetails style={{ maxHeight: 300, overflow: "scroll" }}>
                   {preallocation.length !== 0 && (
                     <div
                       style={{
@@ -770,11 +747,9 @@ class CurrencyCard extends React.Component {
                           const identity_id = Object.keys(preallocation[index])[0];
 
                           return {
-                            name: namesMap[identity_id]
-                              ? namesMap[identity_id]
-                              : identity_id,
+                            name: namesMap[identity_id] ? namesMap[identity_id] : identity_id,
                             amount: preallocation[index][identity_id],
-                            friendlyName: namesMap[identity_id] != null
+                            friendlyName: namesMap[identity_id] != null,
                           };
                         }}
                         columns={[
@@ -824,14 +799,10 @@ class CurrencyCard extends React.Component {
                               return (
                                 <IconDropdown
                                   items={[FIND_ID, COPY]}
-                                  dropdownIconComponent={
-                                    <MoreVertIcon fontSize="small" />
-                                  }
+                                  dropdownIconComponent={<MoreVertIcon fontSize="small" />}
                                   onSelect={(option) => {
                                     this.selectOption(
-                                      rowData.friendlyName
-                                        ? `${rowData.name}@`
-                                        : rowData.name,
+                                      rowData.friendlyName ? `${rowData.name}@` : rowData.name,
                                       FIND_ID
                                     );
                                   }}
@@ -855,9 +826,7 @@ class CurrencyCard extends React.Component {
                 aria-controls="panel2bh-content"
                 id="panel2bh-header"
               >
-                <div style={{ fontWeight: "bold", alignSelf: "center" }}>
-                  {"Parent"}
-                </div>
+                <div style={{ fontWeight: "bold", alignSelf: "center" }}>{"Parent"}</div>
                 <div
                   style={{
                     fontWeight: "bold",
@@ -894,9 +863,7 @@ class CurrencyCard extends React.Component {
                     }}
                   >
                     <CustomButton
-                      title={
-                        blacklisted ? "Unblock Currency" : "Block Currency"
-                      }
+                      title={blacklisted ? "Unblock Currency" : "Block Currency"}
                       disabled={loadingCurrencyLists}
                       backgroundColor={"rgb(212, 49, 62)"}
                       onClick={

@@ -428,6 +428,7 @@ class ConvertCurrencyForm extends React.Component {
           this.setState({ conversionPaths: response.result, nameMap })
         }
       } else {
+        console.warn(response)
         this.props.dispatch(newSnackbar(ERROR_SNACK, `Error fetching potential conversions for ${from}!`, MID_LENGTH_ALERT))
       }
   

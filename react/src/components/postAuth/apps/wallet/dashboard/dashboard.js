@@ -65,7 +65,7 @@ class Dashboard extends React.Component {
           coinPortfolio = {
             ...coinPortfolio,
             spotPrice: Number(fiatPrices[chainTicker][fiatCurrency]).toFixed(2),
-            priceChange7d: fiatPrices[chainTicker].priceChange.data.percent_change_7d,
+            priceChange7d: null,//fiatPrices[chainTicker].priceChange.data.percent_change_7d,
             balanceFiat: coinPortfolio.balance * fiatPrices[chainTicker][fiatCurrency]
           }
 
