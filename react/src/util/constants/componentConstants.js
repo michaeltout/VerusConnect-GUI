@@ -449,6 +449,7 @@ export const API_RUN_PLUGIN = 'plugin/run'
 export const API_LIST_PLUGINS = 'plugin/all'
 export const API_GET_PLUGIN = 'plugin/get'
 export const API_AUTHENTICATE_COIN = 'plugin/builtin/authenticator/authenticate'
+export const API_MAKE_LOGIN_CONSENT_REQUEST = 'plugin/builtin/verus_login_consent_ui/request'
 
 // Add Coin modal constants
 export const ADD_DEFAULT_COIN = 'add_default_preset'
