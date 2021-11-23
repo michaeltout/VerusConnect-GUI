@@ -451,6 +451,10 @@ export const API_GET_PLUGIN = 'plugin/get'
 export const API_AUTHENTICATE_COIN = 'plugin/builtin/authenticator/authenticate'
 export const API_MAKE_LOGIN_CONSENT_REQUEST = 'plugin/builtin/verus_login_consent_ui/request'
 
+// VerusID
+export const API_SIGN_LOGIN_CONSENT_RESPONSE = "verusid/login/sign_response"
+export const API_VERIFY_LOGIN_CONSENT_REQUEST = "verusid/login/verify_request"
+
 // Add Coin modal constants
 export const ADD_DEFAULT_COIN = 'add_default_preset'
 export const IMPORT_COIN = 'import_coin'
