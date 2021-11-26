@@ -671,7 +671,8 @@ export const ConvertCurrencyFormAdvancedRender = function() {
             preconvert,
             refundto,
             memo,
-            sendAmount
+            sendAmount,
+            exportto
           } = output;
 
           return (
@@ -776,7 +777,7 @@ export const ConvertCurrencyFormAdvancedRender = function() {
                   onChange={(e) =>
                     this.updateOutput("exportto", e.target.value, index)
                   }
-                  value={via}
+                  value={exportto}
                   style={{ flex: 1 }}
                   disabled={isConfirmStep}
                 />
