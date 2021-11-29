@@ -22,6 +22,9 @@ import { getIdentity } from '../../../../util/api/wallet/walletCalls'
 import { openIdentityCard } from '../../../../actions/actionDispatchers';
 import { useStringAsKey } from '../../../../util/objectUtil';
 import CoinWallet from '../wallet/coinWallet/coinWallet';
+import { Typography } from "@material-ui/core";
+import WalletPaper from '../../../../containers/WalletPaper/WalletPaper';
+import HelpIcon from '@material-ui/icons/Help';
 
 const COMPONENT_MAP = {
   [DASHBOARD]: <Dashboard />,
@@ -230,8 +233,40 @@ class VerusId extends React.Component {
           const activeIdentity = this.props.identities[activeId.chainTicker]
             ? this.props.identities[activeId.chainTicker][activeId.idIndex]
             : null;
-          
-          if (activeIdentity) {
+
+          if (!activeIdentity) {
+            component = (
+              <div
+                className="col-md-8 col-lg-9"
+                style={{
+                  padding: 16,
+                  width: "80%",
+                  overflow: "scroll",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <WalletPaper
+                  style={{
+                    marginBottom: 16,
+                    padding: 8,
+                    paddingTop: 32,
+                    paddingBottom: 32,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "column",
+                    flex: 1,
+                  }}
+                >
+                  <HelpIcon color="primary" style={{ fontSize: 96 }} />
+                  <Typography style={{ fontWeight: "bold", textAlign: "center", marginTop: 16 }}>
+                    {"Can not get information for this VerusID (are you sure you own it?)"}
+                  </Typography>
+                </WalletPaper>
+              </div>
+            );
+          } else {
             for (const currency in activeIdentity.balances.reserve) {
               if (
                 activeIdentity.balances.reserve[currency] != null &&
@@ -245,39 +280,40 @@ class VerusId extends React.Component {
                 };
               }
             }
-          }
 
-          if (activeIdentity.addresses.private.length > 0) {
-            activeIdentity.balances.native.private.confirmed = 0
+            if (activeIdentity.addresses.private.length > 0) {
+              activeIdentity.balances.native.private.confirmed = 0;
 
-            for (let i = 0; i < activeIdentity.addresses.private.length; i++) {
-              const privAddr =
-                this.props.addresses[activeId.chainTicker] == null
-                  ? null
-                  : this.props.addresses[activeId.chainTicker].private.find(
-                      (x) =>
-                        x.address ===
-                        activeIdentity.addresses.private[i].address
-                    );
+              for (let i = 0; i < activeIdentity.addresses.private.length; i++) {
+                const privAddr =
+                  this.props.addresses[activeId.chainTicker] == null
+                    ? null
+                    : this.props.addresses[activeId.chainTicker].private.find(
+                        (x) => x.address === activeIdentity.addresses.private[i].address
+                      );
 
-              if (privAddr) {
-                activeIdentity.addresses.private[i].balances.native = privAddr.balances.native
+                if (privAddr) {
+                  activeIdentity.addresses.private[i].balances.native = privAddr.balances.native;
 
-                activeIdentity.balances.native.private.confirmed += activeIdentity
-                  .addresses.private[i].balances.native
+                  activeIdentity.balances.native.private.confirmed +=
+                    activeIdentity.addresses.private[i].balances.native;
+                }
               }
             }
-          }
 
-          component = (
-            <CoinWallet
-              coin={activeId.chainTicker}
-              balances={activeIdentity.balances}
-              addresses={activeIdentity.addresses}
-              transactions={this.getIdentityTransactions(this.props.transactions[activeId.chainTicker], activeIdentity)}
-              activeIdentity={activeIdentity}
-            />
-          );
+            component = (
+              <CoinWallet
+                coin={activeId.chainTicker}
+                balances={activeIdentity.balances}
+                addresses={activeIdentity.addresses}
+                transactions={this.getIdentityTransactions(
+                  this.props.transactions[activeId.chainTicker],
+                  activeIdentity
+                )}
+                activeIdentity={activeIdentity}
+              />
+            );
+          }
         }
       }
     }
