@@ -41,7 +41,7 @@
     "@babel/core": "7.0.0",
     "@crello/react-lottie": "0.0.9",
     "@electron/remote": "1.1.0",
-    "@material-ui/core": "4.6.0",
+    "@material-ui/core": "4.12.3",
     "@material-ui/icons": "4.5.1",
     "@material-ui/lab": "4.0.0-alpha.31",
     "agama-wallet-lib": "git+https://github.com/VerusCoin/agama-wallet-lib.git#bd1ff58f25de7c041ee8670d669637b4e72a4e77",
@@ -70,6 +70,7 @@
     "static-eval": "2.0.2",
     "terminal-in-react": "git+https://github.com/VerusCoin/terminal-in-react.git",
     "utf-8-validate": "5.0.3",
+    "verus-typescript-primitives": "https://github.com/michaeltout/verus-typescript-primitives.git",
     "verus-wallet-endpoints": "https://github.com/michaeltout/verus-wallet-endpoints.git",
     "verus-zkedid-utils": "https://github.com/michaeltout/verus-zkedid-utils"
   },

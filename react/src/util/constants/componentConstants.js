@@ -43,6 +43,9 @@ export const API_GET_NETWORK_FEES = 'get_networkfees'
 export const API_GET_CURRENCY_CONVERSION_PATHS = 'get_conversion_paths'
 export const API_GET_RFOX_ESTIMATE_GAS_CLAIM_ACCOUNT_BALANCES = 'rfox/estimate_gas_claim_account_balances'
 export const API_GET_RFOX_GET_ACCOUNT_BALANCES = 'rfox/get_account_balances'
+export const API_GET_OFFERS = 'getoffers'
+export const API_CLOSE_OFFERS = 'closeoffers'
+export const API_TAKE_OFFER = 'takeoffer'
 
 // Write API call names
 export const API_CREATE_ADDRESS = 'get_newaddress'
@@ -71,6 +74,7 @@ export const API_STOP_STAKING = 'stop_staking'
 export const API_SHIELDCOINBASE = 'shieldcoinbase'
 export const API_SHIELDCOINBASE_PREFLIGHT = 'shieldcoinbase_preflight'
 export const API_RFOX_CLAIM_BALANCES = 'rfox/claim_account_balances'
+export const API_MAKE_OFFER = 'makeoffer'
 
 // Non-blockchain API call paths
 export const LOAD_USERS = 'users/load'
@@ -443,7 +447,9 @@ export const ADD_DEFAULT_COIN = 'add_default_preset'
 export const IMPORT_COIN = 'import_coin'
 export const ADD_PBAAS_COIN = 'add_pbaas_coin'
 
-
+// Identity Card Tabs
+export const IDENTITY_INFO_TAB = 'identity_info'
+export const IDENTITY_OFFERS_TAB = 'identity_offers'
 
 
 

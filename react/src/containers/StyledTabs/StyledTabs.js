@@ -1,27 +1,26 @@
-import { tabItemStyles } from './Tabs.styles'
 import React, { useState } from 'react';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
 
-const StyledTabs = withStyles(tabItemStyles)(Tabs);
-
 const StyledTabs = (props) => {
-  const [tabIndex, setTabIndex] = useState(0);
-  const { tabs, labelExtractor, onClickExtractor, selectedExtractor } = props
+  const { tabs, labelExtractor, onClickExtractor, tabStyle } = props
 
   return (
-    <StyledTabs value={tabIndex} onChange={(e, index) => setTabIndex(index)}>
-      { tabs.map(tab => {
+    <Tabs
+      style={tabStyle == null ? {} : tabStyle}
+      value={props.tabIndex}
+      onChange={(e, index) => props.setTabIndex(index)}
+    >
+      {tabs.map((tab) => {
         return (
           <Tab
-            label={labelExtractor != null ? labelExtractor(tab) : tab.label}
-            onClick={onClickExtractor(tab)}
-            selectedExtractor={selectedExtractor(tab)}
+            label={labelExtractor != null ? () => labelExtractor(tab) : tab.label}
+            onClick={onClickExtractor == null ? () => {} : () => onClickExtractor(tab)}
           />
         );
-      }) }
-    </StyledTabs>
+      })}
+    </Tabs>
   );
 };
 
@@ -32,8 +31,9 @@ const StyledTabs = (props) => {
 StyledTabs.propTypes = {
   tabs: PropTypes.array.isRequired,
   labelExtractor: PropTypes.func,
-  onClickExtractor: PropTypes.func.isRequired,
-  selectedExtractor: PropTypes.func.isRequried
+  onClickExtractor: PropTypes.func,
+  tabIndex: PropTypes.number.isRequired,
+  setTabIndex: PropTypes.func.isRequired
 };
 
 export default StyledTabs;

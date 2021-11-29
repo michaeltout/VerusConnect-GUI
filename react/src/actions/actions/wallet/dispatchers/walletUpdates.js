@@ -144,9 +144,17 @@ export const conditionallyUpdateWallet = async (state, dispatch, mode, chainTick
         const locationRestrictions = readNavigationUrl(location)
         const activeCoinTags = state.coins.activatedCoins[chainTicker].options.tags
 
-        if (!(currentMainPath.includes(locationRestrictions.mainPath) && activeCoinTags.includes(type)) || !(currentMainPath.includes(locationRestrictions.modalPath) && activeCoinTags.includes(type))) {
-          return false
-        } else return true
+        if (
+          !(
+            currentMainPath.includes(locationRestrictions.mainPath) && activeCoinTags.includes(type)
+          ) ||
+          !(
+            currentMainPath.includes(locationRestrictions.modalPath) &&
+            activeCoinTags.includes(type)
+          )
+        ) {
+          return false;
+        } else return true;
       })
 
       if (testPassed) restrictionResults.push(TEST_PASS)
