@@ -12182,7 +12182,7 @@ verror@1.10.0:
 
 "verus-typescript-primitives@https://github.com/michaeltout/verus-typescript-primitives.git":
   version "1.0.0"
-  resolved "https://github.com/michaeltout/verus-typescript-primitives.git#16995f9dec83b2542c164556eb9cd7d0276161fd"
+  resolved "https://github.com/michaeltout/verus-typescript-primitives.git#1f3fe8afba9b7d9ca0ee66316c08397814b3f67a"
 
 "verus-wallet-endpoints@https://github.com/michaeltout/verus-wallet-endpoints.git":
   version "1.0.0"

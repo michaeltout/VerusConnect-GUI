@@ -450,6 +450,7 @@ export const ADD_PBAAS_COIN = 'add_pbaas_coin'
 // Identity Card Tabs
 export const IDENTITY_INFO_TAB = 'identity_info'
 export const IDENTITY_OFFERS_TAB = 'identity_offers'
+export const IDENTITY_MAKE_OFFER_TAB = 'identity_make_offer'
 
 
 

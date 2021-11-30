@@ -46,7 +46,7 @@ import { FormControl, Select, MenuItem, Tooltip, Typography } from "@material-ui
 import CustomButton from "../../../../../containers/CustomButton/CustomButton";
 import HelpIcon from '@material-ui/icons/Help';
 import MigrationHelper from "../../../../../containers/MigrationHelper/MigrationHelper";
-import { closeTextDialog, openTextDialog } from "../../../../../actions/actionDispatchers";
+import { closeTextDialog, openIdentityCard, openTextDialog } from "../../../../../actions/actionDispatchers";
 import { claimRfoxMigration, estimateGasRfoxMigration, getRfoxMigrationAccountBalances } from "../../../../../util/api/wallet/walletCalls";
 import { normalizeNum } from "../../../../../util/displayUtil/numberFormat";
 
@@ -336,9 +336,7 @@ export const RenderIdInfo = function () {
       }}
     >
       <div className="d-flex flex-row justify-content-between">
-        <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
-          {"ID Information"}
-        </h6>
+        <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>{"ID Information"}</h6>
         <div>
           <button
             className="btn btn-primary border rounded"
@@ -370,15 +368,7 @@ export const RenderIdInfo = function () {
           <button
             className="btn btn-primary border rounded"
             type="button"
-            onClick={() =>
-              this.openModal(
-                null,
-                {
-                  activeIdentity,
-                },
-                ID_INFO
-              )
-            }
+            onClick={() => openIdentityCard(activeIdentity, this.props.coin)}
             style={{
               fontSize: 14,
               backgroundColor: "rgba(0,178,26,0)",

@@ -14,6 +14,8 @@ import { IS_CURRENCY_FLAG } from '../../util/constants/flags';
 import { copyDataToClipboard } from '../../util/copyToClipboard';
 import StyledTabs from '../StyledTabs/StyledTabs';
 import OffersTable from '../../containers/OfferTable/OfferTable';
+import OfferForm from '../OfferForm/OfferForm'
+import { getAddresses, getAllCurrencies, getIdentities } from '../../util/api/wallet/walletCalls';
 
 export const IdentityCardRender = function() {
   const { props, state } = this;
@@ -65,6 +67,46 @@ export const IdentityCardRender = function() {
   );
 };
 
+export const IdentityMakeOfferCardRender = function () {
+  const { props } = this;
+  const { activeCoin, verusId } = props;
+
+  const extractResults = (response, wrap = (value) => value) => {
+    if (response.msg === 'success') return wrap(response.result)
+    else {
+      console.error(response)
+      return wrap([])
+    }
+  }
+
+  return (
+    <OfferForm
+      getAddrs={async () =>
+        extractResults(
+          await getAddresses(activeCoin.mode, activeCoin.id, (val) => {
+            return { public: val };
+          })
+        )
+      }
+      getIdentities={async () =>
+        extractResults(await getIdentities(activeCoin.mode, activeCoin.id))
+      }
+      getCurrencies={async () =>
+        activeCoin.id === "VRSC"
+          ? [{ fullyqualifiedname: "VRSC" }]
+          : extractResults(await getAllCurrencies(activeCoin.mode, activeCoin.id))
+      }
+      onSubmit={(offerData, forData, changeAddr, destinationAddr) =>
+        this.tryMakeOffer({ offerData, forData, changeAddr, destinationAddr })
+      }
+      lockFor={{
+        isCurrency: false,
+        identity: `${verusId.identity.name}@`,
+      }}
+    />
+  );
+}
+
 export const IdentityOffersCardRender = function () {
   const { props } = this;
   const { verusId } = props;
@@ -92,8 +134,8 @@ export const IdentityOffersCardRender = function () {
             for: extractRow(x.offer.accept),
             expiring: x.offer.blockexpiry.toString(),
             onTake: (destinationaddress, changeaddress) =>
-              this.takeOffer(x, destinationaddress, changeaddress),
-            onClose: () => this.closeOffer(x),
+              this.tryTakeOffer(x, destinationaddress, changeaddress),
+            onClose: () => this.tryCloseOffer(x),
             canTake: x.cantake,
             canClose: x.canclose,
           };
