@@ -98,7 +98,7 @@ function Row(props) {
                       Take offer?
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
-                      Enter a change address and a destination address to take this offer.
+                      Enter a change address and a receiving address to take this offer.
                     </Typography>
                     <div style={{ display: "flex", flexDirection: "column", marginTop: 16 }}>
                       <TextField
@@ -108,7 +108,7 @@ function Row(props) {
                         value={changeAddress}
                       />
                       <TextField
-                        label={"Destination address"}
+                        label={"Receiving address"}
                         variant="outlined"
                         onChange={(e) => setDestinationAddress(e.target.value)}
                         value={destinationAddress}

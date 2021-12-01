@@ -9,7 +9,8 @@ import Select from '@material-ui/core/Select';
 import AsyncAutoComplete from '../AsyncAutoComplete/AsyncAutoComplete';
 
 function OfferSide(props) {
-  const { setData, updateData, data, locked, title, getIdentities, getCurrencies } = props;
+  const { setData, updateData, data, locked, title, getIdentities, getCurrencies, freeIdentity } =
+    props;
 
   const switchType = (isCurrency) => {
     setData({
@@ -70,13 +71,14 @@ function OfferSide(props) {
               getOptions={getCurrencies != null ? getCurrencies : () => []}
             />
           </React.Fragment>
-        ) : locked ? (
+        ) : (locked || freeIdentity) ? (
           <TextField
             label="Identity"
             variant="outlined"
             value={data.identity}
             style={{ flex: 1 }}
-            disabled={true}
+            onChange={(e) => updateData("identity", e.target.value)}
+            disabled={locked}
           />
         ) : (
           <AsyncAutoComplete
@@ -103,7 +105,8 @@ OfferSide.propTypes = {
   locked: PropTypes.bool,
   title: PropTypes.string.isRequired,
   getIdentities: PropTypes.func,
-  getCurrencies: PropTypes.func
+  getCurrencies: PropTypes.func,
+  freeIdentity: PropTypes.bool
 };
 
 export default OfferSide

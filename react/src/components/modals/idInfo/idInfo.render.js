@@ -11,6 +11,7 @@ export const IdInfoRender = function() {
         openIdentity={this.props.openIdentity}
         setLock={this.props.setModalLock}
         openCurrency={this.props.openCurrency}
+        initialTab={this.props.initialTab}
       />
     </div>
   );

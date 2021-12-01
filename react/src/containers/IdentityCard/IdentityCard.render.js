@@ -80,30 +80,56 @@ export const IdentityMakeOfferCardRender = function () {
   }
 
   return (
-    <OfferForm
-      getAddrs={async () =>
-        extractResults(
-          await getAddresses(activeCoin.mode, activeCoin.id, (val) => {
-            return { public: val };
-          })
-        )
-      }
-      getIdentities={async () =>
-        extractResults(await getIdentities(activeCoin.mode, activeCoin.id))
-      }
-      getCurrencies={async () =>
-        activeCoin.id === "VRSC"
-          ? [{ fullyqualifiedname: "VRSC" }]
-          : extractResults(await getAllCurrencies(activeCoin.mode, activeCoin.id))
-      }
-      onSubmit={(offerData, forData, changeAddr, destinationAddr) =>
-        this.tryMakeOffer({ offerData, forData, changeAddr, destinationAddr })
-      }
-      lockFor={{
-        isCurrency: false,
-        identity: `${verusId.identity.name}@`,
-      }}
-    />
+    <React.Fragment>
+      <StyledTabs
+        tabs={[{ label: "Sell" }, { label: "Buy" }]}
+        setTabIndex={(index) => this.setState({ buyOffer: index ? true : false })}
+        tabIndex={this.state.buyOffer ? 1 : 0}
+        tabStyle={{
+          marginTop: -16,
+        }}
+      />
+      <OfferForm
+        getAddrs={async () => {
+          const res = await getAddresses(activeCoin.mode, activeCoin.id, true);
+
+          if (res.msg === 'success') {
+            const addrs = res.result 
+
+            return [...addrs.public, ...addrs.private];
+          } else {
+            return []
+          }
+        }}
+        getIdentities={async () =>
+          extractResults(await getIdentities(activeCoin.mode, activeCoin.id))
+        }
+        getCurrencies={async () =>
+          activeCoin.id === "VRSC"
+            ? [{ fullyqualifiedname: "VRSC" }]
+            : extractResults(await getAllCurrencies(activeCoin.mode, activeCoin.id))
+        }
+        onSubmit={(offerData, forData, changeAddr, destinationAddr, expiry) =>
+          this.tryMakeOffer({ offerData, forData, changeAddr, destinationAddr, expiry })
+        }
+        lockFor={
+          this.state.buyOffer
+            ? {
+                isCurrency: false,
+                identity: `${verusId.identity.name}@`,
+              }
+            : null
+        }
+        lockOffer={
+          !this.state.buyOffer
+            ? {
+                isCurrency: false,
+                identity: `${verusId.identity.name}@`,
+              }
+            : null
+        }
+      />
+    </React.Fragment>
   );
 }
 

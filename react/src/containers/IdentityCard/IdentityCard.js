@@ -46,6 +46,7 @@ class IdentityCard extends React.Component {
       loadingIdMap: false,
       loadingCurrency: false,
       selectedTabIndex: initialTab,
+      buyOffer: !props.verusId.cansignfor
     };
   
     this.selectOption = this.selectOption.bind(this)
@@ -109,24 +110,9 @@ class IdentityCard extends React.Component {
 
   async tryMakeOffer(offer) {
     try {
-      const chainInfo = await getInfo(
-        this.props.activeCoin.mode,
-        this.props.activeCoin.id
-      );
-
-      if (chainInfo.msg !== "success") throw new Error(chainInfo.result);
-      else if (
-        chainInfo.result.longestchain === 0 ||
-        chainInfo.result.longestchain > chainInfo.result.blocks
-      ) {
-        throw new Error("Must be synced to make offer");
-      }
-
-      const height = chainInfo.result.longestchain
-
       let requestedOffer = {
         changeaddress: offer.changeAddr,
-        expiryheight: this.DEFAULT_EXPIRY + height,
+        expiryheight: Number(offer.expiry),
         offer: offer.offerData.isCurrency ? {
           currency: offer.offerData.currency,
           amount: Number(offer.offerData.amount)

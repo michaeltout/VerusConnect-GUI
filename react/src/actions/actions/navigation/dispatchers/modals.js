@@ -27,9 +27,9 @@ export const openCurrencyCard = (currency, chainTicker, identities, isInDisplayF
   });
 }
 
-export const openIdentityCard = (activeIdentity, chainTicker) => {
+export const openIdentityCard = (activeIdentity, chainTicker, initialTab) => {
   Store.dispatch(setModalNavigationPath(null))
-  openModal(ID_INFO, { chainTicker, activeIdentity, openIdentityCard, openCurrencyCard })
+  openModal(ID_INFO, { chainTicker, activeIdentity, initialTab, openIdentityCard, openCurrencyCard });
 }
 
 export const openAddCoinModal = (mode = ADD_DEFAULT_COIN) => {

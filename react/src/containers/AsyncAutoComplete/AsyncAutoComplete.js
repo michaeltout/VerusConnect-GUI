@@ -50,6 +50,7 @@ function AsyncAutoComplete(props) {
       getOptionLabel={(option) => option.name}
       options={options}
       loading={loading}
+      disableClearable
       disabled={props.disabled}
       onChange={(event, value, reason) => props.onChange(event, value, reason)}
       freeSolo={props.freeSolo}
