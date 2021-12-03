@@ -649,7 +649,7 @@ export const DashboardRenderIds = function() {
           (idObj.balances.native.public.confirmed + zBalance).toFixed(8)
         );
 
-        const numOffers = Object.values(idObj.offers).flat().length
+        const numOffers = idObj.offers ? Object.values(idObj.offers).flat().length : 0;
 
         return (
           <WalletPaper

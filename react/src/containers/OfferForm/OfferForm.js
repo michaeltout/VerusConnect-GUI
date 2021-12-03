@@ -24,7 +24,7 @@ function openCloseOfferModal(onSubmit) {
         },
       },
     ],
-    `Are you sure you would like to make this offer? It will be valid for approximately three days (4320 blocks) unless you manually cancel it.`,
+    `Are you sure you would like to make this offer?`,
     "Make offer?"
   );
 }
