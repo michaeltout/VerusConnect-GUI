@@ -16,6 +16,8 @@ import WalletPaper from '../../../../../containers/WalletPaper/WalletPaper';
 import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
 import { openAddCoinModal, openIdentityCard } from '../../../../../actions/actionDispatchers';
 import { copyDataToClipboard } from '../../../../../util/copyToClipboard';
+import { checkFlag } from '../../../../../util/flagUtils';
+import { TIMELOCK_DELAY_FLAG } from '../../../../../util/constants/flags';
 
 export const DashboardRender = function() {
   //TODO: Move to parent component so this isnt re-calculated at render
@@ -649,6 +651,13 @@ export const DashboardRenderIds = function() {
           (idObj.balances.native.public.confirmed + zBalance).toFixed(8)
         );
 
+        const isTimelockDelay = checkFlag(identity.flags, TIMELOCK_DELAY_FLAG);
+        const longestchain =
+          this.props.info[idObj.chainTicker] && this.props.info[idObj.chainTicker].longestchain
+            ? this.props.info[idObj.chainTicker].longestchain
+            : 0;
+        const isLocked = identity.timelock > longestchain || isTimelockDelay
+
         const numOffers = idObj.offers ? Object.values(idObj.offers).flat().length : 0;
 
         return (
@@ -699,12 +708,12 @@ export const DashboardRenderIds = function() {
                     }}
                   >
                     {idObj.status === ID_REVOKED
-                      ? "Revoked"
+                      ? "revoked"
                       : idObj.canspendfor
-                      ? "Can Spend"
+                      ? "can spend"
                       : idObj.cansignfor
-                      ? "Can Sign"
-                      : "Can't Sign/Spend"}
+                      ? "can sign"
+                      : "can't sign/spend"}
                   </h3>
                   {numOffers > 0 && (
                     <h3
@@ -720,6 +729,38 @@ export const DashboardRenderIds = function() {
                       }}
                     >
                       {`${numOffers} offer${numOffers === 1 ? "" : "s"}`}
+                    </h3>
+                  )}
+                  {isLocked && (
+                    <h3
+                      className={`d-lg-flex align-items-lg-center coin-type green`}
+                      style={{
+                        fontSize: 12,
+                        width: "max-content",
+                        padding: 4,
+                        paddingTop: 1,
+                        paddingBottom: 1,
+                        borderWidth: 1,
+                        marginLeft: 3,
+                      }}
+                    >
+                      {"locked"}
+                    </h3>
+                  )}
+                  {isLocked && !isTimelockDelay && (
+                    <h3
+                      className={`d-lg-flex align-items-lg-center coin-type lite`}
+                      style={{
+                        fontSize: 12,
+                        width: "max-content",
+                        padding: 4,
+                        paddingTop: 1,
+                        paddingBottom: 1,
+                        borderWidth: 1,
+                        marginLeft: 3,
+                      }}
+                    >
+                      {"will unlock"}
                     </h3>
                   )}
                 </div>

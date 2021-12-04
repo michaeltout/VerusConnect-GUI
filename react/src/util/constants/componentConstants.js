@@ -75,6 +75,7 @@ export const API_SHIELDCOINBASE = 'shieldcoinbase'
 export const API_SHIELDCOINBASE_PREFLIGHT = 'shieldcoinbase_preflight'
 export const API_RFOX_CLAIM_BALANCES = 'rfox/claim_account_balances'
 export const API_MAKE_OFFER = 'makeoffer'
+export const API_SET_IDENTITY_TIMELOCK = 'setidentitytimelock'
 
 // Non-blockchain API call paths
 export const LOAD_USERS = 'users/load'
@@ -195,6 +196,7 @@ export const BASIC_MODAL = 'basic_modal'
 export const SPLIT_MODAL = 'split_modal'
 
 export const ADD_COIN = 'add_coin'
+export const SETUP_VAULT = 'setup_vault'
 export const CHAIN_INFO = 'chain_info'
 export const CHAIN_OPTIONS = 'chain_options'
 export const PBAAS_CHAIN_INFO = 'pbaas_chain_info'
@@ -216,6 +218,7 @@ export const CONFIGURE_NATIVE = 'configure_native'
 export const CONFIGURE = 'configure'
 export const IMMATURE_DETAILS = 'immature_details'
 export const CONVERT_CURRENCY = 'convert_currency'
+export const CONFIGURE_TIMELOCK = 'configure_timelock'
 
 // Coin object data
 export const DEFAULT_DUST_THRESHOLD = 0.00001
@@ -452,5 +455,8 @@ export const IDENTITY_INFO_TAB = 'identity_info'
 export const IDENTITY_OFFERS_TAB = 'identity_offers'
 export const IDENTITY_MAKE_OFFER_TAB = 'identity_make_offer'
 
+// Verus Vault Modal Constants
+export const LOCK_WITH_DELAY = 'lock_with_delay'
+export const LOCK_UNTIL_HEIGHT = 'lock_until_height'
 
 
