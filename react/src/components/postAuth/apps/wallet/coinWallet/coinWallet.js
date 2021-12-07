@@ -34,13 +34,25 @@ import {
   API_GET_RESERVE_TRANSFERS,
   INFO_SNACK
 } from '../../../../../util/constants/componentConstants'
-import { setUserPreferredCurrency, newSnackbar, setMainNavigationPath } from '../../../../../actions/actionCreators'
+import {
+  setUserPreferredCurrency,
+  newSnackbar,
+  setMainNavigationPath,
+} from "../../../../../actions/actionCreators";
 
 //TODO: Use these to update on mount conditionally
-import { conditionallyUpdateWallet, openModal, openCurrencyCard, restartCoinInPlace } from '../../../../../actions/actionDispatchers'
+import {
+  conditionallyUpdateWallet,
+  openModal,
+  openCurrencyCard,
+  restartCoinInPlace,
+  openTextDialog,
+  closeTextDialog,
+} from "../../../../../actions/actionDispatchers";
 import Store from '../../../../../store'
 import { getCurrency } from '../../../../../util/api/wallet/walletCalls';
 import { getCurrencyInfo } from '../../../../../util/multiverse/multiverseCurrencyUtils';
+import { setIdTimelock } from '../../../../../util/api/wallet/writeCalls/setIdTimelock';
 
 const CONDITIONAL_UPDATES = [
   API_GET_BALANCES,
@@ -101,6 +113,8 @@ class CoinWallet extends React.Component {
       this
     );
     this.tryNativeRelaunch = this.tryNativeRelaunch.bind(this)
+    this.openUnlockIdentityModal = this.openUnlockIdentityModal.bind(this)
+    this.unlockIdentity = this.unlockIdentity.bind(this)
   }
 
   updateCurrencySearchTerm(term) {
@@ -149,6 +163,57 @@ class CoinWallet extends React.Component {
           props.identities
         )
       : null;
+  }
+
+  openUnlockIdentityModal() {
+    const timelock = this.props.activeIdentity.identity.timelock
+
+    openTextDialog(
+      closeTextDialog,
+      [
+        {
+          title: "No",
+          onClick: () => {
+            closeTextDialog();
+          },
+        },
+        {
+          title: "Yes",
+          onClick: () => {
+            closeTextDialog();
+            this.unlockIdentity();
+          },
+        },
+      ],
+      `Are you sure you would like to start unlocking this identity? If you do, it will unlock in ${timelock + 20} blocks.`,
+      "Start Unlock?"
+    );
+  }
+
+  async unlockIdentity() {
+    try {
+      const activeCoin = this.props.activatedCoins[this.props.coin];
+
+      const res = await setIdTimelock(
+        activeCoin.mode,
+        activeCoin.id,
+        this.props.activeIdentity.identity.identityaddress,
+        { unlockatblock: 0 }
+      );
+
+      if (res.msg === "success") {
+        this.props.dispatch(
+          newSnackbar(
+            SUCCESS_SNACK,
+            `Identity unlock started! (txid: ${res.result}) This may take a few minutes to confirm.`
+          )
+        );
+      } else {
+        throw new Error(res.result);
+      }
+    } catch (e) {
+      this.props.dispatch(newSnackbar(ERROR_SNACK, e.message));
+    }
   }
 
   openModal(e, modalParams = {}, modal, modalType = BASIC_MODAL) {

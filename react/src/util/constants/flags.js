@@ -1,5 +1,6 @@
 // Identity Flags
 export const IS_CURRENCY_FLAG = 0x01
+export const TIMELOCK_DELAY_FLAG = 0x2
 
 // Multiverse Flags
 export const IS_TOKEN_FLAG = 0x20

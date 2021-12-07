@@ -9,6 +9,9 @@ import {
   BASIC_MODAL,
   SPLIT_MODAL,
   ADD_DEFAULT_COIN,
+  LOCK_WITH_DELAY,
+  SETUP_VAULT,
+  CONFIGURE_TIMELOCK
 } from "../../../../util/constants/componentConstants";
 
 export const openModal = (modal, modalParams = {}, modalType = BASIC_MODAL) => {
@@ -27,9 +30,9 @@ export const openCurrencyCard = (currency, chainTicker, identities, isInDisplayF
   });
 }
 
-export const openIdentityCard = (activeIdentity, chainTicker) => {
+export const openIdentityCard = (activeIdentity, chainTicker, initialTab) => {
   Store.dispatch(setModalNavigationPath(null))
-  openModal(ID_INFO, { chainTicker, activeIdentity, openIdentityCard, openCurrencyCard })
+  openModal(ID_INFO, { chainTicker, activeIdentity, initialTab, openIdentityCard, openCurrencyCard });
 }
 
 export const openAddCoinModal = (mode = ADD_DEFAULT_COIN) => {
@@ -37,6 +40,19 @@ export const openAddCoinModal = (mode = ADD_DEFAULT_COIN) => {
     `${ADD_COIN}/${SELECT_COIN}`,
     {
       mode,
+    },
+    SPLIT_MODAL
+  );
+}
+
+export const openSetupVaultModal = (mode = LOCK_WITH_DELAY, chainTicker, coinMode, identity) => {
+  openModal(
+    `${SETUP_VAULT}/${CONFIGURE_TIMELOCK}`,
+    {
+      mode,
+      chainTicker,
+      coinMode,
+      identity
     },
     SPLIT_MODAL
   );

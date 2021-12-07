@@ -3,6 +3,14 @@ import { createMuiTheme } from "@material-ui/core";
 const MainFont = 'Source Sans Pro,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji'
 
 export default createMuiTheme({
+  palette: {
+    primary: {
+      main: "#3165D4",
+    },
+    secondary: {
+      main: "#D4313E",
+    },
+  },
   overrides: {
     MuiCssBaseline: {
       '@global': {
@@ -42,6 +50,6 @@ export default createMuiTheme({
       root: {
         fontFamily: MainFont,
       },
-    }
+    },
   },
 });
