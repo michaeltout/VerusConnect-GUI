@@ -37,24 +37,10 @@ export const authenticateCoin = async (chainTicker, mode) => {
 };
 
 export const makeLoginConsentRequest = async (
-  chainId,
-  signer,
-  signature,
-  timestamp,
-  challenge,
-  redirectUrl,
-  onBehalfOf,
   request
 ) => {
   try {
     const res = await apiPost(API_MAKE_LOGIN_CONSENT_REQUEST, {
-      chainId,
-      signer,
-      signature,
-      timestamp,
-      challenge,
-      redirectUrl,
-      onBehalfOf,
       request,
     });
     if (res.msg !== "success") throw new Error(res.result);
