@@ -1,7 +1,8 @@
 import React from 'react';
-import { IS_VERUS, NATIVE, ID_REVOKED } from '../../../../../util/constants/componentConstants';
+import { IS_VERUS, NATIVE, ID_REVOKED, IDENTITY_OFFERS_TAB } from '../../../../../util/constants/componentConstants';
 import Tooltip from '@material-ui/core/Tooltip';
 import Block from '@material-ui/icons/Block';
+import SwapHoriz from '@material-ui/icons/SwapHoriz';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -13,8 +14,10 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import WalletPaper from '../../../../../containers/WalletPaper/WalletPaper';
 import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
-import { openAddCoinModal } from '../../../../../actions/actionDispatchers';
+import { openAddCoinModal, openIdentityCard } from '../../../../../actions/actionDispatchers';
 import { copyDataToClipboard } from '../../../../../util/copyToClipboard';
+import { checkFlag } from '../../../../../util/flagUtils';
+import { TIMELOCK_DELAY_FLAG } from '../../../../../util/constants/flags';
 
 export const DashboardRender = function() {
   //TODO: Move to parent component so this isnt re-calculated at render
@@ -648,6 +651,15 @@ export const DashboardRenderIds = function() {
           (idObj.balances.native.public.confirmed + zBalance).toFixed(8)
         );
 
+        const isTimelockDelay = checkFlag(identity.flags, TIMELOCK_DELAY_FLAG);
+        const longestchain =
+          this.props.info[idObj.chainTicker] && this.props.info[idObj.chainTicker].longestchain
+            ? this.props.info[idObj.chainTicker].longestchain
+            : 0;
+        const isLocked = identity.timelock > longestchain || isTimelockDelay
+
+        const numOffers = idObj.offers ? Object.values(idObj.offers).flat().length : 0;
+
         return (
           <WalletPaper
             style={{
@@ -663,11 +675,7 @@ export const DashboardRenderIds = function() {
             key={index}
           >
             <div style={{ display: "flex", alignItems: "center" }}>
-              <img
-                src={`assets/images/idThumbnail.png`}
-                width="50px"
-                height="50px"
-              />
+              <img src={`assets/images/idThumbnail.png`} width="50px" height="50px" />
               <div style={{ paddingLeft: 10, overflow: "hidden" }}>
                 <a
                   className="d-lg-flex align-items-lg-center"
@@ -685,34 +693,82 @@ export const DashboardRenderIds = function() {
                 >
                   {`${identity.name}@`}
                 </a>
-                <h3
-                  className={`d-lg-flex align-items-lg-center coin-type ${
-                    idObj.status === ID_REVOKED ? "red" : "native"
-                  }`}
-                  style={{
-                    fontSize: 12,
-                    width: "max-content",
-                    padding: 4,
-                    paddingTop: 1,
-                    paddingBottom: 1,
-                    borderWidth: 1,
-                  }}
-                >
-                  {idObj.status === ID_REVOKED
-                    ? "Revoked"
-                    : idObj.canspendfor
-                    ? "Can Spend"
-                    : idObj.cansignfor
-                    ? "Can Sign"
-                    : "Can't Sign/Spend"}
-                </h3>
+                <div style={{ display: "flex" }}>
+                  <h3
+                    className={`d-lg-flex align-items-lg-center coin-type ${
+                      idObj.status === ID_REVOKED ? "red" : "native"
+                    }`}
+                    style={{
+                      fontSize: 12,
+                      width: "max-content",
+                      padding: 4,
+                      paddingTop: 1,
+                      paddingBottom: 1,
+                      borderWidth: 1,
+                    }}
+                  >
+                    {idObj.status === ID_REVOKED
+                      ? "revoked"
+                      : idObj.canspendfor
+                      ? "can spend"
+                      : idObj.cansignfor
+                      ? "can sign"
+                      : "can't sign/spend"}
+                  </h3>
+                  {numOffers > 0 && (
+                    <h3
+                      className={`d-lg-flex align-items-lg-center coin-type green`}
+                      style={{
+                        fontSize: 12,
+                        width: "max-content",
+                        padding: 4,
+                        paddingTop: 1,
+                        paddingBottom: 1,
+                        borderWidth: 1,
+                        marginLeft: 3,
+                      }}
+                    >
+                      {`${numOffers} offer${numOffers === 1 ? "" : "s"}`}
+                    </h3>
+                  )}
+                  {isLocked && (
+                    <h3
+                      className={`d-lg-flex align-items-lg-center coin-type green`}
+                      style={{
+                        fontSize: 12,
+                        width: "max-content",
+                        padding: 4,
+                        paddingTop: 1,
+                        paddingBottom: 1,
+                        borderWidth: 1,
+                        marginLeft: 3,
+                      }}
+                    >
+                      {"locked"}
+                    </h3>
+                  )}
+                  {isLocked && !isTimelockDelay && (
+                    <h3
+                      className={`d-lg-flex align-items-lg-center coin-type lite`}
+                      style={{
+                        fontSize: 12,
+                        width: "max-content",
+                        padding: 4,
+                        paddingTop: 1,
+                        paddingBottom: 1,
+                        borderWidth: 1,
+                        marginLeft: 3,
+                      }}
+                    >
+                      {"will unlock"}
+                    </h3>
+                  )}
+                </div>
               </div>
             </div>
             <div style={{ display: "flex" }}>
               <div style={{ paddingTop: 30 }}>
-                <h3 style={{ fontSize: 14, color: "rgb(20,20,20)" }}>
-                  {"Balance:"}
-                </h3>
+                <h3 style={{ fontSize: 14, color: "rgb(20,20,20)" }}>{"Balance:"}</h3>
                 <h3
                   style={{
                     fontSize: 16,
@@ -729,8 +785,30 @@ export const DashboardRenderIds = function() {
                   justifyContent: "flex-end",
                   alignItems: "flex-end",
                   flex: 1,
+                  flexWrap: "wrap",
                 }}
               >
+                {numOffers > 0 && (
+                  <Tooltip title={numOffers === 1 ? "See offer" : "See offers"}>
+                    <button
+                      className="btn btn-primary"
+                      type="button"
+                      onClick={() =>
+                        openIdentityCard(idObj, idObj.chainTicker, IDENTITY_OFFERS_TAB)
+                      }
+                      style={{
+                        fontSize: 10,
+                        backgroundColor: "rgb(74, 166, 88)",
+                        borderWidth: 1,
+                        borderColor: "rgb(74, 166, 88)",
+                        fontWeight: "bold",
+                        marginTop: 3,
+                      }}
+                    >
+                      <SwapHoriz />
+                    </button>
+                  </Tooltip>
+                )}
                 {idObj.canrevoke && (
                   <Tooltip title="Revoke">
                     <button
@@ -743,6 +821,7 @@ export const DashboardRenderIds = function() {
                         borderWidth: 1,
                         borderColor: "rgb(212, 49, 62)",
                         fontWeight: "bold",
+                        marginTop: 3,
                       }}
                     >
                       <Block />
@@ -769,6 +848,7 @@ export const DashboardRenderIds = function() {
                         borderWidth: 1,
                         borderColor: "rgb(74, 166, 88)",
                         fontWeight: "bold",
+                        marginTop: 3,
                       }}
                     >
                       <SettingsBackupRestoreIcon />
@@ -787,6 +867,7 @@ export const DashboardRenderIds = function() {
                       marginLeft: 3,
                       borderColor: "#2f65d0",
                       fontWeight: "bold",
+                      marginTop: 3,
                     }}
                   >
                     <OpenInNewIcon />

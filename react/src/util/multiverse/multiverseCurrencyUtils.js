@@ -2,8 +2,9 @@ import {
   CENTRALIZED_ISSUANCE,
   DEFUALT_ISSUANCE,
   IS_TOKEN_FLAG,
-  IS_FRACTIONAL,
+  IS_FRACTIONAL_FLAG,
   IS_PBAAS_FLAG,
+  IS_GATEWAY_FLAG,
 } from "../constants/flags";
 import { checkFlag } from "../flagUtils";
 import { blocksToTime } from "../blockMath";
@@ -62,9 +63,10 @@ export const getCurrencyInfo = (
   let finalStartBlock = launchsystemid !== spotterid ? 1 : startblock;
 
   const { supply } = bestcurrencystate != null ? bestcurrencystate : {};
-  const isToken = checkFlag(options, IS_TOKEN_FLAG);
+  const isGateway = checkFlag(options, IS_GATEWAY_FLAG);
+  const isToken = checkFlag(options, IS_TOKEN_FLAG) || isGateway;
 
-  const isReserve = checkFlag(options, IS_FRACTIONAL);
+  const isReserve = checkFlag(options, IS_FRACTIONAL_FLAG);
   const isPending = finalStartBlock > launchSystemHeight;
   const age = launchSystemHeight - finalStartBlock;
   const isFailed =
@@ -83,6 +85,7 @@ export const getCurrencyInfo = (
     age,
     ageString: blocksToTime(Math.abs(age)),
     isToken,
+    isGateway,
     status: isFailed ? "failed" : isPending ? "pending" : "active",
     spendableTo,
     spendableFrom,

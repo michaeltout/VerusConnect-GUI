@@ -17,9 +17,11 @@ import {
   BASIC_MODAL,
   SPLIT_MODAL,
   CONVERT_CURRENCY,
-  CHAIN_OPTIONS
+  CHAIN_OPTIONS,
+  SETUP_VAULT
 } from "../../util/constants/componentConstants";
 import AddCoin from "./addCoin/addCoin";
+import SetupVault from "./setupVault/setupVault";
 import ChainInfo from "./chainInfo/chainInfo";
 import ChainOptions from "./chainOptions/chainOptions";
 import IdInfo from "./idInfo/idInfo";
@@ -58,6 +60,11 @@ export const ModalRender = function() {
   const COMPONENT_MAP = {
     [ADD_COIN]: (
       <AddCoin
+        {...COMPONENT_PROPS}
+      />
+    ),
+    [SETUP_VAULT]: (
+      <SetupVault
         {...COMPONENT_PROPS}
       />
     ),

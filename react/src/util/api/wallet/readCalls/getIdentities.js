@@ -8,15 +8,21 @@ import { API_GET_IDENTITIES } from '../../../constants/componentConstants'
  * @param {Boolean} includeCanSign Whether or not to include "Can Sign" IDs
  * @param {Boolean} includeWatchOnly Whether or not to include "Watch Only" IDs
  */
-export const getIdentities = async (mode, chainTicker, includeCanSign, includeWatchOnly) => {
-  let params = {chainTicker, includeCanSign, includeWatchOnly}
-  let identites = {}
+export const getIdentities = async (
+  mode,
+  chainTicker,
+  includeCanSign,
+  includeWatchOnly,
+  includeOffers
+) => {
+  let params = { chainTicker, includeCanSign, includeWatchOnly, includeOffers };
+  let identites = {};
 
   try {
-    identites = await getApiData(mode, API_GET_IDENTITIES, params)
+    identites = await getApiData(mode, API_GET_IDENTITIES, params);
   } catch (e) {
-    throw e
+    throw e;
   }
-  
-  return identites
-}
+
+  return identites;
+};

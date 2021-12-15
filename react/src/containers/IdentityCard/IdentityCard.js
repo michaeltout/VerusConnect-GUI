@@ -1,38 +1,72 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ObjectToTable from '../ObjectToTable/ObjectToTable';
-import { getIdentity, getCurrency } from '../../util/api/wallet/walletCalls'
-import { NATIVE, ERROR_SNACK, SUCCESS_SNACK, MID_LENGTH_ALERT, WARNING_SNACK } from '../../util/constants/componentConstants';
-import { newSnackbar } from '../../actions/actionCreators';
-import IconDropdown from '../IconDropdown/IconDropdown'
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { checkFlag } from '../../util/flagUtils';
-import { IS_CURRENCY_FLAG } from '../../util/constants/flags';
+import { getIdentity, getCurrency, getInfo } from '../../util/api/wallet/walletCalls'
+import {
+  NATIVE,
+  ERROR_SNACK,
+  MID_LENGTH_ALERT,
+  WARNING_SNACK,
+  IDENTITY_INFO_TAB,
+  IDENTITY_OFFERS_TAB,
+  SUCCESS_SNACK,
+  IDENTITY_MAKE_OFFER_TAB,
+} from "../../util/constants/componentConstants";
+import { newSnackbar, setModalNavigationPath } from '../../actions/actionCreators';
 import { copyDataToClipboard } from '../../util/copyToClipboard';
-
-const FIND_ID = "Find ID"
-const COPY = "Copy to clipboard"
-const FIND_CURRENCY = "Find Currency"
+import {
+  IdentityCardRender,
+  IdentityInfoCardRender,
+  IdentityMakeOfferCardRender,
+  IdentityOffersCardRender,
+} from "./IdentityCard.render";
+import { closeOffers } from '../../util/api/wallet/writeCalls/closeOffers';
+import { takeOffer } from '../../util/api/wallet/writeCalls/takeOffer';
+import { MakeOfferRequest } from 'verus-typescript-primitives';
+import { makeOffer } from '../../util/api/wallet/writeCalls/makeOffer';
 
 class IdentityCard extends React.Component {
   constructor(props) {
     super(props);
+    this.IDENTITY_TABS = [
+      { label: "Info", key: IDENTITY_INFO_TAB },
+      { label: "Offers", key: IDENTITY_OFFERS_TAB },
+      { label: "Make Offer", key: IDENTITY_MAKE_OFFER_TAB }
+    ]
+
+    let initialTab = 0;
+
+    if (props.initialTab != null) {
+      const indexForKey = this.IDENTITY_TABS.findIndex((x) => x.key === props.initialTab)
+
+      if (indexForKey > -1) initialTab = indexForKey
+    }
     
     this.state = {
       idMap: {},
       loadingIdMap: false,
-      loadingCurrency: false
-    }
+      loadingCurrency: false,
+      selectedTabIndex: initialTab,
+      buyOffer: !props.verusId.cansignfor
+    };
   
     this.selectOption = this.selectOption.bind(this)
     this.fetchSupportingIdData = this.fetchSupportingIdData.bind(this)
+    this.setSelectedTabIndex = this.setSelectedTabIndex.bind(this)
+    this.tryCloseOffer = this.tryCloseOffer.bind(this)
+    this.tryTakeOffer = this.tryTakeOffer.bind(this)
+    this.tryMakeOffer = this.tryMakeOffer.bind(this)
+
+    this.FIND_ID = "Find ID"
+    this.COPY = "Copy to clipboard"
+    this.FIND_CURRENCY = "Find Currency"
+
+    this.DEFAULT_EXPIRY = 4320 // Approx. three days
+
+    this.IDENTITY_CARD_TAB_MAP = {
+      [IDENTITY_OFFERS_TAB]: IdentityOffersCardRender,
+      [IDENTITY_INFO_TAB]: IdentityInfoCardRender,
+      [IDENTITY_MAKE_OFFER_TAB]: IdentityMakeOfferCardRender
+    }
   }
 
   componentDidMount() {
@@ -42,6 +76,145 @@ class IdentityCard extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.verusId.identity.name !== this.props.verusId.identity.name) {
       this.fetchSupportingIdData()
+    }
+  }
+
+  setSelectedTabIndex = (index) => {
+    this.setState({
+      selectedTabIndex: index
+    })
+  }
+
+  async tryCloseOffer(offer) {
+    try {
+      const res = await closeOffers(this.props.activeCoin.mode, this.props.activeCoin.id, [offer.offer.txid])
+      if (res.msg !== 'success') throw new Error(res.result)
+
+      this.props.dispatch(setModalNavigationPath(null))
+
+      this.props.dispatch(
+        newSnackbar(
+          SUCCESS_SNACK,
+          `Offer ${offer.offer.txid} canceled! This may take a few minutes to confirm.`
+        )
+      );
+    } catch(e) {
+      this.props.dispatch(
+        newSnackbar(
+          ERROR_SNACK,
+          e.message
+        )
+      );
+    }
+  }
+
+  async tryMakeOffer(offer) {
+    try {
+      let requestedOffer = {
+        changeaddress: offer.changeAddr,
+        expiryheight: Number(offer.expiry),
+        offer: offer.offerData.isCurrency ? {
+          currency: offer.offerData.currency,
+          amount: Number(offer.offerData.amount)
+        } : { identity: offer.offerData.identity },
+        for: offer.forData.isCurrency ? {
+          address: offer.destinationAddr,
+          currency: offer.forData.currency,
+          amount: Number(offer.forData.amount)
+        } : {},
+      }
+  
+      if (!offer.forData.isCurrency) {
+        const requestedId = await getIdentity(
+          this.props.activeCoin.mode,
+          this.props.activeCoin.id,
+          offer.forData.identity
+        );
+  
+        if (requestedId.msg === 'success') {
+          requestedOffer.for = {
+            primaryaddresses: [offer.destinationAddr],
+            minimumsignatures: 1,
+            name: requestedId.result.identity.name,
+            parent: this.props.activeCoin.id,
+          };
+        } else {
+          throw new Error(requestedId.result)
+        }
+      }
+  
+      const res = await makeOffer(
+        this.props.activeCoin.mode,
+        new MakeOfferRequest(this.props.activeCoin.id, "*", requestedOffer).toJson()
+      );
+  
+      if (res.msg === 'success') {
+        this.props.dispatch(setModalNavigationPath(null))
+  
+        this.props.dispatch(
+          newSnackbar(
+            SUCCESS_SNACK,
+            `Offer made! (txid: ${res.result.txid}) This may take a few minutes to confirm.`
+          )
+        );
+      } else {
+        throw new Error(res.result)
+      }
+    } catch(e) {
+      this.props.dispatch(
+        newSnackbar(
+          ERROR_SNACK,
+          e.message
+        )
+      );
+    }
+  }
+
+  async tryTakeOffer(offer, destinationaddress, changeaddress) {
+    try {
+      const offering = offer.offer.offer
+      const { accept } = offer.offer
+
+      const res = await takeOffer(this.props.activeCoin.mode, this.props.activeCoin.id, "*", {
+        txid: offer.offer.txid,
+        changeaddress,
+        deliver:
+          accept.name != null
+            ? accept.identityid
+            : { currency: Object.keys(accept)[0], amount: Object.values(accept)[0] },
+        accept:
+          offering.name != null
+            ? {
+                parent: this.props.activeCoin.id,
+                primaryaddresses: [destinationaddress],
+                minimumsignatures: 1,
+                name: offering.name
+              }
+            : {
+                address: destinationaddress,
+                currency: Object.keys(offering)[0],
+                amount: Object.values(offering)[0],
+              },
+      });
+
+      if (res.msg !== 'success') throw new Error(res.result)
+
+      this.props.dispatch(setModalNavigationPath(null))
+
+      this.props.dispatch(
+        newSnackbar(
+          SUCCESS_SNACK,
+          `Offer taken! (txid: ${res.result.txid}) This may take a few minutes to confirm.`
+        )
+      );
+    } catch(e) {
+      this.props.dispatch(
+        newSnackbar(
+          ERROR_SNACK,
+          e.message,
+          MID_LENGTH_ALERT
+        )
+      );
     }
   }
 
@@ -90,29 +263,14 @@ class IdentityCard extends React.Component {
       } catch (e) {
         this.props.dispatch(newSnackbar(ERROR_SNACK, err.message))
       }
-
-      // Fetch currency data
-      /*if (this.isCurrency) {
-        try {
-          const res = await getCurrency(NATIVE, this.props.activeCoin.id, identity.name)
-  
-          if (res.msg !== "success") {
-            this.props.dispatch(newSnackbar(WARNING_SNACK, `Couldn't fetch information about all related identities.`, MID_LENGTH_ALERT))
-          } else {
-            this.setState({ loadingCurrency: false, currencyData: res.result })
-          }
-        } catch (e) {
-          this.props.dispatch(newSnackbar(ERROR_SNACK, err.message))
-        }
-      }*/
       
       this.props.setLock(false)
     })
   }
 
   selectOption(address, option) {
-    if (option === COPY) copyDataToClipboard(address)
-    else if (option === FIND_ID) { 
+    if (option === this.COPY) copyDataToClipboard(address)
+    else if (option === this.FIND_ID) { 
       this.props.setLock(true)
 
       getIdentity(NATIVE, this.props.activeCoin.id, address)
@@ -129,7 +287,7 @@ class IdentityCard extends React.Component {
         this.props.setLock(false)
         this.props.dispatch(newSnackbar(ERROR_SNACK, err.message))
       })
-    } else if (option === FIND_CURRENCY) {
+    } else if (option === this.FIND_CURRENCY) {
       this.props.setLock(true)
 
       getCurrency(NATIVE, this.props.activeCoin.id, address)
@@ -150,315 +308,13 @@ class IdentityCard extends React.Component {
   }
 
   render() {
-    const { props, state } = this  
-    const { verusId } = props
-    const { identity, status } = verusId
-    const { idMap, loadingIdMap } = state
-    const content = Object.keys(identity.contentmap).length
-    const numAddrs = identity.primaryaddresses.length
-    const addrPanelProps =
-      numAddrs > 1
-        ? {}
-        : {
-            expanded: false,
-            onClick: () =>
-              copyDataToClipboard(identity.primaryaddresses[0]),
-          };
-    const isCurrency = checkFlag(identity.flags, IS_CURRENCY_FLAG)
-
-    return (
-      <Card square style={{ height: "100%", width: "110%", marginLeft: "-5%" }}>
-        <div style={{ height: "100%" }}>
-          <CardMedia
-            component={() => {
-              return (
-                <div
-                  style={{
-                    textAlign: "left",
-                    fontSize: 24,
-                    padding: 15,
-                    backgroundColor: "rgb(49, 101, 212)",
-                    color: "white",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {`${verusId.identity.name}@`}
-                  <i className="fas fa-fingerprint" />
-                </div>
-              );
-            }}
-          />
-          <CardContent style={{ height: "90%", overflow: 'scroll' }}>
-            <ExpansionPanel square expanded={false}>
-              <ExpansionPanelSummary
-                expandIcon={null}
-                aria-controls="panel2bh-content"
-                id="panel2bh-header"
-              >
-                <div style={{ fontWeight: "bold" }}>{"Name"}</div>
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    color: "#878787",
-                    flex: 1,
-                    textAlign: "right",
-                  }}
-                >
-                  {identity.name}
-                </div>
-              </ExpansionPanelSummary>
-            </ExpansionPanel>
-            <ExpansionPanel square expanded={false}>
-              <ExpansionPanelSummary
-                expandIcon={null}
-                aria-controls="panel2bh-content"
-                id="panel2bh-header"
-              >
-                <div style={{ fontWeight: "bold" }}>{"Status"}</div>
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    color: "#878787",
-                    flex: 1,
-                    textAlign: "right",
-                  }}
-                >
-                  {status}
-                </div>
-              </ExpansionPanelSummary>
-            </ExpansionPanel>
-            <ExpansionPanel square expanded={false} disabled={!isCurrency}>
-              <ExpansionPanelSummary
-                expandIcon={null}
-                aria-controls="panel2bh-content"
-                id="panel2bh-header"
-              >
-                <div style={{ fontWeight: "bold", alignSelf: "center" }}>
-                  {"Currency"}
-                </div>
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    flex: 1,
-                    textAlign: "right",
-                    alignSelf: "center",
-                  }}
-                >
-                  {isCurrency ? identity.name : "no currency"}
-                </div>
-                {isCurrency ? (
-                  <IconDropdown
-                    items={[FIND_CURRENCY, COPY]}
-                    dropdownIconComponent={<MoreVertIcon fontSize="small" />}
-                    onSelect={(option) =>
-                      this.selectOption(identity.identityaddress, option)
-                    }
-                  />
-                ) : null}
-              </ExpansionPanelSummary>
-            </ExpansionPanel>
-            <ExpansionPanel
-              square
-              expanded={false}
-              onClick={() => copyDataToClipboard(identity.identityaddress)}
-            >
-              <ExpansionPanelSummary
-                expandIcon={null}
-                aria-controls="panel2bh-content"
-                id="panel2bh-header"
-              >
-                <div style={{ fontWeight: "bold" }}>{"Identity Address"}</div>
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    color: "rgb(49, 101, 212)",
-                    flex: 1,
-                    textAlign: "right",
-                  }}
-                >
-                  {identity.identityaddress}
-                </div>
-              </ExpansionPanelSummary>
-            </ExpansionPanel>
-            <ExpansionPanel square expanded={false}>
-              <ExpansionPanelSummary
-                expandIcon={null}
-                aria-controls="panel2bh-content"
-                id="panel2bh-header"
-              >
-                <div style={{ fontWeight: "bold", alignSelf: "center" }}>
-                  {"Revocation Authority"}
-                </div>
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    flex: 1,
-                    textAlign: "right",
-                    alignSelf: "center",
-                  }}
-                >
-                  {idMap[identity.revocationauthority] != null
-                    ? `${identity.revocationauthority} (${
-                        idMap[identity.revocationauthority].identity.name
-                      }@)`
-                    : loadingIdMap
-                    ? `${identity.revocationauthority} (fetching name...)`
-                    : identity.revocationauthority}
-                </div>
-                <IconDropdown
-                  items={[FIND_ID, COPY]}
-                  dropdownIconComponent={<MoreVertIcon fontSize="small" />}
-                  onSelect={(option) =>
-                    this.selectOption(identity.revocationauthority, option)
-                  }
-                />
-              </ExpansionPanelSummary>
-            </ExpansionPanel>
-            <ExpansionPanel square expanded={false}>
-              <ExpansionPanelSummary
-                expandIcon={null}
-                aria-controls="panel2bh-content"
-                id="panel2bh-header"
-              >
-                <div style={{ fontWeight: "bold", alignSelf: "center" }}>
-                  {"Recovery Authority"}
-                </div>
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    flex: 1,
-                    textAlign: "right",
-                    alignSelf: "center",
-                  }}
-                >
-                  {idMap[identity.recoveryauthority]
-                    ? `${identity.recoveryauthority} (${
-                        idMap[identity.recoveryauthority].identity.name
-                      }@)`
-                    : loadingIdMap
-                    ? `${identity.recoveryauthority} (fetching name...)`
-                    : identity.recoveryauthority}
-                </div>
-                <IconDropdown
-                  items={[FIND_ID, COPY]}
-                  dropdownIconComponent={<MoreVertIcon fontSize="small" />}
-                  onSelect={(option) =>
-                    this.selectOption(identity.recoveryauthority, option)
-                  }
-                />
-              </ExpansionPanelSummary>
-            </ExpansionPanel>
-            <ExpansionPanel
-              square
-              expanded={false}
-              disabled={identity.privateaddress == null}
-              onClick={
-                identity.privateaddress == null
-                  ? () => {}
-                  : () => copyDataToClipboard(identity.privateaddress)
-              }
-            >
-              <ExpansionPanelSummary
-                expandIcon={null}
-                aria-controls="panel2bh-content"
-                id="panel2bh-header"
-              >
-                <div style={{ fontWeight: "bold" }}>{"Private Address"}</div>
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    color:
-                      identity.privateaddress == null
-                        ? "unset"
-                        : "rgb(49, 101, 212)",
-                    flex: 1,
-                    textAlign: "right",
-                  }}
-                >
-                  {identity.privateaddress == null
-                    ? "none"
-                    : identity.privateaddress}
-                </div>
-              </ExpansionPanelSummary>
-            </ExpansionPanel>
-            <ExpansionPanel square {...addrPanelProps}>
-              <ExpansionPanelSummary
-                expandIcon={numAddrs > 1 ? <ExpandMoreIcon /> : null}
-                aria-controls="panel4bh-content"
-                id="panel4bh-header"
-              >
-                <div style={{ fontWeight: "bold" }}>{`Primary Address${
-                  numAddrs > 1 ? "es" : ""
-                }`}</div>
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    color: numAddrs > 1 ? "#878787" : "rgb(49, 101, 212)",
-                    flex: 1,
-                    textAlign: "right",
-                  }}
-                >
-                  {`${identity.primaryaddresses[0]}${
-                    numAddrs > 1 ? ` + ${numAddrs - 1} more` : ""
-                  }`}
-                </div>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails
-                style={{ maxHeight: 300, overflow: "scroll" }}
-              >
-                <ObjectToTable
-                  dataObj={Object.assign({}, identity.primaryaddresses)}
-                  pagination={false}
-                  paperStyle={{ width: "100%", height: "100%" }}
-                  paperProps={{ square: true }}
-                />
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-            <ExpansionPanel square disabled={content === 0}>
-              <ExpansionPanelSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel4bh-content"
-                id="panel4bh-header"
-              >
-                <div style={{ fontWeight: "bold" }}>{"Content"}</div>
-                <div
-                  style={{
-                    fontWeight: "bold",
-                    color: content === 0 ? "unset" : "#878787",
-                    flex: 1,
-                    textAlign: "right",
-                  }}
-                >
-                  {`${
-                    content === 0
-                      ? "no content"
-                      : `${content} item${content > 1 ? "s" : ""}`
-                  }`}
-                </div>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails
-                style={{ maxHeight: 300, overflow: "scroll" }}
-              >
-                <ObjectToTable
-                  dataObj={identity.contentmap}
-                  pagination={false}
-                  paperStyle={{ width: "100%", height: "100%" }}
-                  paperProps={{ square: true }}
-                />
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-          </CardContent>
-        </div>
-      </Card>
-    );
+    return IdentityCardRender.call(this)
   }
 }
 
 IdentityCard.propTypes = {
-  verusId: PropTypes.object.isRequired
+  verusId: PropTypes.object.isRequired,
+  initialTab: PropTypes.string
 };
 
 export default IdentityCard

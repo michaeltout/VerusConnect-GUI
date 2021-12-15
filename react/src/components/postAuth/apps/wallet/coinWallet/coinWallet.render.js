@@ -29,7 +29,8 @@ import {
   CREATE_IDENTITY,
   API_UPDATE_ID,
   IS_PBAAS,
-  Z_ONLY
+  Z_ONLY,
+  LOCK_WITH_DELAY
 } from "../../../../../util/constants/componentConstants";
 import { VirtualizedTable } from '../../../../../containers/VirtualizedTable/VirtualizedTable'
 import { TX_TYPES } from '../../../../../util/txUtils/txRenderUtils'
@@ -42,20 +43,19 @@ import ShuffleIcon from '@material-ui/icons/Shuffle';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import WalletPaper from '../../../../../containers/WalletPaper/WalletPaper'
 import TransactionCard from '../../../../../containers/TransactionCard/TransactionCard'
-import { FormControl, Select, MenuItem, Tooltip, Typography } from "@material-ui/core";
+import { FormControl, Select, MenuItem, Tooltip, Typography, colors } from "@material-ui/core";
 import CustomButton from "../../../../../containers/CustomButton/CustomButton";
 import HelpIcon from '@material-ui/icons/Help';
 import MigrationHelper from "../../../../../containers/MigrationHelper/MigrationHelper";
-import { closeTextDialog, openTextDialog } from "../../../../../actions/actionDispatchers";
+import { closeTextDialog, openIdentityCard, openSetupVaultModal, openTextDialog } from "../../../../../actions/actionDispatchers";
 import { claimRfoxMigration, estimateGasRfoxMigration, getRfoxMigrationAccountBalances } from "../../../../../util/api/wallet/walletCalls";
 import { normalizeNum } from "../../../../../util/displayUtil/numberFormat";
+import { checkFlag } from "../../../../../util/flagUtils";
+import { TIMELOCK_DELAY_FLAG } from "../../../../../util/constants/flags";
 
 export const CoinWalletRender = function() {
   return (
-    <div
-      className="col-md-8 col-lg-9"
-      style={{ padding: 16, width: "80%", overflow: "scroll" }}
-    >
+    <div className="col-md-8 col-lg-9" style={{ padding: 16, width: "80%", overflow: "scroll" }}>
       <WalletPaper
         style={{
           marginBottom: 16,
@@ -105,16 +105,13 @@ export const CoinWalletRender = function() {
             <div className="d-lg-flex justify-content-lg-start">
               <h1 style={{ margin: 0, fontSize: 16, color: "rgb(0,0,0)" }}>
                 {`${
-                  this.state.spendableBalance.fiat == null
-                    ? "-"
-                    : this.state.spendableBalance.fiat
+                  this.state.spendableBalance.fiat == null ? "-" : this.state.spendableBalance.fiat
                 } ${this.props.fiatCurrency}`}
               </h1>
             </div>
           </div>
         </WalletPaper>
-        {this.state.spendableBalance.crypto !=
-          this.state.pendingBalance.crypto && (
+        {this.state.spendableBalance.crypto != this.state.pendingBalance.crypto && (
           <WalletPaper
             style={{
               padding: 16,
@@ -155,9 +152,7 @@ export const CoinWalletRender = function() {
               <div className="d-lg-flex justify-content-lg-start">
                 <h1 style={{ margin: 0, fontSize: 16, color: "rgb(0,0,0)" }}>
                   {`${
-                    this.state.pendingBalance.fiat == null
-                      ? "-"
-                      : this.state.pendingBalance.fiat
+                    this.state.pendingBalance.fiat == null ? "-" : this.state.pendingBalance.fiat
                   } ${this.props.fiatCurrency}`}
                 </h1>
               </div>
@@ -167,19 +162,17 @@ export const CoinWalletRender = function() {
         {this.props.activeIdentity == null
           ? RenderBlockchainInfo.call(this)
           : RenderIdInfo.call(this)}
+        {this.props.activeIdentity == null ? null : RenderIdVault.call(this)}
       </WalletPaper>
       {
         /* TODO: Change this when currencies get to mainnet */
         this.props.activatedCoins[this.props.coin] &&
-        this.props.activatedCoins[this.props.coin].options.tags.includes(
-          IS_PBAAS
-        )
+        this.props.activatedCoins[this.props.coin].options.tags.includes(IS_PBAAS)
           ? WalletRenderCurrencyFunctions.call(this)
           : null
       }
       {
-        /* TODO: Add a way to detect if a coin allows migration */ this.props
-          .coin === "RFOX" && (
+        /* TODO: Add a way to detect if a coin allows migration */ this.props.coin === "RFOX" && (
           <MigrationHelper
             coin={this.props.coin}
             fetchMigrationBalance={getRfoxMigrationAccountBalances}
@@ -226,10 +219,7 @@ export const CoinWalletRender = function() {
       />
       {this.props.zOperations && this.props.zOperations.length > 0 && (
         <WalletPaper>
-          <h6
-            className="card-title"
-            style={{ fontSize: 14, margin: 0, width: "max-content" }}
-          >
+          <h6 className="card-title" style={{ fontSize: 14, margin: 0, width: "max-content" }}>
             {"Pending Transaction Log:"}
           </h6>
           {WalletRenderOperations.call(this)}
@@ -336,10 +326,8 @@ export const RenderIdInfo = function () {
       }}
     >
       <div className="d-flex flex-row justify-content-between">
-        <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>
-          {"ID Information"}
-        </h6>
-        <div>
+        <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>{"ID Status"}</h6>
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-end" }}>
           <button
             className="btn btn-primary border rounded"
             type="button"
@@ -362,23 +350,14 @@ export const RenderIdInfo = function () {
               color: "#FFFFFF",
               borderColor: "rgb(49, 101, 212)",
               fontWeight: "bold",
-              marginRight: 8,
             }}
           >
-            {"Update ID"}
+            {"Update"}
           </button>
           <button
             className="btn btn-primary border rounded"
             type="button"
-            onClick={() =>
-              this.openModal(
-                null,
-                {
-                  activeIdentity,
-                },
-                ID_INFO
-              )
-            }
+            onClick={() => openIdentityCard(activeIdentity, this.props.coin)}
             style={{
               fontSize: 14,
               backgroundColor: "rgba(0,178,26,0)",
@@ -386,9 +365,95 @@ export const RenderIdInfo = function () {
               color: "rgb(133,135,150)",
               borderColor: "rgb(133, 135, 150)",
               fontWeight: "bold",
+              marginLeft: 8
             }}
           >
-            {"ID Info"}
+            {"Info"}
+          </button>
+        </div>
+      </div>
+      <div
+        className="d-lg-flex"
+        style={{
+          display: "flex",
+          justifyContent: "start",
+          alignItems: "center",
+        }}
+      >
+        <h1
+          style={{
+            margin: 0,
+            fontSize: 16,
+            color: "rgb(0,0,0)",
+            overflow: "-webkit-paged-x",
+          }}
+          className="text-capitalize"
+        >
+          {activeIdentity.status !== "active" && (
+            <i
+              className="fas fa-exclamation-triangle"
+              style={{
+                marginRight: 6,
+                color: "rgb(236,124,43)",
+                fontSize: 18,
+              }}
+            />
+          )}
+          {`${activeIdentity.status} as of block ${activeIdentity.blockheight}.`}
+        </h1>
+      </div>
+    </WalletPaper>
+  );
+};
+
+export const RenderIdVault = function () {
+  const { activeIdentity, info } = this.props
+  const isTimelockDelay = checkFlag(activeIdentity.identity.flags, TIMELOCK_DELAY_FLAG);
+  const longestchain = info && info.longestchain ? info.longestchain : 0
+  const timelock =
+    longestchain > activeIdentity.identity.timelock && !isTimelockDelay
+      ? 0
+      : activeIdentity.identity.timelock;
+  const activeCoin = this.props.activatedCoins[this.props.coin]
+
+  return (
+    <WalletPaper
+      style={{
+        padding: 16,
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+      }}
+    >
+      <div className="d-flex flex-row justify-content-between">
+        <h6 style={{ fontSize: 14, margin: 0, width: "max-content" }}>{"Vault Status"}</h6>
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-end" }}>
+          <button
+            className="btn btn-primary border rounded"
+            type="button"
+            disabled={activeCoin == null}
+            onClick={
+              timelock === 0
+                ? () =>
+                    openSetupVaultModal(
+                      LOCK_WITH_DELAY,
+                      activeCoin.id,
+                      activeCoin.mode,
+                      `${activeIdentity.identity.name}@`
+                    )
+                : () => this.openUnlockIdentityModal()
+            }
+            style={{
+              fontSize: 14,
+              backgroundColor: "rgb(49, 101, 212)",
+              borderWidth: 0,
+              color: "#FFFFFF",
+              borderColor: "rgb(49, 101, 212)",
+              fontWeight: "bold",
+              visibility: isTimelockDelay || timelock == 0 ? "unset" : "hidden",
+            }}
+          >
+            {timelock === 0 ? "Setup Vault" : "Start Unlock"}
           </button>
         </div>
       </div>
@@ -408,17 +473,22 @@ export const RenderIdInfo = function () {
             overflow: "-webkit-paged-x",
           }}
         >
-          {activeIdentity.status !== "active" && (
-            <i
-              className="fas fa-exclamation-triangle"
-              style={{
-                marginRight: 6,
-                color: "rgb(236,124,43)",
-                fontSize: 18,
-              }}
-            />
-          )}
-          {`Status: ${activeIdentity.status} as of block ${activeIdentity.blockheight}.`}
+          <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-start" }}>
+            <div style={{ fontWeight: "bold", color: timelock === 0 ? "black" : "#4AA658" }}>
+              {timelock === 0
+                ? "Vault not active."
+                : isTimelockDelay
+                ? "Vault active, funds locked."
+                : "Vault active, funds will unlock."}
+            </div>
+            {timelock !== 0 && (
+              <div style={{ fontSize: 14, marginTop: 6 }}>
+                {isTimelockDelay
+                  ? `Will unlock ${timelock + 20} blocks after unlock start.`
+                  : `Will unlock at block ${timelock}.`}
+              </div>
+            )}
+          </div>
         </h1>
       </div>
     </WalletPaper>

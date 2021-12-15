@@ -263,7 +263,8 @@ const mapStateToProps = (state) => {
     getInfoErrors: state.errors[API_GET_INFO],
     nameCommitments: state.ledger.nameCommitments,
     activeUser: state.users.activeUser,
-    transactions: state.ledger.transactions
+    transactions: state.ledger.transactions,
+    info: state.ledger.info,
   };
 };
 
