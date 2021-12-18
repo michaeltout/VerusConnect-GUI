@@ -47,7 +47,7 @@
     "@material-ui/lab": "4.0.0-alpha.31",
     "agama-wallet-lib": "git+https://github.com/VerusCoin/agama-wallet-lib.git#bd1ff58f25de7c041ee8670d669637b4e72a4e77",
     "bignumber.js": "9.0.1",
-    "blake2b": "https://github.com/michaeltout/blake2b.git",
+    "blake2b": "https://github.com/VerusCoin/blake2b.git",
     "bufferutil": "4.0.2",
     "clsx": "1.0.4",
     "crypto-js": "4.0.0",
@@ -71,7 +71,7 @@
     "static-eval": "2.0.2",
     "terminal-in-react": "git+https://github.com/VerusCoin/terminal-in-react.git",
     "utf-8-validate": "5.0.3",
-    "verus-typescript-primitives": "https://github.com/michaeltout/verus-typescript-primitives.git",
+    "verus-typescript-primitives": "https://github.com/VerusCoin/verus-typescript-primitives.git",
     "verus-wallet-endpoints": "https://github.com/michaeltout/verus-wallet-endpoints.git",
     "verus-zkedid-utils": "https://github.com/michaeltout/verus-zkedid-utils"
   },
