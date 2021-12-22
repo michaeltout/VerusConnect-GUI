@@ -123,7 +123,9 @@ class Main extends React.Component {
             ) ||
             loadedUsers[defaultUserId].pinFile == null
           ) {
-            loginUser(loadedUsers[defaultUserId]).map((action) => {
+            const loginRes = await loginUser(loadedUsers[defaultUserId])
+
+            loginRes.map((action) => {
               dispatch(action);
             });
           } else {

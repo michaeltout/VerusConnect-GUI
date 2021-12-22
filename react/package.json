@@ -6,6 +6,7 @@
   "scripts": {
     "postinstall": "cd node_modules/terminal-in-react && yarn install && yarn run build && cd ..",
     "start": "./node_modules/webpack-dashboard/bin/webpack-dashboard.js -t 'AgamaGUI' -- ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --colors --no-info --mode development",
+    "start-no-dashboard": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --colors --no-info --mode development",
     "build": "rm -rf ./build && mkdir build && mkdir build/assets && cp -R src/assets build/ && NODE_ENV=\"production\" ./node_modules/.bin/webpack --mode production",
     "build_win": "rmdir /s /q build && mkdir build && mkdir build/assets && xcopy src/assets build/ /s /e && NODE_ENV=\"production\" ./node_modules/.bin/webpack --mode production",
     "build-only": "./node_modules/.bin/webpack --config ./webpack.prod.config.js",
@@ -46,7 +47,7 @@
     "@material-ui/lab": "4.0.0-alpha.31",
     "agama-wallet-lib": "git+https://github.com/VerusCoin/agama-wallet-lib.git#bd1ff58f25de7c041ee8670d669637b4e72a4e77",
     "bignumber.js": "9.0.1",
-    "blake2b": "https://github.com/michaeltout/blake2b.git",
+    "blake2b": "https://github.com/VerusCoin/blake2b.git",
     "bufferutil": "4.0.2",
     "clsx": "1.0.4",
     "crypto-js": "4.0.0",
@@ -70,7 +71,7 @@
     "static-eval": "2.0.2",
     "terminal-in-react": "git+https://github.com/VerusCoin/terminal-in-react.git",
     "utf-8-validate": "5.0.3",
-    "verus-typescript-primitives": "https://github.com/michaeltout/verus-typescript-primitives.git",
+    "verus-typescript-primitives": "https://github.com/VerusCoin/verus-typescript-primitives.git",
     "verus-wallet-endpoints": "https://github.com/michaeltout/verus-wallet-endpoints.git",
     "verus-zkedid-utils": "https://github.com/michaeltout/verus-zkedid-utils"
   },

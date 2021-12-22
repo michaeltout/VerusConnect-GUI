@@ -9,7 +9,9 @@ import {
   ELECTRUM,
   POST,
   LOG_OUT,
-  BACKUP_USERS
+  BACKUP_USERS,
+  API_LOGIN_USER,
+  CHECK_AUTHENTICATION
 } from "../../constants/componentConstants";
 
 /**
@@ -93,6 +95,19 @@ export const authenticateSeed = async (seed) => {
 }
 
 /**
+ * Checks if a coin is authenticated
+ * @param {String} chainTicker Coin to check
+ */
+export const checkAuthentication = async (mode) => {
+  try {
+    return await getApiData(mode, CHECK_AUTHENTICATION)
+  } catch (e) {
+    console.error(e.message)
+    throw e
+  }
+}
+
+/**
  * Un-authenticates a user in eth and electrum
  */
 export const logoutUser = async () => {
@@ -104,6 +119,20 @@ export const logoutUser = async () => {
     if (electrumLogoutResult.msg === 'error') throw new Error("Electrum logout failed.")
     else if (ethLogoutResult.msg === 'error') throw new Error("ETH logout failed.")
     else if (erc20LogoutResult.msg === 'error') throw new Error("ERC20 logout failed.")
+
+    return true
+  } catch (e) {
+    console.error(e.message)
+    throw e
+  }
+}
+
+/**
+ * Un-authenticates a user in eth and electrum
+ */
+export const registerLogin = async (id) => {
+  try {
+    await apiPost(API_LOGIN_USER, { id })
 
     return true
   } catch (e) {
