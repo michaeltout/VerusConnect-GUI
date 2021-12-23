@@ -187,16 +187,16 @@ export const getPbaasChain = (chainTicker, chainDefinition) => {
       daemon: DEFAULT_DAEMON,
       startupOptions: [`-chain=${chainTickerLc}`],
       dirNames: {
-        darwin: `VerusTest/pbaas/${chainTickerLc}`,
-        linux: `.verustest/pbaas/${chainTickerLc}`,
-        win32: `VerusTest/pbaas/${chainTickerLc}`,
+        darwin: `VerusTest/pbaas/${chainDefinition.currencyidhex}`,
+        linux: `.verustest/pbaas/${chainDefinition.currencyidhex}`,
+        win32: `VerusTest/pbaas/${chainDefinition.currencyidhex}`,
       },
       tags: [IS_ZCASH, IS_PBAAS, IS_VERUS, IS_SAPLING],
       dustThreshold: 0.00001,
       fallbackPort: chainDefinition.nodes
         ? Number(chainDefinition.nodes[0].networkaddress.split(":")[1]) + 1
         : null,
-      confName: chainTickerLc,
+      confName: chainDefinition.currencyidhex,
     },
   };
 }
