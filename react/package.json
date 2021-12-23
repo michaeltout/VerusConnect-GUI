@@ -168,7 +168,7 @@
     "set-value": "4.0.1",
     "node-notifier": "8.0.1",
     "color-string": "1.5.5",
-    "is-svg": "4.2.2",
+    "is-svg": "4.3.2",
     "trim-newlines": "3.0.1",
     "acorn": "6.4.1",
     "json-schema": "0.4.0"
