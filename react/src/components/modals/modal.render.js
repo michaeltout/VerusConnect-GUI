@@ -9,7 +9,6 @@ import {
   TX_INFO,
   CSV_EXPORT,
   OPERATION_INFO,
-  IMMATURE_DETAILS,
   CREATE_IDENTITY,
   SIGN_VERIFY_ID_DATA,
   SHIELDCOINBASE,
@@ -18,7 +17,9 @@ import {
   SPLIT_MODAL,
   CONVERT_CURRENCY,
   CHAIN_OPTIONS,
-  SETUP_VAULT
+  SETUP_VAULT,
+  WALLET_IMPORT,
+  IMMATURE_DETAILS
 } from "../../util/constants/componentConstants";
 import AddCoin from "./addCoin/addCoin";
 import SetupVault from "./setupVault/setupVault";
@@ -39,6 +40,7 @@ import SignVerifyIdData from "./signVerifyIdData/signVerifyIdData";
 import ShieldCoinbase from "./shieldCoinbase/shieldCoinbase";
 import { BasicModalRender } from "./modalTypes/basicModal.render";
 import { SplitModalRender } from "./modalTypes/splitModal.render";
+import ImportWallet from "./importWallet/importWallet";
 
 export const ModalRender = function() {
   const COMPONENT_PROPS = {
@@ -58,91 +60,24 @@ export const ModalRender = function() {
   }
   
   const COMPONENT_MAP = {
-    [ADD_COIN]: (
-      <AddCoin
-        {...COMPONENT_PROPS}
-      />
-    ),
-    [SETUP_VAULT]: (
-      <SetupVault
-        {...COMPONENT_PROPS}
-      />
-    ),
-    [CHAIN_INFO]: (
-      <ChainInfo
-        {...COMPONENT_PROPS}
-      />
-    ),
-    [CHAIN_OPTIONS]: (
-      <ChainOptions
-        {...COMPONENT_PROPS}
-      />
-    ),
-    [ID_INFO]: (
-      <IdInfo
-        {...COMPONENT_PROPS}
-      />
-    ),
-    [CURRENCY_INFO]: (
-      <CurrencyInfo
-        {...COMPONENT_PROPS}
-      />
-    ),
-    [PBAAS_CHAIN_INFO]: (
-      <PbaasChainInfo
-        {...COMPONENT_PROPS}
-      />
-    ),
-    [RECEIVE_COIN]: (
-      <ReceiveCoin
-        {...COMPONENT_PROPS}
-      />
-    ),
-    [CONVERT_CURRENCY]: (
-      <ConvertCurrency
-        {...COMPONENT_PROPS}
-      />
-    ),
-    [SEND_COIN]: (
-      <SendCoin
-        {...COMPONENT_PROPS}
-      />
-    ),
-    [CREATE_IDENTITY]: (
-      <CreateIdentity
-        {...COMPONENT_PROPS}
-      />
-    ),
-    [TX_INFO]: (
-      <TxInfo
-        {...COMPONENT_PROPS}
-      />
-    ),
-    [CSV_EXPORT]: (
-      <ExportToCsv
-        {...COMPONENT_PROPS}
-      />
-    ),
-    [OPERATION_INFO]: (
-      <OperationInfo
-        {...COMPONENT_PROPS}
-      />
-    ),
-    [IMMATURE_DETAILS]: (
-      <ImmatureDetails
-        {...COMPONENT_PROPS}
-      />
-    ),
-    [SIGN_VERIFY_ID_DATA]: (
-      <SignVerifyIdData
-        {...COMPONENT_PROPS}
-      />
-    ),
-    [SHIELDCOINBASE]: (
-      <ShieldCoinbase
-        {...COMPONENT_PROPS}
-      />
-    )
+    [ADD_COIN]: <AddCoin {...COMPONENT_PROPS} />,
+    [SETUP_VAULT]: <SetupVault {...COMPONENT_PROPS} />,
+    [CHAIN_INFO]: <ChainInfo {...COMPONENT_PROPS} />,
+    [CHAIN_OPTIONS]: <ChainOptions {...COMPONENT_PROPS} />,
+    [ID_INFO]: <IdInfo {...COMPONENT_PROPS} />,
+    [CURRENCY_INFO]: <CurrencyInfo {...COMPONENT_PROPS} />,
+    [PBAAS_CHAIN_INFO]: <PbaasChainInfo {...COMPONENT_PROPS} />,
+    [RECEIVE_COIN]: <ReceiveCoin {...COMPONENT_PROPS} />,
+    [CONVERT_CURRENCY]: <ConvertCurrency {...COMPONENT_PROPS} />,
+    [SEND_COIN]: <SendCoin {...COMPONENT_PROPS} />,
+    [CREATE_IDENTITY]: <CreateIdentity {...COMPONENT_PROPS} />,
+    [TX_INFO]: <TxInfo {...COMPONENT_PROPS} />,
+    [CSV_EXPORT]: <ExportToCsv {...COMPONENT_PROPS} />,
+    [WALLET_IMPORT]: <ImportWallet {...COMPONENT_PROPS} />,
+    [OPERATION_INFO]: <OperationInfo {...COMPONENT_PROPS} />,
+    [IMMATURE_DETAILS]: <ImmatureDetails {...COMPONENT_PROPS} />,
+    [SIGN_VERIFY_ID_DATA]: <SignVerifyIdData {...COMPONENT_PROPS} />,
+    [SHIELDCOINBASE]: <ShieldCoinbase {...COMPONENT_PROPS} />,
   };
 
   return MODAL_MAP[this.state.modalPath[0]] != null
