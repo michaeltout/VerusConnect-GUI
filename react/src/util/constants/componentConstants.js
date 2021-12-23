@@ -280,6 +280,7 @@ export const NATIVE_ZAPWALLETTXES = '-zapwallettxes'
 export const NATIVE_STAKE = '-mint'
 export const NATIVE_MINE = '-gen'
 export const NATIVE_MINE_THREADS = '-genproclimit='
+export const NATIVE_BOOTSTRAP = '-bootstrap'
 
 // ZCash params 
 export const ZCPARAMS_VERUS = 'verus.io'

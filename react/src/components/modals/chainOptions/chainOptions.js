@@ -25,7 +25,7 @@ class ChainOptions extends React.Component {
     this.selectRestartOption = this.selectRestartOption.bind(this)
   }
 
-  selectRestartOption(additionalOptions = [], bootstrap = false) {
+  selectRestartOption(additionalOptions = []) {
     this.setState({
       loading: true
     }, async () => {
@@ -47,8 +47,7 @@ class ChainOptions extends React.Component {
           this.props.activeCoin,
           this.props.activeCoin.mode,
           startParams,
-          this.props.dispatch,
-          bootstrap
+          this.props.dispatch
         );
         this.props.dispatch(newSnackbar(SUCCESS_SNACK, "Daemon relaunched successfully!"))
         this.props.closeModal()

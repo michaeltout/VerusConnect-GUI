@@ -40,7 +40,7 @@ export const initCoin = async (chainTicker, mode, startupOptions, launchConfig) 
   }
 }
 
-export const restartCoin = async (chainTicker, mode, startupOptions, launchConfig, bootstrap = false) => {  
+export const restartCoin = async (chainTicker, mode, startupOptions, launchConfig) => {  
   try {
     return await getApiData(
       mode,
@@ -48,8 +48,7 @@ export const restartCoin = async (chainTicker, mode, startupOptions, launchConfi
       {
         chainTicker,
         launchConfig,
-        startupOptions,
-        bootstrap
+        startupOptions
       },
       POST
     );
