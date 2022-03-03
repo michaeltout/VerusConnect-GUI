@@ -83,5 +83,13 @@ export const EXPLORER_LIST = {
   MNX: 'https://minexexplorer.com/?r=explorer/tx&hash=',
   RDD: 'https://live.reddcoin.com',
   ETH: 'https://etherscan.io/tx/',
+  USDT: 'https://etherscan.io/tx/',
+  USDC: 'https://etherscan.io/tx/',
+  BAT: 'https://etherscan.io/tx/',
+  UNI: 'https://etherscan.io/tx/',
+  AAVE: 'https://etherscan.io/tx/',
+  GLM: 'https://etherscan.io/tx/',
+  LINK: 'https://etherscan.io/tx/',
   ETH_ROPSTEN: 'https://ropsten.etherscan.io/tx/',
+  ETH_RINKEBY: 'https://rinkeby.etherscan.io/tx/',
 };

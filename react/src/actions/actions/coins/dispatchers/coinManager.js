@@ -82,8 +82,7 @@ export const restartCoinInPlace = async (
   coinObj,
   mode,
   startupOptions,
-  dispatch,
-  bootstrap = false
+  dispatch
 ) => {
   let daemonResult;
   try {
@@ -103,8 +102,7 @@ export const restartCoinInPlace = async (
           : coinObj.options.startupOptions),
         ...(startupOptions == null ? [] : startupOptions),
       ],
-      coinObj.options,
-      bootstrap
+      coinObj.options
     );
     if (daemonResult.msg === "error") throw new Error(daemonResult.result);
 

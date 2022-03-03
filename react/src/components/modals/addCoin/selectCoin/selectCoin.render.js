@@ -14,7 +14,8 @@ import {
   ERC20,
   ADD_PBAAS_COIN,
   IMPORT_COIN,
-  ADD_DEFAULT_COIN
+  ADD_DEFAULT_COIN,
+  NATIVE_BOOTSTRAP
 } from "../../../../util/constants/componentConstants";
 import ImportCoinSelector from "./selectors/importCoinSelector/importCoinSelector";
 import DefaultCoinSelector from "./selectors/defaultCoinSelector/defaultCoinSelector";
@@ -101,7 +102,7 @@ export const SelectModeForm = function() {
             paddingRight: 14,
             paddingLeft: 15,
             marginBottom: 2,
-            color: "rgb(0,0,0)"
+            color: "rgb(0,0,0)",
           }}
           onClick={this.clearCoin}
         >
@@ -116,12 +117,9 @@ export const SelectModeForm = function() {
         className="d-sm-flex justify-content-sm-center align-items-sm-center"
         style={{ paddingTop: 9 }}
       >
-        <h1
-          className="text-center"
-          style={{ fontSize: 16, marginBottom: 0, color: "rgb(0,0,0)" }}
-        >
-          Use a seed (<strong>lite mode</strong>) or download the full
-          blockchain (<strong>native mode</strong>)
+        <h1 className="text-center" style={{ fontSize: 16, marginBottom: 0, color: "rgb(0,0,0)" }}>
+          Use a seed (<strong>lite mode</strong>) or download the full blockchain (
+          <strong>native mode</strong>)
         </h1>
       </div>
       <div />
@@ -141,7 +139,7 @@ export const SelectModeForm = function() {
             backgroundColor: "rgba(78,115,223,0)",
             borderRadius: 0,
             width: 120,
-            marginRight: 30
+            marginRight: 30,
           }}
         >
           <strong>Lite</strong>
@@ -158,7 +156,7 @@ export const SelectModeForm = function() {
             backgroundColor: "rgba(78,115,223,0)",
             borderRadius: 0,
             width: 120,
-            marginLeft: 30
+            marginLeft: 30,
           }}
         >
           <strong>Native</strong>
@@ -172,15 +170,12 @@ export const SelectModeForm = function() {
           <div>
             {this.state.chosenCoin.options.tags.includes(IS_VERUS) && (
               <div>
-                <div
-                  className="form-check d-flex align-items-center"
-                  style={{ padding: 0 }}
-                >
+                <div className="form-check d-flex align-items-center" style={{ padding: 0 }}>
                   <CustomCheckbox
                     checkboxProps={{
                       checked: this.state.nativeOptions[NATIVE_STAKE],
                       onChange: this.checkBox,
-                      name: NATIVE_STAKE
+                      name: NATIVE_STAKE,
                     }}
                     colorChecked="rgb(49, 101, 212)"
                     colorUnchecked="rgb(49, 101, 212)"
@@ -196,15 +191,12 @@ export const SelectModeForm = function() {
               </div>
             )}
             <div className="d-flex d-sm-flex d-md-flex d-lg-flex align-items-center align-items-sm-center align-items-md-center align-items-lg-center">
-              <div
-                className="form-check d-flex align-items-center"
-                style={{ padding: 0 }}
-              >
+              <div className="form-check d-flex align-items-center" style={{ padding: 0 }}>
                 <CustomCheckbox
                   checkboxProps={{
                     checked: this.state.nativeOptions[NATIVE_MINE],
                     onChange: this.checkBox,
-                    name: NATIVE_MINE
+                    name: NATIVE_MINE,
                   }}
                   colorChecked="rgb(49, 101, 212)"
                   colorUnchecked="rgb(49, 101, 212)"
@@ -228,15 +220,12 @@ export const SelectModeForm = function() {
               />
             </div>
             <div>
-              <div
-                className="form-check d-flex align-items-center"
-                style={{ padding: 0 }}
-              >
+              <div className="form-check d-flex align-items-center" style={{ padding: 0 }}>
                 <CustomCheckbox
                   checkboxProps={{
                     checked: this.state.nativeOptions[NATIVE_REINDEX],
                     onChange: this.checkBox,
-                    name: NATIVE_REINDEX
+                    name: NATIVE_REINDEX,
                   }}
                   colorChecked="rgb(49, 101, 212)"
                   colorUnchecked="rgb(49, 101, 212)"
@@ -251,15 +240,12 @@ export const SelectModeForm = function() {
               </div>
             </div>
             <div>
-              <div
-                className="form-check d-flex align-items-center"
-                style={{ padding: 0 }}
-              >
+              <div className="form-check d-flex align-items-center" style={{ padding: 0 }}>
                 <CustomCheckbox
                   checkboxProps={{
                     checked: this.state.nativeOptions[NATIVE_RESCAN],
                     onChange: this.checkBox,
-                    name: NATIVE_RESCAN
+                    name: NATIVE_RESCAN,
                   }}
                   colorChecked="rgb(49, 101, 212)"
                   colorUnchecked="rgb(49, 101, 212)"
@@ -273,6 +259,28 @@ export const SelectModeForm = function() {
                 </label>
               </div>
             </div>
+            {this.state.chosenCoin.id === "VRSC" && (
+              <div>
+                <div className="form-check d-flex align-items-center" style={{ padding: 0 }}>
+                  <CustomCheckbox
+                    checkboxProps={{
+                      checked: this.state.nativeOptions[NATIVE_BOOTSTRAP],
+                      onChange: this.checkBox,
+                      name: NATIVE_BOOTSTRAP,
+                    }}
+                    colorChecked="rgb(49, 101, 212)"
+                    colorUnchecked="rgb(49, 101, 212)"
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor="formCheck-1"
+                    style={{ color: "rgb(0,0,0)" }}
+                  >
+                    {"Bootstrap"}
+                  </label>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -289,7 +297,7 @@ export const SelectModeForm = function() {
             paddingRight: 20,
             paddingLeft: 20,
             marginTop: 30,
-            visibility: this.state.selectedCoin ? "unset" : "hidden"
+            visibility: this.state.selectedCoin ? "unset" : "hidden",
           }}
         >
           <strong>{"Add Coin"}</strong>

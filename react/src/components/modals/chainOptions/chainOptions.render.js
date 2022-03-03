@@ -1,5 +1,10 @@
 import React from 'react';
-import { NATIVE_REINDEX, NATIVE_RESCAN, NATIVE_ZAPWALLETTXES } from '../../../util/constants/componentConstants';
+import {
+  NATIVE_REINDEX,
+  NATIVE_RESCAN,
+  NATIVE_ZAPWALLETTXES,
+  NATIVE_BOOTSTRAP,
+} from "../../../util/constants/componentConstants";
 
 export const ChainOptionsRender = function() {
   let options = [
@@ -51,7 +56,7 @@ export const ChainOptionsRender = function() {
     options.push({
       title: "Bootstrap",
       onClick: () =>
-        this.selectRestartOption([], true),
+        this.selectRestartOption([NATIVE_BOOTSTRAP]),
       label: "Bootstrap chain & relaunch daemon",
       description:
         "Downloads chain data and re-launches the coin daemon. Could take a while.",

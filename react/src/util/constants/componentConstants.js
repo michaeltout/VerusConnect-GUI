@@ -46,6 +46,8 @@ export const API_GET_RFOX_GET_ACCOUNT_BALANCES = 'rfox/get_account_balances'
 export const API_GET_OFFERS = 'getoffers'
 export const API_CLOSE_OFFERS = 'closeoffers'
 export const API_TAKE_OFFER = 'takeoffer'
+export const API_EXPORT_WALLET = 'exportwallet'
+export const API_IMPORT_WALLET = 'importwallet'
 
 // Write API call names
 export const API_CREATE_ADDRESS = 'get_newaddress'
@@ -74,6 +76,9 @@ export const API_STOP_STAKING = 'stop_staking'
 export const API_SHIELDCOINBASE = 'shieldcoinbase'
 export const API_SHIELDCOINBASE_PREFLIGHT = 'shieldcoinbase_preflight'
 export const API_RFOX_CLAIM_BALANCES = 'rfox/claim_account_balances'
+export const API_LOGIN_USER = 'users/login'
+export const API_LOGOUT_USER = 'users/logout'
+export const API_GET_CURRENT_USER = 'users/current'
 export const API_MAKE_OFFER = 'makeoffer'
 export const API_SET_IDENTITY_TIMELOCK = 'setidentitytimelock'
 
@@ -94,6 +99,7 @@ export const API_REMOVE_COIN = 'remove_coin'
 export const CHECK_ZCASH_PARAMS = 'zcashparamsexist'
 export const DL_ZCASH_PARAMS = 'zcparamsdl'
 export const AUTHENTICATE = 'auth'
+export const CHECK_AUTHENTICATION = 'check_auth'
 export const LOG_OUT = 'logout' 
 export const GET_STATIC_SYSTEM_DATA = 'get_static_system_data'
 export const API_GET_CPU_TEMP = 'get_cpu_temp'
@@ -209,6 +215,7 @@ export const VERIFY_ID_DATA = 'verify_id_data'
 export const SIGN_ID_DATA = 'sign_id_data'
 export const TX_INFO = 'tx_info'
 export const CSV_EXPORT = 'csv_export'
+export const WALLET_IMPORT = 'wallet_import'
 export const OPERATION_INFO = 'operation_info'
 export const ID_INFO = 'id_info'
 export const CURRENCY_INFO = 'currency_info'
@@ -276,6 +283,7 @@ export const NATIVE_ZAPWALLETTXES = '-zapwallettxes'
 export const NATIVE_STAKE = '-mint'
 export const NATIVE_MINE = '-gen'
 export const NATIVE_MINE_THREADS = '-genproclimit='
+export const NATIVE_BOOTSTRAP = '-bootstrap'
 
 // ZCash params 
 export const ZCPARAMS_VERUS = 'verus.io'
@@ -444,6 +452,19 @@ export const MINING_FUNCTIONS = 'mining_functions'
 export const SIMPLE_CONVERSION = 'simple_conversion'
 export const ADVANCED_CONVERSION = 'advanced_conversion'
 export const CONVERSION_OVERVIEW = 'conversion_overview'
+
+
+// Plugins API
+export const API_INSTALL_PLUGIN = 'plugin/install'
+export const API_RUN_PLUGIN = 'plugin/run'
+export const API_LIST_PLUGINS = 'plugin/all'
+export const API_GET_PLUGIN = 'plugin/get'
+export const API_AUTHENTICATE_COIN = 'plugin/builtin/authenticator/authenticate'
+export const API_MAKE_LOGIN_CONSENT_REQUEST = 'plugin/builtin/verus_login_consent_ui/request'
+
+// VerusID
+export const API_SIGN_LOGIN_CONSENT_RESPONSE = "verusid/login/sign_response"
+export const API_VERIFY_LOGIN_CONSENT_REQUEST = "verusid/login/verify_request"
 
 // Add Coin modal constants
 export const ADD_DEFAULT_COIN = 'add_default_preset'

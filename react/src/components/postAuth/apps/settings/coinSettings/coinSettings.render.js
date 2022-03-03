@@ -128,6 +128,44 @@ export const CoinSettingsOptionsRender = function() {
               disabled={this.state.loadingTxs}
             />
           </div>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              marginBottom: 16,
+            }}
+          >
+            <CustomButton
+              onClick={() => this.openImportWalletModal()}
+              title={`Import native wallet backup`}
+              backgroundColor={"white"}
+              textColor={"black"}
+              buttonProps={{
+                color: "default",
+                variant: "outlined",
+              }}
+            />
+          </div>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              marginBottom: 16,
+            }}
+          >
+            <CustomButton
+              onClick={() => this.openExportWalletModal()}
+              title={`Export native wallet backup`}
+              backgroundColor={"white"}
+              textColor={"black"}
+              buttonProps={{
+                color: "default",
+                variant: "outlined",
+              }}
+            />
+          </div>
           <Terminal
             descriptions={{
               run: "makes a call to the blockchain daemon based on the next entered parameters",

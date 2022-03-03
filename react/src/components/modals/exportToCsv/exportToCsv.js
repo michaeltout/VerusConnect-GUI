@@ -4,10 +4,9 @@ import {
   ExportToCsvRender,
 } from './exportToCsv.render';
 import {
-  CSV_EXPORT, ERROR_SNACK, SUCCESS_SNACK, MID_LENGTH_ALERT
+  CSV_EXPORT
 } from "../../../util/constants/componentConstants";
 import { exportTransactionCsv } from '../../../util/api/csv/csvExport';
-import { newSnackbar } from '../../../actions/actionCreators';
 
 class ExportToCsv extends React.Component {
   constructor(props) {

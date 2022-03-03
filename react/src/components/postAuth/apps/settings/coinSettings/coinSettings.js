@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { 
   CoinSettingsRender,
 } from './coinSettings.render';
-import { NATIVE, ERROR_SNACK, API_SUCCESS, CSV_EXPORT } from '../../../../../util/constants/componentConstants';
-import { customRpcCall, getTransactions } from '../../../../../util/api/wallet/walletCalls';
+import { NATIVE, ERROR_SNACK, API_SUCCESS, CSV_EXPORT, WALLET_IMPORT, SUCCESS_SNACK } from '../../../../../util/constants/componentConstants';
+import { customRpcCall, exportWallet, getTransactions } from '../../../../../util/api/wallet/walletCalls';
 import {
   updateLocalBlacklists,
   newSnackbar,
@@ -15,11 +15,14 @@ import {
 import Store from '../../../../../store';
 import { timeConverter } from '../../../../../util/displayUtil/timeUtils';
 import { renderAffectedBalance } from '../../../../../util/txUtils/txRenderUtils';
+import { closeTextDialog, openTextDialog } from '../../../../../actions/actionDispatchers';
 
 class CoinSettings extends React.Component {
   constructor(props) {
     super(props);
-    this.availableModeArr = [NATIVE] /*Object.keys(props.selectedCoinObj.available_modes).filter(mode => {
+    this.availableModeArr = [
+      NATIVE,
+    ]; /*Object.keys(props.selectedCoinObj.available_modes).filter(mode => {
       return props.selectedCoinObj.available_modes[mode]
     })*/
     //TODO: Uncomment this when you add settings for electrum or eth modes
@@ -29,98 +32,131 @@ class CoinSettings extends React.Component {
       tabs: this.availableModeArr,
       disableBlacklist: false,
       disableWhitelist: false,
-      loadingTxs: false
-    }
+      loadingTxs: false,
+    };
 
     // Any properties here will prevent the command with their key from being run
     // on the console by typing run <key>, and will print our their value instead.
     // E.g., to override help, you could do ['help'] = "No."
     this.COMMAND_OVERRIDES = {};
 
-    this.handleTabChange = this.handleTabChange.bind(this)
-    this.setConfigValue = this.setConfigValue.bind(this)
-    this.callDaemonCmd = this.callDaemonCmd.bind(this)
-    this.removeFromBlacklist = this.removeFromBlacklist.bind(this)
-    this.removeFromWhitelist = this.removeFromWhitelist.bind(this)
-    this.exportAllNativeTransactions = this.exportAllNativeTransactions.bind(this)
+    this.handleTabChange = this.handleTabChange.bind(this);
+    this.setConfigValue = this.setConfigValue.bind(this);
+    this.callDaemonCmd = this.callDaemonCmd.bind(this);
+    this.removeFromBlacklist = this.removeFromBlacklist.bind(this);
+    this.removeFromWhitelist = this.removeFromWhitelist.bind(this);
+    this.exportAllNativeTransactions = this.exportAllNativeTransactions.bind(this);
+    this.openImportWalletModal = this.openImportWalletModal.bind(this);
+    this.exportWalletBackup = this.exportWalletBackup.bind(this);
+    this.openExportWalletModal = this.openExportWalletModal.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    //if (nextProps.selectedCoinObj != this.props.selectedCoinObj) {      
-      //TODO: Uncomment this when you add settings for electrum or eth modes
-      /*this.availableModeArr = Object.keys(nextProps.selectedCoinObj.available_modes).filter(mode => {
+    //if (nextProps.selectedCoinObj != this.props.selectedCoinObj) {
+    //TODO: Uncomment this when you add settings for electrum or eth modes
+    /*this.availableModeArr = Object.keys(nextProps.selectedCoinObj.available_modes).filter(mode => {
         return nextProps.selectedCoinObj.available_modes[mode]
       })*/
-
     //  this.setState({ activeTab: 0, tabs: this.availableModeArr })
     //}
   }
 
   removeFromBlacklist(value) {
     this.setState({ disableBlacklist: true }, async () => {
-      const {
-        blacklist,
-        selectedCoinObj,
-        dispatch
-      } = this.props;
-      let currentBlacklist = [...blacklist]
-      const allBlacklists = Store.getState().localCurrencyLists.blacklists
-  
+      const { blacklist, selectedCoinObj, dispatch } = this.props;
+      let currentBlacklist = [...blacklist];
+      const allBlacklists = Store.getState().localCurrencyLists.blacklists;
+
       const index = currentBlacklist.indexOf(value);
       if (index > -1) {
         currentBlacklist.splice(index, 1);
       }
-  
+
       try {
-        dispatch(await updateLocalBlacklists({ ...allBlacklists, [selectedCoinObj.id]: currentBlacklist}))
-        this.setState({ disableBlacklist: false })
-      } catch(e) {
-        dispatch(newSnackbar(ERROR_SNACK, e.message))
-        this.setState({ disableBlacklist: false })
+        dispatch(
+          await updateLocalBlacklists({ ...allBlacklists, [selectedCoinObj.id]: currentBlacklist })
+        );
+        this.setState({ disableBlacklist: false });
+      } catch (e) {
+        dispatch(newSnackbar(ERROR_SNACK, e.message));
+        this.setState({ disableBlacklist: false });
       }
-    })
+    });
   }
 
   removeFromWhitelist(value) {
     this.setState({ disableWhitelist: true }, async () => {
-      const {
-        whitelist,
-        selectedCoinObj,
-        dispatch
-      } = this.props;
-      let currentWhitelist = [...whitelist]
-      const allWhitelists = Store.getState().localCurrencyLists.whitelists
-  
+      const { whitelist, selectedCoinObj, dispatch } = this.props;
+      let currentWhitelist = [...whitelist];
+      const allWhitelists = Store.getState().localCurrencyLists.whitelists;
+
       const index = currentWhitelist.indexOf(value);
       if (index > -1) {
         currentWhitelist.splice(index, 1);
       }
-  
+
       try {
-        dispatch(await updateLocalWhitelists({ ...allWhitelists, [selectedCoinObj.id]: currentWhitelist}))
-        this.setState({ disableWhitelist: false })
-      } catch(e) {
-        dispatch(newSnackbar(ERROR_SNACK, e.message))
-        this.setState({ disableWhitelist: false })
+        dispatch(
+          await updateLocalWhitelists({ ...allWhitelists, [selectedCoinObj.id]: currentWhitelist })
+        );
+        this.setState({ disableWhitelist: false });
+      } catch (e) {
+        dispatch(newSnackbar(ERROR_SNACK, e.message));
+        this.setState({ disableWhitelist: false });
       }
-    })
+    });
+  }
+
+  openImportWalletModal() {
+    const { id } = this.props.selectedCoinObj;
+
+    this.props.dispatch(setModalParams(WALLET_IMPORT, { chainTicker: id, mode: NATIVE }));
+    this.props.dispatch(setModalNavigationPath(WALLET_IMPORT));
+  }
+
+  async exportWalletBackup() {
+    const res = await exportWallet(NATIVE, this.props.selectedCoinObj.id, Date.now().toString());
+
+    if (res.msg === "success") {
+      this.props.dispatch(newSnackbar(SUCCESS_SNACK, `Wallet export saved at ${res.result}`));
+    } else {
+      this.props.dispatch(newSnackbar(ERROR_SNACK, res.result));
+    }
+  }
+
+  openExportWalletModal() {
+    openTextDialog(
+      closeTextDialog,
+      [
+        {
+          title: "No",
+          onClick: () => {
+            closeTextDialog();
+          },
+        },
+        {
+          title: "Yes",
+          onClick: () => {
+            this.exportWalletBackup();
+            closeTextDialog();
+          },
+        },
+      ],
+      `Are you sure you would like to export a backup of your wallet? It will be generated unencrypted, and must be kept safe.`,
+      "Export wallet backup?"
+    );
   }
 
   exportAllNativeTransactions() {
     this.setState({ loadingTxs: true }, async () => {
       try {
-        const { id } = this.props.selectedCoinObj
-  
-        const apiResult = await getTransactions(
-          NATIVE,
-          id,
-          null,
-          true,
-        );
-        
+        const { id } = this.props.selectedCoinObj;
+
+        const apiResult = await getTransactions(NATIVE, id, null, true);
+
         if (apiResult.msg === API_SUCCESS) {
-          const transactions = apiResult.result
-  
+          const transactions = apiResult.result;
+
           this.props.dispatch(
             setModalParams(CSV_EXPORT, {
               transactions: transactions
@@ -130,31 +166,20 @@ class CoinSettings extends React.Component {
                   const affectedBalance = renderAffectedBalance(tx);
 
                   return {
-                    type:
-                      type === "sent"
-                        ? "send"
-                        : type === "received"
-                        ? "receive"
-                        : type,
+                    type: type === "sent" ? "send" : type === "received" ? "receive" : type,
                     txid: tx.txid,
                     date: timeConverter(
-                      Number(
-                        tx.blocktime != null ? tx.blocktime : tx.timestamp
-                      ),
+                      Number(tx.blocktime != null ? tx.blocktime : tx.timestamp),
                       true
                     ),
                     confirmations: Number(tx.confirmations),
                     amount:
-                      (type === "sent" || type === "send") &&
-                      !isNaN(amount) &&
-                      amount > 0
+                      (type === "sent" || type === "send") && !isNaN(amount) && amount > 0
                         ? amount * -1
                         : amount,
                     address: tx.address,
                     affected_balance:
-                      affectedBalance != null
-                        ? affectedBalance.props.children
-                        : affectedBalance,
+                      affectedBalance != null ? affectedBalance.props.children : affectedBalance,
                     coin: id,
                     fee: tx.fee != null ? Math.abs(tx.fee) : tx.fee,
                   };
@@ -174,124 +199,123 @@ class CoinSettings extends React.Component {
               `Error fetching transactions, ensure the ${id} daemon is running.`
             )
           );
-          console.error(apiResult.result)
+          console.error(apiResult.result);
         }
       } catch (e) {
-        this.props.dispatch(
-          newSnackbar(
-            ERROR_SNACK,
-            `Error exporting transaction CSV for ${id}.`
-          )
-        );
-        console.error(e)
+        this.props.dispatch(newSnackbar(ERROR_SNACK, `Error exporting transaction CSV for ${id}.`));
+        console.error(e);
       }
 
-      this.setState({ loadingTxs: false })
-    })
+      this.setState({ loadingTxs: false });
+    });
   }
 
-  callDaemonCmd(args, print) {    
+  callDaemonCmd(args, print) {
     // Filter out blank arguments
-    const argsFiltered = args._.filter(arg => {
-      return arg.toString().length > 0
-    })   
+    const argsFiltered = args._.filter((arg) => {
+      return arg.toString().length > 0;
+    });
 
-    const cliCmd = argsFiltered.length ? argsFiltered[0] : 'help'
-    let cliParams = argsFiltered.length ? argsFiltered.slice(1, argsFiltered.length) : []
-    let cliCmdsParsed = []
-    let skipIndexes = []
+    const cliCmd = argsFiltered.length ? argsFiltered[0] : "help";
+    let cliParams = argsFiltered.length ? argsFiltered.slice(1, argsFiltered.length) : [];
+    let cliCmdsParsed = [];
+    let skipIndexes = [];
 
     // Try to parse json strings, turn boolean strings into booleans, and number strings into numbers
-    cliParams = cliParams.map(param => {
-      if (param === "true") return true
-      if (param === "false") return false
-      if (!isNaN(Number(param))) return Number(param)
+    cliParams = cliParams.map((param) => {
+      if (param === "true") return true;
+      if (param === "false") return false;
+      if (!isNaN(Number(param))) return Number(param);
 
-      return param
-    })
+      return param;
+    });
 
     // Make arguments with space surrounded by quotes one argument
     cliParams.forEach((cmdParam, index) => {
       if (!skipIndexes.includes(index)) {
-        let parsedParam = cmdParam
+        let parsedParam = cmdParam;
 
-        if (typeof cmdParam === 'string' && (cmdParam[0] == "'" || cmdParam[0] == '"')) {
-          parsedParam = ""
-          let stepIndex = index
-          let endChar = cmdParam[0]
-          let stepCmd = cliParams[stepIndex]
-          let finishedParse = false
-  
-          while (!finishedParse && typeof stepCmd === 'string' && stepIndex < cliParams.length) {
-            stepCmd = cliParams[stepIndex]
-            parsedParam += stepIndex == index ? stepCmd : ' ' + stepCmd
-            skipIndexes.push(stepIndex)
-            
+        if (typeof cmdParam === "string" && (cmdParam[0] == "'" || cmdParam[0] == '"')) {
+          parsedParam = "";
+          let stepIndex = index;
+          let endChar = cmdParam[0];
+          let stepCmd = cliParams[stepIndex];
+          let finishedParse = false;
+
+          while (!finishedParse && typeof stepCmd === "string" && stepIndex < cliParams.length) {
+            stepCmd = cliParams[stepIndex];
+            parsedParam += stepIndex == index ? stepCmd : " " + stepCmd;
+            skipIndexes.push(stepIndex);
+
             if (stepCmd[stepCmd.length - 1] === endChar) {
-              finishedParse = true
+              finishedParse = true;
             }
-  
-            stepIndex++
-          }   
-          
-          parsedParam = parsedParam.replace(endChar === "'" ? /'/g : /"/g, '')
+
+            stepIndex++;
+          }
+
+          parsedParam = parsedParam.replace(endChar === "'" ? /'/g : /"/g, "");
 
           try {
-            const parsedJson = JSON.parse(parsedParam)
+            const parsedJson = JSON.parse(parsedParam);
 
-            if (typeof parsedJson === 'number') cliCmdsParsed.push(parsedJson.toString())
-            else cliCmdsParsed.push(parsedJson)
-          } catch(e) {
-            cliCmdsParsed.push(parsedParam)
+            if (typeof parsedJson === "number") cliCmdsParsed.push(parsedJson.toString());
+            else cliCmdsParsed.push(parsedJson);
+          } catch (e) {
+            cliCmdsParsed.push(parsedParam);
           }
         } else {
-          cliCmdsParsed.push(parsedParam)
+          cliCmdsParsed.push(parsedParam);
         }
-      } 
-    })
+      }
+    });
 
     if (this.COMMAND_OVERRIDES[cliCmd] != null) {
-      print(this.COMMAND_OVERRIDES[cliCmd])
+      print(this.COMMAND_OVERRIDES[cliCmd]);
     } else {
       // Make RPC call based on params given
       customRpcCall(this.props.selectedCoinObj.id, cliCmd, cliCmdsParsed)
-      .then(response => {
-        if (response) {
-          const { result } = response
+        .then((response) => {
+          if (response) {
+            const { result } = response;
 
-          if (result == null) {
-            print("No response.")
-          } else if (typeof result == 'string') {
-            // Format output string in readable format
-            print(`${result
-              .replace(/{/g, `{`)
-              .replace(/\\"/g, `"`)
-              .replace(/\\n/g, `\n`)
-              .replace(/}/g, `}`)}`)
-          } else if (typeof result == 'object') {
-            // Format JSON in readable format
-            print(JSON.stringify(result)
-              .replace(/,/g, ',\n') 
-              .replace(/":/g, '": ')
-              .replace(/{/g, '{\n')
-              .replace(/}/g, '\n}'))
-          } else if (typeof result == 'boolean') {
-            print(result ? "true" : "false")
-          } else {
-            print(result)
+            if (result == null) {
+              print("No response.");
+            } else if (typeof result == "string") {
+              // Format output string in readable format
+              print(
+                `${result
+                  .replace(/{/g, `{`)
+                  .replace(/\\"/g, `"`)
+                  .replace(/\\n/g, `\n`)
+                  .replace(/}/g, `}`)}`
+              );
+            } else if (typeof result == "object") {
+              // Format JSON in readable format
+              print(
+                JSON.stringify(result)
+                  .replace(/,/g, ",\n")
+                  .replace(/":/g, '": ')
+                  .replace(/{/g, "{\n")
+                  .replace(/}/g, "\n}")
+              );
+            } else if (typeof result == "boolean") {
+              print(result ? "true" : "false");
+            } else {
+              print(result);
+            }
           }
-        }
-      })
-      .catch(e => {
-        print(e.message)
-      })
+        })
+        .catch((e) => {
+          print(e.message);
+        });
     }
   }
 
   setConfigValue(name, value) {
-    const { props, state } = this
-    const { displayConfig, setDisplayConfig, selectedCoinObj } = props
-    const { activeTab, tabs } = state
+    const { props, state } = this;
+    const { displayConfig, setDisplayConfig, selectedCoinObj } = props;
+    const { activeTab, tabs } = state;
 
     setDisplayConfig({
       ...displayConfig,
@@ -301,16 +325,16 @@ class CoinSettings extends React.Component {
           ...displayConfig.coin[tabs[activeTab]],
           [name]: {
             ...displayConfig.coin[tabs[activeTab]][name],
-            [selectedCoinObj.id]: value
-          }
-        }
-      }
+            [selectedCoinObj.id]: value,
+          },
+        },
+      },
     });
   }
 
   handleTabChange(event, newTab) {
     this.setState({ activeTab: newTab });
-  };
+  }
 
   render() {
     return CoinSettingsRender.call(this);
