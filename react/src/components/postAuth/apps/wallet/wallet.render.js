@@ -11,6 +11,7 @@ import {
   ADD_DEFAULT_COIN,
   CHAIN_OPTIONS,
   POST_SYNC,
+  IS_PBAAS,
 } from "../../../../util/constants/componentConstants";
 import { openAddCoinModal, openModal } from '../../../../actions/actionDispatchers';
 import { IconButton } from '@material-ui/core';
@@ -25,6 +26,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Dashboard from './dashboard/dashboard'
 import CoinWallet from './coinWallet/coinWallet'
 import { normalizeNum } from '../../../../util/displayUtil/numberFormat';
+import CurrencySelector from '../../../../containers/CurrencySelector/CurrencySelector';
 
 const COMPONENT_MAP = {
   [DASHBOARD]: <Dashboard />,
@@ -88,10 +90,7 @@ export const WalletCardRender = function(coinObj) {
       key={coinObj.id}
       style={WalletStyles.cardClickableContainer}
     >
-      <div
-        className="d-flex flex-column align-items-end"
-        style={WalletStyles.cardContainer}
-      >
+      <div className="d-flex flex-column align-items-end" style={WalletStyles.cardContainer}>
         <div
           className={`card ${isActive ? "active-card" : "border-on-hover"}`}
           style={WalletStyles.cardInnerContainer}
@@ -121,57 +120,51 @@ export const WalletCardRender = function(coinObj) {
               paddingTop: errorOrLoading ? 0 : 20,
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <div>
-                <div
-                  className="d-flex"
-                  style={WalletStyles.cardCoinInfoContainer}
-                >
-                  <img
-                    src={`assets/images/cryptologo/${
-                      coinObj.mode === ETH
-                        ? ETH
-                        : coinObj.mode === ERC20
-                        ? ERC20
-                        : "btc"
-                    }/${coinObj.id.toLowerCase()}.png`}
-                    width="25px"
-                    height="25px"
-                    onError={(e) => {
-                      e.target.src = CHAIN_FALLBACK_IMAGE;
-                    }}
-                  />
-                  <h4 style={WalletStyles.cardCoinName}>
-                    <strong>{coinObj.name}</strong>
-                  </h4>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div>
+                  <div className="d-flex" style={WalletStyles.cardCoinInfoContainer}>
+                    <img
+                      src={`assets/images/cryptologo/${
+                        coinObj.mode === ETH ? ETH : coinObj.mode === ERC20 ? ERC20 : "btc"
+                      }/${coinObj.id.toLowerCase()}.png`}
+                      width="25px"
+                      height="25px"
+                      onError={(e) => {
+                        e.target.src = CHAIN_FALLBACK_IMAGE;
+                      }}
+                    />
+                    <h4 style={WalletStyles.cardCoinName}>
+                      <strong>{coinObj.name}</strong>
+                    </h4>
+                  </div>
+                  <h5
+                    className={`text-left coin-type ${coinObj.mode === NATIVE ? "native" : "lite"}`}
+                    style={WalletStyles.cardCoinType}
+                  >
+                    <strong>{coinObj.mode === NATIVE ? "NATIVE" : "LITE"}</strong>
+                  </h5>
                 </div>
-                <h5
-                  className={`text-left coin-type ${
-                    coinObj.mode === NATIVE ? "native" : "lite"
-                  }`}
-                  style={WalletStyles.cardCoinType}
-                >
-                  <strong>{coinObj.mode === NATIVE ? "NATIVE" : "LITE"}</strong>
-                </h5>
+                <div style={{ paddingTop: 6 }}>
+                  <h6 className="text-right" style={WalletStyles.fiatValue}>
+                    {`${balanceFiat}  ${fiatCurrency}`}
+                  </h6>
+                  <h5 className="text-right" style={WalletStyles.balance}>
+                    {`${
+                      isNaN(coinBalance)
+                        ? coinBalance
+                        : normalizeNum(Number(coinBalance.toFixed(8)))[3]
+                    } ${coinObj.id}`}
+                  </h5>
+                </div>
               </div>
-              <div style={{ paddingTop: 6 }}>
-                <h6 className="text-right" style={WalletStyles.fiatValue}>
-                  {`${balanceFiat}  ${fiatCurrency}`}
-                </h6>
-                <h5 className="text-right" style={WalletStyles.balance}>
-                  {`${
-                    isNaN(coinBalance)
-                      ? coinBalance
-                      : normalizeNum(Number(coinBalance.toFixed(8)))[3]
-                  } ${coinObj.id}`}
-                </h5>
-              </div>
+              {coinObj.options.tags.includes(IS_PBAAS) && <CurrencySelector coin={coinObj.id} />}
             </div>
           </div>
         </div>
@@ -187,9 +180,7 @@ export const WalletCardRender = function(coinObj) {
             <a
               className="text-right"
               href="#"
-              onClick={() =>
-                this.openDeactivateDialog(coinObj.id, coinObj.mode)
-              }
+              onClick={() => this.openDeactivateDialog(coinObj.id, coinObj.mode)}
               style={WalletStyles.deactivateCoin}
             >
               {"Deactivate"}
@@ -197,9 +188,7 @@ export const WalletCardRender = function(coinObj) {
             {coinObj.mode === NATIVE && (
               <IconButton
                 aria-label={"coin options"}
-                onClick={() =>
-                  openModal(CHAIN_OPTIONS, { chainTicker: coinObj.id })
-                }
+                onClick={() => openModal(CHAIN_OPTIONS, { chainTicker: coinObj.id })}
                 size="small"
                 style={{
                   display: "flex",

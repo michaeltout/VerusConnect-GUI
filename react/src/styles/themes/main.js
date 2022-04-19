@@ -22,33 +22,45 @@ export default createMuiTheme({
           lineHeight: 1.5,
           color: '#858796',
           textAlign: 'left',
-          backgroundColor: "#fff"
+          backgroundColor: "#fff",
+          textTransform: 'none',
         }
       },
     },
     MuiTableCell: {
       root: {
         fontFamily: MainFont,
+        textTransform: 'none',
       },
     },
     MuiTextField: {
       root: {
         fontFamily: MainFont,
+        textTransform: 'none',
       },
     },
     MuiFormLabel: {
       root: {
         fontFamily: MainFont,
+        textTransform: 'none',
       },
     },
     MuiInputBase: {
       root: {
         fontFamily: MainFont,
+        textTransform: 'none',
       },
     },
     MuiMenuItem: {
       root: {
         fontFamily: MainFont,
+        textTransform: 'none',
+      },
+    },
+    MuiTab: {
+      root: {
+        fontFamily: MainFont,
+        textTransform: 'none',
       },
     },
   },

@@ -109,12 +109,11 @@ class CoinWallet extends React.Component {
     this.onCurrencySearchSubmit = this.onCurrencySearchSubmit.bind(this);
     this.setPreferredCurrency = this.setPreferredCurrency.bind(this);
     this.openMultiverse = this.openMultiverse.bind(this);
-    this.ensureSelectedCurrencyExists = this.ensureSelectedCurrencyExists.bind(
-      this
-    );
-    this.tryNativeRelaunch = this.tryNativeRelaunch.bind(this)
-    this.openUnlockIdentityModal = this.openUnlockIdentityModal.bind(this)
-    this.unlockIdentity = this.unlockIdentity.bind(this)
+    this.ensureSelectedCurrencyExists = this.ensureSelectedCurrencyExists.bind(this);
+    this.tryNativeRelaunch = this.tryNativeRelaunch.bind(this);
+    this.openUnlockIdentityModal = this.openUnlockIdentityModal.bind(this);
+    this.unlockIdentity = this.unlockIdentity.bind(this);
+    this.displayCurrencyInfo = this.displayCurrencyInfo.bind(this);
   }
 
   updateCurrencySearchTerm(term) {
@@ -128,26 +127,16 @@ class CoinWallet extends React.Component {
   }
 
   async tryNativeRelaunch() {
-    const activeCoin = this.props.activatedCoins[this.props.coin]
+    const activeCoin = this.props.activatedCoins[this.props.coin];
     const startParams =
-      this.props.startupOptions != null &&
-      this.props.startupOptions[NATIVE][activeCoin.id] != null
+      this.props.startupOptions != null && this.props.startupOptions[NATIVE][activeCoin.id] != null
         ? this.props.startupOptions[NATIVE][activeCoin.id]
         : [];
 
     try {
-      this.props.dispatch(
-        newSnackbar(INFO_SNACK, "Restarting coin daemon, please wait...")
-      );
-      await restartCoinInPlace(
-        activeCoin,
-        activeCoin.mode,
-        startParams,
-        this.props.dispatch
-      );
-      this.props.dispatch(
-        newSnackbar(SUCCESS_SNACK, "Daemon relaunched successfully!")
-      );
+      this.props.dispatch(newSnackbar(INFO_SNACK, "Restarting coin daemon, please wait..."));
+      await restartCoinInPlace(activeCoin, activeCoin.mode, startParams, this.props.dispatch);
+      this.props.dispatch(newSnackbar(SUCCESS_SNACK, "Daemon relaunched successfully!"));
     } catch (e) {
       this.props.dispatch(newSnackbar(ERROR_SNACK, e.message));
     }
@@ -157,16 +146,14 @@ class CoinWallet extends React.Component {
     return props.currencyDataMap[currency]
       ? getCurrencyInfo(
           props.currencyDataMap[currency],
-          props.info && props.info.longestchain
-            ? props.info.longestchain
-            : this.NO_HEIGHT,
+          props.info && props.info.longestchain ? props.info.longestchain : this.NO_HEIGHT,
           props.identities
         )
       : null;
   }
 
   openUnlockIdentityModal() {
-    const timelock = this.props.activeIdentity.identity.timelock
+    const timelock = this.props.activeIdentity.identity.timelock;
 
     openTextDialog(
       closeTextDialog,
@@ -185,7 +172,9 @@ class CoinWallet extends React.Component {
           },
         },
       ],
-      `Are you sure you would like to start unlocking this identity? If you do, it will unlock in ${timelock + 20} blocks.`,
+      `Are you sure you would like to start unlocking this identity? If you do, it will unlock in ${
+        timelock + 20
+      } blocks.`,
       "Start Unlock?"
     );
   }
@@ -218,26 +207,16 @@ class CoinWallet extends React.Component {
 
   openModal(e, modalParams = {}, modal, modalType = BASIC_MODAL) {
     const _modal = modal ? modal : e.target.name;
-    openModal(
-      _modal,
-      { chainTicker: this.props.coin, ...modalParams },
-      modalType
-    );
+    openModal(_modal, { chainTicker: this.props.coin, ...modalParams }, modalType);
   }
 
   openMultiverse() {
-    this.props.dispatch(
-      setMainNavigationPath(`${POST_AUTH}/${APPS}/${MULTIVERSE}`)
-    );
+    this.props.dispatch(setMainNavigationPath(`${POST_AUTH}/${APPS}/${MULTIVERSE}`));
   }
 
   openOpInfo(rowData) {
     const { zOperations } = this.props;
-    this.openModal(
-      null,
-      { opObj: zOperations[rowData.opIndex] },
-      OPERATION_INFO
-    );
+    this.openModal(null, { opObj: zOperations[rowData.opIndex] }, OPERATION_INFO);
   }
 
   setPreferredCurrency(currency) {
@@ -250,32 +229,25 @@ class CoinWallet extends React.Component {
 
   onCurrencySearchSubmit() {
     this.setState({ loadingCurrency: true }, () => {
-      getCurrency(NATIVE, this.props.coin, this.state.currencySearchTerm)
-        .then((res) => {
-          if (res.msg === "success") {
-            this.props.dispatch(
-              newSnackbar(
-                SUCCESS_SNACK,
-                `${this.state.currencySearchTerm} currency found!`,
-                MID_LENGTH_ALERT
-              )
-            );
-            openCurrencyCard(
-              res.result,
-              this.props.coin,
-              this.props.identities[this.props.coin]
-            );
-            this.setState({ loadingCurrency: false, currencySearchTerm: "" });
-          } else {
-            this.props.dispatch(newSnackbar(ERROR_SNACK, res.result));
-            this.setState({ loadingCurrency: false });
-          }
-        })
-        .catch((err) => {
-          this.props.dispatch(newSnackbar(ERROR_SNACK, err.message));
-          this.setState({ loadingCurrency: false });
-        });
+      this.displayCurrencyInfo(this.state.currencySearchTerm);
     });
+  }
+
+  displayCurrencyInfo(currency) {
+    getCurrency(NATIVE, this.props.coin, currency)
+      .then((res) => {
+        if (res.msg === "success") {
+          openCurrencyCard(res.result, this.props.coin, this.props.identities[this.props.coin]);
+          this.setState({ loadingCurrency: false, currencySearchTerm: "" });
+        } else {
+          this.props.dispatch(newSnackbar(ERROR_SNACK, res.result));
+          this.setState({ loadingCurrency: false });
+        }
+      })
+      .catch((err) => {
+        this.props.dispatch(newSnackbar(ERROR_SNACK, err.message));
+        this.setState({ loadingCurrency: false });
+      });
   }
 
   ensureSelectedCurrencyExists() {
@@ -297,13 +269,7 @@ class CoinWallet extends React.Component {
           const { mode, id } = activeCoin;
 
           CONDITIONAL_UPDATES.map((updateId) => {
-            conditionallyUpdateWallet(
-              stateSnapshot,
-              dispatch,
-              mode,
-              id,
-              updateId
-            );
+            conditionallyUpdateWallet(stateSnapshot, dispatch, mode, id, updateId);
           });
         }
 
@@ -320,10 +286,7 @@ class CoinWallet extends React.Component {
         this.props.identities !== lastProps.identities
       ) {
         this.setState({
-          currencyInfo: this.calculateCurrencyData(
-            this.props,
-            this.props.selectedCurrency
-          ),
+          currencyInfo: this.calculateCurrencyData(this.props, this.props.selectedCurrency),
         });
       }
     }
@@ -357,8 +320,7 @@ class CoinWallet extends React.Component {
 
               if (balance != null && balanceType !== STAKING_BALANCE) {
                 if (currency === chainTicker) {
-                  if (balanceType !== INTEREST_BALANCE)
-                    pendingBalance.crypto += balance;
+                  if (balanceType !== INTEREST_BALANCE) pendingBalance.crypto += balance;
 
                   if (balanceType === CONFIRMED_BALANCE) {
                     spendableBalance.crypto += balance;
@@ -377,8 +339,7 @@ class CoinWallet extends React.Component {
                     balanceFiat: "-",
                     sendable: balanceType === IMMATURE_BALANCE ? false : true,
                     receivable:
-                      balanceType === IMMATURE_BALANCE ||
-                      balanceType === INTEREST_BALANCE
+                      balanceType === IMMATURE_BALANCE || balanceType === INTEREST_BALANCE
                         ? false
                         : true,
                   });
@@ -398,9 +359,7 @@ class CoinWallet extends React.Component {
 
       if (fiatPrices && fiatPrices[fiatCurrency]) {
         const fiatPrice = fiatPrices[fiatCurrency];
-        spendableBalance.fiat = (spendableBalance.crypto * fiatPrice).toFixed(
-          2
-        );
+        spendableBalance.fiat = (spendableBalance.crypto * fiatPrice).toFixed(2);
         pendingBalance.fiat = (pendingBalance.crypto * fiatPrice).toFixed(2);
 
         walletDisplayBalances = walletDisplayBalances.map((balanceObj) => {

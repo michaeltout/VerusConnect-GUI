@@ -4,13 +4,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import {
   CONFIRMED_BALANCE,
   PRIVATE_BALANCE,
-  DARK_CARD,
-  RESERVE_BALANCE,
   RECEIVE_COIN,
   CHAIN_INFO,
-  SEND,
   TRANSPARENT_BALANCE,
-  IMMATURE_DETAILS,
   SEND_COIN,
   API_SUCCESS,
   API_FAILED,
@@ -25,7 +21,6 @@ import {
   SPLIT_MODAL,
   CONVERT_CURRENCY,
   SIMPLE_CONVERSION,
-  ID_INFO,
   CREATE_IDENTITY,
   API_UPDATE_ID,
   IS_PBAAS,
@@ -33,23 +28,18 @@ import {
   LOCK_WITH_DELAY
 } from "../../../../../util/constants/componentConstants";
 import { VirtualizedTable } from '../../../../../containers/VirtualizedTable/VirtualizedTable'
-import { TX_TYPES } from '../../../../../util/txUtils/txRenderUtils'
 import { timeConverter } from '../../../../../util/displayUtil/timeUtils'
 import { SortDirection } from 'react-virtualized';
 import SearchBar from '../../../../../containers/SearchBar/SearchBar'
-import InputLabel from '@material-ui/core/InputLabel';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
-import ShuffleIcon from '@material-ui/icons/Shuffle';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import WalletPaper from '../../../../../containers/WalletPaper/WalletPaper'
 import TransactionCard from '../../../../../containers/TransactionCard/TransactionCard'
-import { FormControl, Select, MenuItem, Tooltip, Typography, colors } from "@material-ui/core";
+import { MenuItem, Tooltip, Typography } from "@material-ui/core";
 import CustomButton from "../../../../../containers/CustomButton/CustomButton";
-import HelpIcon from '@material-ui/icons/Help';
 import MigrationHelper from "../../../../../containers/MigrationHelper/MigrationHelper";
 import { closeTextDialog, openIdentityCard, openSetupVaultModal, openTextDialog } from "../../../../../actions/actionDispatchers";
 import { claimRfoxMigration, estimateGasRfoxMigration, getRfoxMigrationAccountBalances } from "../../../../../util/api/wallet/walletCalls";
-import { normalizeNum } from "../../../../../util/displayUtil/numberFormat";
 import { checkFlag } from "../../../../../util/flagUtils";
 import { TIMELOCK_DELAY_FLAG } from "../../../../../util/constants/flags";
 
@@ -909,9 +899,7 @@ export const WalletRenderOperations = function() {
 }
 
 export const WalletRenderCurrencyFunctions = function() {
-  const { whitelists, coin, selectedCurrency, balances } = this.props
-  const whitelist = whitelists[coin] ? whitelists[coin] : []
-  const currencyBalances = balances != null ? balances.reserve : null
+  const { coin, selectedCurrency } = this.props
 
   return (
     <React.Fragment>
@@ -931,56 +919,18 @@ export const WalletRenderCurrencyFunctions = function() {
             justifyContent: "space-between",
           }}
         >
-          <FormControl variant="outlined" style={{ flex: 1 }}>
-            <InputLabel>{"Selected Currency"}</InputLabel>
-            <Select
-              value={
-                selectedCurrency == null
-                  ? -1
-                  : whitelist.findIndex((value) => value === selectedCurrency)
-              }
-              onChange={(e) =>
-                this.setPreferredCurrency(
-                  e.target.value == -1 ? coin : whitelist[e.target.value]
-                )
-              }
-              labelWidth={124}
-            >
-              <MenuItem value={-1}>{coin}</MenuItem>
-              {whitelist.map((currency, index) => {
-                const currencyBalance =
-                  currencyBalances == null
-                    ? ["-", 0, ""]
-                    : currencyBalances[currency] == null
-                    ? ["0", 0, ""]
-                    : normalizeNum(currencyBalances[currency].public.confirmed);
-
-                return (
-                  <MenuItem
-                    key={index}
-                    value={index}
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      flexDirection: "row",
-                    }}
-                  >
-                    <div>{currency}</div>
-                    <div>
-                      {currencyBalances == null || selectedCurrency === currency
-                        ? ""
-                        : `${currencyBalance[0]}${currencyBalance[2]}`}
-                    </div>
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-          <Tooltip
-            title={`Here you can select the ${coin} currency you want to view/send/receive. To add currencies to this list, search for them or discover them on the right.`}
-          >
-            <HelpIcon color="primary" style={{ marginLeft: 16 }} />
-          </Tooltip>
+          <CustomButton
+            onClick={(e) => this.displayCurrencyInfo(selectedCurrency)}
+            title={"Currency Info"}
+            backgroundColor={"#3165D4"}
+            textColor={"white"}
+            buttonProps={{
+              size: "large",
+              color: "default",
+              variant: "outlined",
+              style: { width: "100%", height: "100%" },
+            }}
+          />
         </WalletPaper>
         <WalletPaper
           style={{

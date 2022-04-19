@@ -1,10 +1,6 @@
 import React from "react";
-import { secondsToTime } from "../../../../../util/displayUtil/timeUtils";
-import { normalizeNum } from "../../../../../util/displayUtil/numberFormat";
 import WalletPaper from "../../../../../containers/WalletPaper/WalletPaper";
 import {
-  SYNCING,
-  PRE_DATA,
   MINED_TX,
   MINTED_TX,
   IMMATURE_TX,
@@ -20,7 +16,7 @@ import WalletBooklet from "../../../../../containers/WalletBooklet/WalletBooklet
 import TransactionCard from "../../../../../containers/TransactionCard/TransactionCard";
 import GeneratorCard from "../../../../../containers/GeneratorCard/GeneratorCard";
 import { FormControl, Select, MenuItem, Switch } from "@material-ui/core";
-import { openAddCoinModal } from "../../../../../actions/actionDispatchers";
+import NetworkOverviewCard from "../../../../../containers/NetworkOverviewCard/NetworkOverviewCard";
 
 export const MiningWalletRender = function() {
   const {
@@ -54,7 +50,7 @@ export const MiningWalletRender = function() {
         }}
       >
         <div style={{ display: "flex", flexWrap: "wrap" }}>
-          {MiningWalletRenderNetworkOverview.call(this)}
+          <NetworkOverviewCard coin={coin}/>
         </div>
       </WalletPaper>
       {MiningWalletFunctions.call(this)}
@@ -169,112 +165,6 @@ export const MiningWalletRender = function() {
     </div>
   );
 };
-
-export const MiningWalletRenderNetworkOverview = function() {
-  const {
-    miningInfo,
-    coin,
-    info,
-    currentSupply,
-    currentSupplyError,
-    blockReward,
-    coinObj
-  } = this.props;
-  const _supply = currentSupply != null ? normalizeNum(currentSupply.total) : null
-  const _supplyError = currentSupplyError[coin]
-  const _reward = blockReward != null ? normalizeNum(blockReward.miner) : null
-
-  const currentTime = Math.round((new Date()).getTime() / 1000);
-  const timeSinceLastBlock = info && ((currentTime - info.tiptime) > 0) ? currentTime - info.tiptime : null
-
-  const netHashrate = miningInfo != null ? normalizeNum(miningInfo.networkhashps) : null
-
-  let displayedSystemData = {
-    ["Network Hashrate"]: {
-      text: `${netHashrate != null ? netHashrate[0] : "-"} ${
-        netHashrate != null ? netHashrate[2] : ""
-      }H/s`,
-      error: false
-    },
-    ["Block Height"]: {
-      text: `${info && info.longestchain ? info.longestchain : "-"}`,
-      error: false
-    },
-    ["Last Block"]: {
-      text:
-        coinObj && coinObj.status === SYNCING
-          ? "Syncing..."
-          : timeSinceLastBlock != null && coinObj.status !== PRE_DATA
-          ? `${secondsToTime(timeSinceLastBlock)} ago`
-          : "-",
-      error: false
-    },
-    ["Est. Total Supply"]: {
-      text:
-        _supplyError != null && _supplyError.error
-          ? _supplyError.result === "Loading..." &&
-            coinObj &&
-            coinObj.status === SYNCING
-            ? "Syncing..."
-            : _supplyError.result.includes("ENOTFOUND")
-            ? "Loading..."
-            : _supplyError.result
-          : `${_supply ? `${_supply[0]}${_supply[2]}` : "-"} ${coin}`,
-      error: false
-    },
-    ["Block Reward"]: {
-      text: `${_reward ? `${_reward[0]}${_reward[2]}` : "-"} ${coin}`,
-      error: false
-    }
-  };
-
-  return Object.keys(displayedSystemData).map((dataKey, index) => {
-    return (
-      <WalletPaper
-        style={{
-          flex: 1,
-          display: "flex",
-          alignItems: "start",
-          flexDirection: "column",
-          border: "none",
-          padding: 0,
-          minWidth: 'max-content',
-          margin: 6,
-          marginLeft: 0
-        }}
-        key={index}
-      >
-        <h6
-          className="card-title"
-          style={{
-            fontSize: 14,
-            margin: 0,
-            width: "max-content"
-          }}
-        >
-          {dataKey}
-        </h6>
-        <h5
-          className="card-title"
-          style={{
-            margin: 0,
-            marginTop: 5,
-            width: "max-content",
-            color: "rgb(0,0,0)"
-          }}
-        >
-          {displayedSystemData[dataKey].error && (
-            <i
-              className="fas fa-exclamation-triangle"
-              style={{ paddingRight: 6, color: "rgb(236,124,43)" }}
-            />
-          )}
-          {displayedSystemData[dataKey].text}
-        </h5>
-      </WalletPaper>
-    );
-  });
-}
 
 export const MiningWalletFunctions = function() {
   const { props } = this

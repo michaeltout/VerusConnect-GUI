@@ -47,7 +47,7 @@ export const conditionallyUpdateSystemData = async (state, dispatch, updateId) =
     let testPassed = true
     
     if (updateInfo.location_restrictions && updateInfo.location_restrictions.length > 0) {
-      testPassed = updateInfo.location_restrictions.every((locationRestriction) => {
+      testPassed = updateInfo.location_restrictions.some((locationRestriction) => {
         const locationRestrictions = readNavigationUrl(locationRestriction)
         if (!(currentMainPath.includes(locationRestrictions.mainPath)) || !(currentModalPath.includes(locationRestrictions.modalPath))) {
           return false

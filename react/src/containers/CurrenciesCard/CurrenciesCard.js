@@ -5,6 +5,7 @@ import { openCurrencyCard } from '../../actions/actionDispatchers';
 import { getCurrencyInfo } from '../../util/multiverse/multiverseCurrencyUtils';
 import { NATIVE, IS_VERUS } from '../../util/constants/componentConstants';
 import { getCurrency } from '../../util/api/wallet/walletCalls';
+import { useSelector } from 'react-redux'
 
 async function openCurrencyInfo(rowData, identities) {
   const fullCurrency = await getCurrency(
@@ -102,7 +103,16 @@ function CurrenciesCard(props) {
   const [displayCurrencies, setDisplayCurrencies] = useState([])
   const [currencySearchTerm, setCurrencySearchTerm] = useState('')
   const [activeTicker, setActiveTicker] = useState(null)
-  const { allCurrencies, info, blacklists, activatedCoins, identities } = props
+
+  const allCurrencies = props.currencies
+  const info = useSelector(state => state.ledger.info)
+  const blacklists = useSelector(state => state.localCurrencyLists.blacklists)
+  const whitelists = useSelector(state => state.localCurrencyLists.whitelists)
+  const activatedCoins = useSelector(state => state.coins.activatedCoins)
+  const identities = useSelector(state => state.ledger.identities)
+
+  useEffect(() => setActiveTicker(props.coin), [props.coin]);
+
   const [verusCoins, setVerusCoins] = useState(Object.values(activatedCoins).filter((coinObj) => {
     return coinObj.options.tags.includes(IS_VERUS) && coinObj.mode === NATIVE
   }))
@@ -110,6 +120,8 @@ function CurrenciesCard(props) {
   const currencyArray =
     activeTicker == null
       ? Object.values(allCurrencies).flat()
+      : allCurrencies[activeTicker] == null
+      ? []
       : allCurrencies[activeTicker];
   
   useEffect(
@@ -144,17 +156,21 @@ function CurrenciesCard(props) {
       setActiveTicker,
       verusCoins
     },
-    props
+    {
+      allCurrencies,
+      info,
+      whitelists,
+      blacklists,
+      activatedCoins,
+      identities,
+      coin: props.coin
+    }
   );
 }
 
 CurrenciesCard.propTypes = {
-  allCurrencies: PropTypes.object.isRequired,
-  info: PropTypes.object.isRequired,
-  whitelists: PropTypes.object.isRequired,
-  blacklists: PropTypes.object.isRequired,
-  activatedCoins: PropTypes.object.isRequired,
-  identities: PropTypes.object.isRequired
+  coin: PropTypes.string,
+  currencies: PropTypes.object
 };
 
 export default CurrenciesCard

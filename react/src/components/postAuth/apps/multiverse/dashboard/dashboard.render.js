@@ -1,48 +1,43 @@
 import React from 'react';
-import { IS_VERUS, NATIVE, ID_REVOKED, CHAIN_FALLBACK_IMAGE } from '../../../../../util/constants/componentConstants';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteForever from '@material-ui/icons/DeleteForever';
 import WalletPaper from '../../../../../containers/WalletPaper/WalletPaper';
 import CurrenciesCard from '../../../../../containers/CurrenciesCard/CurrenciesCard';
 
 export const DashboardRender = function() {
   return (
-    <div
-      className="col-md-8 col-lg-9"
-      style={{ padding: 16, overflow: "scroll" }}
-    >
+    <div className="col-md-8 col-lg-9" style={{ padding: 16, overflow: "scroll" }}>
       <WalletPaper
         style={{
           marginBottom: 16,
           display: "flex",
-          flexDirection: "column"
+          flexDirection: "column",
         }}
       >
-        <h6
-          className="card-title"
-          style={{ fontSize: 14, margin: 0, width: "100%" }}
-        >
+        <h6 className="card-title" style={{ fontSize: 14, margin: 0, width: "100%" }}>
           {"Multiverse Overview"}
         </h6>
         <div style={{ display: "flex", flexWrap: "wrap", marginTop: 10 }}>
           {DashboardRenderMultiverseOverview.call(this)}
         </div>
       </WalletPaper>
-      <CurrenciesCard
-        allCurrencies={this.props.allCurrencies}
-        info={this.props.info}
-        blacklists={this.props.localCurrencyLists.blacklists}
-        whitelists={this.props.localCurrencyLists.whitelists}
-        activatedCoins={this.props.activatedCoins}
-        identities={this.props.identities}
-      />
+      <WalletPaper
+        style={{
+          marginBottom: 16,
+        }}
+      >
+        <h6
+          className="card-title"
+          style={{ fontSize: 14, margin: 0, marginBottom: 8, width: "max-content" }}
+        >
+          {"PBaaS Chains"}
+        </h6>
+        <CurrenciesCard currencies={this.props.allBlockchains} />
+      </WalletPaper>
     </div>
   );
 }
 
 export const DashboardRenderMultiverseOverview = function() {
-  const { verusProtoCoins, loadedCurrencyCoins } = this.state
+  const { loadedCurrencyCoins } = this.state
   const { allCurrencies } = this.props
   let totalCurrencies = 0
 

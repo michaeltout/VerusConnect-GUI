@@ -5,27 +5,31 @@ import {
   CHAIN_FALLBACK_IMAGE,
   ADD_DEFAULT_COIN,
   ADD_PBAAS_COIN,
-  POST_SYNC
+  POST_SYNC,
+  PBAAS_POSTFIX,
+  FIX_CHARACTER
 } from "../../../../util/constants/componentConstants";
 import { openAddCoinModal } from '../../../../actions/actionDispatchers';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-export const MultiverseCardRender = function(coinObj) {
-  const { allCurrencies } = this.props
-  const errorOrLoading = coinObj.status !== POST_SYNC
-  const numCurrencies = allCurrencies[coinObj.id] ? allCurrencies[coinObj.id].length : '-'
+export const MultiverseCardRender = function (coinObj) {
+  const { allCurrencies, mainPathArray } = this.props;
+  const errorOrLoading = coinObj.status !== POST_SYNC;
+  const numCurrencies = allCurrencies[coinObj.id] ? allCurrencies[coinObj.id].length : "-";
+  const isActive = mainPathArray.includes(`${coinObj.id}${FIX_CHARACTER}${PBAAS_POSTFIX}`);
 
   return (
-    <div
+    <button
       className="unstyled-button"
+      onClick={() => {
+        this.openCoin(coinObj.id);
+      }}
+      key={coinObj.id}
       style={MultiverseStyles.cardClickableContainer}
     >
-      <div
-        className="d-flex flex-column align-items-end"
-        style={MultiverseStyles.cardContainer}
-      >
+      <div className="d-flex flex-column align-items-end" style={MultiverseStyles.cardContainer}>
         <div
-          className={'card'}
+          className={`card ${isActive ? "active-card" : "border-on-hover"}`}
           style={MultiverseStyles.cardInnerContainer}
         >
           {errorOrLoading && (
@@ -52,15 +56,14 @@ export const MultiverseCardRender = function(coinObj) {
             }}
           >
             <div style={{ width: "100%" }}>
-              <div
-                className="d-flex"
-                style={MultiverseStyles.cardCoinInfoContainer}
-              >
+              <div className="d-flex" style={MultiverseStyles.cardCoinInfoContainer}>
                 <img
                   src={`assets/images/cryptologo/btc/${coinObj.id.toLowerCase()}.png`}
                   width="25px"
                   height="25px"
-                  onError={(e) => {e.target.src = CHAIN_FALLBACK_IMAGE}}
+                  onError={(e) => {
+                    e.target.src = CHAIN_FALLBACK_IMAGE;
+                  }}
                 />
                 <h4 style={MultiverseStyles.cardCoinName}>
                   <strong>{coinObj.name}</strong>
@@ -76,15 +79,14 @@ export const MultiverseCardRender = function(coinObj) {
                   style={MultiverseStyles.searchButtonContainer}
                 >
                   <div
-                    className={'card border-on-hover'}
+                    className={"card border-on-hover"}
                     style={MultiverseStyles.cardInnerContainer}
                   >
                     <div style={MultiverseStyles.cardInnerTextContainer}>
-                      <i
-                        className={'fas fa-search'}
-                        style={{ paddingRight: 6, color: 'black' }}
-                      />
-                      {`Search ${numCurrencies} ${!isNaN(numCurrencies) && numCurrencies === 1 ? 'Currency' : 'Currencies'}`}
+                      <i className={"fas fa-search"} style={{ paddingRight: 6, color: "black" }} />
+                      {`Search ${numCurrencies} ${
+                        !isNaN(numCurrencies) && numCurrencies === 1 ? "Currency" : "Currencies"
+                      }`}
                     </div>
                   </div>
                 </div>
@@ -93,16 +95,16 @@ export const MultiverseCardRender = function(coinObj) {
           </div>
         </div>
       </div>
-    </div>
+    </button>
   );
-}
+};
 
 export const MultiverseTabsRender = function() {
   return [
     {
       title: "Multiverse Dashboard",
       icon: 'fa-home',
-      onClick: () => {},
+      onClick: () => this.openDashboard(),
       isActive: () => this.props.mainPathArray.includes(DASHBOARD)
     },
     {

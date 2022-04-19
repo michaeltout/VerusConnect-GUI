@@ -2,9 +2,8 @@
 import React from 'react';
 import { VirtualizedTable } from '../VirtualizedTable/VirtualizedTable'
 import { SortDirection } from 'react-virtualized';
-import WalletPaper from '../WalletPaper/WalletPaper';
 import SearchBar from '../SearchBar/SearchBar';
-import { FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
+import { FormControl, Select, MenuItem } from '@material-ui/core';
 import { openAddCoinModal } from '../../actions/actionDispatchers';
 
 export const CurrenciesCardRender = (
@@ -24,95 +23,79 @@ export const CurrenciesCardRender = (
     setActiveTicker,
     verusCoins,
   } = state;
-  const { title, allCurrencies, info, blacklists, identities } = props;
+  const { allCurrencies, info, blacklists, identities } = props;
   const coins = Object.keys(allCurrencies);
 
   return (
-    <WalletPaper style={{ marginBottom: 16 }}>
-      <h6
-        className="card-title"
-        style={{ fontSize: 14, margin: 0, marginBottom: 8, width: "max-content" }}
-      >
-        {title == null ? "Currencies" : title}
-      </h6>
-      {currencies != null && coins != null && coins.length > 0 && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            width: "100%",
-            marginBottom: 8,
-          }}
-        >
-          <FormControl variant="outlined">
-            <Select
-              value={coins.findIndex((value) => value === activeTicker)}
-              onChange={(e) =>
-                setActiveTicker(
-                  e.target.value === -1 ? null : coins[e.target.value]
+    <React.Fragment>
+      {currencies != null &&
+        coins != null &&
+        coins.length > 0 &&
+        (props.coin == null || coins.includes(props.coin)) &&
+        Object.values(allCurrencies).flat().length > 0 && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+              marginBottom: 8,
+            }}
+          >
+            {/* {props.coin == null && (
+              <FormControl variant="outlined">
+                <Select
+                  value={coins.findIndex((value) => value === activeTicker)}
+                  onChange={(e) =>
+                    setActiveTicker(e.target.value === -1 ? null : coins[e.target.value])
+                  }
+                >
+                  <MenuItem value={-1}>{"All Blockchains"}</MenuItem>
+                  {coins.map((coin, index) => {
+                    return <MenuItem value={index}>{coin}</MenuItem>;
+                  })}
+                </Select>
+              </FormControl>
+            )} */}
+            <SearchBar
+              label={"Currency Filter"}
+              variant={"outlined"}
+              placeholder={"Type and press enter"}
+              clearable={true}
+              style={{
+                width: 300,
+              }}
+              onChange={(e) => setCurrencySearchTerm(e.target.value)}
+              onClear={() => {
+                setCurrencySearchTerm("");
+                setDisplayCurrencies(
+                  filterCurrencies(
+                    getDisplayCurrencies(currencies, info, blacklists, identities),
+                    ""
+                  )
+                );
+              }}
+              onSubmit={() =>
+                setDisplayCurrencies(
+                  filterCurrencies(
+                    getDisplayCurrencies(currencies, info, blacklists, identities),
+                    currencySearchTerm
+                  )
                 )
               }
-            >
-              <MenuItem value={-1}>{"All Blockchains"}</MenuItem>
-              {coins.map((coin, index) => {
-                return <MenuItem value={index}>{coin}</MenuItem>;
-              })}
-            </Select>
-          </FormControl>
-          <SearchBar
-            label={"Currency Filter"}
-            variant={"outlined"}
-            placeholder={"Type and press enter"}
-            clearable={true}
-            style={{
-              width: 300,
-            }}
-            onChange={(e) => setCurrencySearchTerm(e.target.value)}
-            onClear={() => {
-              setCurrencySearchTerm("");
-              setDisplayCurrencies(
-                filterCurrencies(
-                  getDisplayCurrencies(
-                    currencies,
-                    info,
-                    blacklists,
-                    identities
-                  ),
-                  ""
-                )
-              );
-            }}
-            onSubmit={() =>
-              setDisplayCurrencies(
-                filterCurrencies(
-                  getDisplayCurrencies(
-                    currencies,
-                    info,
-                    blacklists,
-                    identities
-                  ),
-                  currencySearchTerm
-                )
-              )
-            }
-            value={currencySearchTerm}
-          />
-        </div>
-      )}
+              value={currencySearchTerm}
+            />
+          </div>
+        )}
       {displayCurrencies.length > 0 ? (
         CurrencyTableRender(displayCurrencies, openCurrencyInfo, props)
       ) : verusCoins.length == 0 ? (
-        <a
-          href="#"
-          style={{ color: "rgb(49, 101, 212)" }}
-          onClick={() => openAddCoinModal()}
-        >
+        <a href="#" style={{ color: "rgb(49, 101, 212)" }} onClick={() => openAddCoinModal()}>
           {"Add VRSCTEST to discover new currencies!"}
         </a>
       ) : (
         <div>{"No currencies found."}</div>
       )}
-    </WalletPaper>
+    </React.Fragment>
   );
 };
 
@@ -222,35 +205,6 @@ export const CurrencyTableRender = (displayCurrencies, openCurrencyInfo, props) 
             flexGrow: 1,
             label: 'Age',
             dataKey: 'age',
-          },
-          // {
-          //   width: 100,
-          //   flexGrow: 1,
-          //   cellDataGetter: ({ rowData }) => {
-          //     return rowData.spendableTo ? "Yes" : "No"
-          //   },
-          //   label: 'Convertable To',
-          //   dataKey: 'spendableTo',
-          // },
-          {
-            width: 100,
-            flexGrow: 1,
-            cellDataGetter: ({ rowData }) => {
-              return (
-                <div
-                  style={{
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    width: "100%",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {rowData.currency.systemname}
-                </div>
-              );
-            },
-            label: 'Chain',
-            dataKey: 'chain',
           },
           {
             width: 60,

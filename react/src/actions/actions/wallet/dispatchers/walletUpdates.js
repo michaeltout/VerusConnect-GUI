@@ -124,7 +124,7 @@ export const conditionallyUpdateWallet = async (state, dispatch, mode, chainTick
     //TODO: Fix testspass to be an OR rather than and AND
     
     if (updateInfo.location_restrictions && updateInfo.location_restrictions.length > 0) {
-      let testPassed = updateInfo.location_restrictions.every((locationRestriction) => {
+      let testPassed = updateInfo.location_restrictions.some((locationRestriction) => {
         const locationRestrictions = readNavigationUrl(locationRestriction)
         if (!(currentMainPath.includes(locationRestrictions.mainPath)) || !(currentModalPath.includes(locationRestrictions.modalPath))) {
           return false

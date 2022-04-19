@@ -18,7 +18,9 @@ import {
   VERUSID,
   MINING_POSTFIX,
   MINING,
-  API_SUCCESS
+  API_SUCCESS,
+  PBAAS_POSTFIX,
+  MULTIVERSE
 } from "../../../util/constants/componentConstants";
 import { checkAuthentication } from '../../../util/api/users/userData';
 
@@ -101,7 +103,16 @@ class UxSelector extends React.Component {
         }
       }
 
-      // TODO: Mining wallet here as well
+      if (navLocation.includes(`${FIX_CHARACTER}${PBAAS_POSTFIX}`)) {
+        const pbaasChainName = navLocation.split('/').filter(value => {
+          return value.includes(`${FIX_CHARACTER}${PBAAS_POSTFIX}`)
+        })
+        
+        if (!activatedCoins[pbaasChainName[0]]) {
+          dispatch(setMainNavigationPath(`${POST_AUTH}/${APPS}/${MULTIVERSE}`))
+          return
+        }
+      }
   
       dispatch(setMainNavigationPath(navLocation))
       return
