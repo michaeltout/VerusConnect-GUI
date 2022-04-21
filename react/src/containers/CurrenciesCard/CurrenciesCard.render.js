@@ -57,7 +57,7 @@ export const CurrenciesCardRender = (
               </FormControl>
             )} */}
             <SearchBar
-              label={"Currency Filter"}
+              label={"Filter"}
               variant={"outlined"}
               placeholder={"Type and press enter"}
               clearable={true}

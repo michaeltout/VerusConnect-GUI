@@ -72,7 +72,7 @@
     "terminal-in-react": "git+https://github.com/VerusCoin/terminal-in-react.git",
     "utf-8-validate": "5.0.3",
     "verus-typescript-primitives": "https://github.com/VerusCoin/verus-typescript-primitives.git",
-    "verus-wallet-endpoints": "https://github.com/michaeltout/verus-wallet-endpoints.git",
+    "verus-wallet-endpoints": "https://github.com/VerusCoin/verus-wallet-endpoints.git",
     "verus-zkedid-utils": "https://github.com/michaeltout/verus-zkedid-utils"
   },
   "devDependencies": {

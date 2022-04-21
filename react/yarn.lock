@@ -12199,9 +12199,9 @@ verror@1.10.0:
   version "1.0.0"
   resolved "https://github.com/VerusCoin/verus-typescript-primitives.git#67fc0610d6893893973f0da598bd267d42cc3c99"
 
-"verus-wallet-endpoints@https://github.com/michaeltout/verus-wallet-endpoints.git":
+"verus-wallet-endpoints@https://github.com/VerusCoin/verus-wallet-endpoints.git":
   version "1.0.0"
-  resolved "https://github.com/michaeltout/verus-wallet-endpoints.git#2a508a170ca0e2825b78254cdbad28118b0be132"
+  resolved "https://github.com/VerusCoin/verus-wallet-endpoints.git#d7c9d51138e5231ac66cbfe316fb5d7527d35e4c"
 
 "verus-zkedid-utils@https://github.com/michaeltout/verus-zkedid-utils":
   version "1.0.0"
