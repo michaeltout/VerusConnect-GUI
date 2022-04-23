@@ -710,7 +710,6 @@ export const WalletRenderBalances = function() {
                               )
                             }
                             disabled={
-                              balance === 0 ||
                               balance === "-" ||
                               !this.props.addresses ||
                               (this.props.selectedCurrency !==
