@@ -74,12 +74,13 @@ export const MultiverseCardRender = function (coinObj) {
               <button
                 className="unstyled-button"
                 onClick={() => this.openSearchModal(coinObj.id)}
-                style={MultiverseStyles.cardClickableContainer}
+                style={{
+                  ...MultiverseStyles.cardClickableContainer,
+                  marginBottom: 8,
+                  marginTop: 8,
+                }}
               >
-                <div
-                  className="d-flex flex-column align-items-end"
-                  style={MultiverseStyles.searchButtonContainer}
-                >
+                <div className="d-flex flex-column align-items-end">
                   <div
                     className={"card border-on-hover"}
                     style={MultiverseStyles.cardInnerContainer}
@@ -97,12 +98,9 @@ export const MultiverseCardRender = function (coinObj) {
                 <button
                   className="unstyled-button"
                   onClick={() => visualizePbaasNetwork(coinObj.id)}
-                  style={MultiverseStyles.cardClickableContainer}
+                  style={{ ...MultiverseStyles.cardClickableContainer, marginBottom: 8 }}
                 >
-                  <div
-                    className="d-flex flex-column align-items-end"
-                    style={MultiverseStyles.searchButtonContainer}
-                  >
+                  <div className="d-flex flex-column align-items-end">
                     <div
                       className={"card border-on-hover"}
                       style={MultiverseStyles.cardInnerContainer}
