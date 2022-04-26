@@ -101,9 +101,11 @@ export const ConvertCurrencySuccessRender = function() {
 }
 
 export const ConvertCurrencyConfirmSimpleRender = function() {
-  const output = this.state.outputs[this.state.confirmOutputIndex]
-  const price = this.state.conversionPaths[this.state.selectedConversionPath]
-    ? this.state.conversionPaths[this.state.selectedConversionPath].price
+  const { selectedConversionPath, conversionPaths, confirmOutputIndex, outputs } = this.state;
+
+  const output = outputs[confirmOutputIndex];
+  const price = conversionPaths[selectedConversionPath]
+    ? conversionPaths[selectedConversionPath].price
     : 0;
 
   const fee = output.via
@@ -149,8 +151,8 @@ export const ConvertCurrencyConfirmSimpleRender = function() {
             label="Via"
             variant="outlined"
             value={
-              this.state.conversionPaths[output.convertto]
-                ? this.state.conversionPaths[output.convertto].via.name
+              conversionPaths[selectedConversionPath]
+                ? conversionPaths[selectedConversionPath].via.name
                 : output.via
             }
             InputProps={{
@@ -166,8 +168,8 @@ export const ConvertCurrencyConfirmSimpleRender = function() {
           label="To"
           variant="outlined"
           value={
-            this.state.conversionPaths[output.convertto]
-              ? this.state.conversionPaths[output.convertto].destination.name
+            conversionPaths[selectedConversionPath]
+              ? conversionPaths[selectedConversionPath].destination.name
               : output.convertto
           }
           InputProps={{
@@ -210,13 +212,13 @@ export const ConvertCurrencyConfirmSimpleRender = function() {
         <TextField
           style={{
             flex: 1,
-            marginLeft: 4
+            marginLeft: 4,
           }}
           label="Receive (Estimated)"
           variant="outlined"
           value={`${Number((output.amount * price).toFixed(8))} ${
-            this.state.conversionPaths[output.convertto]
-              ? this.state.conversionPaths[output.convertto].destination.name
+            conversionPaths[selectedConversionPath]
+              ? conversionPaths[selectedConversionPath].destination.name
               : output.convertto
           }`}
           InputProps={{
@@ -295,6 +297,20 @@ export const ConvertCurrencyConfirmSimpleRender = function() {
   );
 };
 
+export const ConvertCurrencyFormSimpleOptionText = function (conversionPath) {
+  return `${conversionPath.destination.name}${
+    conversionPath.via
+      ? ` (${
+          conversionPath.exportto ? (conversionPath.gateway ? "gateway " : "off-chain ") : ""
+        }via ${conversionPath.via.name})`
+      : conversionPath.exportto
+      ? conversionPath.gateway
+        ? " (gateway)"
+        : " (off-chain)"
+      : ""
+  }`;
+};
+
 export const ConvertCurrencyFormSimpleRender = function() {
   const {
     currency,
@@ -313,7 +329,7 @@ export const ConvertCurrencyFormSimpleRender = function() {
     this.state.selectedConversionPath
   ]
     ? this.state.conversionPaths[this.state.selectedConversionPath].destination
-    : this.state.selectedConversionPath;
+    : null;
   
   const whitelist = this.props.whitelists[this.props.activeCoin.id]
     ? this.props.whitelists[this.props.activeCoin.id]
@@ -375,13 +391,7 @@ export const ConvertCurrencyFormSimpleRender = function() {
               variant="outlined"
               size="small"
               onChange={(e) => this.updateSimpleFormAmount(e, true)}
-              value={
-                this.state.controlAmounts
-                  ? amount
-                  : sendAmount == null
-                  ? ""
-                  : sendAmount
-              }
+              value={this.state.controlAmounts ? amount : sendAmount == null ? "" : sendAmount}
               style={{ flex: 1, marginRight: 4 }}
             />
             <SuggestionInput
@@ -442,51 +452,34 @@ export const ConvertCurrencyFormSimpleRender = function() {
                   : receiveAmount
               }
               style={{ flex: 1, marginRight: 4 }}
-              disabled={Object.keys(this.state.conversionPaths) == 0}
+              disabled={this.state.conversionPaths.length == 0}
             />
             <SuggestionInput
               value={
                 this.state.conversionPaths[this.state.selectedConversionPath]
-                  ? this.state.conversionPaths[
-                      this.state.selectedConversionPath
-                    ].destination.name
+                  ? ConvertCurrencyFormSimpleOptionText(
+                      this.state.conversionPaths[this.state.selectedConversionPath]
+                    )
                   : null
               }
               name="RecievingCurrency"
-              items={Object.values(this.state.conversionPaths)
+              items={this.state.conversionPaths
                 .map((x) => x.destination.name)
-                .sort()}
+                .sort()
+                .map((x, index) => index)}
               label="Currency"
               size="small"
               grouped={false}
               freeSolo={false}
-              onChange={(e) =>
-                this.selectConversionPath(this.state.nameMap[e.target.value])
-              }
-              disabled={Object.keys(this.state.conversionPaths) == 0}
+              onChange={(e) => this.selectConversionPath(e.target.value)}
+              disabled={this.state.conversionPaths.length == 0}
               renderOption={(option) => {
-                const id = this.state.nameMap[option];
-
                 return (
                   <h1
                     className="d-lg-flex align-items-lg-center"
                     style={{ marginBottom: 0, fontSize: 16 }}
                   >
-                    {`${this.state.conversionPaths[id].destination.name}${
-                      this.state.conversionPaths[id].via
-                        ? ` (${
-                            this.state.conversionPaths[id].exportto
-                              ? this.state.conversionPaths[id].gateway
-                                ? "gateway "
-                                : "off-chain "
-                              : ""
-                          }via ${this.state.conversionPaths[id].via.name})`
-                        : this.state.conversionPaths[id].exportto
-                        ? this.state.conversionPaths[id].gateway
-                          ? " (gateway)"
-                          : " (off-chain)"
-                        : ""
-                    }`}
+                    {ConvertCurrencyFormSimpleOptionText(this.state.conversionPaths[option])}
                   </h1>
                 );
               }}
@@ -494,16 +487,6 @@ export const ConvertCurrencyFormSimpleRender = function() {
             />
           </div>
           <div style={{ display: "flex", marginTop: 8 }}>
-            {/* <SuggestionInput
-              value={address}
-              name="DestinationAddress"
-              items={(exportto == null || exportto.length == 0)? [] : this.state.addresses}
-              label="Destination"
-              size="small"
-              disabled={this.state.addresses.length === 0}
-              onChange={(e) => this.updateOutput("address", e.target.value)}
-              containerStyle={{ flex: 1 }}
-            /> */}
             <TextField
               label="Destination"
               variant="outlined"
@@ -549,10 +532,8 @@ export const ConvertCurrencyFormSimpleRender = function() {
             }}
             square={false}
           >
-            <div style={{ fontWeight: "bold" }}>{`Price per ${
-              currency ? currency : "-"
-            }: ${
-              this.state.selectedConversionPath ? Number(price.toFixed(8)) : "-"
+            <div style={{ fontWeight: "bold" }}>{`Price per ${currency ? currency : "-"}: ${
+              this.state.selectedConversionPath != null ? Number(price.toFixed(8)) : "-"
             }`}</div>
           </WalletPaper>
         </div>
@@ -561,23 +542,15 @@ export const ConvertCurrencyFormSimpleRender = function() {
             style={{
               marginBottom: 8,
               flex: 1,
-              marginRight: 4
+              marginRight: 4,
             }}
             square={false}
           >
             <div style={{ fontWeight: "bold" }}>{`Est. Fee: ${
               amount
                 ? via
-                  ? Number(
-                      (0.0005 * amount + (exportto ? 0.0201 : 0.0001)).toFixed(
-                        8
-                      )
-                    )
-                  : Number(
-                      (0.00025 * amount + (exportto ? 0.0201 : 0.0001)).toFixed(
-                        8
-                      )
-                    )
+                  ? Number((0.0005 * amount + (exportto ? 0.0201 : 0.0001)).toFixed(8))
+                  : Number((0.00025 * amount + (exportto ? 0.0201 : 0.0001)).toFixed(8))
                 : "-"
             } ${currency ? currency : "-"}`}</div>
           </WalletPaper>
@@ -590,10 +563,10 @@ export const ConvertCurrencyFormSimpleRender = function() {
             square={false}
           >
             <div style={{ fontWeight: "bold" }}>{`Est. Time: ${
-              this.state.selectedConversionPath
-                ? (exportto
+              this.state.selectedConversionPath != null
+                ? exportto
                   ? "20-30 Min."
-                  : "2-10 Min.")
+                  : "2-10 Min."
                 : "- Min."
             }`}</div>
           </WalletPaper>
@@ -612,7 +585,6 @@ export const ConvertCurrencyFormSimpleRender = function() {
             currency == null ||
             convertto == null ||
             amount === 0 ||
-            this.state.addresses.length === 0 ||
             address == null ||
             address.length === 0
           }

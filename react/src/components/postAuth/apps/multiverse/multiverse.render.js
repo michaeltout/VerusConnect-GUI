@@ -7,10 +7,12 @@ import {
   ADD_PBAAS_COIN,
   POST_SYNC,
   PBAAS_POSTFIX,
-  FIX_CHARACTER
+  FIX_CHARACTER,
+  IS_PBAAS_ROOT
 } from "../../../../util/constants/componentConstants";
 import { openAddCoinModal } from '../../../../actions/actionDispatchers';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { visualizePbaasNetwork } from '../../../../util/api/plugins/run';
 
 export const MultiverseCardRender = function (coinObj) {
   const { allCurrencies, mainPathArray } = this.props;
@@ -91,6 +93,28 @@ export const MultiverseCardRender = function (coinObj) {
                   </div>
                 </div>
               </button>
+              {coinObj.options.tags.includes(IS_PBAAS_ROOT) && (
+                <button
+                  className="unstyled-button"
+                  onClick={() => visualizePbaasNetwork(coinObj.id)}
+                  style={MultiverseStyles.cardClickableContainer}
+                >
+                  <div
+                    className="d-flex flex-column align-items-end"
+                    style={MultiverseStyles.searchButtonContainer}
+                  >
+                    <div
+                      className={"card border-on-hover"}
+                      style={MultiverseStyles.cardInnerContainer}
+                    >
+                      <div style={MultiverseStyles.cardInnerTextContainer}>
+                        <i className={"fas fa-star"} style={{ paddingRight: 6, color: "black" }} />
+                        {`Visualize Network`}
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              )}
             </div>
           </div>
         </div>
