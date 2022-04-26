@@ -22,7 +22,8 @@ export const CoinSettingsRender = function() {
               handleTabChange={handleTabChange}
               tabProps={{
                 style: {
-                  color: "white"
+                  color: "white",
+                  textTransform: "capitalize"
                 }
               }}
             />

@@ -298,6 +298,8 @@ export const ConvertCurrencyConfirmSimpleRender = function() {
 };
 
 export const ConvertCurrencyFormSimpleOptionText = function (conversionPath) {
+  const priceFixed = Number(conversionPath.price.toFixed(2))
+  
   return `${conversionPath.destination.name}${
     conversionPath.via
       ? ` (${
@@ -308,7 +310,9 @@ export const ConvertCurrencyFormSimpleOptionText = function (conversionPath) {
         ? " (gateway)"
         : " (off-chain)"
       : ""
-  }`;
+  } [${
+    priceFixed === 0 ? "<0.01" : priceFixed === conversionPath.price ? priceFixed : `~${priceFixed}`
+  }]`;
 };
 
 export const ConvertCurrencyFormSimpleRender = function() {
@@ -464,10 +468,13 @@ export const ConvertCurrencyFormSimpleRender = function() {
               }
               name="RecievingCurrency"
               items={this.state.conversionPaths
-                .map((x) => x.destination.name)
-                .sort()
-                .map((x, index) => index)}
-              label="Currency"
+                .map((x, index) => index)
+                .sort((a, b) => {
+                  return this.state.conversionPaths[a].destination.name.localeCompare(
+                    this.state.conversionPaths[b].destination.name
+                  );
+                })}
+              label={`Currency [estimated price]`}
               size="small"
               grouped={false}
               freeSolo={false}
@@ -484,6 +491,15 @@ export const ConvertCurrencyFormSimpleRender = function() {
                 );
               }}
               containerStyle={{ flex: 2 }}
+              filterOptions={(options, state) => {
+                const input = state.inputValue.toUpperCase();
+
+                return options.filter((pathIndex) => {
+                  const name = this.state.conversionPaths[pathIndex].destination.name.toUpperCase();
+
+                  return name.includes(input);
+                });
+              }}
             />
           </div>
           <div style={{ display: "flex", marginTop: 8 }}>
@@ -532,7 +548,7 @@ export const ConvertCurrencyFormSimpleRender = function() {
             }}
             square={false}
           >
-            <div style={{ fontWeight: "bold" }}>{`Price per ${currency ? currency : "-"}: ${
+            <div style={{ fontWeight: "bold" }}>{`Est. price per ${currency ? currency : "-"}: ${
               this.state.selectedConversionPath != null ? Number(price.toFixed(8)) : "-"
             }`}</div>
           </WalletPaper>

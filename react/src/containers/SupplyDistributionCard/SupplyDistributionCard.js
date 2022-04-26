@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types';
-import { normalizeNum } from '../../util/displayUtil/numberFormat';
-import WalletPaper from '../WalletPaper/WalletPaper';
 import { checkFlag } from '../../util/flagUtils';
 import { IS_FRACTIONAL_FLAG } from '../../util/constants/flags';
 import { SupplyDistributionCardRender } from './SupplyDistributionCard.render';
@@ -25,7 +23,7 @@ function calculateSupplyDistribution(chainCurrencies, coinSupply, selfCurrency) 
           remainingSupply -= reserve.reserves
           supplyDistribution.push({
             amount: reserve.reserves,
-            name: fullyqualifiedname,
+            name: `${fullyqualifiedname} reserve`,
             value: (reserve.reserves/coinSupply)*100,
             color: randomColor.randomColor({ seed: currencyid })
           })
@@ -67,7 +65,7 @@ function SupplyDistributionCard(props) {
     [allCurrencies, currentSupply, selfCurrency]
   );
 
-  return SupplyDistributionCardRender({ supplyDistribution })
+  return SupplyDistributionCardRender({ supplyDistribution }, { coin })
 }
 
 SupplyDistributionCard.propTypes = {

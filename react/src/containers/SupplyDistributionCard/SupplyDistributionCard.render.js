@@ -4,13 +4,22 @@ import WalletPaper from '../WalletPaper/WalletPaper';
 import { VirtualizedTable } from '../VirtualizedTable/VirtualizedTable';
 import ReactMinimalPieChart from 'react-minimal-pie-chart';
 import ColoredCircle from '../ColoredCircle/ColoredCircle';
+import InfoIcon from '@material-ui/icons/Info';
+import { Tooltip } from '@material-ui/core';
 
-export const SupplyDistributionCardRender = (state) => {
+export const SupplyDistributionCardRender = (state, props) => {
   return (
     <WalletPaper style={{ marginBottom: 16 }}>
-      <h6 className="card-title" style={{ fontSize: 14, margin: 0, width: "100%" }}>
-        {"Supply Distribution"}
-      </h6>
+      <div style={{ display: "flex", width: "100%" }}>
+        <h6 className="card-title" style={{ fontSize: 14, margin: 0 }}>
+          {"Supply Distribution"}
+        </h6>
+        <Tooltip
+          title={`The supply distribution chart shows where supply of this chain's native currency (${props.coin}) is held`}
+        >
+          <InfoIcon fontSize="small" color="primary" style={{ marginBottom: 2, marginLeft: 3 }} />
+        </Tooltip>
+      </div>
       <div className="d-lg-flex justify-content-lg-center">
         <div className="col-lg-3" style={{ display: "flex", paddingLeft: 20 }}>
           <div
