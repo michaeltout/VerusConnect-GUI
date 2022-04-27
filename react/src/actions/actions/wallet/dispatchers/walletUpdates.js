@@ -141,16 +141,22 @@ export const conditionallyUpdateWallet = async (state, dispatch, mode, chainTick
       let testPassed = updateInfo.location_and_type_restrictions.every((locationAndTypeRestriction) => {
         const location = locationAndTypeRestriction[0]
         const type = locationAndTypeRestriction[1]
+        const negated = locationAndTypeRestriction.length < 3 ? false : locationAndTypeRestriction[2]
+
         const locationRestrictions = readNavigationUrl(location)
         const activeCoinTags = state.coins.activatedCoins[chainTicker].options.tags
 
+        const typeCondition = negated
+          ? !activeCoinTags.includes(type)
+          : activeCoinTags.includes(type);
+
         if (
           !(
-            currentMainPath.includes(locationRestrictions.mainPath) && activeCoinTags.includes(type)
+            currentMainPath.includes(locationRestrictions.mainPath) && typeCondition
           ) ||
           !(
             currentMainPath.includes(locationRestrictions.modalPath) &&
-            activeCoinTags.includes(type)
+            typeCondition
           )
         ) {
           return false;
