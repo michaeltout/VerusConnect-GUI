@@ -478,7 +478,9 @@ export const ConvertCurrencyFormSimpleRender = function() {
               size="small"
               grouped={false}
               freeSolo={false}
-              onChange={(e) => this.selectConversionPath(e.target.value)}
+              onChange={(e) =>
+                this.selectConversionPath(e.target.value == "" ? null : e.target.value)
+              }
               disabled={this.state.conversionPaths.length == 0}
               renderOption={(option) => {
                 return (

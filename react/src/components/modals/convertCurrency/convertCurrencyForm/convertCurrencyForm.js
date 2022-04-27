@@ -353,17 +353,19 @@ class ConvertCurrencyForm extends React.Component {
   }
 
   selectConversionPath(path) {
-    const selectedPathObj = this.state.conversionPaths[path]
-
     this.setState({
       selectedConversionPath: path
     }, () => {
-      this.updateOutput("convertto", selectedPathObj.destination.currencyid)
-      if (selectedPathObj.via) this.updateOutput("via", selectedPathObj.via.currencyid)
-      else this.updateOutput("via", null)
+      if (path != null) {        
+        const selectedPathObj = this.state.conversionPaths[path]
 
-      if (selectedPathObj.exportto) this.updateOutput("exportto", selectedPathObj.exportto)
-      else this.updateOutput("exportto", null)
+        this.updateOutput("convertto", selectedPathObj.destination.currencyid)
+        if (selectedPathObj.via) this.updateOutput("via", selectedPathObj.via.currencyid)
+        else this.updateOutput("via", null)
+
+        if (selectedPathObj.exportto) this.updateOutput("exportto", selectedPathObj.exportto)
+        else this.updateOutput("exportto", null)
+      }
     })
   }
 
