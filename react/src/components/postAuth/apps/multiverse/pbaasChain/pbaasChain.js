@@ -20,14 +20,14 @@ function isFractional(currency) {
 
 function isStandalone(currency) {
   return (
-    !checkFlag(currency.options, IS_FRACTIONAL_FLAG) && isToken(currency)
+    !checkFlag(currency.options, IS_FRACTIONAL_FLAG)
   );
 }
 
 function passesIndexCheck(currency, tabIndex) {
   switch (tabIndex) {
     case 0:
-      return isToken(currency)
+      return true
     case 1:
       return isFractional(currency)
     case 2:
