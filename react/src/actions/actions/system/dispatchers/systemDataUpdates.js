@@ -64,7 +64,7 @@ export const conditionallyUpdateSystemData = async (state, dispatch, updateId) =
   } else if (updateInfo && updateInfo.busy) {
     const { updateWarningSnackDisabled } = state.updates
 
-    dispatch(logDebugWarning(`The ${updateId} call is taking a very long time to complete. This may impact performace.`))
+    // dispatch(logDebugWarning(`The ${updateId} call is taking a very long time to complete. This may impact performace.`))
 
     // TODO: Deprecated, delete
     /*if (!updateWarningSnackDisabled) {

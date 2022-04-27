@@ -176,7 +176,7 @@ export const conditionallyUpdateWallet = async (state, dispatch, mode, chainTick
     }
     else return API_ERROR
   } else if (updateInfo && updateInfo.needs_update && updateInfo.busy) {
-    dispatch(logDebugWarning(`The ${updateId} call for ${chainTicker} is taking a very long time to complete. This may impact performace.`))
+    // dispatch(logDebugWarning(`The ${updateId} call for ${chainTicker} is taking a very long time to complete. This may impact performace.`))
 
     // TODO: Deprecated, delete
     /*if (!updateWarningSnackDisabled) {
