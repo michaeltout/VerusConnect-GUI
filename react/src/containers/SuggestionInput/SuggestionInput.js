@@ -23,7 +23,8 @@ class SuggestionInput extends React.Component {
       size,
       disabled,
       freeSolo,
-      grouped
+      grouped,
+      filterOptions
     } = this.props;
 
     //TODO: Solve warning/error in console where if option for getOptionLabel
@@ -35,12 +36,15 @@ class SuggestionInput extends React.Component {
         style={containerStyle}
         options={items}
         groupBy={grouped == null || grouped == true ? () => "Suggestions:" : null}
-        onChange={(event, value) => onChange({target: {name, value: value == null ? '' : value}})}
+        onChange={(event, value) =>
+          onChange({ target: { name, value: value == null ? "" : value } })
+        }
         renderOption={renderOption}
-        getOptionLabel={getOptionLabel == null ? option => option : getOptionLabel}
-        value = { this.props.value }
+        getOptionLabel={getOptionLabel == null ? (option) => option : getOptionLabel}
+        value={this.props.value}
         disabled={disabled}
-        renderInput={params => (
+        filterOptions={filterOptions}
+        renderInput={(params) => (
           <TextField
             {...params}
             error={error}
@@ -49,8 +53,7 @@ class SuggestionInput extends React.Component {
             variant="outlined"
             onChange={
               freeSolo == null || freeSolo
-                ? (event) =>
-                    onChange({ target: { name, value: event.target.value } })
+                ? (event) => onChange({ target: { name, value: event.target.value } })
                 : () => {}
             }
             style={{ width: "100%" }}
@@ -77,7 +80,8 @@ SuggestionInput.propTypes = {
   renderOption: PropTypes.func,
   getOptionLabel: PropTypes.func,
   size: PropTypes.string,
-  grouped: PropTypes.bool
+  grouped: PropTypes.bool,
+  filterOptions: PropTypes.func
 };
 
 export default SuggestionInput

@@ -265,6 +265,7 @@ const mapStateToProps = (state) => {
     activeUser: state.users.activeUser,
     transactions: state.ledger.transactions,
     info: state.ledger.info,
+    selectedCurrencyMap: state.users.activeUser.selectedCurrencyMap
   };
 };
 

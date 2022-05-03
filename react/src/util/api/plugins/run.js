@@ -2,6 +2,7 @@ import {
   API_AUTHENTICATE_COIN,
   API_MAKE_LOGIN_CONSENT_REQUEST,
   API_RUN_PLUGIN,
+  API_VISUALIZE_PBAAS_NETWORK,
 } from "../../constants/componentConstants";
 import { apiPost } from "../callCreator";
 
@@ -42,6 +43,21 @@ export const makeLoginConsentRequest = async (
   try {
     const res = await apiPost(API_MAKE_LOGIN_CONSENT_REQUEST, {
       request,
+    });
+    if (res.msg !== "success") throw new Error(res.result);
+    else return res.result;
+  } catch (e) {
+    console.error(e.message);
+    throw new Error(e.message);
+  }
+};
+
+export const visualizePbaasNetwork = async (
+  root
+) => {
+  try {
+    const res = await apiPost(API_VISUALIZE_PBAAS_NETWORK, {
+      request: { chain_id: root },
     });
     if (res.msg !== "success") throw new Error(res.result);
     else return res.result;

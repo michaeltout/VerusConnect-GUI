@@ -124,7 +124,7 @@ export const conditionallyUpdateWallet = async (state, dispatch, mode, chainTick
     //TODO: Fix testspass to be an OR rather than and AND
     
     if (updateInfo.location_restrictions && updateInfo.location_restrictions.length > 0) {
-      let testPassed = updateInfo.location_restrictions.every((locationRestriction) => {
+      let testPassed = updateInfo.location_restrictions.some((locationRestriction) => {
         const locationRestrictions = readNavigationUrl(locationRestriction)
         if (!(currentMainPath.includes(locationRestrictions.mainPath)) || !(currentModalPath.includes(locationRestrictions.modalPath))) {
           return false
@@ -141,16 +141,22 @@ export const conditionallyUpdateWallet = async (state, dispatch, mode, chainTick
       let testPassed = updateInfo.location_and_type_restrictions.every((locationAndTypeRestriction) => {
         const location = locationAndTypeRestriction[0]
         const type = locationAndTypeRestriction[1]
+        const negated = locationAndTypeRestriction.length < 3 ? false : locationAndTypeRestriction[2]
+
         const locationRestrictions = readNavigationUrl(location)
         const activeCoinTags = state.coins.activatedCoins[chainTicker].options.tags
 
+        const typeCondition = negated
+          ? !activeCoinTags.includes(type)
+          : activeCoinTags.includes(type);
+
         if (
           !(
-            currentMainPath.includes(locationRestrictions.mainPath) && activeCoinTags.includes(type)
+            currentMainPath.includes(locationRestrictions.mainPath) && typeCondition
           ) ||
           !(
             currentMainPath.includes(locationRestrictions.modalPath) &&
-            activeCoinTags.includes(type)
+            typeCondition
           )
         ) {
           return false;
@@ -170,7 +176,7 @@ export const conditionallyUpdateWallet = async (state, dispatch, mode, chainTick
     }
     else return API_ERROR
   } else if (updateInfo && updateInfo.needs_update && updateInfo.busy) {
-    dispatch(logDebugWarning(`The ${updateId} call for ${chainTicker} is taking a very long time to complete. This may impact performace.`))
+    // dispatch(logDebugWarning(`The ${updateId} call for ${chainTicker} is taking a very long time to complete. This may impact performace.`))
 
     // TODO: Deprecated, delete
     /*if (!updateWarningSnackDisabled) {

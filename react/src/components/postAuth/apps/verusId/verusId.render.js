@@ -8,6 +8,14 @@ import {
 } from "../../../../util/constants/componentConstants";
 import { openAddCoinModal } from '../../../../actions/actionDispatchers';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import CurrencySelector from '../../../../containers/CurrencySelector/CurrencySelector';
+import {
+  FormControl,
+  Select,
+  MenuItem,
+  InputLabel,
+  Button
+} from "@material-ui/core";
 
 export const IdCardRender = function(coinObj) {
   const { identities } = this.props
@@ -21,15 +29,10 @@ export const IdCardRender = function(coinObj) {
       //onClick={() => this.openCoin(coinObj.id)} key={coinObj.id}
       style={VerusIdStyles.cardClickableContainer}
     >
-      <div
-        className="d-flex flex-column align-items-end"
-        style={VerusIdStyles.cardContainer}
-      >
+      <div className="d-flex flex-column align-items-end" style={VerusIdStyles.cardContainer}>
         <div
           className={`card ${
-            activeId.chainTicker === coinObj.id
-              ? "active-card"
-              : "border-on-hover"
+            activeId.chainTicker === coinObj.id ? "active-card" : "border-on-hover"
           }`}
           style={VerusIdStyles.cardInnerContainer}
         >
@@ -50,80 +53,65 @@ export const IdCardRender = function(coinObj) {
             </div>
           )}
           <div
-            className="card-body d-flex justify-content-between"
+            className="card-body"
             style={{
               ...VerusIdStyles.cardBody,
               paddingTop: errorOrLoading ? 0 : 20,
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            <div style={{ width: "100%" }}>
-              <div
-                className="d-flex"
-                style={VerusIdStyles.cardCoinInfoContainer}
-              >
-                <img
-                  src={`assets/images/cryptologo/btc/${coinObj.id.toLowerCase()}.png`}
-                  width="25px"
-                  height="25px"
-                  onError={(e) => {e.target.src = CHAIN_FALLBACK_IMAGE}}
-                />
-                <h4 style={VerusIdStyles.cardCoinName}>
-                  <strong>{coinObj.name}</strong>
-                </h4>
-              </div>
-              <select
-                value={
-                  activeId.idIndex != null &&
-                  activeId.chainTicker === coinObj.id
-                    ? JSON.stringify(coinIdentities[activeId.idIndex])
-                    : -1
-                }
-                name="selectedProfileId"
-                className="custom-select custom-select-lg"
-                style={{ marginTop: 10 }}
-                //Selected index is offset by one due to "Select Identity" placeholder
-                onChange={e =>
-                  this.openId(coinObj.id, e.target.selectedIndex - 1)
-                }
-              >
-                <option key={-1} value={-1} disabled={true}>
-                  {"Select identity"}
-                </option>
-                {coinIdentities.map((idObj, index) => {
-                  {
-                    const { identity } = idObj;
-                    return (
-                      <option key={index} value={JSON.stringify(idObj)}>
-                        {`${identity.name}@`}
-                      </option>
-                    );
-                  }
-                })}
-              </select>
-              <button
-                className="unstyled-button"
-                onClick={() => this.openSearchModal(coinObj.id)}
-                style={VerusIdStyles.cardClickableContainer}
-              >
-              <div
-                className="d-flex flex-column align-items-end"
-                style={VerusIdStyles.searchButtonContainer}
-              >
-                <div
-                  className={'card border-on-hover'}
-                  style={VerusIdStyles.cardInnerContainer}
-                >
-                  <div style={VerusIdStyles.cardInnerTextContainer}>
-                    <i
-                      className={'fas fa-search'}
-                      style={{ paddingRight: 6, color: 'black' }}
-                    />
-                    {"ID Search"}
-                  </div>
-                </div>
-              </div>
-              </button>
+            <div className="d-flex" style={VerusIdStyles.cardCoinInfoContainer}>
+              <img
+                src={`assets/images/cryptologo/btc/${coinObj.id.toLowerCase()}.png`}
+                width="25px"
+                height="25px"
+                onError={(e) => {
+                  e.target.src = CHAIN_FALLBACK_IMAGE;
+                }}
+              />
+              <h4 style={VerusIdStyles.cardCoinName}>
+                <strong>{coinObj.name}</strong>
+              </h4>
             </div>
+            <FormControl variant="outlined" style={{ flex: 1, marginTop: 8, marginBottom: 8 }}>
+              <InputLabel>{"Identity"}</InputLabel>
+              <Select
+                value={
+                  activeId.idIndex != null && activeId.chainTicker === coinObj.id
+                    ? activeId.idIndex
+                    : ""
+                }
+                onChange={(e) => this.openId(coinObj.id, e.target.value)}
+                labelWidth={62}
+              >
+                {coinIdentities.map((idObj, index) => {
+                  const { identity } = idObj;
+                  return (
+                    <MenuItem
+                      key={index}
+                      value={index}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        flexDirection: "row",
+                      }}
+                    >
+                      <div>{`${identity.name}@`}</div>
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+            <CurrencySelector coin={coinObj.id} />
+            <Button
+              variant="outlined"
+              onClick={() => this.openSearchModal(coinObj.id)}
+              style={{ marginTop: 8 }}
+            >
+              <i className={"fas fa-search"} style={{ paddingRight: 6, color: "black" }} />
+              {"ID Search"}
+            </Button>
           </div>
         </div>
       </div>

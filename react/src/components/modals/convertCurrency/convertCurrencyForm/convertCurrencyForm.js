@@ -38,7 +38,7 @@ class ConvertCurrencyForm extends React.Component {
         receiveAmount: ""
       }],
       estArrivals: [],
-      conversionPaths: {},
+      conversionPaths: [],
       nameMap: {},
       selectedConversionPath: null,
       addresses: [],
@@ -95,7 +95,7 @@ class ConvertCurrencyForm extends React.Component {
         exportto: ""
       }],
       estArrivals: [],
-      conversionPaths: {},
+      conversionPaths: [],
       nameMap: {},
       selectedConversionPath: null,
       addresses: [],
@@ -110,36 +110,38 @@ class ConvertCurrencyForm extends React.Component {
   componentDidUpdate(lastProps, lastState) {
     if (lastProps.mode !== this.props.mode) this.resetState()
 
+    const { conversionPaths, outputs, selectedConversionPath } = this.state
+
     if (
       this.props.mode === SIMPLE_CONVERSION &&
       (lastProps.info != this.props.info ||
-        lastState.outputs.length != this.state.outputs.length ||
+        lastState.outputs.length != outputs.length ||
         !lastState.outputs.every(
           (output, index) =>
-            output.address === this.state.outputs[index].address
+            output.address === outputs[index].address
         ))
     ) {
       let arrivals = [];
 
-      let outputs = this.state.outputs.map((x) => {
+      const newOutputs = outputs.map((x) => {
         const isPreconvert =
           x.convertto != null &&
-          this.state.conversionPaths[x.convertto] &&
+          selectedConversionPath != null &&
+          conversionPaths[selectedConversionPath] &&
           this.props.info.longestchain &&
-          ((this.state.conversionPaths[x.convertto].destination.launchsystemid !==
-            this.state.conversionPaths[x.convertto].destination.spotterid)
+          (conversionPaths[selectedConversionPath].destination.launchsystemid !==
+          conversionPaths[selectedConversionPath].destination.spotterid
             ? 1
-            : this.state.conversionPaths[x.convertto].destination.startblock) >
+            : conversionPaths[selectedConversionPath].destination.startblock) >
             this.props.info.longestchain;
 
         arrivals.push(
           isPreconvert
-            ? ((this.state.conversionPaths[x.convertto].destination
-                .launchsystemid !==
-                this.state.conversionPaths[x.convertto].destination.spotterid)
+            ? (conversionPaths[selectedConversionPath].destination.launchsystemid !==
+              conversionPaths[selectedConversionPath].destination.spotterid
                 ? 1
-                : this.state.conversionPaths[x.convertto].destination
-                    .startblock) - this.props.info.longestchain
+                : conversionPaths[selectedConversionPath].destination.startblock) -
+                this.props.info.longestchain
             : null
         );
         return {
@@ -151,12 +153,12 @@ class ConvertCurrencyForm extends React.Component {
           refundto: isPreconvert ? x.address : null,
           memo: x.memo,
           preconvert: isPreconvert,
-          exportto: x.exportto
+          exportto: x.exportto,
         };
       });
 
       this.setState({
-        outputs,
+        outputs: newOutputs,
         estArrivals: arrivals,
       });
     }
@@ -351,17 +353,19 @@ class ConvertCurrencyForm extends React.Component {
   }
 
   selectConversionPath(path) {
-    const selectedPathObj = this.state.conversionPaths[path]
-
     this.setState({
-      selectedConversionPath: selectedPathObj.destination.currencyid
+      selectedConversionPath: path
     }, () => {
-      this.updateOutput("convertto", selectedPathObj.destination.currencyid)
-      if (selectedPathObj.via) this.updateOutput("via", selectedPathObj.via.currencyid)
-      else this.updateOutput("via", null)
+      if (path != null) {        
+        const selectedPathObj = this.state.conversionPaths[path]
 
-      if (selectedPathObj.exportto) this.updateOutput("exportto", selectedPathObj.exportto)
-      else this.updateOutput("exportto", null)
+        this.updateOutput("convertto", selectedPathObj.destination.currencyid)
+        if (selectedPathObj.via) this.updateOutput("via", selectedPathObj.via.currencyid)
+        else this.updateOutput("via", null)
+
+        if (selectedPathObj.exportto) this.updateOutput("exportto", selectedPathObj.exportto)
+        else this.updateOutput("exportto", null)
+      }
     })
   }
 
@@ -399,7 +403,7 @@ class ConvertCurrencyForm extends React.Component {
 
   selectSimpleSourceCurrency(source) {
     this.setState({
-      conversionPaths: {},
+      conversionPaths: [],
       selectedConversionPath: null
     }, async () => {
       this.updateOutput("convertto", "")
@@ -421,11 +425,13 @@ class ConvertCurrencyForm extends React.Component {
           this.props.dispatch(newSnackbar(INFO_SNACK, `No possible conversions found from "${from}".`, MID_LENGTH_ALERT))
         } else {
           let nameMap = {}
-          Object.values(response.result).map(x => {
-            nameMap[x.destination.name] = x.destination.currencyid
-          })
+          Object.values(response.result).map((x) => {
+            for (const conversionPath of x) {
+              nameMap[conversionPath.destination.name] = conversionPath.destination.currencyid;
+            }
+          });
   
-          this.setState({ conversionPaths: response.result, nameMap })
+          this.setState({ conversionPaths: (Object.values(response.result)).flat(), nameMap })
         }
       } else {
         console.warn(response)
@@ -440,7 +446,7 @@ class ConvertCurrencyForm extends React.Component {
     }
   }
 
-  render() {
+  render() {    
     return ConvertCurrencyFormRender.call(this);
   }
 }

@@ -39,7 +39,9 @@ export const registerId = async (
   recoveryauthority,
   privateaddress,
   idFee,
-  referral
+  referral,
+  parent,
+  version
 ) => {
   try {
     return await getApiData(
@@ -57,7 +59,9 @@ export const registerId = async (
         recoveryauthority,
         privateaddress,
         idFee,
-        referral
+        referral,
+        parent,
+        version
       }
     );
   } catch (e) {

@@ -5,10 +5,14 @@ import {
 } from './dashboard.render';
 import {
   NATIVE,
-  API_GET_ALL_CURRENCIES
+  API_GET_ALL_CURRENCIES,
+  IS_PBAAS
 } from "../../../../../util/constants/componentConstants";
 import { conditionallyUpdateWallet } from '../../../../../actions/actionDispatchers';
 import Store from '../../../../../store';
+import { filterSubArrays } from '../../../../../util/objectUtil';
+import { checkFlag } from '../../../../../util/flagUtils';
+import { IS_PBAAS_FLAG, IS_TOKEN_FLAG } from '../../../../../util/constants/flags';
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -17,7 +21,7 @@ class Dashboard extends React.Component {
     this.getLoadedCurrencyCoins = this.getLoadedCurrencyCoins.bind(this)
 
     this.state = {
-      verusProtoCoins: this.getVerusProtocolCoins(props.activatedCoins),
+      pbaasCoins: this.getVerusProtocolCoins(props.activatedCoins),
       loadedCurrencyCoins: this.getLoadedCurrencyCoins(props.allCurrencies)
     }
 
@@ -26,12 +30,12 @@ class Dashboard extends React.Component {
 
   getVerusProtocolCoins(activatedCoins) {
     return Object.values(activatedCoins).filter((coinObj) => {
-      return /*coinObj.options.tags.includes(IS_VERUS)*/ coinObj.id === 'VRSCTEST' && coinObj.mode === NATIVE
+      return coinObj.options.tags.includes(IS_PBAAS)
     })
   }
 
   componentDidMount() {
-    this.state.verusProtoCoins.map(coinObj => {
+    this.state.pbaasCoins.map(coinObj => {
       conditionallyUpdateWallet(
         Store.getState(),
         this.props.dispatch,
@@ -58,7 +62,7 @@ class Dashboard extends React.Component {
 
   updateState() {
     this.setState({
-      verusProtoCoins: this.getVerusProtocolCoins(this.props.activatedCoins),
+      pbaasCoins: this.getVerusProtocolCoins(this.props.activatedCoins),
       loadedCurrencyCoins: this.getLoadedCurrencyCoins(this.props.allCurrencies)
     })
   }
@@ -73,9 +77,16 @@ const mapStateToProps = (state) => {
     mainPathArray: state.navigation.mainPathArray,
     activatedCoins: state.coins.activatedCoins,
     allCurrencies: state.ledger.allCurrencies,
+    allBlockchains: {
+      ["VRSCTEST"]: state.ledger.allCurrencies["VRSCTEST"]
+        ? state.ledger.allCurrencies["VRSCTEST"].filter((currency) =>
+            checkFlag(currency.options, IS_PBAAS_FLAG)
+          )
+        : [],
+    },
     info: state.ledger.info,
     localCurrencyLists: state.localCurrencyLists,
-    identities: state.ledger.identities
+    identities: state.ledger.identities,
   };
 };
 

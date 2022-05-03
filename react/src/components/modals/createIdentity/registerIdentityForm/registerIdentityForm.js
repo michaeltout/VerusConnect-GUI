@@ -81,7 +81,7 @@ class RegisterIdentityForm extends React.Component {
   initFormData(props) {
     const { chainTicker, nameCommitmentObj, setContinueDisabled } = props
     const { txid, namereservation, controlAddress } = nameCommitmentObj
-    const { salt, referral, nameid, name } = namereservation
+    const { salt, referral, nameid, name, parent, version } = namereservation
 
     props.setFormData({
       chainTicker,
@@ -91,6 +91,8 @@ class RegisterIdentityForm extends React.Component {
       salt,
       referralId: !referral || referral.length === 0 ? null : referral,
       nameid,
+      parent,
+      version
     })
   }
 

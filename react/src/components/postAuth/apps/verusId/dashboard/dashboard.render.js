@@ -642,19 +642,28 @@ export const DashboardRenderIds = function() {
       }}
     >
       {this.state.compiledIds.map((idObj, index) => {
-        const { identity } = idObj;
+        const { identity, chainTicker } = idObj;
+        const selectedCurrency = this.props.selectedCurrencyMap[chainTicker]
+          ? this.props.selectedCurrencyMap[chainTicker]
+          : chainTicker;
         const zBalance =
-          idObj.balances.native.private.confirmed == null
+          idObj.balances.native.private.confirmed == null || selectedCurrency !== chainTicker
             ? 0
             : idObj.balances.native.private.confirmed;
+        const tBalance =
+          selectedCurrency === chainTicker
+            ? idObj.balances.native.public.confirmed
+            : idObj.balances.reserve[selectedCurrency] != null
+            ? idObj.balances.reserve[selectedCurrency]
+            : 0;
         const spendableBalance = Number(
-          (idObj.balances.native.public.confirmed + zBalance).toFixed(8)
+          (tBalance + zBalance).toFixed(8)
         );
 
         const isTimelockDelay = checkFlag(identity.flags, TIMELOCK_DELAY_FLAG);
         const longestchain =
-          this.props.info[idObj.chainTicker] && this.props.info[idObj.chainTicker].longestchain
-            ? this.props.info[idObj.chainTicker].longestchain
+          this.props.info[chainTicker] && this.props.info[chainTicker].longestchain
+            ? this.props.info[chainTicker].longestchain
             : 0;
         const isLocked = identity.timelock > longestchain || isTimelockDelay
 
@@ -776,7 +785,7 @@ export const DashboardRenderIds = function() {
                     marginBottom: 0,
                   }}
                 >
-                  {`${spendableBalance} ${idObj.chainTicker}`}
+                  {`${spendableBalance} ${selectedCurrency}`}
                 </h3>
               </div>
               <div

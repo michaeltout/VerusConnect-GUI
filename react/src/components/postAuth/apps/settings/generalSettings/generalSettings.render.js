@@ -19,7 +19,8 @@ export const GeneralSettingsRender = function() {
               handleTabChange={handleTabChange}
               tabProps={{
                 style: {
-                  color: "white"
+                  color: "white",
+                  textTransform: "capitalize"
                 }
               }}
             />

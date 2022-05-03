@@ -113,7 +113,9 @@ class CreateIdentity extends React.Component {
           revocationAuthority,
           recoveryAuthority,
           privateAddress,
-          primaryAddress
+          primaryAddress,
+          parent,
+          version
         } = formData;
 
         const _privateAddress =
@@ -145,7 +147,9 @@ class CreateIdentity extends React.Component {
             recoveryAuthority,
             _privateAddress,
             null,
-            this.selectReferralIdentity(referralId)
+            this.selectReferralIdentity(referralId),
+            parent,
+            version
           );
         } else if (modalProps.modalType === API_RECOVER_ID) {
           _txData = await recoverId(

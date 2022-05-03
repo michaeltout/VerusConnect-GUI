@@ -47,7 +47,7 @@ export const conditionallyUpdateSystemData = async (state, dispatch, updateId) =
     let testPassed = true
     
     if (updateInfo.location_restrictions && updateInfo.location_restrictions.length > 0) {
-      testPassed = updateInfo.location_restrictions.every((locationRestriction) => {
+      testPassed = updateInfo.location_restrictions.some((locationRestriction) => {
         const locationRestrictions = readNavigationUrl(locationRestriction)
         if (!(currentMainPath.includes(locationRestrictions.mainPath)) || !(currentModalPath.includes(locationRestrictions.modalPath))) {
           return false
@@ -64,7 +64,7 @@ export const conditionallyUpdateSystemData = async (state, dispatch, updateId) =
   } else if (updateInfo && updateInfo.busy) {
     const { updateWarningSnackDisabled } = state.updates
 
-    dispatch(logDebugWarning(`The ${updateId} call is taking a very long time to complete. This may impact performace.`))
+    // dispatch(logDebugWarning(`The ${updateId} call is taking a very long time to complete. This may impact performace.`))
 
     // TODO: Deprecated, delete
     /*if (!updateWarningSnackDisabled) {

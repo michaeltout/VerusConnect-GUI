@@ -12,6 +12,9 @@ import App from './components/app/app';
 import './styles/index.scss';
 import ErrorBoundary from './components/error/ErrorBoundary';
 
+Object.freeze(Object.prototype);
+Object.freeze(Object);
+
 const router = (
   <ErrorBoundary>
     <Provider store={ store }>

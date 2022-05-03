@@ -3,6 +3,9 @@
 export const timeConverter = (UNIX_timestamp, compact = false) => {
   if (UNIX_timestamp) {
     var a = new Date(UNIX_timestamp * 1000);
+
+    if (compact) return a.toISOString()
+
     var months = [
       "Jan",
       "Feb",
@@ -23,10 +26,8 @@ export const timeConverter = (UNIX_timestamp, compact = false) => {
     var hour = a.getHours();
     var min = a.getMinutes() < 10 ? "0" + a.getMinutes() : a.getMinutes();
     var sec = a.getSeconds() < 10 ? "0" + a.getSeconds() : a.getSeconds();
-    var time = compact
-      ? `${date}/${a.getMonth() + 1}/${year} ${hour + ":" + min + ":" + sec}`
-      : date + " " + month + " " + year + " " + hour + ":" + min + ":" + sec;
-    return time;
+
+    return date + " " + month + " " + year + " " + hour + ":" + min + ":" + sec;
   } else {
     return null;
   }

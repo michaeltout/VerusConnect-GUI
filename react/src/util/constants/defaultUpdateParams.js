@@ -313,7 +313,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [],
-          location_and_type_restrictions: [['@post_auth/apps/multiverse/dashboard', IS_PBAAS]]
+          location_and_type_restrictions: [['@post_auth/apps/multiverse/', IS_PBAAS]]
         },
         interval_info: {
           expire_id: null,
@@ -329,7 +329,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [],
-          location_and_type_restrictions: [['@post_auth/apps/multiverse/dashboard', IS_PBAAS]]
+          location_and_type_restrictions: [['@post_auth/apps/multiverse/', IS_PBAAS]]
         },
         interval_info: {
           expire_id: null,
@@ -469,7 +469,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: ['@post_auth/apps/mining'],
+          location_restrictions: ['@post_auth/apps/mining', '@post_auth/apps/multiverse'],
           location_and_type_restrictions: []
         },
         interval_info: {
@@ -485,7 +485,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: ['@post_auth/apps/mining'],
+          location_restrictions: ['@post_auth/apps/mining', '@post_auth/apps/multiverse'],
           location_and_type_restrictions: []
         },
         interval_info: {
@@ -521,7 +521,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: ['@post_auth/apps/mining'],
+          location_restrictions: ['@post_auth/apps/mining', '@post_auth/apps/multiverse'],
           location_and_type_restrictions: []
         },
         interval_info: {
@@ -537,7 +537,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: ['@post_auth/apps/mining'],
+          location_restrictions: ['@post_auth/apps/mining', '@post_auth/apps/multiverse'],
           location_and_type_restrictions: []
         },
         interval_info: {
@@ -573,7 +573,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: ['@post_auth/apps/mining'],
+          location_restrictions: ['@post_auth/apps/mining', '@post_auth/apps/multiverse'],
           location_and_type_restrictions: []
         },
         interval_info: {
@@ -589,7 +589,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: ['@post_auth/apps/mining'],
+          location_restrictions: ['@post_auth/apps/mining', '@post_auth/apps/multiverse'],
           location_and_type_restrictions: []
         },
         interval_info: {
@@ -730,7 +730,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [/*'@post_auth/apps/wallet'*/],
-          location_and_type_restrictions: []
+          location_and_type_restrictions: [[`@post_auth`, IS_PBAAS, true]]
         },
         interval_info: {
           expire_id: null,
@@ -746,7 +746,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [/*'@post_auth/apps/wallet'*/],
-          location_and_type_restrictions: []
+          location_and_type_restrictions: [[`@post_auth`, IS_PBAAS, true]]
         },
         interval_info: {
           expire_id: null,
