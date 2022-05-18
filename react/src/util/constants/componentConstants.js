@@ -228,6 +228,7 @@ export const CONFIGURE = 'configure'
 export const IMMATURE_DETAILS = 'immature_details'
 export const CONVERT_CURRENCY = 'convert_currency'
 export const CONFIGURE_TIMELOCK = 'configure_timelock'
+export const STARTBRIDGEKEEPER = 'start_bridgekeeper'
 
 // Coin object data
 export const DEFAULT_DUST_THRESHOLD = 0.00001
@@ -483,4 +484,6 @@ export const IDENTITY_MAKE_OFFER_TAB = 'identity_make_offer'
 export const LOCK_WITH_DELAY = 'lock_with_delay'
 export const LOCK_UNTIL_HEIGHT = 'lock_until_height'
 
-
+// Verus bridgekeeper
+export const API_BRIDGEKEEPER_START = 'start_bridgekeeper'
+export const API_BRIDGEKEEPER_STOP = 'stop_bridgekeeper'

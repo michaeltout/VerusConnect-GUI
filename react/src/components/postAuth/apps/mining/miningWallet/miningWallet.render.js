@@ -296,6 +296,37 @@ export const MiningWalletFunctions = function() {
           {"Shield Rewards"}
         </button>
       </WalletPaper>
+      <WalletPaper
+        style={{
+          display: "flex",
+          alignItems: "center",
+          flex: 1,
+          justifyContent: "space-between"
+        }}
+      >
+        <h6
+          className="card-title"
+          style={{ fontSize: 14, margin: 0, width: "max-content" }}
+        >
+          {"Verus Bridge"}
+        </h6>
+        <button
+          className="btn btn-primary border rounded"
+          type="button"
+          onClick={this.startBridgekeeper}
+          disabled={false}
+          style={{
+            fontSize: 14,
+            backgroundColor: "rgba(0,178,26,0)",
+            borderWidth: 0,
+            color: "rgb(133,135,150)",
+            borderColor: "rgb(133, 135, 150)",
+            fontWeight: "bold"
+          }}
+        >
+          {"Start Bridgekeeper"}
+        </button>
+      </WalletPaper>
     </WalletPaper>
   );
 };
