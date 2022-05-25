@@ -4,13 +4,13 @@ import Button from '@material-ui/core/Button';
 import SimpleLoader from '../../../containers/SimpleLoader/SimpleLoader'
 
 export const BridgekeeperRender = function() {
-  const { startBridgekeeper, stopBridgekeeper, state, back, props } = this
-  const { loading, continueDisabled, formStep, txData } = state
+  const { startBridgekeeper, stopBridgekeeper, getBridgekeeperInfo, state, back, props } = this
+  const { loading, continueDisabled, formStep, txData, logData } = state
   const { closeModal } = props
 
   return (
     <div style={{ width: "100%", paddingLeft: 35, paddingRight: 35 }}>
-      
+     
       {!loading && (
         <div
           style={{
@@ -52,9 +52,19 @@ export const BridgekeeperRender = function() {
           >
             {"Stop"}
           </Button>
+          <Button
+            variant="outlined"
+            onClick={getBridgekeeperInfo}
+            disabled={false}
+            size="large"
+            color="primary"
+          >
+            {"Status"}
+          </Button>
 
         </div>
       )}
+    <pre class="prettyprint" id="log">{logData}</pre>
     </div>
   );
 }

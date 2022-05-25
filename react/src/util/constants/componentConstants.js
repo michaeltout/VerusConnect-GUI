@@ -487,3 +487,4 @@ export const LOCK_UNTIL_HEIGHT = 'lock_until_height'
 // Verus bridgekeeper
 export const API_BRIDGEKEEPER_START = 'start_bridgekeeper'
 export const API_BRIDGEKEEPER_STOP = 'stop_bridgekeeper'
+export const API_BRIDGEKEEPER_STATUS = "bridgekeeper_status"
