@@ -8,14 +8,14 @@ import {
   ENTER_DATA,
   STARTBRIDGEKEEPER
 } from "../../../util/constants/componentConstants";
-import { startBridgekeeperprocess, stopBridgekeeperprocess, bridgekeeperStatus } from '../../../util/api/verusbridge/verusbridge';
+import { updateConfFile, bridgekeeperStatus } from '../../../util/api/verusbridge/verusbridge';
 
 
 class Bridgekeeper extends React.Component {
   constructor(props) {
     super(props);
 
-    props.setModalHeader("Start Verus BridgeKeeper")
+    props.setModalHeader("BridgeKeeper setup")
     this.state = {
       formStep: ENTER_DATA,
       txData: {},
@@ -23,15 +23,18 @@ class Bridgekeeper extends React.Component {
       loadingProgress: 0,
       formData: {},
       continueDisabled: true,
-      logData: null
+      logData: null,
+      ethKey: '',
+      infuraNode: '',
+      ethContract: ''
     }
 
     this.getFormData = this.getFormData.bind(this)
     this.back = this.back.bind(this)
     this.getContinueDisabled = this.getContinueDisabled.bind(this)
-    this.startBridgekeeper = this.startBridgekeeper.bind(this)
-    this.stopBridgekeeper = this.stopBridgekeeper.bind(this)
+    this.setConfFile = this.setConfFile.bind(this)
     this.getBridgekeeperInfo = this.getBridgekeeperInfo.bind(this)
+    this.updateInput = this.updateInput.bind(this)
   }
 
   getFormData(formData) {    
@@ -71,25 +74,26 @@ class Bridgekeeper extends React.Component {
   // Also the  GUI needs to have a function which enables the user to pass their infrua node + ETH private key
   // The bridge needs to be changed to give endpoints for the above functions.
 
-  async startBridgekeeper() {
-    const { id } = this.props.activeCoin
-    this.updateLog("Starting Bridgekeeper");
-    const startReply = await startBridgekeeperprocess(id);
-    this.updateLog("Bridge replied:" + JSON.stringify(startReply) /*?.msg == "success" ? stopReply?.msg : stopReply?.result*/);
+  updateInput(e, value = false) {
+    this.setState({
+      [e.target.name]:
+        value === false ? e.target.value : value == null ? "" : value,
+    })
   }
 
-  async stopBridgekeeper() {
+  async setConfFile() {
     const { id } = this.props.activeCoin
-    this.updateLog("Stopping Bridgekeeper");
-    const stopReply = await stopBridgekeeperprocess(id);
-    this.updateLog("Bridge replied:" + JSON.stringify(stopReply) /*?.msg == "success" ? stopReply?.msg : stopReply?.result*/);
+    this.updateLog("Updating vETH .conf file");
+    const confReply = await updateConfFile(id, this.state.ethKey, this.state.infuraNode, this.state.ethContract);
+    if (confReply?.result )
+      this.updateLog(confReply.result);
   }
 
   async getBridgekeeperInfo() {
     const { id } = this.props.activeCoin
     const statusReply = await bridgekeeperStatus(id);
-    if (statusReply?.result && statusReply?.result.length > 1)
-      this.updateLog(statusReply?.result);
+    if (statusReply?.result && statusReply?.result?.logs?.length > 1)
+      this.updateLog(statusReply?.result?.logs);
     else {
       this.updateLog("No status information available yet, or bridge not running");
     }
