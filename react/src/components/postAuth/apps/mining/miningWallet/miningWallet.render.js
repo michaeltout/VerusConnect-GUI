@@ -17,6 +17,7 @@ import TransactionCard from "../../../../../containers/TransactionCard/Transacti
 import GeneratorCard from "../../../../../containers/GeneratorCard/GeneratorCard";
 import { FormControl, Select, MenuItem, Switch } from "@material-ui/core";
 import NetworkOverviewCard from "../../../../../containers/NetworkOverviewCard/NetworkOverviewCard";
+import AppsStyles from '../../apps.styles'
 
 export const MiningWalletRender = function() {
   const {
@@ -177,7 +178,8 @@ export const MiningWalletFunctions = function() {
     cpuData,
     miningInfo,
     addresses,
-    coinObj
+    coinObj,
+    toggleBridging
   } = props;
 
   const coinAddresses = addresses
@@ -286,6 +288,45 @@ export const MiningWalletFunctions = function() {
             }}
           >
             {"Shield Rewards"}
+          </button>
+        </WalletPaper>
+      )}
+      {coinObj.id === "VRSCTEST" && (
+        <WalletPaper
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flex: 1,
+            justifyContent: "space-between",
+          }}
+        >
+          <h6 className="card-title" style={{ fontSize: 14, margin: 0, width: "max-content" }}>
+            {"Verus ETH Bridge"}
+          </h6>
+          <div style={{ color: `rgb(49, 101, 212)` }}>
+            <Switch
+              checked={miningInfo?.bridgekeeperstatus?.serverrunning === true}
+              onChange={() => toggleBridging(coin)}
+              disabled={miningState === MS_IDLE}
+              value="bridging"
+              color="primary"
+            />
+          </div>
+          <button
+            className="btn btn-primary"
+            type="button"
+            onClick={this.startBridgekeeper}
+            disabled={false}
+            style={{
+              fontSize: 14,
+              backgroundColor: "rgba(0,178,26,0)",
+              borderWidth: 0,
+              color: "rgb(133,135,150)",
+              borderColor: "rgb(0,0,0)",
+              fontWeight: "bold",
+            }}
+          >
+            <i className="fas fa-cog" style={AppsStyles.topBarMenuItemIcon} />
           </button>
         </WalletPaper>
       )}
