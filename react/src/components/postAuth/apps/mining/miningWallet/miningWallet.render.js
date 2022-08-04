@@ -301,7 +301,7 @@ export const MiningWalletFunctions = function() {
           }}
         >
           <h6 className="card-title" style={{ fontSize: 14, margin: 0, width: "max-content" }}>
-            {"Verus ETH Bridge"}
+            {"Bridgekeeper"}
           </h6>
           <div style={{ color: `rgb(49, 101, 212)` }}>
             <Switch
