@@ -1,17 +1,17 @@
 import React from "react";
-import { CONFIRM_DATA, API_SUCCESS, SEND_RESULT } from '../../../util/constants/componentConstants';
-import Button from '@material-ui/core/Button';
+import { CONFIRM_DATA, API_SUCCESS, SEND_RESULT } from "../../../util/constants/componentConstants";
+import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import SimpleLoader from '../../../containers/SimpleLoader/SimpleLoader'
+import SimpleLoader from "../../../containers/SimpleLoader/SimpleLoader";
 
-export const BridgekeeperRender = function() {
-  const { startBridgekeeper, getBridgekeeperInfo, state, back, props, updateInput, setConfFile } = this
-  const { loading, continueDisabled, formStep, txData, logData, ethKey, infuraNode, ethContract } = state
-  const { closeModal } = props
+export const BridgekeeperRender = function () {
+  const { startBridgekeeper, getBridgekeeperInfo, state, back, props, updateInput, setConfFile } =
+    this;
+  const { loading, continueDisabled, formStep, txData, logData, ethKey, infuraNode } = state;
+  const { closeModal } = props;
 
   return (
     <div style={{ width: "100%", paddingLeft: 35, paddingRight: 35 }}>
-     
       <TextField
         error={false}
         label="Enter Ethereum Private Key"
@@ -32,51 +32,44 @@ export const BridgekeeperRender = function() {
         value={infuraNode}
         style={{ marginTop: 10, width: "100%" }}
       />
-            <TextField
-        error={false}
-        label="Enter Ethereum contract"
-        variant="outlined"
-        placeholder="0x..........."
-        onChange={updateInput}
-        name="ethContract"
-        value={ethContract}
-        style={{ marginTop: 10, width: "100%" }}
-      />
-      <div style={{ 
+      <div
+        style={{
           display: "flex",
           justifyContent: "space-between",
-          flexDirection: "row"}}>
+          flexDirection: "row",
+        }}
+      >
         <Button
           variant="outlined"
           onClick={setConfFile}
           disabled={false}
           size="large"
           color="primary"
-          style={{ marginTop: 10}}
+          style={{ marginTop: 10 }}
         >
           {"Save Settings"}
         </Button>
         <Button
-              variant="outlined"
-              onClick={getBridgekeeperInfo}
-              disabled={false}
-              size="large"
-              color="primary"
-              style={{ marginTop: 10}}
-            >
-              {"Status"}
-          </Button>
+          variant="outlined"
+          onClick={getBridgekeeperInfo}
+          disabled={false}
+          size="large"
+          color="primary"
+          style={{ marginTop: 10 }}
+        >
+          {"Status"}
+        </Button>
       </div>
-    <pre class="prettyprint" id="log">{logData}</pre>
-  </div>
+      <pre class="prettyprint" id="log">
+        {logData}
+      </pre>
+    </div>
   );
-}
+};
 
-export const BridgekeeperFormRender = function() {
-  const { state, props, getFormData, getContinueDisabled } = this
-  const { modalProps } = props
+export const BridgekeeperFormRender = function () {
+  const { state, props, getFormData, getContinueDisabled } = this;
+  const { modalProps } = props;
 
-  return (
-    null
-  );
-}
+  return null;
+};

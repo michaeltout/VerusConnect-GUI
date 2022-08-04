@@ -25,8 +25,7 @@ class Bridgekeeper extends React.Component {
       continueDisabled: true,
       logData: null,
       ethKey: '',
-      infuraNode: '',
-      ethContract: ''
+      infuraNode: ''
     }
 
     this.getFormData = this.getFormData.bind(this)
@@ -84,7 +83,7 @@ class Bridgekeeper extends React.Component {
   async setConfFile() {
     const { id } = this.props.activeCoin
     this.updateLog("Updating vETH .conf file");
-    const confReply = await updateConfFile(id, this.state.ethKey, this.state.infuraNode, this.state.ethContract);
+    const confReply = await updateConfFile(id, this.state.ethKey, this.state.infuraNode);
     if (confReply?.result )
       this.updateLog(confReply.result);
   }
